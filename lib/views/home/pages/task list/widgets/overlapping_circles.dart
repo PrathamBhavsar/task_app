@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'package:task_app/constants/app_colors.dart';
+
 class OverlappingCircles extends StatelessWidget {
   final int numberOfCircles;
 
@@ -19,25 +21,35 @@ class OverlappingCircles extends StatelessWidget {
       ),
     );
 
-    return Stack(
-      children: List.generate(
-        numberOfCircles,
-        (index) {
-          final overlapOffset = index * 20.0; // Adjust overlap amount
-          return Positioned(
-            left: overlapOffset,
-            child: CircleAvatar(
-              radius: 25,
-              backgroundColor: randomColors[index],
-              child: index == numberOfCircles - 1
-                  ? Text(
-                      '+${numberOfCircles - index}',
-                      style: const TextStyle(color: Colors.white),
-                    )
-                  : null,
-            ),
-          );
-        },
+    final totalWidth = 16.0 * 2 + (numberOfCircles - 1) * 12.0;
+
+    return SizedBox(
+      width: totalWidth,
+      height: 32.0,
+      child: Stack(
+        children: List.generate(
+          numberOfCircles,
+          (index) {
+            final overlapOffset = index * 12.0;
+            return Positioned(
+              left: overlapOffset,
+              child: CircleAvatar(
+                radius: 16,
+                backgroundColor: randomColors[index],
+                child: index == numberOfCircles - 1
+                    ? Text(
+                        '+${numberOfCircles - index}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: AppTexts.fW900,
+                        ),
+                      )
+                    : null,
+              ),
+            );
+          },
+        ),
       ),
     );
   }

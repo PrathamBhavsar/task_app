@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/providers/auth_provider.dart';
+import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/router/app_router.dart';
 import 'package:task_app/secrets/app_secrets.dart';
 
@@ -24,6 +25,9 @@ void main() async {
         ChangeNotifierProvider<AuthProvider>(
           create: (_) => AuthProvider.instance,
         ),
+        ChangeNotifierProvider<TaskProvider>(
+          create: (_) => TaskProvider.instance,
+        ),
       ],
       child: MyApp(isLoggedIn: isLoggedIn),
     ),
@@ -33,7 +37,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
 
-  MyApp({super.key, required this.isLoggedIn});
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {

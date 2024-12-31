@@ -7,8 +7,8 @@ import 'package:task_app/providers/auth_provider.dart';
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
-    required this.controller,
-    required this.focusNode,
+    this.controller,
+    this.focusNode,
     this.labelTxt,
     this.hintTxt,
     this.keyboardType,
@@ -19,8 +19,8 @@ class CustomTextField extends StatelessWidget {
     this.onChangedFunc,
   });
 
-  final TextEditingController controller;
-  final FocusNode focusNode;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
   final String? labelTxt;
   final String? hintTxt;
   final TextInputType? keyboardType;

@@ -19,7 +19,7 @@ class CircleIcons extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(width: 2),
         ),
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Center(
           child: Icon(
             icon,
