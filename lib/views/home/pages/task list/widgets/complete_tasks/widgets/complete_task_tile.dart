@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'package:task_app/widgets/circle_icons.dart';
+import 'package:task_app/widgets/custom_tag.dart';
 
 class TaskTile extends StatelessWidget {
   const TaskTile({super.key});
@@ -36,38 +37,14 @@ class TaskTile extends StatelessWidget {
             ),
             Row(
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2),
-                    borderRadius: BorderRadius.circular(25),
-                    color: AppColors.green,
-                  ),
-                  child: const Text(
-                    'Low',
-                    style: TextStyle(
-                      fontWeight: AppTexts.fW900,
-                      color: AppColors.primary,
-                    ),
-                  ),
+                CustomTag(
+                  color: AppColors.green,
+                  text: 'Low',
                 ),
                 AppPaddings.gapW(8),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(width: 2),
-                    borderRadius: BorderRadius.circular(25),
-                    color: AppColors.pink,
-                  ),
-                  child: const Text(
-                    'Meeting',
-                    style: TextStyle(
-                      fontWeight: AppTexts.fW900,
-                      color: AppColors.primary,
-                    ),
-                  ),
+                CustomTag(
+                  color: AppColors.pink,
+                  text: 'Meeting',
                 ),
               ],
             ),

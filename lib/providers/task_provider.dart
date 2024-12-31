@@ -8,11 +8,20 @@ class TaskProvider extends ChangeNotifier {
   var logger = Logger();
 
   DateTime dueDate = DateTime.now().add(Duration(days: 2));
+  DateTime startDate = DateTime.now();
   List<Map<String, dynamic>> selectedAssignees = [];
   List<Map<String, dynamic>> selectedDesigners = [];
   List<Map<String, dynamic>> selectedClients = [];
 
   List<Map<String, dynamic>> userNames = [];
+
+  bool isAgencyRequired = true;
+
+  /// toggle switch
+  void toggleAgencyRequired() {
+    isAgencyRequired = !isAgencyRequired;
+    notifyListeners();
+  }
 
   /// Method to set the due date
   void setDueDate(DateTime newDueDate) {
@@ -20,8 +29,13 @@ class TaskProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Fetch Users from Supabase
+  /// Method to set the start date
+  void setStartDate(DateTime newStartDate) {
+    startDate = newStartDate;
+    notifyListeners();
+  }
 
+  /// Fetch Users from Supabase
   Future<void> getUsers(String table) async {
     userNames.clear();
     // final response = await SupabaseController.instance.getUsers(table);

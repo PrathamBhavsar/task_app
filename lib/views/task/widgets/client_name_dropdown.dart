@@ -9,6 +9,10 @@ class ClientNameDropdown extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          'Client Name',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -21,10 +25,6 @@ class ClientNameDropdown extends StatelessWidget {
             Icon(Icons.arrow_drop_down_rounded)
           ],
         ),
-        Text(
-          'Client Name',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-        )
       ],
     );
   }
