@@ -74,6 +74,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 ),
                 AppPaddings.gapH(10),
                 _buildRowWithTextAndWidget(
+                  label: 'Designers',
+                  widget: OverlappingCircles(numberOfCircles: 3),
+                ),
+                AppPaddings.gapH(10),
+                _buildRowWithTextAndWidget(
                   label: 'Priority',
                   widget: CustomTag(
                     color: AppColors.green,
@@ -86,7 +91,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   Column(
                     children: [
                       _buildRowWithTextAndWidget(
-                        label: 'Assigned For',
+                        label: 'Agency',
                         widget: OverlappingCircles(numberOfCircles: 3),
                       ),
                       AppPaddings.gapH(10),
