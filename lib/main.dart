@@ -13,7 +13,7 @@ void main() async {
 
   await Supabase.initialize(
     url: AppSecrets.supabaseUrl,
-    anonKey: AppSecrets.supabasePublicKey,
+    anonKey: AppSecrets.supabaseSecureKey,
   );
 
   SharedPreferences prefs = await SharedPreferences.getInstance();
