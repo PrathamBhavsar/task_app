@@ -33,28 +33,6 @@ class TaskProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Toggle selection for multi-select fields
-  void toggleSelection(String field, int index) {
-    if (!selectedIndices.containsKey(field)) return;
-
-    if (selectedIndices[field]!.contains(index)) {
-      selectedIndices[field]!.remove(index);
-    } else {
-      selectedIndices[field]!.add(index);
-    }
-    logger.d(selectedIndices[field]);
-    notifyListeners();
-  }
-
-  /// Select only one for single-select fields
-  void selectSingle(String field, int index) {
-    if (!selectedIndices.containsKey(field)) return;
-
-    selectedIndices[field] = [index];
-    logger.d(selectedIndices[field]);
-    notifyListeners();
-  }
-
   /// fetches all the data
   Future<void> fetchAllData() async {
     final futures = [
