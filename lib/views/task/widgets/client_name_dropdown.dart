@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:task_app/constants/app_colors.dart';
 
 class ClientNameDropdown extends StatelessWidget {
-  const ClientNameDropdown({super.key});
-
+  const ClientNameDropdown({super.key, required this.name});
+  final String name;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -18,7 +18,7 @@ class ClientNameDropdown extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Client Name',
+              name,
               style: TextStyle(fontSize: 22, fontWeight: AppTexts.fW900),
             ),
             AppPaddings.gapW(8),

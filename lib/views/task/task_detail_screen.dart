@@ -47,7 +47,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               children: [
                 _buildRowWithIconAndWidget(
                   icon: Icons.person_2_rounded,
-                  widget: ClientNameDropdown(),
+                  widget: ClientNameDropdown(
+                    name: provider.currentClientName,
+                  ),
                 ),
                 AppPaddings.gapH(20),
                 CustomTextField(
