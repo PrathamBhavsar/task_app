@@ -5,8 +5,8 @@ import 'package:task_app/widgets/circle_icons.dart';
 import 'package:task_app/widgets/custom_tag.dart';
 
 class TaskTile extends StatelessWidget {
-  const TaskTile({super.key});
-
+  const TaskTile({super.key, required this.tasks});
+  final Map<String, dynamic> tasks;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,8 +22,8 @@ class TaskTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Dashboard Design for Admin',
+                Text(
+                  tasks['name'],
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: AppTexts.fW900,
@@ -39,12 +39,12 @@ class TaskTile extends StatelessWidget {
               children: [
                 CustomTag(
                   color: AppColors.green,
-                  text: 'Low',
+                  text: tasks['priority'],
                 ),
                 AppPaddings.gapW(8),
                 CustomTag(
                   color: AppColors.pink,
-                  text: 'Meeting',
+                  text: tasks['status'],
                 ),
               ],
             ),
@@ -59,8 +59,8 @@ class TaskTile extends StatelessWidget {
                       size: 22,
                     ),
                     AppPaddings.gapW(8),
-                    const Text(
-                      '14 Oct, 2024',
+                    Text(
+                      tasks['due_date'],
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: AppTexts.fW900,

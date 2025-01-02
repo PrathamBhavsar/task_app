@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:task_app/constants/app_colors.dart';
@@ -14,8 +16,43 @@ class TaskProvider extends ChangeNotifier {
   DateTime startDate = DateTime.now();
 
   Map<String, List<Map<String, dynamic>>> fetchedData = {};
+  Map<String, List<Map<String, dynamic>>> fetchedTasksData = {};
   bool isAgencyRequired = true;
   int selectedStatusIndex = 0;
+  Map<String, dynamic> selectedIndices = {
+    'assignedFor': [],
+    'designers': [],
+    'agency': [],
+    'status': 0,
+    'priority': 0,
+  };
+
+  void updateSelectedIndex(String field, dynamic index) {
+    selectedIndices[field] = index;
+    notifyListeners();
+  }
+
+  /// Toggle selection for multi-select fields
+  void toggleSelection(String field, int index) {
+    if (!selectedIndices.containsKey(field)) return;
+
+    if (selectedIndices[field]!.contains(index)) {
+      selectedIndices[field]!.remove(index);
+    } else {
+      selectedIndices[field]!.add(index);
+    }
+    logger.d(selectedIndices[field]);
+    notifyListeners();
+  }
+
+  /// Select only one for single-select fields
+  void selectSingle(String field, int index) {
+    if (!selectedIndices.containsKey(field)) return;
+
+    selectedIndices[field] = [index];
+    logger.d(selectedIndices[field]);
+    notifyListeners();
+  }
 
   /// fetches all the data
   Future<void> fetchAllData() async {
@@ -26,6 +63,21 @@ class TaskProvider extends ChangeNotifier {
       fetchData('users', filters: {'role': 'Agency'}, key: 'agencies'),
       fetchData('task_status', orderBy: 'order', ascending: true),
       fetchData('task_priority'),
+      fetchData('tasks',
+          filters: {'status': 'Pending'},
+          key: 'pending_tasks',
+          orderBy: 'created_at',
+          ascending: true),
+      fetchData('tasks',
+          filters: {'status': 'Measurement'},
+          key: 'shared_tasks',
+          orderBy: 'created_at',
+          ascending: true),
+      fetchData('tasks',
+          filters: {'status': 'Closed'},
+          key: 'completed_tasks',
+          orderBy: 'created_at',
+          ascending: true),
     ];
 
     // Await all futures in parallel

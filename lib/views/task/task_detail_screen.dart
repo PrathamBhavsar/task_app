@@ -75,30 +75,39 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     label: 'Status',
                     dataList: data['task_status'],
                     widget: CustomTag(
-                        color: provider
-                            .stringToColor(data['task_status']?[0]['color']),
-                        text: data['task_status']?[0]['name'] ?? ""),
+                        color: provider.stringToColor(data['task_status']
+                            ?[provider.selectedIndices['status']]['color']),
+                        text: data['task_status']
+                                ?[provider.selectedIndices['status']]['name'] ??
+                            ""),
+                    field: 'status',
                   ),
                   _buildDynamicRow(
                     context: context,
                     label: 'Assigned For',
                     dataList: data['salespersons'],
                     widget: const OverlappingCircles(numberOfCircles: 3),
+                    field: 'salespersons',
                   ),
                   _buildDynamicRow(
                     context: context,
                     label: 'Designers',
                     dataList: data['designers'],
                     widget: const OverlappingCircles(numberOfCircles: 3),
+                    field: 'designers',
                   ),
                   _buildDynamicRow(
                     context: context,
                     label: 'Priority',
                     dataList: data['task_priority'],
                     widget: CustomTag(
-                        color: provider
-                            .stringToColor(data['task_priority']?[0]['color']),
-                        text: data['task_priority']?[0]['name'] ?? ""),
+                        color: provider.stringToColor(data['task_priority']
+                            ?[provider.selectedIndices['priority']]['color']),
+                        text: data['task_priority']
+                                    ?[provider.selectedIndices['priority']]
+                                ['name'] ??
+                            ""),
+                    field: 'priority',
                   ),
                   _buildDivider(),
                   const AgencyRequiredSwitch(),
@@ -108,6 +117,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       label: 'Agency',
                       dataList: data['agencies'],
                       widget: const OverlappingCircles(numberOfCircles: 3),
+                      field: 'agency',
                     ),
                   _buildDivider(),
                   Align(
@@ -147,6 +157,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   Widget _buildDynamicRow({
     required BuildContext context,
     required String label,
+    required String field,
     required List<Map<String, dynamic>>? dataList,
     required Widget widget,
   }) {
@@ -156,7 +167,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         label: label,
         widget: widget,
         onTap: () =>
-            showClientsBottomSheet(context, dataList ?? [], label, 'name'),
+            showClientsBottomSheet(context, dataList ?? [], label, field),
       ),
     );
   }
