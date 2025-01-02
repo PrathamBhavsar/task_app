@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/controllers/supabase_controller.dart';
 
 class TaskProvider extends ChangeNotifier {
   static final TaskProvider instance = TaskProvider._privateConstructor();
 
-  TaskProvider._privateConstructor() {
-    _init();
-  }
+  TaskProvider._privateConstructor();
 
   final Logger logger = Logger();
 
@@ -16,16 +15,21 @@ class TaskProvider extends ChangeNotifier {
 
   Map<String, List<Map<String, dynamic>>> fetchedData = {};
   bool isAgencyRequired = true;
+  int selectedStatusIndex = 0;
 
-  /// Initialize and fetch all necessary data
-  void _init() async {
-    await fetchData('clients');
-    await fetchData('designers');
-    await fetchData('users',
-        filters: {'role': 'Salesperson'}, key: 'salespersons');
-    await fetchData('users', filters: {'role': 'Agency'}, key: 'agencies');
-    await fetchData('task_status', orderBy: 'order', ascending: true);
-    await fetchData('task_priority');
+  /// fetches all the data
+  Future<void> fetchAllData() async {
+    final futures = [
+      fetchData('clients'),
+      fetchData('designers'),
+      fetchData('users', filters: {'role': 'Salesperson'}, key: 'salespersons'),
+      fetchData('users', filters: {'role': 'Agency'}, key: 'agencies'),
+      fetchData('task_status', orderBy: 'order', ascending: true),
+      fetchData('task_priority'),
+    ];
+
+    // Await all futures in parallel
+    await Future.wait(futures);
   }
 
   /// Generic method to fetch data
@@ -67,15 +71,11 @@ class TaskProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Add selected users
-  void addSelectedUsers(
-    List<Map<String, dynamic>> users,
-    TextEditingController controller,
-    String key,
-  ) {
-    fetchedData[key] = [...users];
-    logger.i(fetchedData[key]);
-    controller.text = users.map((user) => user['name']).join(', ');
-    notifyListeners();
+  /// String to color
+  Color stringToColor(String? colorString) {
+    if (colorString == null || colorString.isEmpty) {
+      return AppColors.orange; // Default color if none provided
+    }
+    return Color(int.parse(colorString, radix: 16));
   }
 }

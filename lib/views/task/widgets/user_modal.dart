@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/widgets/custom_tag.dart';
 
 class ClientsBottomSheetWidget extends StatelessWidget {
@@ -33,8 +34,10 @@ class ClientsBottomSheetWidget extends StatelessWidget {
             runSpacing: 8.0,
             children: list.map((client) {
               final name = client[nameKey];
+              final Color color =
+                  TaskProvider.instance.stringToColor(client['color']);
               return CustomTag(
-                color: AppColors.orange,
+                color: color,
                 text: name,
               );
             }).toList(),

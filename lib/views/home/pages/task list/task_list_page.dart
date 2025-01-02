@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/router/app_router.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/complete_tasks/complete_tasks_list.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/in_review_tasks_list.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/todo_tasks_list.dart';
@@ -25,6 +27,9 @@ class _TaskListPageState extends State<TaskListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.pushNamed('taskDetails'),
+      ),
       appBar: AppBar(
         forceMaterialTransparency: true,
         title: const Text(

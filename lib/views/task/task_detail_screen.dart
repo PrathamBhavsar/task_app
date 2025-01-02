@@ -74,8 +74,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     context: context,
                     label: 'Status',
                     dataList: data['task_status'],
-                    widget:
-                        const CustomTag(color: AppColors.pink, text: 'Meeting'),
+                    widget: CustomTag(
+                        color: provider
+                            .stringToColor(data['task_status']?[0]['color']),
+                        text: data['task_status']?[0]['name'] ?? ""),
                   ),
                   _buildDynamicRow(
                     context: context,
@@ -93,8 +95,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     context: context,
                     label: 'Priority',
                     dataList: data['task_priority'],
-                    widget:
-                        const CustomTag(color: AppColors.green, text: 'Low'),
+                    widget: CustomTag(
+                        color: provider
+                            .stringToColor(data['task_priority']?[0]['color']),
+                        text: data['task_priority']?[0]['name'] ?? ""),
                   ),
                   _buildDivider(),
                   const AgencyRequiredSwitch(),
