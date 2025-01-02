@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/controllers/supabase_controller.dart';
@@ -63,6 +64,7 @@ class TaskProvider extends ChangeNotifier {
       fetchData('users', filters: {'role': 'Agency'}, key: 'agencies'),
       fetchData('task_status', orderBy: 'order', ascending: true),
       fetchData('task_priority'),
+      fetchData('task_attachments'),
       fetchData('tasks',
           filters: {'status': 'Pending'},
           key: 'pending_tasks',
@@ -129,5 +131,24 @@ class TaskProvider extends ChangeNotifier {
       return AppColors.orange; // Default color if none provided
     }
     return Color(int.parse(colorString, radix: 16));
+  }
+
+  /// formats date
+  String formatDate(dynamic date) {
+    DateTime dateTime;
+
+    if (date is String) {
+      try {
+        dateTime = DateTime.parse(date);
+      } catch (e) {
+        dateTime = DateTime.now();
+      }
+    } else if (date is DateTime) {
+      dateTime = date;
+    } else {
+      throw ArgumentError('Invalid argument type');
+    }
+
+    return DateFormat('d MMM, yyyy').format(dateTime);
   }
 }

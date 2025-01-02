@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'package:task_app/widgets/circle_icons.dart';
 import 'package:task_app/widgets/custom_tag.dart';
@@ -60,7 +61,7 @@ class TaskTile extends StatelessWidget {
                     ),
                     AppPaddings.gapW(8),
                     Text(
-                      tasks['due_date'],
+                      TaskProvider.instance.formatDate(tasks['due_date']),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: AppTexts.fW900,

@@ -10,6 +10,10 @@ class AppColors {
   static const Color orange = Color(0xfff6bb54);
   static const Color pink = Color(0xffe8a4fe);
 
+  static const Color pdfRed = Color(0xfffdeeee);
+  static const Color jpgBlue = Color(0xffe6effa);
+  static const Color defaultColor = Color(0xfff0f0f0);
+
   // Create a MaterialColor from the primary color
   static final MaterialColor primarySwatch = createMaterialColor(primary);
 

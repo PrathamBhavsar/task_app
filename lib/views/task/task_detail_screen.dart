@@ -5,6 +5,7 @@ import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'package:task_app/views/task/methods/show_bottom_modal.dart';
 import 'package:task_app/views/task/widgets/agency_required_switch.dart';
+import 'package:task_app/views/task/widgets/attachment_list.dart';
 import 'package:task_app/views/task/widgets/client_name_dropdown.dart';
 import 'package:task_app/views/task/widgets/due_date_picker.dart';
 import 'package:task_app/widgets/custom_tag.dart';
@@ -48,84 +49,87 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
             return Padding(
               padding: AppPaddings.appPadding,
-              child: ListView(
-                children: [
-                  _buildRowWithIconAndWidget(
-                    icon: Icons.person_2_rounded,
-                    widget: _dropdownWidget(
-                      context: context,
-                      dataList: data['clients'],
-                      title: 'Clients',
-                      fieldName: 'name',
-                      defaultText: "No Clients Yet",
-                    ),
+              child: ListView(children: [
+                _buildRowWithIconAndWidget(
+                  icon: Icons.person_2_rounded,
+                  widget: _dropdownWidget(
+                    context: context,
+                    dataList: data['clients'],
+                    title: 'Clients',
+                    fieldName: 'name',
+                    defaultText: "No Clients Yet",
                   ),
-                  AppPaddings.gapH(20),
-                  CustomTextField(
-                    controller: nameController,
-                    focusNode: nameFocusNode,
-                    labelTxt: 'Task Name',
-                    hintTxt: 'Task Name',
-                  ),
-                  AppPaddings.gapH(20),
-                  DueDatePicker(isNewTask: false),
-                  _buildDivider(),
+                ),
+                AppPaddings.gapH(20),
+                CustomTextField(
+                  controller: nameController,
+                  focusNode: nameFocusNode,
+                  labelTxt: 'Task Name',
+                  hintTxt: 'Task Name',
+                ),
+                AppPaddings.gapH(20),
+                DueDatePicker(isNewTask: false),
+                _buildDivider(),
+                _buildDynamicRow(
+                  context: context,
+                  label: 'Status',
+                  dataList: data['task_status'],
+                  widget: CustomTag(
+                      color: provider.stringToColor(data['task_status']
+                          ?[provider.selectedIndices['status']]['color']),
+                      text: data['task_status']
+                              ?[provider.selectedIndices['status']]['name'] ??
+                          ""),
+                  field: 'status',
+                ),
+                _buildDynamicRow(
+                  context: context,
+                  label: 'Assigned For',
+                  dataList: data['salespersons'],
+                  widget: const OverlappingCircles(numberOfCircles: 3),
+                  field: 'salespersons',
+                ),
+                _buildDynamicRow(
+                  context: context,
+                  label: 'Designers',
+                  dataList: data['designers'],
+                  widget: const OverlappingCircles(numberOfCircles: 3),
+                  field: 'designers',
+                ),
+                _buildDynamicRow(
+                  context: context,
+                  label: 'Priority',
+                  dataList: data['task_priority'],
+                  widget: CustomTag(
+                      color: provider.stringToColor(data['task_priority']
+                          ?[provider.selectedIndices['priority']]['color']),
+                      text: data['task_priority']
+                              ?[provider.selectedIndices['priority']]['name'] ??
+                          ""),
+                  field: 'priority',
+                ),
+                _buildDivider(),
+                const AgencyRequiredSwitch(),
+                if (provider.isAgencyRequired)
                   _buildDynamicRow(
                     context: context,
-                    label: 'Status',
-                    dataList: data['task_status'],
-                    widget: CustomTag(
-                        color: provider.stringToColor(data['task_status']
-                            ?[provider.selectedIndices['status']]['color']),
-                        text: data['task_status']
-                                ?[provider.selectedIndices['status']]['name'] ??
-                            ""),
-                    field: 'status',
-                  ),
-                  _buildDynamicRow(
-                    context: context,
-                    label: 'Assigned For',
-                    dataList: data['salespersons'],
+                    label: 'Agency',
+                    dataList: data['agencies'],
                     widget: const OverlappingCircles(numberOfCircles: 3),
-                    field: 'salespersons',
+                    field: 'agency',
                   ),
-                  _buildDynamicRow(
-                    context: context,
-                    label: 'Designers',
-                    dataList: data['designers'],
-                    widget: const OverlappingCircles(numberOfCircles: 3),
-                    field: 'designers',
-                  ),
-                  _buildDynamicRow(
-                    context: context,
-                    label: 'Priority',
-                    dataList: data['task_priority'],
-                    widget: CustomTag(
-                        color: provider.stringToColor(data['task_priority']
-                            ?[provider.selectedIndices['priority']]['color']),
-                        text: data['task_priority']
-                                    ?[provider.selectedIndices['priority']]
-                                ['name'] ??
-                            ""),
-                    field: 'priority',
-                  ),
-                  _buildDivider(),
-                  const AgencyRequiredSwitch(),
-                  if (provider.isAgencyRequired)
-                    _buildDynamicRow(
-                      context: context,
-                      label: 'Agency',
-                      dataList: data['agencies'],
-                      widget: const OverlappingCircles(numberOfCircles: 3),
-                      field: 'agency',
-                    ),
-                  _buildDivider(),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Attachments', style: AppTexts.headingStyle),
-                  ),
-                ],
-              ),
+                //   if (data['task_attachments'] != null &&
+                //       data['task_attachments']!.isNotEmpty)
+                //     _buildDynamicRow(
+                //       context: context,
+                //       label: 'Attachments',
+                //       dataList: data['task_attachments'],
+                //       widget: SizedBox.shrink(),
+                //       field: 'attachment',
+                //     ),
+                //   AttachmentsList(
+                //       attachmentsList: data['task_attachments'] ?? []),
+              ]),
             );
           },
         ),

@@ -89,7 +89,7 @@ class DueDatePicker extends StatelessWidget {
                   Icon(Icons.calendar_month_rounded),
                   AppPaddings.gapW(5),
                   Text(
-                    _formatDate(date),
+                    provider.formatDate(date),
                     style: TextStyle(fontSize: 20, fontWeight: AppTexts.fW900),
                   ),
                 ],
@@ -99,9 +99,5 @@ class DueDatePicker extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return DateFormat('d MMM, yyyy').format(date);
   }
 }

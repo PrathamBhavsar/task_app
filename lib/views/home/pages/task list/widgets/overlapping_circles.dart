@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'package:task_app/constants/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'dart:math';
+
+import 'package:task_app/constants/app_colors.dart';
 
 class OverlappingCircles extends StatelessWidget {
   final int numberOfCircles;
@@ -42,7 +46,7 @@ class OverlappingCircles extends StatelessWidget {
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
-                          fontWeight: AppTexts.fW900,
+                          fontWeight: FontWeight.w900,
                         ),
                       )
                     : null,
