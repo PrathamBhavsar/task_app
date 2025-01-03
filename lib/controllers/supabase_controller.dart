@@ -1,5 +1,8 @@
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:task_app/constants/enums.dart';
+import 'package:task_app/controllers/auth_controller.dart';
+import 'package:task_app/models/user.dart';
 
 class SupabaseController {
   static final SupabaseController instance =
@@ -22,15 +25,34 @@ class SupabaseController {
     return null;
   }
 
+  /// Get all tasks
+  Future<Map<String, dynamic>> getAllTasks() async {
+    return await _executeQuery(() async {
+          final UserModel? user =
+              await AuthController.instance.getLoggedInUser();
+          final response = await supabase.rpc(
+            user!.role == UserRole.salesperson.role
+                ? 'get_sales_tasks'
+                : 'get_agency_tasks',
+            params: {'_user_id': user.id},
+          ).single();
+
+          // Cast the response as Map<String, dynamic> before returning
+          return response;
+        }) ??
+        {};
+  }
+
   /// Get all rows
   Future<List<Map<String, dynamic>>> getRows({
     required String table,
     Map<String, dynamic>? filters,
+    String? select,
     String? orderBy,
     bool ascending = true,
   }) async {
     return await _executeQuery(() async {
-          var query = supabase.from(table).select();
+          var query = supabase.from(table).select(select ?? "");
 
           filters?.forEach((key, value) {
             query = query.eq(key, value);

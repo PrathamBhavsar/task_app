@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/controllers/auth_controller.dart';
+import 'package:task_app/providers/auth_provider.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/router/app_router.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/complete_tasks/complete_tasks_list.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/in_review_tasks_list.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/todo_tasks_list.dart';
+import 'package:task_app/views/home/pages/task%20list/widgets/shared_tasks/shared_tasks_list.dart';
+import 'package:task_app/views/home/pages/task%20list/widgets/pending_tasks/pending_tasks_list.dart';
 import 'package:task_app/views/home/pages/widgets/chip_label_widget.dart';
 import 'package:task_app/widgets/circle_icons.dart';
 
@@ -22,8 +24,6 @@ class _TaskListPageState extends State<TaskListPage> {
   Widget build(BuildContext context) {
     return Consumer<TaskProvider>(
       builder: (BuildContext context, TaskProvider provider, Widget? child) {
-        int _selectedIndex = 0;
-
         final pendingTasksList = provider.fetchedData['pending_tasks'];
         final sharedTasksList = provider.fetchedData['shared_tasks'];
         final completedTasksList = provider.fetchedData['completed_tasks'];
@@ -61,7 +61,9 @@ class _TaskListPageState extends State<TaskListPage> {
                 padding: const EdgeInsets.only(right: 10),
                 child: CircleIcons(
                   icon: Icons.notifications_none_rounded,
-                  onTap: () {},
+                  onTap: () {
+                    AuthController.instance.logout(context);
+                  },
                 ),
               ),
             ],
@@ -83,24 +85,22 @@ class _TaskListPageState extends State<TaskListPage> {
                           label: ChipLabelWidget(
                             tabs: _tabs,
                             index: index,
-                            selectedIndex: _selectedIndex,
+                            selectedIndex: provider.selectedListIndex,
                           ),
-                          selected: _selectedIndex == index,
+                          selected: provider.selectedListIndex == index,
                           selectedColor: AppColors.primary,
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                             side: BorderSide(
-                              color: _selectedIndex == index
+                              color: provider.selectedListIndex == index
                                   ? Colors.transparent
                                   : AppColors.primary,
                               width: 2,
                             ),
                           ),
                           onSelected: (bool selected) {
-                            setState(() {
-                              _selectedIndex = index;
-                            });
+                            provider.setSelectedListIndex(index);
                           },
                         ),
                       ),
@@ -111,7 +111,7 @@ class _TaskListPageState extends State<TaskListPage> {
             ),
           ),
           body: IndexedStack(
-            index: _selectedIndex,
+            index: provider.selectedListIndex,
             children: [
               PendingTasksList(
                 pendingTasksList: pendingTasksList ?? [],
