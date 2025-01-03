@@ -28,7 +28,7 @@ class ClientNameDropdown extends StatelessWidget {
             children: [
               Text(
                 name,
-                style: TextStyle(fontSize: 22, fontWeight: AppTexts.fW900),
+                style: TextStyle(fontSize: 22, fontWeight: AppTexts.fW700),
               ),
               AppPaddings.gapW(8),
               Icon(Icons.arrow_drop_down_rounded)

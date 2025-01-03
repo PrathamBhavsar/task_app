@@ -28,7 +28,7 @@ class NotificationListTile extends StatelessWidget {
                   text,
                   style: TextStyle(
                     fontSize: 22,
-                    fontWeight: AppTexts.fW900,
+                    fontWeight: AppTexts.fW700,
                   ),
                 ),
               ],
@@ -45,7 +45,7 @@ class NotificationListTile extends StatelessWidget {
                   TaskProvider.instance.formatDate(date),
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: AppTexts.fW900,
+                    fontWeight: FontWeight.w600,
                   ),
                 )
               ],

@@ -44,9 +44,9 @@ class AppPaddings {
 }
 
 class AppTexts {
-  static const fW900 = FontWeight.w800;
+  static const fW700 = FontWeight.w700;
   static var borderRadius = BorderRadius.circular(15);
   static var borderWidth = Border.all(width: 2);
 
-  static TextStyle headingStyle = TextStyle(fontSize: 22, fontWeight: fW900);
+  static TextStyle headingStyle = TextStyle(fontSize: 22, fontWeight: fW700);
 }

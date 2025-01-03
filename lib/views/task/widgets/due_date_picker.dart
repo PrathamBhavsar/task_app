@@ -81,7 +81,7 @@ class DueDatePicker extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: TextStyle(fontSize: 16, fontWeight: AppTexts.fW900),
+                style: TextStyle(fontSize: 16, fontWeight: AppTexts.fW700),
               ),
               AppPaddings.gapH(10),
               Row(
@@ -90,7 +90,7 @@ class DueDatePicker extends StatelessWidget {
                   AppPaddings.gapW(5),
                   Text(
                     provider.formatDate(date),
-                    style: TextStyle(fontSize: 20, fontWeight: AppTexts.fW900),
+                    style: TextStyle(fontSize: 20, fontWeight: AppTexts.fW700),
                   ),
                 ],
               ),

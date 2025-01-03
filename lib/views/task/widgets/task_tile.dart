@@ -27,7 +27,7 @@ class TaskTile extends StatelessWidget {
                   tasks['name'],
                   style: TextStyle(
                     fontSize: 22,
-                    fontWeight: AppTexts.fW900,
+                    fontWeight: AppTexts.fW700,
                   ),
                 ),
                 CircleIcons(
@@ -64,7 +64,7 @@ class TaskTile extends StatelessWidget {
                       TaskProvider.instance.formatDate(tasks['due_date']),
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight: AppTexts.fW900,
+                        fontWeight: AppTexts.fW700,
                       ),
                     )
                   ],

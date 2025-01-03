@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/views/auth/widgets/navigation_text.dart';
 import 'package:task_app/widgets/action_button.dart';
 import 'package:task_app/widgets/custom_text_feild.dart';
@@ -52,49 +53,66 @@ class _LoginScreenState extends State<LoginScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        body: Padding(
-          padding: AppPaddings.appPadding,
-          child: Column(
-            children: [
-              AppPaddings.gapH(200),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Log into your Account!',
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: AppTexts.fW900,
-                  ),
+        body: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height,
+            ),
+            child: IntrinsicHeight(
+              child: Padding(
+                padding: AppPaddings.appPadding,
+                child: Column(
+                  children: [
+                    AppPaddings.gapH(200),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Log into your Account!',
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: AppTexts.fW700,
+                        ),
+                      ),
+                    ),
+                    AppPaddings.gapH(20),
+                    _buildTextField(
+                      controller: emailController,
+                      focusNode: emailFocusNode,
+                      label: "Email",
+                      hint: "Enter your email",
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    AppPaddings.gapH(10),
+                    _buildTextField(
+                      controller: passController,
+                      focusNode: passFocusNode,
+                      label: "Password",
+                      hint: "Enter your password",
+                      keyboardType: TextInputType.visiblePassword,
+                      isPassword: true,
+                    ),
+                    Expanded(
+                      child: SizedBox(),
+                    ),
+                    const NavigationText(isLogin: false),
+                    AppPaddings.gapH(10),
+                    ActionBtn(
+                      btnTxt: 'Log in',
+                      onPress: () async {
+                        await AuthController.instance.login(
+                          context: context,
+                          email: emailController.text,
+                          password: passController.text,
+                        );
+                      },
+                      fontColor: AppColors.primary,
+                      backgroundColor: AppColors.orange,
+                    ),
+                    AppPaddings.gapH(10),
+                  ],
                 ),
               ),
-              AppPaddings.gapH(20),
-              _buildTextField(
-                controller: emailController,
-                focusNode: emailFocusNode,
-                label: "Email",
-                hint: "Enter your email",
-                keyboardType: TextInputType.emailAddress,
-              ),
-              AppPaddings.gapH(10),
-              _buildTextField(
-                controller: passController,
-                focusNode: passFocusNode,
-                label: "Password",
-                hint: "Enter your password",
-                keyboardType: TextInputType.visiblePassword,
-                isPassword: true,
-              ),
-              const Spacer(),
-              const NavigationText(isLogin: false),
-              AppPaddings.gapH(10),
-              ActionBtn(
-                btnTxt: 'Log in',
-                onPress: () {},
-                fontColor: AppColors.primary,
-                backgroundColor: AppColors.orange,
-              ),
-              AppPaddings.gapH(10),
-            ],
+            ),
           ),
         ),
       ),

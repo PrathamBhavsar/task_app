@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:task_app/constants/enums.dart';
+import 'package:task_app/controllers/supabase_controller.dart';
 
 class AuthProvider extends ChangeNotifier {
   static final AuthProvider instance = AuthProvider._privateConstructor();
@@ -9,7 +10,7 @@ class AuthProvider extends ChangeNotifier {
   var logger = Logger();
 
   bool isVisible = false;
-  UserRoles currentUserRole = UserRoles.salesperson;
+  UserRole currentUserRole = UserRole.salesperson;
 
   /// Toggle visibility
   void toggleVisibility() {
@@ -18,7 +19,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   /// Toggle user roles
-  void toggleUserRole(UserRoles userRole) {
+  void toggleUserRole(UserRole userRole) {
     currentUserRole = userRole;
     notifyListeners();
   }

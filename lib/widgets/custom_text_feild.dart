@@ -47,7 +47,7 @@ class CustomTextField extends StatelessWidget {
                   LengthLimitingTextInputFormatter(10),
                 ]
               : null,
-          style: _textStyle(AppColors.primary, 18, AppTexts.fW900),
+          style: _textStyle(AppColors.primary, 18, AppTexts.fW700),
           textAlignVertical: TextAlignVertical.center,
           decoration: _buildInputDecoration(provider),
         );

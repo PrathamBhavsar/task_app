@@ -9,6 +9,7 @@ class SupabaseController {
   final supabase = Supabase.instance.client;
   final Logger log = Logger();
 
+  /// Query Executing function
   Future<T?> _executeQuery<T>(Future<T> Function() queryFunction) async {
     try {
       final result = await queryFunction();
@@ -21,6 +22,7 @@ class SupabaseController {
     return null;
   }
 
+  /// Get all rows
   Future<List<Map<String, dynamic>>> getRows({
     required String table,
     Map<String, dynamic>? filters,

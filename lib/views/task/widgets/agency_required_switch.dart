@@ -15,7 +15,7 @@ class AgencyRequiredSwitch extends StatelessWidget {
         children: [
           Text(
             'Is Agency Required?',
-            style: TextStyle(fontSize: 22, fontWeight: AppTexts.fW900),
+            style: TextStyle(fontSize: 22, fontWeight: AppTexts.fW700),
           ),
           Consumer<TaskProvider>(
             builder:
