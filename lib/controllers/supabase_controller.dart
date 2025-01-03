@@ -25,6 +25,17 @@ class SupabaseController {
     return null;
   }
 
+  Future<Map<String, dynamic>> getTaskById(String dealNo) async {
+    return await _executeQuery(() async {
+          final response = await supabase.rpc(
+            'get_task_by_deal_no',
+            params: {'deal_no_input': dealNo},
+          ).single();
+          return response;
+        }) ??
+        {};
+  }
+
   /// Get all tasks
   Future<Map<String, dynamic>> getAllTasks() async {
     return await _executeQuery(() async {
@@ -37,7 +48,6 @@ class SupabaseController {
             params: {'_user_id': user.id},
           ).single();
 
-          // Cast the response as Map<String, dynamic> before returning
           return response;
         }) ??
         {};
@@ -63,7 +73,6 @@ class SupabaseController {
           // }
 
           final response = await query;
-          log.i('Fetched from $table: $response');
           return (response as List<dynamic>).cast<Map<String, dynamic>>();
         }) ??
         [];

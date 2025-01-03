@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/constants/enums.dart';
+import 'package:task_app/constants/supabase_keys.dart';
+import 'package:task_app/controllers/supabase_controller.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'package:task_app/views/task/methods/show_bottom_modal.dart';
@@ -12,7 +16,14 @@ import 'package:task_app/widgets/custom_tag.dart';
 import 'package:task_app/widgets/custom_text_feild.dart';
 
 class TaskDetailScreen extends StatefulWidget {
-  const TaskDetailScreen({super.key});
+  final bool isNewTask;
+  final String dealNo;
+
+  const TaskDetailScreen({
+    Key? key,
+    required this.isNewTask,
+    required this.dealNo,
+  }) : super(key: key);
 
   @override
   State<TaskDetailScreen> createState() => _TaskDetailScreenState();
@@ -22,6 +33,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   final nameController = TextEditingController();
   final assigneeController = TextEditingController();
   final nameFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    TaskProvider.instance.getTaskByDealNo(widget.dealNo);
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -73,11 +90,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 _buildDynamicRow(
                   context: context,
                   label: 'Status',
-                  dataList: data['task_status'],
+                  dataList: data[SupabaseKeys.taskStatusTable],
                   widget: CustomTag(
-                      color: provider.stringToColor(data['task_status']
-                          ?[provider.selectedIndices['status']]['color']),
-                      text: data['task_status']
+                      color: provider.stringToColor(
+                          data[SupabaseKeys.taskStatusTable]
+                              ?[provider.selectedIndices['status']]['color']),
+                      text: data[SupabaseKeys.taskStatusTable]
                               ?[provider.selectedIndices['status']]['name'] ??
                           ""),
                   field: 'status',
@@ -99,11 +117,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 _buildDynamicRow(
                   context: context,
                   label: 'Priority',
-                  dataList: data['task_priority'],
+                  dataList: data[SupabaseKeys.taskPriorityTable],
                   widget: CustomTag(
-                      color: provider.stringToColor(data['task_priority']
-                          ?[provider.selectedIndices['priority']]['color']),
-                      text: data['task_priority']
+                      color: provider.stringToColor(
+                          data[SupabaseKeys.taskPriorityTable]
+                              ?[provider.selectedIndices['priority']]['color']),
+                      text: data[SupabaseKeys.taskPriorityTable]
                               ?[provider.selectedIndices['priority']]['name'] ??
                           ""),
                   field: 'priority',
@@ -113,7 +132,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 if (provider.isAgencyRequired)
                   _buildDynamicRow(
                     context: context,
-                    label: 'Agency',
+                    label: UserRole.agency.role,
                     dataList: data['agencies'],
                     widget: const OverlappingCircles(numberOfCircles: 3),
                     field: 'agency',

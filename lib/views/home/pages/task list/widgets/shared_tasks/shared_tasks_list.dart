@@ -20,7 +20,7 @@ class SharedTasksList extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: TaskTile(
-              tasks: sharedTasksList[index],
+              task: sharedTasksList[index],
             ),
           );
         },

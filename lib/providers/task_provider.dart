@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/constants/enums.dart';
+import 'package:task_app/constants/supabase_keys.dart';
 import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/controllers/supabase_controller.dart';
 import 'package:task_app/models/user.dart';
@@ -30,6 +31,9 @@ class TaskProvider extends ChangeNotifier {
     'status': 0,
     'priority': 0,
   };
+  Future<void> getTaskByDealNo(String dealNo) async {
+    final data = await SupabaseController.instance.getTaskById(dealNo);
+  }
 
   /// updates list index
   void setSelectedListIndex(int index) {
@@ -43,33 +47,18 @@ class TaskProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  ///fetches all the tasks
-  Future<void> fetchAllTasks() async {
-    final futures = [
-      fetchData('clients'),
-      fetchData('designers'),
-      fetchData('users', filters: {'role': 'Salesperson'}, key: 'salespersons'),
-      fetchData('users', filters: {'role': 'Agency'}, key: 'agencies'),
-      fetchData('task_status', orderBy: 'order', ascending: true),
-      fetchData('task_priority'),
-    ];
-
-    // Await all futures in parallel
-    await Future.wait(futures);
-
-    logger.d(fetchedData);
-    notifyListeners();
-  }
-
   /// fetches all the data
   Future<void> fetchAllData() async {
     final futures = [
-      fetchData('clients'),
-      fetchData('designers'),
-      fetchData('users', filters: {'role': 'Salesperson'}, key: 'salespersons'),
-      fetchData('users', filters: {'role': 'Agency'}, key: 'agencies'),
-      fetchData('task_status', orderBy: 'order', ascending: true),
-      fetchData('task_priority'),
+      fetchData(SupabaseKeys.clientsTable),
+      fetchData(SupabaseKeys.designersTable),
+      fetchData(SupabaseKeys.usersTable,
+          filters: {'role': UserRole.salesperson.role}, key: 'salespersons'),
+      fetchData(SupabaseKeys.usersTable,
+          filters: {'role': UserRole.agency.role}, key: 'agencies'),
+      fetchData(SupabaseKeys.taskStatusTable,
+          orderBy: 'order', ascending: true),
+      fetchData(SupabaseKeys.taskPriorityTable),
     ];
 
     // Await all futures in parallel
@@ -114,7 +103,6 @@ class TaskProvider extends ChangeNotifier {
 
     final storageKey = key ?? table;
     fetchedData[storageKey] = data;
-    logger.d(fetchedData);
     notifyListeners();
   }
 

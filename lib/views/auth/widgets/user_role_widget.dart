@@ -24,7 +24,7 @@ class UserRoleWidget extends StatelessWidget {
               ),
               AppPaddings.gapW(10),
               UserRoleTile(
-                text: 'Agency',
+                text: UserRole.agency.role,
                 onTap: () => provider.toggleUserRole(UserRole.agency),
                 isSelected: provider.currentUserRole == UserRole.agency,
               ),

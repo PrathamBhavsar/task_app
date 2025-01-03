@@ -48,7 +48,7 @@ class _TaskListPageState extends State<TaskListPage> {
 
         return Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: () => context.pushNamed('taskDetails'),
+            onPressed: () => context.push('/taskDetails?isNewTask=true'),
           ),
           appBar: AppBar(
             forceMaterialTransparency: true,

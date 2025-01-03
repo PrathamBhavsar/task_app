@@ -22,7 +22,7 @@ class CompleteTasksList extends StatelessWidget {
           return Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: TaskTile(
-              tasks: completedTasksList[index],
+              task: completedTasksList[index],
             ),
           );
         },

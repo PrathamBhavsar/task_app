@@ -31,8 +31,15 @@ abstract class MyRouter {
       GoRoute(
         path: '/taskDetails',
         name: 'taskDetails',
-        builder: (BuildContext context, GoRouterState state) =>
-            const TaskDetailScreen(),
+        builder: (BuildContext context, GoRouterState state) {
+          final isNewTask = state.uri.queryParameters['isNewTask'] == 'true';
+          final dealNo = state.uri.queryParameters['dealNo'] ?? '';
+
+          return TaskDetailScreen(
+            isNewTask: isNewTask,
+            dealNo: dealNo,
+          );
+        },
       ),
       GoRoute(
         path: '/taskList',
