@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:task_app/constants/enums.dart';
-import 'package:task_app/controllers/supabase_controller.dart';
 
 class AuthProvider extends ChangeNotifier {
   static final AuthProvider instance = AuthProvider._privateConstructor();

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/constants/enums.dart';
 import 'package:task_app/constants/supabase_keys.dart';
-import 'package:task_app/controllers/supabase_controller.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'package:task_app/views/task/methods/show_bottom_modal.dart';
 import 'package:task_app/views/task/widgets/agency_required_switch.dart';
-import 'package:task_app/views/task/widgets/attachment_list.dart';
 import 'package:task_app/views/task/widgets/client_name_dropdown.dart';
 import 'package:task_app/views/task/widgets/due_date_picker.dart';
+import 'package:task_app/widgets/action_button.dart';
 import 'package:task_app/widgets/custom_tag.dart';
 import 'package:task_app/widgets/custom_text_feild.dart';
 
@@ -30,21 +28,30 @@ class TaskDetailScreen extends StatefulWidget {
 }
 
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
-  final nameController = TextEditingController();
+  final nameController = TextEditingController(
+      text: TaskProvider.instance.fetchedTaskData['name'] ?? "");
+  final remarkController = TextEditingController(
+      text: TaskProvider.instance.fetchedTaskData['name'] ?? "");
   final assigneeController = TextEditingController();
   final nameFocusNode = FocusNode();
+  final remarkFocusNode = FocusNode();
 
   @override
   void initState() {
-    TaskProvider.instance.getTaskByDealNo(widget.dealNo);
+    if (!widget.isNewTask) {
+      TaskProvider.instance.getTaskByDealNo(widget.dealNo);
+    }
     super.initState();
   }
 
   @override
   void dispose() {
     nameController.dispose();
+    remarkController.dispose();
     assigneeController.dispose();
     nameFocusNode.dispose();
+    remarkFocusNode.dispose();
+    TaskProvider.instance.resetTaskIndexes();
     super.dispose();
   }
 
@@ -73,7 +80,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     context: context,
                     dataList: data['clients'],
                     title: 'Clients',
-                    fieldName: 'name',
+                    index: provider.selectedIndices['client'],
+                    name: 'name',
+                    field: 'client',
                     defaultText: "No Clients Yet",
                   ),
                 ),
@@ -83,6 +92,13 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   focusNode: nameFocusNode,
                   labelTxt: 'Task Name',
                   hintTxt: 'Task Name',
+                ),
+                AppPaddings.gapH(20),
+                CustomTextField(
+                  controller: remarkController,
+                  focusNode: remarkFocusNode,
+                  labelTxt: 'Remarks',
+                  hintTxt: 'Remarks',
                 ),
                 AppPaddings.gapH(20),
                 DueDatePicker(isNewTask: false),
@@ -152,6 +168,66 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             );
           },
         ),
+        bottomSheet: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+          child: ActionBtn(
+            btnTxt: widget.isNewTask ? 'Create Task' : 'Edit Task',
+            onPress: () async {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: BorderSide(width: 2),
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.isNewTask ? 'Create Task?' : 'Edit Task?',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: AppTexts.fW700,
+                          ),
+                        ),
+                        AppPaddings.gapH(20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: ActionBtn(
+                                btnTxt: 'Cancel',
+                                onPress: () => Navigator.of(context).pop(),
+                                fontColor: AppColors.primary,
+                                backgroundColor: AppColors.pink,
+                              ),
+                            ),
+                            AppPaddings.gapW(10),
+                            Expanded(
+                              child: ActionBtn(
+                                btnTxt: widget.isNewTask ? 'Create' : 'Edit',
+                                onPress: () {
+                                  Navigator.of(context).pop();
+                                },
+                                fontColor: AppColors.primary,
+                                backgroundColor: AppColors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+              ;
+              ;
+            },
+            fontColor: AppColors.primary,
+            backgroundColor: AppColors.orange,
+          ),
+        ),
       ),
     );
   }
@@ -198,16 +274,17 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   Widget _dropdownWidget({
     required BuildContext context,
     required List<Map<String, dynamic>>? dataList,
+    required int index,
     required String title,
-    required String fieldName,
+    required String name,
+    required String field,
     required String defaultText,
   }) {
     return ClientNameDropdown(
-      name:
-          dataList?.isNotEmpty == true ? dataList![0][fieldName] : defaultText,
+      name: dataList?.isNotEmpty == true ? dataList![index][name] : defaultText,
       clientList: dataList ?? [],
       onTap: () =>
-          showClientsBottomSheet(context, dataList ?? [], title, fieldName),
+          showClientsBottomSheet(context, dataList ?? [], title, field),
     );
   }
 

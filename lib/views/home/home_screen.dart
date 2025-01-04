@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/dashboard/dashboard_page.dart';
 import 'package:task_app/views/home/pages/task%20list/task_list_page.dart';

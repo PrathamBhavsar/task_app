@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/widgets/custom_tag.dart';
 
 class ClientNameDropdown extends StatelessWidget {
   const ClientNameDropdown(

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/views/task/widgets/task_tile.dart';
 
 class PendingTasksList extends StatelessWidget {
