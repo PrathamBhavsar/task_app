@@ -28,10 +28,9 @@ class TaskDetailScreen extends StatefulWidget {
 }
 
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
-  final nameController = TextEditingController(
-      text: TaskProvider.instance.fetchedTaskData['name'] ?? "");
-  final remarkController = TextEditingController(
-      text: TaskProvider.instance.fetchedTaskData['name'] ?? "");
+  final nameController = TextEditingController();
+  final remarkController = TextEditingController();
+
   final assigneeController = TextEditingController();
   final nameFocusNode = FocusNode();
   final remarkFocusNode = FocusNode();
@@ -39,7 +38,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   @override
   void initState() {
     if (!widget.isNewTask) {
-      TaskProvider.instance.getTaskByDealNo(widget.dealNo);
+      TaskProvider.instance.getTaskByDealNo(widget.dealNo).then((_) {
+        setState(() {
+          nameController.text =
+              TaskProvider.instance.fetchedTaskData['name'] ?? '';
+          remarkController.text =
+              TaskProvider.instance.fetchedTaskData['remarks'] ?? '';
+        });
+      });
     }
     super.initState();
   }
@@ -60,6 +66,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           forceMaterialTransparency: true,
           title: const Text(
@@ -164,6 +171,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 //     ),
                 //   AttachmentsList(
                 //       attachmentsList: data['task_attachments'] ?? []),
+
+                AppPaddings.gapH(70),
               ]),
             );
           },

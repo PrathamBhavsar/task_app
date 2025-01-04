@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:task_app/constants/enums.dart';
 import 'package:task_app/constants/supabase_keys.dart';
 import 'package:task_app/extensions/color_extension.dart';
 import 'package:task_app/models/user.dart';
@@ -21,7 +22,7 @@ class AuthController {
     required String name,
     required String email,
     required String password,
-    required String role,
+    required UserRole role,
   }) async {
     try {
       final AuthResponse res = await supabase.auth.signUp(

@@ -42,7 +42,7 @@ class SupabaseController {
           final UserModel? user =
               await AuthController.instance.getLoggedInUser();
           final response = await supabase.rpc(
-            user!.role == UserRole.salesperson.role
+            user!.role == UserRole.salesperson
                 ? 'get_sales_tasks'
                 : 'get_agency_tasks',
             params: {'_user_id': user.id},

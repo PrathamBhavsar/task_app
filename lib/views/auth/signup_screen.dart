@@ -141,7 +141,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           name: nameController.text,
                           email: emailController.text,
                           password: passController.text,
-                          role: AuthProvider.instance.currentUserRole.role,
+                          role: AuthProvider.instance.currentUserRole,
                         );
                       },
                       fontColor: AppColors.primary,
