@@ -216,7 +216,17 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                             Expanded(
                               child: ActionBtn(
                                 btnTxt: widget.isNewTask ? 'Create' : 'Edit',
-                                onPress: () {
+                                onPress: () async {
+                                  widget.isNewTask
+                                      ? await TaskProvider.instance.createTask(
+                                          nameController.text,
+                                          remarkController.text,
+                                        )
+                                      : await TaskProvider.instance.updateTask(
+                                          nameController.text,
+                                          remarkController.text,
+                                          widget.dealNo,
+                                        );
                                   Navigator.of(context).pop();
                                 },
                                 fontColor: AppColors.primary,

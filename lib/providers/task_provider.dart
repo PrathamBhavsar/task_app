@@ -30,6 +30,31 @@ class TaskProvider extends ChangeNotifier {
     'priority': 0,
   };
 
+  /// create task
+  Future<void> createTask(name, remarks) async {
+    await SupabaseController.instance.createTask(
+        name: name,
+        remarks: remarks,
+        status: fetchedData['task_status']![selectedIndices['status']]['name'],
+        dueDate: dueDate,
+        priority: fetchedData['task_priority']![selectedIndices['priority']]
+            ['name'],
+        startDate: startDate);
+  }
+
+  /// update task
+  Future<void> updateTask(name, remarks, dealNo) async {
+    await SupabaseController.instance.updateTask(
+        name: name,
+        remarks: remarks,
+        dealNo: dealNo,
+        status: fetchedData['task_status']![selectedIndices['status']]['name'],
+        dueDate: dueDate,
+        priority: fetchedData['task_priority']![selectedIndices['priority']]
+            ['name'],
+        startDate: startDate);
+  }
+
   /// reset task indexes
   void resetTaskIndexes() {
     selectedIndices = {

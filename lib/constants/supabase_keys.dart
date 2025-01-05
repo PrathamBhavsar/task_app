@@ -3,6 +3,7 @@ class SupabaseKeys {
 
   static const String usersTable = 'users';
   static const String taskTable = 'tasks';
+  static const String configTable = 'config';
   static const String taskAttachmentsTable = 'task_attachments';
   static const String taskClientsTable = 'task_clients';
   static const String clientsTable = 'clients';

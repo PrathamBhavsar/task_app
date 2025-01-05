@@ -14,11 +14,11 @@ class TaskModel {
   final DateTime? createdAt;
   final String createdBy;
   final DateTime startDate;
-  final List<ClientModel> taskClients;
+  final List<ClientModel>? taskClients;
   final List<UserModel>? taskAgencies;
-  final List<DesignerModel> taskDesigners;
+  final List<DesignerModel>? taskDesigners;
   final List<AttachmentModel>? taskAttachments;
-  final List<UserModel> taskSalespersons;
+  final List<UserModel>? taskSalespersons;
 
   TaskModel({
     this.id,
@@ -31,11 +31,11 @@ class TaskModel {
     this.createdAt,
     required this.createdBy,
     required this.startDate,
-    required this.taskClients,
+    this.taskClients,
     this.taskAgencies,
-    required this.taskDesigners,
+    this.taskDesigners,
     this.taskAttachments,
-    required this.taskSalespersons,
+    this.taskSalespersons,
   });
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
@@ -80,14 +80,6 @@ class TaskModel {
       'priority': priority,
       'created_by': createdBy,
       'start_date': startDate.toIso8601String(),
-      'task_clients': taskClients.map((client) => client.toJson()).toList(),
-      'task_agencies': taskAgencies?.map((agency) => agency.toJson()).toList(),
-      'task_designers':
-          taskDesigners.map((designer) => designer.toJson()).toList(),
-      'task_attachments':
-          taskAttachments?.map((attachment) => attachment.toJson()).toList(),
-      'task_salespersons':
-          taskSalespersons.map((salesperson) => salesperson.toJson()).toList(),
     };
   }
 }
