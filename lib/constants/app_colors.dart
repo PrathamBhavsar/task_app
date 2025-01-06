@@ -7,6 +7,7 @@ class AppColors {
   static const Color accent = Color(0xffb4b4b4);
   static const Color error = Color(0xffffecec);
   static const Color purple = Color(0xff9d9bff);
+  static const Color lightBlue = Color(0xff85C1E9);
   static const Color orange = Color(0xfff6bb54);
   static const Color pink = Color(0xffe8a4fe);
 

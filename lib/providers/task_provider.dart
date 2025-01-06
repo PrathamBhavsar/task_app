@@ -32,14 +32,38 @@ class TaskProvider extends ChangeNotifier {
 
   /// create task
   Future<void> createTask(name, remarks) async {
+    final sales = fetchedData['salespersons'];
+    final agency = fetchedData['agencies'];
+    final designer = fetchedData['designers'];
+
+    final List<String> selectedSalespersonIds =
+        (selectedIndices['salespersons'] as List<dynamic>)
+            .map((index) => sales![index]['id'] as String)
+            .toList();
+
+    final List<String> selectedAgencyIds =
+        (selectedIndices['agency'] as List<dynamic>)
+            .map((index) => agency![index]['id'] as String)
+            .toList();
+
+    final List<String> selectedDesignerIds =
+        (selectedIndices['designers'] as List<dynamic>)
+            .map((index) => designer![index]['id'] as String)
+            .toList();
+
     await SupabaseController.instance.createTask(
-        name: name,
-        remarks: remarks,
-        status: fetchedData['task_status']![selectedIndices['status']]['name'],
-        dueDate: dueDate,
-        priority: fetchedData['task_priority']![selectedIndices['priority']]
-            ['name'],
-        startDate: startDate);
+      name: name,
+      remarks: remarks,
+      status: fetchedData['task_status']![selectedIndices['status']]['name'],
+      dueDate: dueDate,
+      priority: fetchedData['task_priority']![selectedIndices['priority']]
+          ['name'],
+      startDate: startDate,
+      selectedClientId: fetchedData['clients']![selectedIndices['client']],
+      selectedSalespersonIds: selectedSalespersonIds,
+      selectedAgencyIds: selectedAgencyIds,
+      selectedDesignerIds: selectedDesignerIds,
+    );
   }
 
   /// update task
@@ -201,6 +225,11 @@ class TaskProvider extends ChangeNotifier {
         [];
 
     fetchedData['shared_tasks'] = (data['shared_tasks'] as List<dynamic>?)
+            ?.map((item) => item as Map<String, dynamic>)
+            .toList() ??
+        [];
+
+    fetchedData['payment_tasks'] = (data['payment_tasks'] as List<dynamic>?)
             ?.map((item) => item as Map<String, dynamic>)
             .toList() ??
         [];

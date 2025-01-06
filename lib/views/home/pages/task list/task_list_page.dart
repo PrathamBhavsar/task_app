@@ -4,9 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/providers/task_provider.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/complete_tasks/complete_tasks_list.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/shared_tasks/shared_tasks_list.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/pending_tasks/pending_tasks_list.dart';
+import 'package:task_app/views/home/pages/task%20list/widgets/task_list.dart';
 import 'package:task_app/views/home/pages/widgets/chip_label_widget.dart';
 import 'package:task_app/widgets/circle_icons.dart';
 
@@ -24,6 +22,7 @@ class _TaskListPageState extends State<TaskListPage> {
       builder: (BuildContext context, TaskProvider provider, Widget? child) {
         final pendingTasksList = provider.fetchedData['pending_tasks'];
         final sharedTasksList = provider.fetchedData['shared_tasks'];
+        final paymentTasksList = provider.fetchedData['payment_tasks'];
         final completedTasksList = provider.fetchedData['completed_tasks'];
 
         final List<Map<String, dynamic>> _tabs = [
@@ -36,6 +35,11 @@ class _TaskListPageState extends State<TaskListPage> {
             'label': 'Shared',
             'count': sharedTasksList?.length ?? 0,
             'color': AppColors.orange
+          },
+          {
+            'label': 'Payment',
+            'count': paymentTasksList?.length ?? 0,
+            'color': AppColors.purple
           },
           {
             'label': 'Complete',
@@ -111,14 +115,21 @@ class _TaskListPageState extends State<TaskListPage> {
           body: IndexedStack(
             index: provider.selectedListIndex,
             children: [
-              PendingTasksList(
-                pendingTasksList: pendingTasksList ?? [],
+              TasksList(
+                tasksList: pendingTasksList ?? [],
+                noListText: 'No Pending Tasks',
               ),
-              SharedTasksList(
-                sharedTasksList: sharedTasksList ?? [],
+              TasksList(
+                tasksList: sharedTasksList ?? [],
+                noListText: 'No Tasks Shared',
               ),
-              CompleteTasksList(
-                completedTasksList: completedTasksList ?? [],
+              TasksList(
+                tasksList: paymentTasksList ?? [],
+                noListText: 'No Payment Pending',
+              ),
+              TasksList(
+                tasksList: completedTasksList ?? [],
+                noListText: 'No Tasks Completed',
               ),
             ],
           ),

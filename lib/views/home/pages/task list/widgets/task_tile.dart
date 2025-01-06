@@ -75,7 +75,9 @@ class TaskTile extends StatelessWidget {
                       )
                     ],
                   ),
-                  const OverlappingCircles(numberOfCircles: 3),
+                  OverlappingCircles(
+                      numberOfCircles:
+                          task['salespersons_count'] + task['agencies_count']),
                 ],
               ),
             ],

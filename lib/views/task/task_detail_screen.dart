@@ -127,7 +127,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   context: context,
                   label: 'Assigned For',
                   dataList: data['salespersons'],
-                  widget: const OverlappingCircles(numberOfCircles: 3),
+                  widget: OverlappingCircles(
+                      numberOfCircles:
+                          provider.selectedIndices['salespersons'].length),
                   field: 'salespersons',
                 ),
                 _buildDynamicRow(
@@ -135,7 +137,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   label: 'Designers',
                   dataList: data['designers'],
                   widget: provider.selectedIndices['designers']!.isNotEmpty
-                      ? OverlappingCircles(numberOfCircles: 3)
+                      ? OverlappingCircles(
+                          numberOfCircles:
+                              provider.selectedIndices['designers'].length)
                       : Text(
                           'None',
                           style: TextStyle(
@@ -165,7 +169,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     context: context,
                     label: UserRole.agency.role,
                     dataList: data['agencies'],
-                    widget: const OverlappingCircles(numberOfCircles: 3),
+                    widget: OverlappingCircles(
+                        numberOfCircles:
+                            provider.selectedIndices['agency'].length),
                     field: 'agency',
                   ),
                 //   if (data['task_attachments'] != null &&

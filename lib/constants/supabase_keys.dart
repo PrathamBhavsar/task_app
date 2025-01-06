@@ -6,6 +6,8 @@ class SupabaseKeys {
   static const String configTable = 'config';
   static const String taskAttachmentsTable = 'task_attachments';
   static const String taskClientsTable = 'task_clients';
+  static const String taskAgenciesTable = 'task_agencies';
+  static const String taskSalespersonsTable = 'task_salespersons';
   static const String clientsTable = 'clients';
   static const String taskDesignersTable = 'task_designers';
   static const String designersTable = 'designers';

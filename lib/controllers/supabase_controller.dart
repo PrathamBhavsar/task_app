@@ -21,6 +21,10 @@ class SupabaseController {
     required DateTime dueDate,
     required String priority,
     required DateTime startDate,
+    required Map<String, dynamic> selectedClientId,
+    required List<String> selectedSalespersonIds,
+    required List<String> selectedAgencyIds,
+    required List<String> selectedDesignerIds,
   }) async {
     final String createdBy = supabase.auth.currentUser!.id;
     final String dealNo = await getNextDealNo();
@@ -35,12 +39,59 @@ class SupabaseController {
       createdBy: createdBy,
       startDate: startDate,
     );
-    log.i(task.dealNo);
     await _executeQuery(() async {
-      final response =
-          await supabase.from(SupabaseKeys.taskTable).insert(task.toJson());
-
+      final response = await supabase
+          .from(SupabaseKeys.taskTable)
+          .insert(task.toJson())
+          .select(SupabaseKeys.id)
+          .single();
+      await createUsers(
+          taskId: response[SupabaseKeys.id],
+          clientIdsList: selectedClientId,
+          selectedSalespersonIds: selectedSalespersonIds,
+          selectedAgencyIds: selectedAgencyIds,
+          selectedDesignerIds: selectedDesignerIds);
       return response;
+    });
+  }
+
+  Future<void> createUsers({
+    required String taskId,
+    required Map<String, dynamic> clientIdsList,
+    required List<String> selectedSalespersonIds,
+    required List<String> selectedAgencyIds,
+    required List<String> selectedDesignerIds,
+  }) async {
+    await _executeQuery(() async {
+      // Insert client into the taskClientsTable
+      await supabase.from(SupabaseKeys.taskClientsTable).insert({
+        SupabaseKeys.clientId: clientIdsList['id'],
+        SupabaseKeys.taskId: taskId,
+      });
+
+      // Insert salespersons into the taskSalespersonsTable
+      for (String salespersonId in selectedSalespersonIds) {
+        await supabase.from(SupabaseKeys.taskSalespersonsTable).insert({
+          SupabaseKeys.userId: salespersonId,
+          SupabaseKeys.taskId: taskId,
+        });
+      }
+
+      // Insert agencies into the taskAgenciesTable
+      for (String agencyId in selectedAgencyIds) {
+        await supabase.from(SupabaseKeys.taskAgenciesTable).insert({
+          SupabaseKeys.userId: agencyId,
+          SupabaseKeys.taskId: taskId,
+        });
+      }
+
+      // Insert designers into the taskDesignersTable
+      for (String designerId in selectedDesignerIds) {
+        await supabase.from(SupabaseKeys.taskDesignersTable).insert({
+          SupabaseKeys.designerId: designerId,
+          SupabaseKeys.taskId: taskId,
+        });
+      }
     });
   }
 
