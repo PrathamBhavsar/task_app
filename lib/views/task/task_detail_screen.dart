@@ -134,7 +134,15 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   context: context,
                   label: 'Designers',
                   dataList: data['designers'],
-                  widget: const OverlappingCircles(numberOfCircles: 3),
+                  widget: provider.selectedIndices['designers']!.isNotEmpty
+                      ? OverlappingCircles(numberOfCircles: 3)
+                      : Text(
+                          'None',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: AppTexts.fW700,
+                          ),
+                        ),
                   field: 'designers',
                 ),
                 _buildDynamicRow(

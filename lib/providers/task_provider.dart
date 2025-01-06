@@ -74,9 +74,10 @@ class TaskProvider extends ChangeNotifier {
   void setFetchedSelectedIndices(Map<String, dynamic> taskData) {
     // Extract values from taskData
     final List<dynamic> taskSalesperson = taskData['task_salespersons'] ?? [];
-    final List<dynamic> taskDesigner = taskData['task_designers'] ?? [];
+    final List<dynamic> taskDesigner =
+        taskData['task_designers']?.where((e) => e != null).toList() ?? [];
     final List<dynamic> taskAgency = taskData['task_agencies'] ?? [];
-    final List<dynamic> taskClients = taskData['task_clients'];
+    final List<dynamic> taskClients = taskData['task_clients'] ?? [];
     final String taskStatus = taskData['status'];
     final String taskPriority = taskData['priority'];
 
@@ -100,50 +101,54 @@ class TaskProvider extends ChangeNotifier {
       notifyListeners();
     }
 
-    // Find matching indices for salespersons
-    selectedIndices['salespersons'] = fetchedSalesperson
-        .asMap()
-        .entries
-        .where((entry) => taskSalesperson
-            .any((salesperson) => salesperson['id'] == entry.value["id"]))
-        .map((entry) => entry.key)
-        .toList();
+    // Find matching indices for salespersons or default to an empty list
+    selectedIndices['salespersons'] = taskSalesperson.isNotEmpty
+        ? fetchedSalesperson
+            .asMap()
+            .entries
+            .where((entry) => taskSalesperson
+                .any((salesperson) => salesperson['id'] == entry.value["id"]))
+            .map((entry) => entry.key)
+            .toList()
+        : [];
 
-    // Find matching indices for designers
-    selectedIndices['designers'] = fetchedDesigner
-        .asMap()
-        .entries
-        .where((entry) =>
-            taskDesigner.any((designer) => designer['id'] == entry.value["id"]))
-        .map((entry) => entry.key)
-        .toList();
+    // Find matching indices for designers or default to an empty list
+    selectedIndices['designers'] = taskDesigner.isNotEmpty
+        ? fetchedDesigner
+            .asMap()
+            .entries
+            .where((entry) => taskDesigner
+                .any((designer) => designer['id'] == entry.value["id"]))
+            .map((entry) => entry.key)
+            .toList()
+        : [];
 
-    // Find matching indices for agencies
-    selectedIndices['agency'] = fetchedAgency
-        .asMap()
-        .entries
-        .where((entry) =>
-            taskAgency.any((agency) => agency['id'] == entry.value["id"]))
-        .map((entry) => entry.key)
-        .toList();
+    // Find matching indices for agencies or default to an empty list
+    selectedIndices['agency'] = taskAgency.isNotEmpty
+        ? fetchedAgency
+            .asMap()
+            .entries
+            .where((entry) =>
+                taskAgency.any((agency) => agency['id'] == entry.value["id"]))
+            .map((entry) => entry.key)
+            .toList()
+        : [];
 
-    // Find matching index for priority (by name)
-    selectedIndices['client'] = fetchedClient
-        .asMap()
-        .entries
-        .where((entry) =>
-            taskClients.any((client) => client['id'] == entry.value["id"]))
-        .map((entry) => entry.key)
-        .toList()
-        .first; // Get the first matching index
+    // Find matching index for client or default to 0
+    selectedIndices['client'] = taskClients.isNotEmpty
+        ? fetchedClient
+            .indexWhere((client) => client['id'] == taskClients[0]['id'])
+        : 0;
 
-    // Find matching index for priority (by name)
-    selectedIndices['priority'] =
-        fetchedPriority.indexWhere((map) => map["name"] == taskPriority);
+    // Find matching index for priority or default to 0
+    selectedIndices['priority'] = taskPriority != null
+        ? fetchedPriority.indexWhere((map) => map["name"] == taskPriority)
+        : 0;
 
-    // Find matching index for status (by name)
-    selectedIndices['status'] =
-        fetchedStatus.indexWhere((map) => map["name"] == taskStatus);
+    // Find matching index for status or default to 0
+    selectedIndices['status'] = taskStatus != null
+        ? fetchedStatus.indexWhere((map) => map["name"] == taskStatus)
+        : 0;
   }
 
   Future<void> getTaskByDealNo(String dealNo) async {

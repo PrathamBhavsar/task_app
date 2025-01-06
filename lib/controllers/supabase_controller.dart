@@ -77,14 +77,12 @@ class SupabaseController {
   /// gets the next deal no
   Future<String> getNextDealNo() async {
     final int currentYear = DateTime.now().year;
-    final String currentYearShort =
-        currentYear.toString().substring(2); // "2024" -> "24"
+    final String currentYearShort = currentYear.toString().substring(2);
 
-    // Fetch the current counter and last updated year from the database
     final response = await supabase
         .from(SupabaseKeys.configTable)
         .select('task_counter, last_updated_year')
-        .eq('id', 1) // Ensure we are fetching the correct row
+        .eq('id', 1)
         .single();
 
     int currentCounter = 0;
@@ -95,23 +93,19 @@ class SupabaseController {
       lastUpdatedYear = response['last_updated_year'] ?? currentYear;
     }
 
-    // Reset the counter if the year has changed
     if (lastUpdatedYear != currentYear) {
       currentCounter = 0;
     }
 
-    // Increment the counter
     final int nextCounter = currentCounter + 1;
 
-    // Generate the next task ID
     final String nextTaskId =
         '$currentYearShort-${nextCounter.toString().padLeft(4, '0')}';
 
-    // Update the database with the new counter and current year
     await supabase.from(SupabaseKeys.configTable).update({
       'task_counter': nextCounter,
       'last_updated_year': currentYear,
-    }).eq('id', 1); // Use the primary key or a fixed identifier for the row
+    }).eq('id', 1);
 
     return nextTaskId;
   }
