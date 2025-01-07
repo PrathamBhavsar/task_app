@@ -68,7 +68,7 @@ class SupabaseController {
     await _executeQuery(() async {
       // Insert client into the taskClientsTable
       await supabase.from(SupabaseKeys.taskClientsTable).insert({
-        SupabaseKeys.clientId: clientIdsList['id'],
+        SupabaseKeys.clientId: clientIdsList[SupabaseKeys.id],
         SupabaseKeys.taskId: taskId,
       });
 
@@ -158,23 +158,33 @@ class SupabaseController {
         'start_date': startDate.toIso8601String(),
       };
 
+      final TaskModel updatedDAta = TaskModel(
+        name: name,
+        status: status,
+        remarks: remarks,
+        dueDate: dueDate,
+        priority: priority,
+        startDate: startDate,
+      );
+
       // Perform the update query on the task table
       final response = await supabase
           .from(SupabaseKeys.taskTable)
-          .update(updatedData)
-          .eq('deal_no', dealNo)
-          .select();
+          .update(updatedDAta.toJson())
+          .eq(SupabaseKeys.taskDealNo, dealNo)
+          .select()
+          .single();
 
-      if (response == null || response.isEmpty) {
+      if (response.isEmpty) {
         throw Exception('Failed to update task');
       }
 
       // Extract the task ID from the response
-      final String taskId = response[0]['id'];
+      final String taskId = response[SupabaseKeys.id];
 
       await updateTaskAssociations(
         taskId: taskId,
-        clientId: selectedClientId['id'],
+        clientId: selectedClientId[SupabaseKeys.id],
         salespersonIds: selectedSalespersonIds,
         agencyIds: selectedAgencyIds,
         designerIds: selectedDesignerIds,
@@ -191,16 +201,18 @@ class SupabaseController {
 
     final response = await supabase
         .from(SupabaseKeys.configTable)
-        .select('task_counter, last_updated_year')
-        .eq('id', 1)
+        .select(
+            '${SupabaseKeys.taskCounterKey}, ${SupabaseKeys.lastUpdatedYearKey}')
+        .eq(SupabaseKeys.id, 1)
         .single();
 
     int currentCounter = 0;
     int lastUpdatedYear = currentYear;
 
     if (response.isNotEmpty) {
-      currentCounter = response['task_counter'] ?? 0;
-      lastUpdatedYear = response['last_updated_year'] ?? currentYear;
+      currentCounter = response[SupabaseKeys.taskCounterKey] ?? 0;
+      lastUpdatedYear =
+          response[SupabaseKeys.lastUpdatedYearKey] ?? currentYear;
     }
 
     if (lastUpdatedYear != currentYear) {
@@ -213,9 +225,9 @@ class SupabaseController {
         '$currentYearShort-${nextCounter.toString().padLeft(4, '0')}';
 
     await supabase.from(SupabaseKeys.configTable).update({
-      'task_counter': nextCounter,
-      'last_updated_year': currentYear,
-    }).eq('id', 1);
+      SupabaseKeys.taskCounterKey: nextCounter,
+      SupabaseKeys.lastUpdatedYearKey: currentYear,
+    }).eq(SupabaseKeys.id, 1);
 
     return nextTaskId;
   }

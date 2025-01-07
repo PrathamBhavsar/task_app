@@ -7,12 +7,12 @@ class TaskModel {
   final String? id;
   final String name;
   final String status;
-  final String dealNo;
+  final String? dealNo;
   final String remarks;
   final DateTime dueDate;
   final String priority;
   final DateTime? createdAt;
-  final String createdBy;
+  final String? createdBy;
   final DateTime startDate;
   final List<ClientModel>? taskClients;
   final List<UserModel>? taskAgencies;
@@ -24,12 +24,12 @@ class TaskModel {
     this.id,
     required this.name,
     required this.status,
-    required this.dealNo,
+    this.dealNo,
     required this.remarks,
     required this.dueDate,
     required this.priority,
     this.createdAt,
-    required this.createdBy,
+    this.createdBy,
     required this.startDate,
     this.taskClients,
     this.taskAgencies,

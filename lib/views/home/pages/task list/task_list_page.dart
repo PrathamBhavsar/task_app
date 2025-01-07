@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/controllers/auth_controller.dart';
+import 'package:task_app/models/user.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/task_list.dart';
 import 'package:task_app/views/home/pages/widgets/chip_label_widget.dart';
@@ -17,114 +17,98 @@ class TaskListPage extends StatefulWidget {
 }
 
 class _TaskListPageState extends State<TaskListPage> {
+  late Future<UserModel?> _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = AuthController.instance.getLoggedInUser();
+    _userFuture.then((user) {
+      if (user != null) {
+        TaskProvider.instance.setCurrentUser(user);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<TaskProvider>(
-      builder: (BuildContext context, TaskProvider provider, Widget? child) {
-        final fetchedUnopenedTasks =
-            provider.fetchedData[AppKeys.fetchedUnopenedTasks];
-        final pendingTasksList =
-            provider.fetchedData[AppKeys.fetchedPendingTasks];
-        final sharedTasksList =
-            provider.fetchedData[AppKeys.fetchedSharedTasks];
-        final paymentTasksList =
-            provider.fetchedData[AppKeys.fetchedPaymentTasks];
-        final quotationTasksList =
-            provider.fetchedData[AppKeys.fetchedQuotationTasks];
-        final completeTasksList =
-            provider.fetchedData[AppKeys.fetchedCompleteTasks];
+    return FutureBuilder<UserModel?>(
+      future: _userFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-        final List<Map<String, dynamic>> _tabs = [
-          {
-            'label': 'Un-Opened',
-            'count': fetchedUnopenedTasks?.length ?? 0,
-            'color': AppColors.lightBlue
-          },
-          {
-            'label': 'Pending',
-            'count': pendingTasksList?.length ?? 0,
-            'color': AppColors.pink
-          },
-          {
-            'label': 'Shared',
-            'count': sharedTasksList?.length ?? 0,
-            'color': AppColors.orange
-          },
-          {
-            'label': 'Quotation',
-            'count': quotationTasksList?.length ?? 0,
-            'color': AppColors.pink
-          },
-          {
-            'label': 'Payment',
-            'count': paymentTasksList?.length ?? 0,
-            'color': AppColors.purple
-          },
-          {
-            'label': 'Complete',
-            'count': completeTasksList?.length ?? 0,
-            'color': AppColors.green
-          },
-        ];
+        if (!snapshot.hasData) {
+          return const Center(
+            child: Text("No user found"),
+          );
+        }
 
-        return RefreshIndicator(
-          onRefresh: () async => await provider.fetchAllData(),
-          child: Scaffold(
-            floatingActionButton: FloatingActionButton(
-              onPressed: () => context.push('/taskDetails?isNewTask=true'),
-            ),
-            appBar: AppBar(
-              forceMaterialTransparency: true,
-              title: const Text(
-                'Task List',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        return Consumer<TaskProvider>(
+          builder:
+              (BuildContext context, TaskProvider provider, Widget? child) {
+            final user = snapshot.data!;
+
+            final List<Map<String, dynamic>> _tabs =
+                provider.getTabsForRole(user.role, provider.fetchedData);
+
+            return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                onPressed: () => context.push('/taskDetails?isNewTask=true'),
               ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: CircleIcons(
-                    icon: Icons.notifications_none_rounded,
-                    onTap: () {
-                      AuthController.instance.logout(context);
-                    },
-                  ),
+              appBar: AppBar(
+                title: const Text(
+                  'Task List',
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
-              ],
-              bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(60),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        _tabs.length,
-                        (index) => Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ChoiceChip(
-                            showCheckmark: false,
-                            label: ChipLabelWidget(
-                              tabs: _tabs,
-                              index: index,
-                              selectedIndex: provider.selectedListIndex,
-                            ),
-                            selected: provider.selectedListIndex == index,
-                            selectedColor: AppColors.primary,
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                              side: BorderSide(
-                                color: provider.selectedListIndex == index
-                                    ? Colors.transparent
-                                    : AppColors.primary,
-                                width: 2,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: CircleIcons(
+                      icon: Icons.notifications_none_rounded,
+                      onTap: () {
+                        AuthController.instance.logout(context);
+                      },
+                    ),
+                  ),
+                ],
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(60),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: List.generate(
+                          _tabs.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ChoiceChip(
+                              showCheckmark: false,
+                              label: ChipLabelWidget(
+                                tabs: _tabs,
+                                index: index,
+                                selectedIndex: provider.selectedListIndex,
                               ),
+                              selectedColor: AppColors.primary,
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                side: BorderSide(
+                                  color: provider.selectedListIndex == index
+                                      ? Colors.transparent
+                                      : AppColors.primary,
+                                  width: 2,
+                                ),
+                              ),
+                              selected: provider.selectedListIndex == index,
+                              onSelected: (bool selected) {
+                                provider.setSelectedListIndex(index);
+                              },
                             ),
-                            onSelected: (bool selected) {
-                              provider.setSelectedListIndex(index);
-                            },
                           ),
                         ),
                       ),
@@ -132,33 +116,18 @@ class _TaskListPageState extends State<TaskListPage> {
                   ),
                 ),
               ),
-            ),
-            body: IndexedStack(
-              index: provider.selectedListIndex,
-              children: [
-                TasksList(
-                  tasksList: pendingTasksList ?? [],
-                  noListText: 'No Pending Tasks',
-                ),
-                TasksList(
-                  tasksList: sharedTasksList ?? [],
-                  noListText: 'No Tasks Shared',
-                ),
-                TasksList(
-                  tasksList: quotationTasksList ?? [],
-                  noListText: 'No Quotation Pending',
-                ),
-                TasksList(
-                  tasksList: paymentTasksList ?? [],
-                  noListText: 'No Payment Pending',
-                ),
-                TasksList(
-                  tasksList: completeTasksList ?? [],
-                  noListText: 'No Tasks Completed',
-                ),
-              ],
-            ),
-          ),
+              body: IndexedStack(
+                index: provider.selectedListIndex,
+                children: _tabs.map((tab) {
+                  final taskList = provider.fetchedData[tab['key']] ?? [];
+                  return TasksList(
+                    tasksList: taskList,
+                    noListText: 'No ${tab['label']} Tasks',
+                  );
+                }).toList(),
+              ),
+            );
+          },
         );
       },
     );

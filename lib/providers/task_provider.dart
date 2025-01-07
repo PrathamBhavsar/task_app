@@ -5,6 +5,7 @@ import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/constants/enums.dart';
 import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/controllers/supabase_controller.dart';
+import 'package:task_app/models/user.dart';
 
 class TaskProvider extends ChangeNotifier {
   static final TaskProvider instance = TaskProvider._privateConstructor();
@@ -19,6 +20,10 @@ class TaskProvider extends ChangeNotifier {
   Map<String, List<Map<String, dynamic>>> fetchedData = {};
   Map<String, dynamic> fetchedTaskData = {};
 
+  UserModel? _currentUser;
+
+  UserModel? get currentUser => _currentUser;
+
   bool isAgencyRequired = false;
   int selectedListIndex = 0;
   Map<String, dynamic> selectedIndices = {
@@ -29,6 +34,82 @@ class TaskProvider extends ChangeNotifier {
     IndexKeys.statusIndex: 0,
     IndexKeys.priorityIndex: 0,
   };
+
+  /// set current user
+  void setCurrentUser(UserModel user) {
+    _currentUser = user;
+    notifyListeners();
+  }
+
+  /// get tabs
+  List<Map<String, dynamic>> getTabsForRole(
+      UserRole role, Map<String, List<dynamic>> fetchedData) {
+    final int unopenedCount =
+        fetchedData[AppKeys.fetchedUnopenedTasks]?.length ?? 0;
+    final int pendingCount =
+        fetchedData[AppKeys.fetchedPendingTasks]?.length ?? 0;
+    final int sharedCount =
+        fetchedData[AppKeys.fetchedSharedTasks]?.length ?? 0;
+    final int quotationCount =
+        fetchedData[AppKeys.fetchedQuotationTasks]?.length ?? 0;
+    final int paymentCount =
+        fetchedData[AppKeys.fetchedPaymentTasks]?.length ?? 0;
+    final int completeCount =
+        fetchedData[AppKeys.fetchedCompleteTasks]?.length ?? 0;
+
+    final List<Map<String, dynamic>> allTabs = [
+      {
+        'label': 'Un-Opened',
+        'key': AppKeys.fetchedUnopenedTasks,
+        'count': unopenedCount,
+        'color': AppColors.lightBlue,
+      },
+      {
+        'label': 'Pending',
+        'key': AppKeys.fetchedPendingTasks,
+        'count': pendingCount,
+        'color': AppColors.pink,
+      },
+      {
+        'label': 'Shared',
+        'key': AppKeys.fetchedSharedTasks,
+        'count': sharedCount,
+        'color': AppColors.orange,
+      },
+      {
+        'label': 'Quotation',
+        'key': AppKeys.fetchedQuotationTasks,
+        'count': quotationCount,
+        'color': AppColors.pink,
+      },
+      {
+        'label': 'Payment',
+        'key': AppKeys.fetchedPaymentTasks,
+        'count': paymentCount,
+        'color': AppColors.purple,
+      },
+      {
+        'label': 'Complete',
+        'key': AppKeys.fetchedCompleteTasks,
+        'count': completeCount,
+        'color': AppColors.green,
+      },
+    ];
+
+    List<Map<String, dynamic>> filteredTabs =
+        allTabs.where((tab) => tab['count'] > 0).toList();
+
+    switch (role) {
+      case UserRole.salesperson:
+        return filteredTabs
+            .where((tab) => tab['label'] != 'Un-Opened')
+            .toList();
+      case UserRole.agency:
+        return filteredTabs.where((tab) => tab['label'] != 'Shared').toList();
+      default:
+        return filteredTabs;
+    }
+  }
 
   /// create task
   Future<void> createTask(name, remarks) async {
@@ -177,8 +258,8 @@ class TaskProvider extends ChangeNotifier {
         ? fetchedSalesperson
             .asMap()
             .entries
-            .where((entry) => taskSalesperson
-                .any((salesperson) => salesperson['id'] == entry.value["id"]))
+            .where((entry) => taskSalesperson.any((salesperson) =>
+                salesperson[SupabaseKeys.id] == entry.value[SupabaseKeys.id]))
             .map((entry) => entry.key)
             .toList()
         : [];

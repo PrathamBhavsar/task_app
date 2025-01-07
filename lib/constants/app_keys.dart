@@ -35,7 +35,8 @@ class SupabaseKeys {
 
   static const String designerId = 'designer_id';
 
-  static const String commentText = 'comment';
+  static const String taskCounterKey = 'task_counter';
+  static const String lastUpdatedYearKey = 'last_updated_year';
 }
 
 class AppKeys {
