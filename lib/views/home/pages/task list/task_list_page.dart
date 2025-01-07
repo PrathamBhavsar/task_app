@@ -21,16 +21,25 @@ class _TaskListPageState extends State<TaskListPage> {
   Widget build(BuildContext context) {
     return Consumer<TaskProvider>(
       builder: (BuildContext context, TaskProvider provider, Widget? child) {
+        final fetchedUnopenedTasks =
+            provider.fetchedData[AppKeys.fetchedUnopenedTasks];
         final pendingTasksList =
             provider.fetchedData[AppKeys.fetchedPendingTasks];
         final sharedTasksList =
             provider.fetchedData[AppKeys.fetchedSharedTasks];
         final paymentTasksList =
             provider.fetchedData[AppKeys.fetchedPaymentTasks];
+        final quotationTasksList =
+            provider.fetchedData[AppKeys.fetchedQuotationTasks];
         final completeTasksList =
             provider.fetchedData[AppKeys.fetchedCompleteTasks];
 
         final List<Map<String, dynamic>> _tabs = [
+          {
+            'label': 'Un-Opened',
+            'count': fetchedUnopenedTasks?.length ?? 0,
+            'color': AppColors.lightBlue
+          },
           {
             'label': 'Pending',
             'count': pendingTasksList?.length ?? 0,
@@ -40,6 +49,11 @@ class _TaskListPageState extends State<TaskListPage> {
             'label': 'Shared',
             'count': sharedTasksList?.length ?? 0,
             'color': AppColors.orange
+          },
+          {
+            'label': 'Quotation',
+            'count': quotationTasksList?.length ?? 0,
+            'color': AppColors.pink
           },
           {
             'label': 'Payment',
@@ -53,62 +67,65 @@ class _TaskListPageState extends State<TaskListPage> {
           },
         ];
 
-        return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => context.push('/taskDetails?isNewTask=true'),
-          ),
-          appBar: AppBar(
-            forceMaterialTransparency: true,
-            title: const Text(
-              'Task List',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        return RefreshIndicator(
+          onRefresh: () async => await provider.fetchAllData(),
+          child: Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => context.push('/taskDetails?isNewTask=true'),
             ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: CircleIcons(
-                  icon: Icons.notifications_none_rounded,
-                  onTap: () {
-                    AuthController.instance.logout(context);
-                  },
-                ),
+            appBar: AppBar(
+              forceMaterialTransparency: true,
+              title: const Text(
+                'Task List',
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
               ),
-            ],
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(60),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      _tabs.length,
-                      (index) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          showCheckmark: false,
-                          label: ChipLabelWidget(
-                            tabs: _tabs,
-                            index: index,
-                            selectedIndex: provider.selectedListIndex,
-                          ),
-                          selected: provider.selectedListIndex == index,
-                          selectedColor: AppColors.primary,
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            side: BorderSide(
-                              color: provider.selectedListIndex == index
-                                  ? Colors.transparent
-                                  : AppColors.primary,
-                              width: 2,
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: CircleIcons(
+                    icon: Icons.notifications_none_rounded,
+                    onTap: () {
+                      AuthController.instance.logout(context);
+                    },
+                  ),
+                ),
+              ],
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(60),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        _tabs.length,
+                        (index) => Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            showCheckmark: false,
+                            label: ChipLabelWidget(
+                              tabs: _tabs,
+                              index: index,
+                              selectedIndex: provider.selectedListIndex,
                             ),
+                            selected: provider.selectedListIndex == index,
+                            selectedColor: AppColors.primary,
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              side: BorderSide(
+                                color: provider.selectedListIndex == index
+                                    ? Colors.transparent
+                                    : AppColors.primary,
+                                width: 2,
+                              ),
+                            ),
+                            onSelected: (bool selected) {
+                              provider.setSelectedListIndex(index);
+                            },
                           ),
-                          onSelected: (bool selected) {
-                            provider.setSelectedListIndex(index);
-                          },
                         ),
                       ),
                     ),
@@ -116,27 +133,31 @@ class _TaskListPageState extends State<TaskListPage> {
                 ),
               ),
             ),
-          ),
-          body: IndexedStack(
-            index: provider.selectedListIndex,
-            children: [
-              TasksList(
-                tasksList: pendingTasksList ?? [],
-                noListText: 'No Pending Tasks',
-              ),
-              TasksList(
-                tasksList: sharedTasksList ?? [],
-                noListText: 'No Tasks Shared',
-              ),
-              TasksList(
-                tasksList: paymentTasksList ?? [],
-                noListText: 'No Payment Pending',
-              ),
-              TasksList(
-                tasksList: completeTasksList ?? [],
-                noListText: 'No Tasks Completed',
-              ),
-            ],
+            body: IndexedStack(
+              index: provider.selectedListIndex,
+              children: [
+                TasksList(
+                  tasksList: pendingTasksList ?? [],
+                  noListText: 'No Pending Tasks',
+                ),
+                TasksList(
+                  tasksList: sharedTasksList ?? [],
+                  noListText: 'No Tasks Shared',
+                ),
+                TasksList(
+                  tasksList: quotationTasksList ?? [],
+                  noListText: 'No Quotation Pending',
+                ),
+                TasksList(
+                  tasksList: paymentTasksList ?? [],
+                  noListText: 'No Payment Pending',
+                ),
+                TasksList(
+                  tasksList: completeTasksList ?? [],
+                  noListText: 'No Tasks Completed',
+                ),
+              ],
+            ),
           ),
         );
       },

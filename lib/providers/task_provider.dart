@@ -55,7 +55,7 @@ class TaskProvider extends ChangeNotifier {
       name: name,
       remarks: remarks,
       status: fetchedData[AppKeys.fetchedStatus]![
-          selectedIndices[IndexKeys.statusIndex]][AppKeys.statusSlug],
+          selectedIndices[IndexKeys.statusIndex]][AppKeys.nameKey],
       dueDate: dueDate,
       priority: fetchedData[AppKeys.fetchedPriority]![
           selectedIndices[IndexKeys.priorityIndex]][AppKeys.nameKey],
@@ -103,7 +103,7 @@ class TaskProvider extends ChangeNotifier {
       name: name,
       remarks: remarks,
       status: fetchedData[AppKeys.fetchedStatus]![
-          selectedIndices[IndexKeys.statusIndex]][AppKeys.statusSlug],
+          selectedIndices[IndexKeys.statusIndex]][AppKeys.nameKey],
       dueDate: dueDate,
       priority: fetchedData[AppKeys.fetchedPriority]![
           selectedIndices[IndexKeys.priorityIndex]][AppKeys.nameKey],
@@ -219,8 +219,7 @@ class TaskProvider extends ChangeNotifier {
 
     // Find matching index for status or default to 0
     selectedIndices[IndexKeys.statusIndex] = taskStatus != null
-        ? fetchedStatus
-            .indexWhere((map) => map[AppKeys.statusSlug] == taskStatus)
+        ? fetchedStatus.indexWhere((map) => map[AppKeys.nameKey] == taskStatus)
         : 0;
   }
 
@@ -267,6 +266,12 @@ class TaskProvider extends ChangeNotifier {
     await Future.wait(futures);
     final data = await SupabaseController.instance.getAllTasks();
 
+    fetchedData[AppKeys.fetchedUnopenedTasks] =
+        (data[AppKeys.fetchedUnopenedTasks] as List<dynamic>?)
+                ?.map((item) => item as Map<String, dynamic>)
+                .toList() ??
+            [];
+
     fetchedData[AppKeys.fetchedPendingTasks] =
         (data[AppKeys.fetchedPendingTasks] as List<dynamic>?)
                 ?.map((item) => item as Map<String, dynamic>)
@@ -275,6 +280,12 @@ class TaskProvider extends ChangeNotifier {
 
     fetchedData[AppKeys.fetchedSharedTasks] =
         (data[AppKeys.fetchedSharedTasks] as List<dynamic>?)
+                ?.map((item) => item as Map<String, dynamic>)
+                .toList() ??
+            [];
+
+    fetchedData[AppKeys.fetchedQuotationTasks] =
+        (data[AppKeys.fetchedQuotationTasks] as List<dynamic>?)
                 ?.map((item) => item as Map<String, dynamic>)
                 .toList() ??
             [];

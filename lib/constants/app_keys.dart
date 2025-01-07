@@ -39,9 +39,11 @@ class SupabaseKeys {
 }
 
 class AppKeys {
+  static const String fetchedUnopenedTasks = 'unopened_tasks';
   static const String fetchedPendingTasks = 'pending_tasks';
   static const String fetchedSharedTasks = 'shared_tasks';
   static const String fetchedPaymentTasks = 'payment_tasks';
+  static const String fetchedQuotationTasks = 'quotation_tasks';
   static const String fetchedCompleteTasks = 'complete_tasks';
 
   static const String fetchedSalespersons = 'salespersons';

@@ -248,6 +248,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                                           remarkController.text,
                                           widget.dealNo,
                                         );
+                                  await TaskProvider.instance.fetchAllData();
+                                  Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                 },
                                 fontColor: AppColors.primary,
