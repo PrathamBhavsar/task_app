@@ -45,16 +45,19 @@ class SupabaseController {
           .insert(task.toJson())
           .select(SupabaseKeys.id)
           .single();
+
       await createUsers(
-          taskId: response[SupabaseKeys.id],
-          clientIdsList: selectedClientId,
-          selectedSalespersonIds: selectedSalespersonIds,
-          selectedAgencyIds: selectedAgencyIds,
-          selectedDesignerIds: selectedDesignerIds);
+        taskId: response[SupabaseKeys.id],
+        clientIdsList: selectedClientId,
+        selectedSalespersonIds: selectedSalespersonIds,
+        selectedAgencyIds: selectedAgencyIds,
+        selectedDesignerIds: selectedDesignerIds,
+      );
       return response;
     });
   }
 
+  /// create user entries
   Future<void> createUsers({
     required String taskId,
     required Map<String, dynamic> clientIdsList,
@@ -95,6 +98,41 @@ class SupabaseController {
     });
   }
 
+  Future<void> updateTaskAssociations({
+    required String taskId,
+    required String clientId,
+    required List<String> salespersonIds,
+    required List<String> agencyIds,
+    required List<String> designerIds,
+  }) async {
+    final supabase = Supabase.instance.client;
+
+    try {
+      final salespersonIdsArray = '{${salespersonIds.join(",")}}';
+      final agencyIdsArray = '{${agencyIds.join(",")}}';
+      final designerIdsArray = '{${designerIds.join(",")}}';
+
+      final response = await supabase.rpc(
+        'update_task_associations',
+        params: {
+          'p_task_id': taskId,
+          'p_client_id': clientId,
+          'salesperson_ids': salespersonIdsArray,
+          'agency_ids': agencyIdsArray,
+          'designer_ids': designerIdsArray,
+        },
+      );
+
+      if (response.error != null) {
+        log.e('Error in function response');
+      }
+
+      print('Task associations updated successfully.');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   Future<void> updateTask({
     required String dealNo,
     required String name,
@@ -103,9 +141,14 @@ class SupabaseController {
     required DateTime dueDate,
     required String priority,
     required DateTime startDate,
+    required Map<String, dynamic> selectedClientId,
+    required List<String> selectedSalespersonIds,
+    required List<String> selectedAgencyIds,
+    required List<String> selectedDesignerIds,
+    required Map<String, dynamic> fetchedTaskData,
   }) async {
     await _executeQuery(() async {
-      // Prepare the data to update
+      // Prepare the data to update the task
       final Map<String, dynamic> updatedData = {
         'name': name,
         'status': status,
@@ -115,11 +158,27 @@ class SupabaseController {
         'start_date': startDate.toIso8601String(),
       };
 
-      // Perform the update query
+      // Perform the update query on the task table
       final response = await supabase
           .from(SupabaseKeys.taskTable)
           .update(updatedData)
-          .eq('deal_no', dealNo);
+          .eq('deal_no', dealNo)
+          .select();
+
+      if (response == null || response.isEmpty) {
+        throw Exception('Failed to update task');
+      }
+
+      // Extract the task ID from the response
+      final String taskId = response[0]['id'];
+
+      await updateTaskAssociations(
+        taskId: taskId,
+        clientId: selectedClientId['id'],
+        salespersonIds: selectedSalespersonIds,
+        agencyIds: selectedAgencyIds,
+        designerIds: selectedDesignerIds,
+      );
 
       return response;
     });

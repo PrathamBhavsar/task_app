@@ -54,7 +54,7 @@ class TaskProvider extends ChangeNotifier {
     await SupabaseController.instance.createTask(
       name: name,
       remarks: remarks,
-      status: fetchedData['task_status']![selectedIndices['status']]['name'],
+      status: fetchedData['task_status']![selectedIndices['status']]['slug'],
       dueDate: dueDate,
       priority: fetchedData['task_priority']![selectedIndices['priority']]
           ['name'],
@@ -67,16 +67,50 @@ class TaskProvider extends ChangeNotifier {
   }
 
   /// update task
-  Future<void> updateTask(name, remarks, dealNo) async {
+  Future<void> updateTask(
+    String name,
+    String remarks,
+    String dealNo,
+  ) async {
+    // Prepare salespersons
+    final sales = fetchedData['salespersons'];
+    final List<String> selectedSalespersonIds =
+        (selectedIndices['salespersons'] as List<dynamic>)
+            .map((index) => sales![index]['id'] as String)
+            .toList();
+
+    // Prepare agencies
+    final agencies = fetchedData['agencies'];
+
+    final List<String> selectedAgencyIds =
+        (selectedIndices['agency'] as List<dynamic>? ?? [])
+            .map((index) => agencies![index]['id'] as String)
+            .toList();
+
+    // Prepare designers
+    final designers = fetchedData['designers'];
+
+    final List<String> selectedDesignerIds =
+        (selectedIndices['designers'] as List<dynamic>? ?? [])
+            .map((index) => designers![index]['id'] as String)
+            .toList();
+
+    // Perform all Supabase updates
     await SupabaseController.instance.updateTask(
-        name: name,
-        remarks: remarks,
-        dealNo: dealNo,
-        status: fetchedData['task_status']![selectedIndices['status']]['name'],
-        dueDate: dueDate,
-        priority: fetchedData['task_priority']![selectedIndices['priority']]
-            ['name'],
-        startDate: startDate);
+      dealNo: dealNo,
+      name: name,
+      remarks: remarks,
+      status: fetchedData['task_status']![selectedIndices['status']]['slug'],
+      dueDate: dueDate,
+      priority: fetchedData['task_priority']![selectedIndices['priority']]
+          ['name'],
+      startDate: startDate,
+      selectedClientId: fetchedData['clients']![selectedIndices['client']],
+      selectedSalespersonIds: selectedSalespersonIds,
+      selectedAgencyIds: selectedAgencyIds,
+      selectedDesignerIds: selectedDesignerIds,
+      fetchedTaskData: fetchedTaskData,
+    );
   }
 
   /// reset task indexes
@@ -100,7 +134,8 @@ class TaskProvider extends ChangeNotifier {
     final List<dynamic> taskSalesperson = taskData['task_salespersons'] ?? [];
     final List<dynamic> taskDesigner =
         taskData['task_designers']?.where((e) => e != null).toList() ?? [];
-    final List<dynamic> taskAgency = taskData['task_agencies'] ?? [];
+    final List<dynamic> taskAgency =
+        taskData['task_agencies']?.where((e) => e != null).toList() ?? [];
     final List<dynamic> taskClients = taskData['task_clients'] ?? [];
     final String taskStatus = taskData['status'];
     final String taskPriority = taskData['priority'];
@@ -171,7 +206,7 @@ class TaskProvider extends ChangeNotifier {
 
     // Find matching index for status or default to 0
     selectedIndices['status'] = taskStatus != null
-        ? fetchedStatus.indexWhere((map) => map["name"] == taskStatus)
+        ? fetchedStatus.indexWhere((map) => map["slug"] == taskStatus)
         : 0;
   }
 
@@ -184,7 +219,6 @@ class TaskProvider extends ChangeNotifier {
     setDueDate(DateTime.parse(data['due_date']));
 
     setFetchedSelectedIndices(data);
-    logger.i(selectedIndices);
     notifyListeners();
   }
 
