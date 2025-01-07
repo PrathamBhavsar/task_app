@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_app/constants/enums.dart';
-import 'package:task_app/constants/supabase_keys.dart';
+import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/models/task.dart';
 import 'package:task_app/models/user.dart';
@@ -113,13 +113,13 @@ class SupabaseController {
       final designerIdsArray = '{${designerIds.join(",")}}';
 
       final response = await supabase.rpc(
-        'update_task_associations',
+        FunctionKeys.updateTaskAssociationsFunc,
         params: {
-          'p_task_id': taskId,
-          'p_client_id': clientId,
-          'salesperson_ids': salespersonIdsArray,
-          'agency_ids': agencyIdsArray,
-          'designer_ids': designerIdsArray,
+          FunctionKeys.updateTaskAssociationsFunc: taskId,
+          FunctionKeys.clientIdParam: clientId,
+          FunctionKeys.salespersonIdsParam: salespersonIdsArray,
+          FunctionKeys.agencyIdsParam: agencyIdsArray,
+          FunctionKeys.designerIdsParam: designerIdsArray,
         },
       );
 
@@ -236,8 +236,8 @@ class SupabaseController {
   Future<Map<String, dynamic>> getTaskById(String dealNo) async {
     return await _executeQuery(() async {
           final response = await supabase.rpc(
-            'get_task_by_deal_no',
-            params: {'deal_no_input': dealNo},
+            FunctionKeys.getTaskByDealNoFunc,
+            params: {FunctionKeys.dealNoParam: dealNo},
           ).single();
           return response;
         }) ??
@@ -251,9 +251,9 @@ class SupabaseController {
               await AuthController.instance.getLoggedInUser();
           final response = await supabase.rpc(
             user!.role == UserRole.salesperson
-                ? 'get_sales_tasks'
-                : 'get_agency_tasks',
-            params: {'_user_id': user.id},
+                ? FunctionKeys.getSalesTasksFunc
+                : FunctionKeys.getAgencyTasksFunc,
+            params: {FunctionKeys.userIdParam: user.id},
           ).single();
 
           return response;

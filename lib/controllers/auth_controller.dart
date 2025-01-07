@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_app/constants/enums.dart';
-import 'package:task_app/constants/supabase_keys.dart';
+import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/extensions/color_extension.dart';
 import 'package:task_app/models/user.dart';
 import 'dart:convert';

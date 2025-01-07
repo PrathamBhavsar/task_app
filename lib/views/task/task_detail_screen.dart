@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/constants/enums.dart';
-import 'package:task_app/constants/supabase_keys.dart';
+import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'package:task_app/views/task/methods/show_bottom_modal.dart';
@@ -87,10 +87,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     context: context,
                     dataList: data['clients'],
                     title: 'Clients',
-                    index: provider.selectedIndices['client'],
+                    index: provider.selectedIndices[IndexKeys.clientIndex],
                     name: 'name',
                     field: 'client',
                     defaultText: "No Clients Yet",
+                    isNewTask: widget.isNewTask,
+                    dealNo: widget.dealNo,
                   ),
                 ),
                 AppPaddings.gapH(20),
@@ -115,11 +117,13 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   label: 'Status',
                   dataList: data[SupabaseKeys.taskStatusTable],
                   widget: CustomTag(
-                      color: provider.stringToColor(
-                          data[SupabaseKeys.taskStatusTable]
-                              ?[provider.selectedIndices['status']]['color']),
-                      text: data[SupabaseKeys.taskStatusTable]
-                              ?[provider.selectedIndices['status']]['name'] ??
+                      color: provider.stringToColor(data[
+                                  SupabaseKeys.taskStatusTable]
+                              ?[provider.selectedIndices[IndexKeys.statusIndex]]
+                          ['color']),
+                      text: data[SupabaseKeys.taskStatusTable]?[provider
+                                  .selectedIndices[IndexKeys.statusIndex]]
+                              ['name'] ??
                           ""),
                   field: 'status',
                 ),
@@ -128,18 +132,19 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   label: 'Assigned For',
                   dataList: data['salespersons'],
                   widget: OverlappingCircles(
-                      numberOfCircles:
-                          provider.selectedIndices['salespersons'].length),
+                      numberOfCircles: provider
+                          .selectedIndices[IndexKeys.salespersonIndex].length),
                   field: 'salespersons',
                 ),
                 _buildDynamicRow(
                   context: context,
                   label: 'Designers',
                   dataList: data['designers'],
-                  widget: provider.selectedIndices['designers']!.isNotEmpty
+                  widget: provider
+                          .selectedIndices[IndexKeys.designerIndex]!.isNotEmpty
                       ? OverlappingCircles(
-                          numberOfCircles:
-                              provider.selectedIndices['designers'].length)
+                          numberOfCircles: provider
+                              .selectedIndices[IndexKeys.designerIndex].length)
                       : Text(
                           'None',
                           style: TextStyle(
@@ -155,10 +160,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   dataList: data[SupabaseKeys.taskPriorityTable],
                   widget: CustomTag(
                       color: provider.stringToColor(
-                          data[SupabaseKeys.taskPriorityTable]
-                              ?[provider.selectedIndices['priority']]['color']),
-                      text: data[SupabaseKeys.taskPriorityTable]
-                              ?[provider.selectedIndices['priority']]['name'] ??
+                          data[SupabaseKeys.taskPriorityTable]?[provider
+                                  .selectedIndices[IndexKeys.priorityIndex]]
+                              ['color']),
+                      text: data[SupabaseKeys.taskPriorityTable]?[provider
+                                  .selectedIndices[IndexKeys.priorityIndex]]
+                              ['name'] ??
                           ""),
                   field: 'priority',
                 ),
@@ -170,8 +177,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     label: UserRole.agency.role,
                     dataList: data['agencies'],
                     widget: OverlappingCircles(
-                        numberOfCircles:
-                            provider.selectedIndices['agency'].length),
+                        numberOfCircles: provider
+                            .selectedIndices[IndexKeys.agencyIndex].length),
                     field: 'agency',
                   ),
                 //   if (data['task_attachments'] != null &&
@@ -312,12 +319,16 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     required String name,
     required String field,
     required String defaultText,
+    required bool isNewTask,
+    required String dealNo,
   }) {
     return ClientNameDropdown(
       name: dataList?.isNotEmpty == true ? dataList![index][name] : defaultText,
       clientList: dataList ?? [],
       onTap: () =>
           showClientsBottomSheet(context, dataList ?? [], title, field),
+      dealNo: dealNo,
+      isNewTask: isNewTask,
     );
   }
 

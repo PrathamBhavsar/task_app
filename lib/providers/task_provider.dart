@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/constants/enums.dart';
-import 'package:task_app/constants/supabase_keys.dart';
+import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/controllers/supabase_controller.dart';
 
 class TaskProvider extends ChangeNotifier {
@@ -22,44 +22,46 @@ class TaskProvider extends ChangeNotifier {
   bool isAgencyRequired = false;
   int selectedListIndex = 0;
   Map<String, dynamic> selectedIndices = {
-    'salespersons': [],
-    'designers': [],
-    'agency': [],
-    'client': 0,
-    'status': 0,
-    'priority': 0,
+    IndexKeys.salespersonIndex: [],
+    IndexKeys.designerIndex: [],
+    IndexKeys.agencyIndex: [],
+    IndexKeys.clientIndex: 0,
+    IndexKeys.statusIndex: 0,
+    IndexKeys.priorityIndex: 0,
   };
 
   /// create task
   Future<void> createTask(name, remarks) async {
-    final sales = fetchedData['salespersons'];
-    final agency = fetchedData['agencies'];
-    final designer = fetchedData['designers'];
+    final sales = fetchedData[AppKeys.fetchedSalespersons];
+    final agency = fetchedData[AppKeys.fetchedAgencies];
+    final designer = fetchedData[AppKeys.fetchedDesigners];
 
     final List<String> selectedSalespersonIds =
-        (selectedIndices['salespersons'] as List<dynamic>)
-            .map((index) => sales![index]['id'] as String)
+        (selectedIndices[IndexKeys.salespersonIndex] as List<dynamic>)
+            .map((index) => sales![index][SupabaseKeys.id] as String)
             .toList();
 
     final List<String> selectedAgencyIds =
-        (selectedIndices['agency'] as List<dynamic>)
-            .map((index) => agency![index]['id'] as String)
+        (selectedIndices[IndexKeys.agencyIndex] as List<dynamic>)
+            .map((index) => agency![index][SupabaseKeys.id] as String)
             .toList();
 
     final List<String> selectedDesignerIds =
-        (selectedIndices['designers'] as List<dynamic>)
-            .map((index) => designer![index]['id'] as String)
+        (selectedIndices[IndexKeys.designerIndex] as List<dynamic>)
+            .map((index) => designer![index][SupabaseKeys.id] as String)
             .toList();
 
     await SupabaseController.instance.createTask(
       name: name,
       remarks: remarks,
-      status: fetchedData['task_status']![selectedIndices['status']]['slug'],
+      status: fetchedData[AppKeys.fetchedStatus]![
+          selectedIndices[IndexKeys.statusIndex]][AppKeys.statusSlug],
       dueDate: dueDate,
-      priority: fetchedData['task_priority']![selectedIndices['priority']]
-          ['name'],
+      priority: fetchedData[AppKeys.fetchedPriority]![
+          selectedIndices[IndexKeys.priorityIndex]][AppKeys.nameKey],
       startDate: startDate,
-      selectedClientId: fetchedData['clients']![selectedIndices['client']],
+      selectedClientId: fetchedData[AppKeys.fetchedClients]![
+          selectedIndices[IndexKeys.clientIndex]],
       selectedSalespersonIds: selectedSalespersonIds,
       selectedAgencyIds: selectedAgencyIds,
       selectedDesignerIds: selectedDesignerIds,
@@ -73,26 +75,26 @@ class TaskProvider extends ChangeNotifier {
     String dealNo,
   ) async {
     // Prepare salespersons
-    final sales = fetchedData['salespersons'];
+    final sales = fetchedData[AppKeys.fetchedSalespersons];
     final List<String> selectedSalespersonIds =
-        (selectedIndices['salespersons'] as List<dynamic>)
-            .map((index) => sales![index]['id'] as String)
+        (selectedIndices[IndexKeys.salespersonIndex] as List<dynamic>)
+            .map((index) => sales![index][SupabaseKeys.id] as String)
             .toList();
 
     // Prepare agencies
-    final agencies = fetchedData['agencies'];
+    final agencies = fetchedData[AppKeys.fetchedAgencies];
 
     final List<String> selectedAgencyIds =
-        (selectedIndices['agency'] as List<dynamic>? ?? [])
-            .map((index) => agencies![index]['id'] as String)
+        (selectedIndices[IndexKeys.agencyIndex] as List<dynamic>? ?? [])
+            .map((index) => agencies![index][SupabaseKeys.id] as String)
             .toList();
 
     // Prepare designers
-    final designers = fetchedData['designers'];
+    final designers = fetchedData[AppKeys.fetchedDesigners];
 
     final List<String> selectedDesignerIds =
-        (selectedIndices['designers'] as List<dynamic>? ?? [])
-            .map((index) => designers![index]['id'] as String)
+        (selectedIndices[IndexKeys.designerIndex] as List<dynamic>? ?? [])
+            .map((index) => designers![index][SupabaseKeys.id] as String)
             .toList();
 
     // Perform all Supabase updates
@@ -100,12 +102,14 @@ class TaskProvider extends ChangeNotifier {
       dealNo: dealNo,
       name: name,
       remarks: remarks,
-      status: fetchedData['task_status']![selectedIndices['status']]['slug'],
+      status: fetchedData[AppKeys.fetchedStatus]![
+          selectedIndices[IndexKeys.statusIndex]][AppKeys.statusSlug],
       dueDate: dueDate,
-      priority: fetchedData['task_priority']![selectedIndices['priority']]
-          ['name'],
+      priority: fetchedData[AppKeys.fetchedPriority]![
+          selectedIndices[IndexKeys.priorityIndex]][AppKeys.nameKey],
       startDate: startDate,
-      selectedClientId: fetchedData['clients']![selectedIndices['client']],
+      selectedClientId: fetchedData[AppKeys.fetchedClients]![
+          selectedIndices[IndexKeys.clientIndex]],
       selectedSalespersonIds: selectedSalespersonIds,
       selectedAgencyIds: selectedAgencyIds,
       selectedDesignerIds: selectedDesignerIds,
@@ -131,28 +135,36 @@ class TaskProvider extends ChangeNotifier {
   /// sets task indexes
   void setFetchedSelectedIndices(Map<String, dynamic> taskData) {
     // Extract values from taskData
-    final List<dynamic> taskSalesperson = taskData['task_salespersons'] ?? [];
+    final List<dynamic> taskSalesperson =
+        taskData[TaskKeys.taskSalespersons] ?? [];
     final List<dynamic> taskDesigner =
-        taskData['task_designers']?.where((e) => e != null).toList() ?? [];
+        taskData[TaskKeys.taskDesigners]?.where((e) => e != null).toList() ??
+            [];
     final List<dynamic> taskAgency =
-        taskData['task_agencies']?.where((e) => e != null).toList() ?? [];
-    final List<dynamic> taskClients = taskData['task_clients'] ?? [];
-    final String taskStatus = taskData['status'];
-    final String taskPriority = taskData['priority'];
+        taskData[TaskKeys.taskAgencies]?.where((e) => e != null).toList() ?? [];
+    final List<dynamic> taskClients = taskData[TaskKeys.taskClients] ?? [];
+    final String taskStatus = taskData[TaskKeys.taskStatus];
+    final String taskPriority = taskData[TaskKeys.taskPriority];
 
     // Extract lists from fetchedData
     final List<Map<String, dynamic>> fetchedSalesperson =
-        List<Map<String, dynamic>>.from(fetchedData["salespersons"] ?? []);
+        List<Map<String, dynamic>>.from(
+            fetchedData[AppKeys.fetchedSalespersons] ?? []);
     final List<Map<String, dynamic>> fetchedDesigner =
-        List<Map<String, dynamic>>.from(fetchedData["designers"] ?? []);
+        List<Map<String, dynamic>>.from(
+            fetchedData[AppKeys.fetchedDesigners] ?? []);
     final List<Map<String, dynamic>> fetchedAgency =
-        List<Map<String, dynamic>>.from(fetchedData["agencies"] ?? []);
+        List<Map<String, dynamic>>.from(
+            fetchedData[AppKeys.fetchedAgencies] ?? []);
     final List<Map<String, dynamic>> fetchedClient =
-        List<Map<String, dynamic>>.from(fetchedData["clients"] ?? []);
+        List<Map<String, dynamic>>.from(
+            fetchedData[AppKeys.fetchedClients] ?? []);
     final List<Map<String, dynamic>> fetchedPriority =
-        List<Map<String, dynamic>>.from(fetchedData["task_priority"] ?? []);
+        List<Map<String, dynamic>>.from(
+            fetchedData[AppKeys.fetchedPriority] ?? []);
     final List<Map<String, dynamic>> fetchedStatus =
-        List<Map<String, dynamic>>.from(fetchedData["task_status"] ?? []);
+        List<Map<String, dynamic>>.from(
+            fetchedData[AppKeys.fetchedStatus] ?? []);
 
     // Set isAgencyRequired to true only if agency is present
     if (taskAgency.isNotEmpty) {
@@ -161,7 +173,7 @@ class TaskProvider extends ChangeNotifier {
     }
 
     // Find matching indices for salespersons or default to an empty list
-    selectedIndices['salespersons'] = taskSalesperson.isNotEmpty
+    selectedIndices[IndexKeys.salespersonIndex] = taskSalesperson.isNotEmpty
         ? fetchedSalesperson
             .asMap()
             .entries
@@ -172,41 +184,43 @@ class TaskProvider extends ChangeNotifier {
         : [];
 
     // Find matching indices for designers or default to an empty list
-    selectedIndices['designers'] = taskDesigner.isNotEmpty
+    selectedIndices[IndexKeys.designerIndex] = taskDesigner.isNotEmpty
         ? fetchedDesigner
             .asMap()
             .entries
-            .where((entry) => taskDesigner
-                .any((designer) => designer['id'] == entry.value["id"]))
+            .where((entry) => taskDesigner.any((designer) =>
+                designer[SupabaseKeys.id] == entry.value[SupabaseKeys.id]))
             .map((entry) => entry.key)
             .toList()
         : [];
 
     // Find matching indices for agencies or default to an empty list
-    selectedIndices['agency'] = taskAgency.isNotEmpty
+    selectedIndices[IndexKeys.agencyIndex] = taskAgency.isNotEmpty
         ? fetchedAgency
             .asMap()
             .entries
-            .where((entry) =>
-                taskAgency.any((agency) => agency['id'] == entry.value["id"]))
+            .where((entry) => taskAgency.any((agency) =>
+                agency[SupabaseKeys.id] == entry.value[SupabaseKeys.id]))
             .map((entry) => entry.key)
             .toList()
         : [];
 
     // Find matching index for client or default to 0
-    selectedIndices['client'] = taskClients.isNotEmpty
-        ? fetchedClient
-            .indexWhere((client) => client['id'] == taskClients[0]['id'])
+    selectedIndices[IndexKeys.clientIndex] = taskClients.isNotEmpty
+        ? fetchedClient.indexWhere((client) =>
+            client[SupabaseKeys.id] == taskClients[0][SupabaseKeys.id])
         : 0;
 
     // Find matching index for priority or default to 0
-    selectedIndices['priority'] = taskPriority != null
-        ? fetchedPriority.indexWhere((map) => map["name"] == taskPriority)
+    selectedIndices[IndexKeys.priorityIndex] = taskPriority != null
+        ? fetchedPriority
+            .indexWhere((map) => map[AppKeys.nameKey] == taskPriority)
         : 0;
 
     // Find matching index for status or default to 0
-    selectedIndices['status'] = taskStatus != null
-        ? fetchedStatus.indexWhere((map) => map["slug"] == taskStatus)
+    selectedIndices[IndexKeys.statusIndex] = taskStatus != null
+        ? fetchedStatus
+            .indexWhere((map) => map[AppKeys.statusSlug] == taskStatus)
         : 0;
   }
 
@@ -253,25 +267,29 @@ class TaskProvider extends ChangeNotifier {
     await Future.wait(futures);
     final data = await SupabaseController.instance.getAllTasks();
 
-    fetchedData['pending_tasks'] = (data['pending_tasks'] as List<dynamic>?)
-            ?.map((item) => item as Map<String, dynamic>)
-            .toList() ??
-        [];
+    fetchedData[AppKeys.fetchedPendingTasks] =
+        (data[AppKeys.fetchedPendingTasks] as List<dynamic>?)
+                ?.map((item) => item as Map<String, dynamic>)
+                .toList() ??
+            [];
 
-    fetchedData['shared_tasks'] = (data['shared_tasks'] as List<dynamic>?)
-            ?.map((item) => item as Map<String, dynamic>)
-            .toList() ??
-        [];
+    fetchedData[AppKeys.fetchedSharedTasks] =
+        (data[AppKeys.fetchedSharedTasks] as List<dynamic>?)
+                ?.map((item) => item as Map<String, dynamic>)
+                .toList() ??
+            [];
 
-    fetchedData['payment_tasks'] = (data['payment_tasks'] as List<dynamic>?)
-            ?.map((item) => item as Map<String, dynamic>)
-            .toList() ??
-        [];
+    fetchedData[AppKeys.fetchedPaymentTasks] =
+        (data[AppKeys.fetchedPaymentTasks] as List<dynamic>?)
+                ?.map((item) => item as Map<String, dynamic>)
+                .toList() ??
+            [];
 
-    fetchedData['complete_tasks'] = (data['complete_tasks'] as List<dynamic>?)
-            ?.map((item) => item as Map<String, dynamic>)
-            .toList() ??
-        [];
+    fetchedData[AppKeys.fetchedCompleteTasks] =
+        (data[AppKeys.fetchedCompleteTasks] as List<dynamic>?)
+                ?.map((item) => item as Map<String, dynamic>)
+                .toList() ??
+            [];
 
     logger.d(fetchedData);
     notifyListeners();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/task_list.dart';
@@ -20,10 +21,14 @@ class _TaskListPageState extends State<TaskListPage> {
   Widget build(BuildContext context) {
     return Consumer<TaskProvider>(
       builder: (BuildContext context, TaskProvider provider, Widget? child) {
-        final pendingTasksList = provider.fetchedData['pending_tasks'];
-        final sharedTasksList = provider.fetchedData['shared_tasks'];
-        final paymentTasksList = provider.fetchedData['payment_tasks'];
-        final completedTasksList = provider.fetchedData['completed_tasks'];
+        final pendingTasksList =
+            provider.fetchedData[AppKeys.fetchedPendingTasks];
+        final sharedTasksList =
+            provider.fetchedData[AppKeys.fetchedSharedTasks];
+        final paymentTasksList =
+            provider.fetchedData[AppKeys.fetchedPaymentTasks];
+        final completeTasksList =
+            provider.fetchedData[AppKeys.fetchedCompleteTasks];
 
         final List<Map<String, dynamic>> _tabs = [
           {
@@ -43,7 +48,7 @@ class _TaskListPageState extends State<TaskListPage> {
           },
           {
             'label': 'Complete',
-            'count': completedTasksList?.length ?? 0,
+            'count': completeTasksList?.length ?? 0,
             'color': AppColors.green
           },
         ];
@@ -128,7 +133,7 @@ class _TaskListPageState extends State<TaskListPage> {
                 noListText: 'No Payment Pending',
               ),
               TasksList(
-                tasksList: completedTasksList ?? [],
+                tasksList: completeTasksList ?? [],
                 noListText: 'No Tasks Completed',
               ),
             ],
