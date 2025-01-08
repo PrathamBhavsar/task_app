@@ -19,6 +19,7 @@ class TaskProvider extends ChangeNotifier {
 
   Map<String, List<Map<String, dynamic>>> fetchedData = {};
   Map<String, dynamic> fetchedTaskData = {};
+  Map<String, dynamic> fetchedOverallData = {};
 
   UserModel? _currentUser;
 

@@ -53,79 +53,59 @@ class _TaskListPageState extends State<TaskListPage> {
             final List<Map<String, dynamic>> _tabs =
                 provider.getTabsForRole(user.role, provider.fetchedData);
 
-            return Scaffold(
-              floatingActionButton: FloatingActionButton(
-                onPressed: () => context.push('/taskDetails?isNewTask=true'),
-              ),
-              appBar: AppBar(
-                title: const Text(
-                  'Task List',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: CircleIcons(
-                      icon: Icons.notifications_none_rounded,
-                      onTap: () {
-                        AuthController.instance.logout(context);
-                      },
-                    ),
-                  ),
-                ],
-                bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(60),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: List.generate(
-                          _tabs.length,
-                          (index) => Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: ChoiceChip(
-                              showCheckmark: false,
-                              label: ChipLabelWidget(
-                                tabs: _tabs,
-                                index: index,
-                                selectedIndex: provider.selectedListIndex,
-                              ),
-                              selectedColor: AppColors.primary,
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                                side: BorderSide(
-                                  color: provider.selectedListIndex == index
-                                      ? Colors.transparent
-                                      : AppColors.primary,
-                                  width: 2,
-                                ),
-                              ),
-                              selected: provider.selectedListIndex == index,
-                              onSelected: (bool selected) {
-                                provider.setSelectedListIndex(index);
-                              },
+            return Column(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: List.generate(
+                        _tabs.length,
+                        (index) => Padding(
+                          padding: const EdgeInsets.only(right: 8),
+                          child: ChoiceChip(
+                            showCheckmark: false,
+                            label: ChipLabelWidget(
+                              tabs: _tabs,
+                              index: index,
+                              selectedIndex: provider.selectedListIndex,
                             ),
+                            selectedColor: AppColors.primary,
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              side: BorderSide(
+                                color: provider.selectedListIndex == index
+                                    ? Colors.transparent
+                                    : AppColors.primary,
+                                width: 2,
+                              ),
+                            ),
+                            selected: provider.selectedListIndex == index,
+                            onSelected: (bool selected) {
+                              provider.setSelectedListIndex(index);
+                            },
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              body: IndexedStack(
-                index: provider.selectedListIndex,
-                children: _tabs.map((tab) {
-                  final taskList = provider.fetchedData[tab['key']] ?? [];
-                  return TasksList(
-                    tasksList: taskList,
-                    noListText: 'No ${tab['label']} Tasks',
-                  );
-                }).toList(),
-              ),
+                Expanded(
+                  child: IndexedStack(
+                    index: provider.selectedListIndex,
+                    children: _tabs.map((tab) {
+                      final taskList = provider.fetchedData[tab['key']] ?? [];
+                      return TasksList(
+                        tasksList: taskList,
+                        noListText: 'No ${tab['label']} Tasks',
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
             );
           },
         );

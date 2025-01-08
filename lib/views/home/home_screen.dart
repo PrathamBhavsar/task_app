@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/dashboard/dashboard_page.dart';
 import 'package:task_app/views/home/pages/task%20list/task_list_page.dart';
@@ -11,23 +12,42 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<String> pageTitles = ['Dashboard', 'Task List'];
   List<Widget> pages = [const DashboardPage(), const TaskListPage()];
 
-  final pageController = PageController(initialPage: 1);
+  final PageController pageController = PageController(initialPage: 0);
+  int _currentPageIndex = 0;
+
   @override
   void initState() {
-    TaskProvider.instance.fetchAllData();
+    // TaskProvider.instance.fetchAllData();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      controller: pageController,
-      itemCount: pages.length,
-      itemBuilder: (context, index) {
-        return pages[index];
-      },
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push('/taskDetails?isNewTask=true'),
+      ),
+      appBar: AppBar(
+        title: Text(
+          pageTitles[_currentPageIndex],
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: PageView.builder(
+        controller: pageController,
+        itemCount: pages.length,
+        onPageChanged: (index) {
+          setState(() {
+            _currentPageIndex = index;
+          });
+        },
+        itemBuilder: (context, index) {
+          return pages[index];
+        },
+      ),
     );
   }
 }
