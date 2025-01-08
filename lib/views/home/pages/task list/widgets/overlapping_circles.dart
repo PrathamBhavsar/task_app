@@ -1,80 +1,117 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-class OverlappingCircles extends StatelessWidget {
-  final int numberOfCircles;
+import 'package:task_app/constants/app_colors.dart';
 
-  const OverlappingCircles({super.key, required this.numberOfCircles});
+class OverlappingCircles extends StatelessWidget {
+  final List<Color> bgColors;
+  final List<String> displayNames;
+  final double circleSize;
+  final double borderWidth;
+  final Color borderColor;
+
+  const OverlappingCircles({
+    super.key,
+    required this.bgColors,
+    required this.displayNames,
+    this.circleSize = 38.0,
+    this.borderWidth = 2.0,
+    this.borderColor = AppColors.primary,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final random = Random();
-
-    // Generate random colors for the circles
-    List<Color> randomColors = List.generate(
-      numberOfCircles,
-      (_) => Color.fromRGBO(
-        random.nextInt(256),
-        random.nextInt(256),
-        random.nextInt(256),
-        1.0,
-      ),
-    );
-
+    final numberOfCircles = min(bgColors.length, displayNames.length);
     final circlesToShow = numberOfCircles > 3 ? 2 : numberOfCircles;
     final remainingCircles = numberOfCircles - 3;
+    final fontSize = circleSize * 0.4;
 
+    // Calculate width for the "+remainingCircles" text
     double textWidth = 0.0;
     if (remainingCircles > 0) {
       final textPainter = TextPainter(
         text: TextSpan(
           text: '+$remainingCircles',
-          style: const TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w900,
-          ),
+          style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.w900,
+              color: AppColors.primary),
         ),
         textDirection: TextDirection.ltr,
       )..layout();
       textWidth = textPainter.width;
     }
-
-    final totalWidth = 16.0 * 2 +
-        (circlesToShow - 1) * 12.0 +
-        (remainingCircles > 0 ? max(16.0, textWidth) : 0);
+    final space = circleSize * 0.7;
+    final totalWidth = circleSize +
+        (circlesToShow - 1) * space +
+        (remainingCircles > 0 ? max(circleSize, textWidth) : 0);
 
     return SizedBox(
       width: totalWidth,
-      height: 32.0,
+      height: circleSize,
       child: Stack(
         children: List.generate(
           circlesToShow + (remainingCircles > 0 ? 1 : 0),
           (index) {
-            final overlapOffset = index * 12.0;
+            final overlapOffset = index * space;
 
             if (remainingCircles > 0 && index == circlesToShow) {
               return Positioned(
                 left: overlapOffset,
-                child: CircleAvatar(
-                  radius: 16,
-                  backgroundColor: Colors.grey,
-                  child: Text(
-                    '+$remainingCircles',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w900,
+                child: Container(
+                  width: circleSize,
+                  height: circleSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: borderColor,
+                      width: borderWidth,
+                    ),
+                    color: Colors.grey,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '+$remainingCircles',
+                      style: TextStyle(
+                          fontSize: fontSize,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.primary),
                     ),
                   ),
                 ),
               );
             }
 
+            // Display the first two letters of the display name
+            final initials = displayNames[index]
+                .trim()
+                .split(' ')
+                .map((word) => word.isNotEmpty ? word[0] : '')
+                .take(2)
+                .join();
+
             return Positioned(
               left: overlapOffset,
-              child: CircleAvatar(
-                radius: 16,
-                backgroundColor: randomColors[index],
+              child: Container(
+                width: circleSize,
+                height: circleSize,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: borderColor, 
+                    width: borderWidth, 
+                  ),
+                  color: bgColors[index], 
+                ),
+                child: Center(
+                  child: Text(
+                    initials,
+                    style: TextStyle(
+                        fontSize: fontSize, 
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary),
+                  ),
+                ),
               ),
             );
           },

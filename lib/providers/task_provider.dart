@@ -136,10 +136,10 @@ class TaskProvider extends ChangeNotifier {
       name: name,
       remarks: remarks,
       status: fetchedData[AppKeys.fetchedStatus]![
-          selectedIndices[IndexKeys.statusIndex]][AppKeys.nameKey],
+          selectedIndices[IndexKeys.statusIndex]][AppKeys.name],
       dueDate: dueDate,
       priority: fetchedData[AppKeys.fetchedPriority]![
-          selectedIndices[IndexKeys.priorityIndex]][AppKeys.nameKey],
+          selectedIndices[IndexKeys.priorityIndex]][AppKeys.name],
       startDate: startDate,
       selectedClientId: fetchedData[AppKeys.fetchedClients]![
           selectedIndices[IndexKeys.clientIndex]],
@@ -184,10 +184,10 @@ class TaskProvider extends ChangeNotifier {
       name: name,
       remarks: remarks,
       status: fetchedData[AppKeys.fetchedStatus]![
-          selectedIndices[IndexKeys.statusIndex]][AppKeys.nameKey],
+          selectedIndices[IndexKeys.statusIndex]][AppKeys.name],
       dueDate: dueDate,
       priority: fetchedData[AppKeys.fetchedPriority]![
-          selectedIndices[IndexKeys.priorityIndex]][AppKeys.nameKey],
+          selectedIndices[IndexKeys.priorityIndex]][AppKeys.name],
       startDate: startDate,
       selectedClientId: fetchedData[AppKeys.fetchedClients]![
           selectedIndices[IndexKeys.clientIndex]],
@@ -294,13 +294,12 @@ class TaskProvider extends ChangeNotifier {
 
     // Find matching index for priority or default to 0
     selectedIndices[IndexKeys.priorityIndex] = taskPriority != null
-        ? fetchedPriority
-            .indexWhere((map) => map[AppKeys.nameKey] == taskPriority)
+        ? fetchedPriority.indexWhere((map) => map[AppKeys.name] == taskPriority)
         : 0;
 
     // Find matching index for status or default to 0
     selectedIndices[IndexKeys.statusIndex] = taskStatus != null
-        ? fetchedStatus.indexWhere((map) => map[AppKeys.nameKey] == taskStatus)
+        ? fetchedStatus.indexWhere((map) => map[AppKeys.name] == taskStatus)
         : 0;
   }
 
@@ -385,6 +384,48 @@ class TaskProvider extends ChangeNotifier {
 
     logger.d(fetchedData);
     notifyListeners();
+  }
+
+  List<Map<String, dynamic>> getUserDetails(List<String> userIds) {
+    final List<Map<String, dynamic>> userDetails = [];
+
+    for (var userId in userIds) {
+      // Check which list contains the userId
+      final salesperson = fetchedData[AppKeys.fetchedSalespersons]?.firstWhere(
+          (user) => user[SupabaseKeys.id] == userId,
+          orElse: () => {});
+      if (salesperson!.isNotEmpty) {
+        userDetails.add({
+          UserDetails.profileBgColor: salesperson[UserDetails.profileBgColor],
+          UserDetails.name: salesperson[UserDetails.name],
+        });
+        continue;
+      }
+
+      final agency = fetchedData[AppKeys.fetchedAgencies]?.firstWhere(
+          (user) => user[SupabaseKeys.id] == userId,
+          orElse: () => {});
+      if (agency!.isNotEmpty) {
+        userDetails.add({
+          UserDetails.profileBgColor: agency[UserDetails.profileBgColor],
+          UserDetails.name: agency[UserDetails.name],
+        });
+        continue;
+      }
+
+      final designer = fetchedData[AppKeys.fetchedDesigners]?.firstWhere(
+          (user) => user[SupabaseKeys.id] == userId,
+          orElse: () => {});
+      if (designer!.isNotEmpty) {
+        userDetails.add({
+          UserDetails.profileBgColor: designer[UserDetails.profileBgColor],
+          UserDetails.name: designer[UserDetails.name],
+        });
+        continue;
+      }
+    }
+
+    return userDetails;
   }
 
   /// Generic method to fetch data

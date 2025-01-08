@@ -89,7 +89,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     title: 'Clients',
                     index: provider.selectedIndices[IndexKeys.clientIndex],
                     name: 'name',
-                    field: 'client',
+                    indexKey: 'client',
                     defaultText: "No Clients Yet",
                     isNewTask: widget.isNewTask,
                     dealNo: widget.dealNo,
@@ -120,31 +120,49 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       color: provider.stringToColor(data[
                                   SupabaseKeys.taskStatusTable]
                               ?[provider.selectedIndices[IndexKeys.statusIndex]]
-                          ['color']),
+                          [AppKeys.color]),
                       text: data[SupabaseKeys.taskStatusTable]?[provider
                                   .selectedIndices[IndexKeys.statusIndex]]
-                              ['name'] ??
+                              [AppKeys.name] ??
                           ""),
-                  field: 'status',
+                  indexKey: IndexKeys.statusIndex,
                 ),
                 _buildDynamicRow(
                   context: context,
                   label: 'Assigned For',
-                  dataList: data['salespersons'],
+                  dataList: data[AppKeys.fetchedSalespersons],
                   widget: OverlappingCircles(
-                      numberOfCircles: provider
-                          .selectedIndices[IndexKeys.salespersonIndex].length),
-                  field: 'salespersons',
+                    bgColors: data[AppKeys.fetchedSalespersons]!
+                        .map(
+                          (user) => provider.stringToColor(
+                            user[UserDetails.profileBgColor],
+                          ),
+                        )
+                        .toList(),
+                    displayNames: data[AppKeys.fetchedSalespersons]!
+                        .map((user) => user[UserDetails.name] as String)
+                        .toList(),
+                  ),
+                  indexKey: IndexKeys.salespersonIndex,
                 ),
                 _buildDynamicRow(
                   context: context,
                   label: 'Designers',
-                  dataList: data['designers'],
+                  dataList: data[AppKeys.fetchedDesigners],
                   widget: provider
                           .selectedIndices[IndexKeys.designerIndex]!.isNotEmpty
                       ? OverlappingCircles(
-                          numberOfCircles: provider
-                              .selectedIndices[IndexKeys.designerIndex].length)
+                          bgColors: data[AppKeys.fetchedDesigners]!
+                              .map(
+                                (user) => provider.stringToColor(
+                                  user[UserDetails.profileBgColor],
+                                ),
+                              )
+                              .toList(),
+                          displayNames: data[AppKeys.fetchedDesigners]!
+                              .map((user) => user[UserDetails.name] as String)
+                              .toList(),
+                        )
                       : Text(
                           'None',
                           style: TextStyle(
@@ -152,7 +170,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                             fontWeight: AppTexts.fW700,
                           ),
                         ),
-                  field: 'designers',
+                  indexKey: IndexKeys.designerIndex,
                 ),
                 _buildDynamicRow(
                   context: context,
@@ -162,12 +180,12 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       color: provider.stringToColor(
                           data[SupabaseKeys.taskPriorityTable]?[provider
                                   .selectedIndices[IndexKeys.priorityIndex]]
-                              ['color']),
+                              [AppKeys.color]),
                       text: data[SupabaseKeys.taskPriorityTable]?[provider
                                   .selectedIndices[IndexKeys.priorityIndex]]
-                              ['name'] ??
+                              [AppKeys.name] ??
                           ""),
-                  field: 'priority',
+                  indexKey: IndexKeys.priorityIndex,
                 ),
                 _buildDivider(),
                 const AgencyRequiredSwitch(),
@@ -175,11 +193,20 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   _buildDynamicRow(
                     context: context,
                     label: UserRole.agency.role,
-                    dataList: data['agencies'],
+                    dataList: data[AppKeys.fetchedAgencies],
                     widget: OverlappingCircles(
-                        numberOfCircles: provider
-                            .selectedIndices[IndexKeys.agencyIndex].length),
-                    field: 'agency',
+                      bgColors: data[AppKeys.fetchedAgencies]!
+                          .map(
+                            (user) => provider.stringToColor(
+                              user[UserDetails.profileBgColor],
+                            ),
+                          )
+                          .toList(),
+                      displayNames: data[AppKeys.fetchedAgencies]!
+                          .map((user) => user[UserDetails.name] as String)
+                          .toList(),
+                    ),
+                    indexKey: IndexKeys.agencyIndex,
                   ),
                 //   if (data['task_attachments'] != null &&
                 //       data['task_attachments']!.isNotEmpty)
@@ -298,7 +325,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   Widget _buildDynamicRow({
     required BuildContext context,
     required String label,
-    required String field,
+    required String indexKey,
     required List<Map<String, dynamic>>? dataList,
     required Widget widget,
   }) {
@@ -308,7 +335,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         label: label,
         widget: widget,
         onTap: () =>
-            showClientsBottomSheet(context, dataList ?? [], label, field),
+            showClientsBottomSheet(context, dataList ?? [], label, indexKey),
       ),
     );
   }
@@ -319,7 +346,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     required int index,
     required String title,
     required String name,
-    required String field,
+    required String indexKey,
     required String defaultText,
     required bool isNewTask,
     required String dealNo,
@@ -328,7 +355,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       name: dataList?.isNotEmpty == true ? dataList![index][name] : defaultText,
       clientList: dataList ?? [],
       onTap: () =>
-          showClientsBottomSheet(context, dataList ?? [], title, field),
+          showClientsBottomSheet(context, dataList ?? [], title, indexKey),
       dealNo: dealNo,
       isNewTask: isNewTask,
     );

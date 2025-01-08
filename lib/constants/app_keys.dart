@@ -55,8 +55,18 @@ class AppKeys {
   static const String fetchedPriority = 'task_priority';
   static const String fetchedStatus = 'task_status';
 
+  static const String status = 'status';
+  static const String priority = 'priority';
+
   static const String statusSlug = 'slug';
-  static const String nameKey = 'name';
+
+  static const String color = 'color';
+  static const String name = 'name';
+}
+
+class UserDetails {
+  static const String profileBgColor = 'profile_bg_color';
+  static const String name = 'name';
 }
 
 class IndexKeys {
@@ -90,6 +100,7 @@ class TaskKeys {
   static const String taskClients = 'task_clients';
   static const String taskAgencies = 'task_agencies';
   static const String taskDesigners = 'task_designers';
+  static const String taskUserIds = 'user_ids';
 
   static const String taskPriority = 'priority';
   static const String taskStatus = 'status';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'package:task_app/widgets/circle_icons.dart';
@@ -76,8 +77,23 @@ class TaskTile extends StatelessWidget {
                     ],
                   ),
                   OverlappingCircles(
-                      numberOfCircles:
-                          task['salespersons_count'] + task['agencies_count']),
+                    bgColors: TaskProvider.instance
+                        .getUserDetails(
+                            (task[TaskKeys.taskUserIds] as List<dynamic>)
+                                .cast<String>())
+                        .map(
+                          (user) => TaskProvider.instance.stringToColor(
+                            user[UserDetails.profileBgColor],
+                          ),
+                        )
+                        .toList(),
+                    displayNames: TaskProvider.instance
+                        .getUserDetails(
+                            (task[TaskKeys.taskUserIds] as List<dynamic>)
+                                .cast<String>())
+                        .map((user) => user[UserDetails.name] as String)
+                        .toList(),
+                  ),
                 ],
               ),
             ],
