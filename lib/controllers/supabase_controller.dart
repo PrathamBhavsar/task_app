@@ -14,6 +14,21 @@ class SupabaseController {
   final supabase = Supabase.instance.client;
   final Logger log = Logger();
 
+  Future<Map<String, dynamic>> getOverallCounts() async {
+    return await _executeQuery(() async {
+          final UserModel? user =
+              await AuthController.instance.getLoggedInUser();
+          final response = await supabase.rpc(
+            'get_status_counts',
+            params: {FunctionKeys.userIdParam: user!.id},
+          ).single();
+
+          return response;
+        }) ??
+        {};
+  }
+
+  /// creates a task in supabase
   Future<void> createTask({
     required String name,
     required String remarks,

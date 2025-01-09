@@ -42,6 +42,7 @@ dependencies:
   logger: ^2.5.0
   intl: ^0.20.1
   fluttertoast: ^8.2.10
+  flutter_screenutil: ^5.9.3
 
 
 dev_dependencies:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppColors {
   static const Color textFieldBg = Color(0xfff7f7f7);
@@ -41,7 +42,7 @@ class AppPaddings {
   static EdgeInsets appPadding = const EdgeInsets.all(10);
 
   static Widget gapH(double h) => SizedBox(height: h);
-  static Widget gapW(double h) => SizedBox(width: h);
+  static Widget gapW(double w) => SizedBox(width: w);
 }
 
 class AppTexts {
@@ -49,5 +50,7 @@ class AppTexts {
   static var borderRadius = BorderRadius.circular(15);
   static var borderWidth = Border.all(width: 2);
 
-  static TextStyle headingStyle = TextStyle(fontSize: 22, fontWeight: fW700);
+  static TextStyle textStyleFS = TextStyle(fontSize: 22, fontWeight: fW700);
+  static TextStyle headingStyle =
+      TextStyle(fontSize: 22, fontWeight: fW700, fontFamily: 'Poppins');
 }

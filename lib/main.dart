@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -20,16 +21,21 @@ void main() async {
   bool? isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AuthProvider>(
-          create: (_) => AuthProvider.instance,
-        ),
-        ChangeNotifierProvider<TaskProvider>(
-          create: (_) => TaskProvider.instance,
-        ),
-      ],
-      child: MyApp(isLoggedIn: isLoggedIn),
+    ScreenUtilInit(
+      designSize: const Size(1080, 2340),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AuthProvider>(
+            create: (_) => AuthProvider.instance,
+          ),
+          ChangeNotifierProvider<TaskProvider>(
+            create: (_) => TaskProvider.instance,
+          ),
+        ],
+        child: MyApp(isLoggedIn: isLoggedIn),
+      ),
     ),
   );
 }
@@ -44,6 +50,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       theme: ThemeData(
         fontFamily: 'Poppins',
+        primaryTextTheme: TextTheme(),
         primaryColor: AppColors.primary,
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: AppColors.primarySwatch,

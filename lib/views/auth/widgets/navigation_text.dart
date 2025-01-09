@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:task_app/constants/app_colors.dart';
@@ -19,16 +20,19 @@ class NavigationText extends StatelessWidget {
             text: isLogin
                 ? "Already have an account? "
                 : "Don't have an account? ",
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.accent,
-              fontSize: 15,
+              fontSize: 15.sp,
               fontWeight: FontWeight.bold,
+              
             ),
             children: [
               TextSpan(
                 text: isLogin ? "Log in" : "Sign up",
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.primary,
+                                fontSize: 15.sp,
+
                   fontWeight: FontWeight.w900,
                 ),
                 recognizer: TapGestureRecognizer()

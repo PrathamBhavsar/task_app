@@ -132,14 +132,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   label: 'Assigned For',
                   dataList: data[AppKeys.fetchedSalespersons],
                   widget: OverlappingCircles(
-                    bgColors: data[AppKeys.fetchedSalespersons]!
+                    bgColors: (data[AppKeys.fetchedSalespersons] ?? [])
                         .map(
                           (user) => provider.stringToColor(
                             user[UserDetails.profileBgColor],
                           ),
                         )
                         .toList(),
-                    displayNames: data[AppKeys.fetchedSalespersons]!
+                    displayNames: (data[AppKeys.fetchedSalespersons] ?? [])
                         .map((user) => user[UserDetails.name] as String)
                         .toList(),
                   ),
@@ -152,14 +152,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   widget: provider
                           .selectedIndices[IndexKeys.designerIndex]!.isNotEmpty
                       ? OverlappingCircles(
-                          bgColors: data[AppKeys.fetchedDesigners]!
+                          bgColors: (data[AppKeys.fetchedDesigners] ?? [])
                               .map(
                                 (user) => provider.stringToColor(
                                   user[UserDetails.profileBgColor],
                                 ),
                               )
                               .toList(),
-                          displayNames: data[AppKeys.fetchedDesigners]!
+                          displayNames: (data[AppKeys.fetchedDesigners] ?? [])
                               .map((user) => user[UserDetails.name] as String)
                               .toList(),
                         )
@@ -275,7 +275,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                                           remarkController.text,
                                           widget.dealNo,
                                         );
-                                  await TaskProvider.instance.fetchAllData();
+                                  // await TaskProvider.instance.fetchAllData();
                                   Navigator.of(context).pop();
                                   Navigator.of(context).pop();
                                 },

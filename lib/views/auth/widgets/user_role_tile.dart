@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/main.dart';
 
 class UserRoleTile extends StatelessWidget {
   const UserRoleTile({
@@ -22,15 +24,15 @@ class UserRoleTile extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: isSelected ? AppColors.green : Colors.white,
-            border: Border.all(width: 2),
+            border: Border.all(width: 2.w),
             borderRadius: AppTexts.borderRadius,
           ),
           child: Center(
             child: Text(
               text,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: AppTexts.fW700,
               ),
             ),
           ),

@@ -36,6 +36,15 @@ class TaskProvider extends ChangeNotifier {
     IndexKeys.priorityIndex: 0,
   };
 
+  Map<String, dynamic> fetchedDataCount = {};
+
+  /// gets overall counts
+  Future<void> getOverallCounts() async {
+    final data = await SupabaseController.instance.getOverallCounts();
+    fetchedDataCount = data;
+    notifyListeners();
+  }
+
   /// set current user
   void setCurrentUser(UserModel user) {
     _currentUser = user;
@@ -392,10 +401,12 @@ class TaskProvider extends ChangeNotifier {
 
     for (var userId in userIds) {
       // Check which list contains the userId
-      final salesperson = fetchedData[AppKeys.fetchedSalespersons]?.firstWhere(
-          (user) => user[SupabaseKeys.id] == userId,
-          orElse: () => {});
-      if (salesperson!.isNotEmpty) {
+      final salesperson = fetchedData[AppKeys.fetchedSalespersons] ??
+          [].firstWhere(
+            (user) => user[SupabaseKeys.id] == userId,
+            // orElse: () => {}
+          );
+      if (salesperson.isNotEmpty) {
         userDetails.add({
           UserDetails.profileBgColor: salesperson[UserDetails.profileBgColor],
           UserDetails.name: salesperson[UserDetails.name],
@@ -403,9 +414,9 @@ class TaskProvider extends ChangeNotifier {
         continue;
       }
 
-      final agency = fetchedData[AppKeys.fetchedAgencies]?.firstWhere(
-          (user) => user[SupabaseKeys.id] == userId,
-          orElse: () => {});
+      final agency = fetchedData[AppKeys.fetchedAgencies] ??
+          [].firstWhere((user) => user[SupabaseKeys.id] == userId,
+              orElse: () => {});
       if (agency!.isNotEmpty) {
         userDetails.add({
           UserDetails.profileBgColor: agency[UserDetails.profileBgColor],
@@ -414,9 +425,9 @@ class TaskProvider extends ChangeNotifier {
         continue;
       }
 
-      final designer = fetchedData[AppKeys.fetchedDesigners]?.firstWhere(
-          (user) => user[SupabaseKeys.id] == userId,
-          orElse: () => {});
+      final designer = fetchedData[AppKeys.fetchedDesigners] ??
+          [].firstWhere((user) => user[SupabaseKeys.id] == userId,
+              orElse: () => {});
       if (designer!.isNotEmpty) {
         userDetails.add({
           UserDetails.profileBgColor: designer[UserDetails.profileBgColor],
