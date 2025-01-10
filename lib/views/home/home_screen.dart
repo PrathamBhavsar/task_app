@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    TaskProvider.instance.fetchAllData();
+    // TaskProvider.instance.fetchAllData();
     super.initState();
   }
 

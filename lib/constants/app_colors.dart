@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class AppColors {
   static const Color textFieldBg = Color(0xfff7f7f7);
   static const Color green = Color(0xff5cd669);
+  static const Color darkGreen = Color(0xffe8a4fe);
   static const Color primary = Color(0xff181818);
   static const Color accent = Color(0xffb4b4b4);
   static const Color error = Color(0xffffecec);

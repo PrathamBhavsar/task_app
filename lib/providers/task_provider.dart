@@ -14,6 +14,12 @@ class TaskProvider extends ChangeNotifier {
 
   final Logger logger = Logger();
 
+  int _currentTaskPage = 0;
+  int _currentTodayTaskPage = 0;
+
+  int get currentTaskPage => _currentTaskPage;
+  int get currentTodayTaskPage => _currentTodayTaskPage;
+
   DateTime dueDate = DateTime.now().add(Duration(days: 2));
   DateTime startDate = DateTime.now();
 
@@ -37,6 +43,16 @@ class TaskProvider extends ChangeNotifier {
   };
 
   Map<String, dynamic> fetchedDataCount = {};
+
+  void updateCurrentTaskPage(int page) {
+    _currentTaskPage = page;
+    notifyListeners();
+  }
+
+  void updateCurrentTodayTaskPage(int page) {
+    _currentTodayTaskPage = page;
+    notifyListeners();
+  }
 
   /// gets overall counts
   Future<void> getOverallCounts() async {
@@ -401,11 +417,9 @@ class TaskProvider extends ChangeNotifier {
 
     for (var userId in userIds) {
       // Check which list contains the userId
-      final salesperson = fetchedData[AppKeys.fetchedSalespersons] ??
-          [].firstWhere(
-            (user) => user[SupabaseKeys.id] == userId,
-            // orElse: () => {}
-          );
+      final salesperson = fetchedData[AppKeys.fetchedSalespersons]!.firstWhere(
+          (user) => user[SupabaseKeys.id] == userId,
+          orElse: () => {});
       if (salesperson.isNotEmpty) {
         userDetails.add({
           UserDetails.profileBgColor: salesperson[UserDetails.profileBgColor],
@@ -414,10 +428,10 @@ class TaskProvider extends ChangeNotifier {
         continue;
       }
 
-      final agency = fetchedData[AppKeys.fetchedAgencies] ??
-          [].firstWhere((user) => user[SupabaseKeys.id] == userId,
-              orElse: () => {});
-      if (agency!.isNotEmpty) {
+      final agency = fetchedData[AppKeys.fetchedAgencies]!.firstWhere(
+          (user) => user[SupabaseKeys.id] == userId,
+          orElse: () => {});
+      if (agency.isNotEmpty) {
         userDetails.add({
           UserDetails.profileBgColor: agency[UserDetails.profileBgColor],
           UserDetails.name: agency[UserDetails.name],
@@ -425,9 +439,9 @@ class TaskProvider extends ChangeNotifier {
         continue;
       }
 
-      final designer = fetchedData[AppKeys.fetchedDesigners] ??
-          [].firstWhere((user) => user[SupabaseKeys.id] == userId,
-              orElse: () => {});
+      final designer = fetchedData[AppKeys.fetchedDesigners]!.firstWhere(
+          (user) => user[SupabaseKeys.id] == userId,
+          orElse: () => {});
       if (designer!.isNotEmpty) {
         userDetails.add({
           UserDetails.profileBgColor: designer[UserDetails.profileBgColor],

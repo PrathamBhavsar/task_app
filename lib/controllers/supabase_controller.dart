@@ -276,6 +276,12 @@ class SupabaseController {
     return await _executeQuery(() async {
           final UserModel? user =
               await AuthController.instance.getLoggedInUser();
+
+          // final response = await getSalesTasks(user!.id!);
+
+          //   return response;
+          // }) ??
+          // {};
           final response = await supabase.rpc(
             user!.role == UserRole.salesperson
                 ? FunctionKeys.getSalesTasksFunc
@@ -286,6 +292,97 @@ class SupabaseController {
           return response;
         }) ??
         {};
+  }
+
+  Future<Map<String, dynamic>> getSalesTasks(String userId) async {
+    try {
+      // Step 1: Fetch tasks from `task_salespersons`
+      final response1 = await supabase
+          .from('tasks')
+          .select('*, task_salespersons!inner(user_id)')
+          .eq('task_salespersons.user_id', userId);
+
+      // Step 2: Fetch tasks from `task_agencies`
+      final response2 = await supabase
+          .from('tasks')
+          .select('*, task_agencies!inner(user_id)')
+          .eq('task_agencies.user_id', userId);
+
+      // Step 3: Merge both task lists and remove duplicates
+      final tasks = [
+        ...response1 as List<dynamic>,
+        ...response2 as List<dynamic>
+      ];
+
+      // Remove duplicate tasks based on task ID
+      final uniqueTasks =
+          {for (var task in tasks) task['id']: task}.values.toList();
+
+      // Step 4: Categorize tasks
+      final Map<String, List<Map<String, dynamic>>> categorizedTasks = {
+        'pending_tasks': [],
+        'completed_tasks': [],
+        'payment_tasks': [],
+        'shared_tasks': [],
+        'quotation_tasks': [],
+      };
+
+      for (final task in uniqueTasks) {
+        final String status = task['status'];
+        final String taskCategory;
+
+        if (status == 'Task: In Progress') {
+          taskCategory = 'pending_tasks';
+        } else if ([
+          'Measurement: Shared',
+          'Measurement: Accepted',
+          'Measurement: Rejected',
+          'Measurement: In Progress'
+        ].contains(status)) {
+          taskCategory = 'shared_tasks';
+        } else if (['Measurement: Completed', 'Quotation: Created']
+            .contains(status)) {
+          taskCategory = 'quotation_tasks';
+        } else if (['Payment: Paid', 'Payment: Unpaid'].contains(status)) {
+          taskCategory = 'payment_tasks';
+        } else if (status == 'Task: Completed') {
+          taskCategory = 'completed_tasks';
+        } else {
+          continue; // Skip tasks that don't match any category
+        }
+
+        // Aggregate user IDs associated with the task
+        final userIds = <String>{};
+        if (task['task_salespersons'] != null) {
+          for (var ts in task['task_salespersons']) {
+            userIds.add(ts['user_id']);
+          }
+        }
+        if (task['task_agencies'] != null) {
+          for (var ta in task['task_agencies']) {
+            userIds.add(ta['user_id']);
+          }
+        }
+
+        // Add the task to the appropriate category
+        categorizedTasks[taskCategory]!.add({
+          ...task,
+          'user_ids': userIds.toList(),
+          'task_category': taskCategory,
+        });
+      }
+
+      // Step 5: Return the result in the desired format
+      return {
+        'pending_tasks': categorizedTasks['pending_tasks'],
+        'completed_tasks': categorizedTasks['completed_tasks'],
+        'payment_tasks': categorizedTasks['payment_tasks'],
+        'shared_tasks': categorizedTasks['shared_tasks'],
+        'quotation_tasks': categorizedTasks['quotation_tasks'],
+      };
+    } catch (e) {
+      throw Exception('Error fetching tasks: $e');
+    }
   }
 
   /// Get all rows

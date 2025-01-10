@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/providers/task_provider.dart';
@@ -14,19 +16,18 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   late Future<void> _userFuture;
   final PageController _pageController = PageController();
-  int _currentPage = 0;
-
+  final PageController _taskPageController = PageController();
   @override
   void initState() {
     super.initState();
-    // _userFuture = Future.delayed(const Duration(
-    //     seconds: 2));
-    _userFuture = TaskProvider.instance.getOverallCounts();
+    _userFuture = Future.delayed(const Duration(seconds: 2));
+    // _userFuture = TaskProvider.instance.getOverallCounts();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _taskPageController.dispose();
     super.dispose();
   }
 
@@ -161,7 +162,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 "category": "Measurement",
               }
             ];
-            final taskw = [
+            final task = [
               {
                 "task_category": "shared_tasks",
                 "id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
@@ -211,32 +212,31 @@ class _DashboardPageState extends State<DashboardPage> {
 
             // List of categories
             final categories = groupedCounts.keys.toList();
-            final colors = provider.fetchedData['task_status'];
-            final task = provider.fetchedData['shared_tasks'];
-            // final colors = fetchedData;
+            // final colors = provider.fetchedData['task_status'];
+            // final task = provider.fetchedData['shared_tasks'];
+            final colors = fetchedData;
 
             return Padding(
               padding: AppPaddings.appPadding,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      categories[_currentPage],
+                      categories[provider.currentTaskPage],
                       style: AppTexts.headingStyle,
                     ),
                   ),
                   AppPaddings.gapH(10),
                   SizedBox(
-                    height: 165,
+                    height: 136.h,
                     width: screenWidth,
                     child: PageView.builder(
                       itemCount: categories.length,
                       controller: _pageController,
                       onPageChanged: (page) {
-                        setState(() {
-                          _currentPage = page;
-                        });
+                        provider.updateCurrentTaskPage(page);
                       },
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
@@ -267,9 +267,28 @@ class _DashboardPageState extends State<DashboardPage> {
                       },
                     ),
                   ),
-                  _buildDotIndicator(categories.length),
+                  _buildDotIndicator(
+                      categories.length, provider.currentTaskPage),
                   AppPaddings.gapH(10),
-                  // _buildTodayTasks(task ?? []),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Tasks Due Today',
+                      style: AppTexts.headingStyle,
+                    ),
+                  ),
+                  AppPaddings.gapH(10),
+                  task != null ? _buildTodayTasks(task) : SizedBox.shrink(),
+                  _buildDotIndicator(
+                      task.length, provider.currentTodayTaskPage),
+                  AppPaddings.gapH(10),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Tasks By User',
+                      style: AppTexts.headingStyle,
+                    ),
+                  ),
                 ],
               ),
             );
@@ -279,31 +298,38 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildTodayTasks(List<Map<String, dynamic>> task) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        height: 150,
-        width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: task.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (task.isEmpty) {
-              return Center(
-                child: Text(
-                  'noListText',
-                  style: AppTexts.headingStyle,
-                ),
-              );
-            }
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: TaskTile(task: task[index]),
-            );
-          },
-        ),
+  Widget _buildPageViews<T>({
+    required List<T> data,
+    required PageController controller,
+    required Function(int) onPageChanged,
+    required Widget Function(BuildContext, int) itemBuilder,
+    double height = 148.0,
+  }) {
+    return Container(
+      height: height.h,
+      child: PageView.builder(
+        controller: controller,
+        scrollDirection: Axis.horizontal,
+        itemCount: data.length,
+        onPageChanged: onPageChanged,
+        itemBuilder: itemBuilder,
       ),
+    );
+  }
+
+  Widget _buildTodayTasks(List<Map<String, dynamic>> tasks) {
+    return _buildPageViews(
+      data: tasks,
+      controller: _taskPageController,
+      onPageChanged: (page) {
+        TaskProvider.instance.updateCurrentTodayTaskPage(page);
+      },
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10, right: 10),
+          child: TaskTile(task: tasks[index]),
+        );
+      },
     );
   }
 
@@ -328,7 +354,6 @@ class _DashboardPageState extends State<DashboardPage> {
       Map<String, dynamic> data, List<Map<String, dynamic>>? taskStatusColors) {
     final displayName = data['name'].split(':').last.trim();
 
-    // Find the corresponding color based on the task name
     final colorMap = taskStatusColors?.firstWhere(
       (color) => color['name'].trim() == data['name'],
     );
@@ -371,7 +396,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildDotIndicator(int pageCount) {
+  Widget _buildDotIndicator(int pageCount, int currentPage) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -380,10 +405,10 @@ class _DashboardPageState extends State<DashboardPage> {
           return AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             margin: const EdgeInsets.symmetric(horizontal: 4.0),
-            width: _currentPage == index ? 8 : 3,
-            height: _currentPage == index ? 8 : 3,
+            width: currentPage == index ? 8 : 3,
+            height: currentPage == index ? 8 : 3,
             decoration: BoxDecoration(
-              color: _currentPage == index ? AppColors.primary : Colors.grey,
+              color: currentPage == index ? AppColors.primary : Colors.grey,
               shape: BoxShape.circle,
             ),
           );
