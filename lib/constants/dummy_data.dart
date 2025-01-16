@@ -1,4 +1,62 @@
 class DummyData {
+  static final Map<String, dynamic> dummyTaskData = {
+    "name": "test",
+    "status": "Quotation: Created",
+    "deal_no": "25-0019",
+    "remarks": "test",
+    "due_date": "2025-01-09T13:47:15.811486+00:00",
+    "priority": "High",
+    "created_at": "2025-01-07T08:26:55.63643+00:00",
+    "created_by": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+    "start_date": "2025-01-07T13:47:15.812646+00:00",
+    "task_clients": [
+      {
+        "id": "47bdb46f-8067-4ab1-8f89-1a188a24fe35",
+        "name": "client 1",
+        "address": "test aaddress",
+        "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+        "contact_no": "8490055445",
+        "created_at": "2025-01-01T07:26:40.084195+00:00"
+      }
+    ],
+    "task_agencies": [
+      {
+        "id": "f7c84cb0-f16e-4e6c-8f76-dd629007fb78",
+        "name": "Jatin Tailor",
+        "role": "Agency",
+        "email": "d@gmail.com",
+        "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+        "created_at": "2025-01-02T07:58:17.127613+00:00",
+        "profile_bg_color": "ff5cd669"
+      }
+    ],
+    "task_designers": [
+      {
+        "id": "7da4e0ff-f6fc-4220-a135-84866574decb",
+        "code": 321,
+        "name": "designer 1",
+        "address": "address 1",
+        "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+        "firm_name": "yaay designers",
+        "contact_no": "848954523",
+        "created_at": "2025-01-03T12:01:17.930424+00:00",
+        "profile_bg_color": "ff5cd669"
+      }
+    ],
+    "task_attachments": [null],
+    "task_salespersons": [
+      {
+        "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+        "name": "Bhushan",
+        "role": "Salesperson",
+        "email": "a@gmail.com",
+        "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+        "created_at": "2025-01-02T07:35:50.240763+00:00",
+        "profile_bg_color": "ff9d9bff"
+      }
+    ]
+  };
+
   static final Map<String, dynamic> dummyFetchedData = {
     "task_priority": [
       {

@@ -6,6 +6,7 @@ import 'package:task_app/constants/dummy_data.dart';
 import 'package:task_app/constants/enums.dart';
 import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/models/user.dart';
+import 'package:task_app/providers/auth_provider.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/task_list.dart';
 import 'package:task_app/views/home/pages/widgets/chip_label_widget.dart';
@@ -53,16 +54,19 @@ class _TaskListPageState extends State<TaskListPage> {
               (BuildContext context, TaskProvider provider, Widget? child) {
             // final user = snapshot.data!;
             final user = UserModel(
-                name: 'Bhushan',
-                role: UserRole.agency,
-                email: 'a@gmail.com',
-                profileBgColor: 'ff358845');
+              name: 'Bhushan',
+              role: UserRole.agency,
+              email: 'a@gmail.com',
+              profileBgColor: 'ff358845',
+            );
 
             // final List<Map<String, dynamic>> _tabs =
             //     provider.getTabsForRole(user.role, provider.fetchedData);
 
             final List<Map<String, dynamic>> _tabs = provider.getTabsForRole(
-                user.role, DummyData.dummyFetchedDataProvider);
+              user!.role,
+              DummyData.dummyFetchedDataProvider,
+            );
 
             return Column(
               children: [
@@ -116,6 +120,8 @@ class _TaskListPageState extends State<TaskListPage> {
                       return TasksList(
                         tasksList: taskList,
                         noListText: 'No ${tab['label']} Tasks',
+                        isSalesperson:
+                            user.role == UserRole.salesperson ?? false,
                       );
                     }).toList(),
                   ),

@@ -4,9 +4,13 @@ import 'package:task_app/views/home/pages/task%20list/widgets/task_tile.dart';
 
 class TasksList extends StatelessWidget {
   const TasksList(
-      {super.key, required this.tasksList, required this.noListText});
+      {super.key,
+      required this.tasksList,
+      required this.noListText,
+      required this.isSalesperson});
   final List<Map<String, dynamic>> tasksList;
   final String noListText;
+  final bool isSalesperson;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +28,8 @@ class TasksList extends StatelessWidget {
           }
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: TaskTile(task: tasksList[index]),
+            child:
+                TaskTile(task: tasksList[index], isSalesperson: isSalesperson),
           );
         },
       ),

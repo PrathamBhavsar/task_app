@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/providers/task_provider.dart';
 
-class DueDatePicker extends StatelessWidget {
+class DatePickerWidget extends StatelessWidget {
   final bool isNewTask;
 
-  DueDatePicker({super.key, required this.isNewTask});
+  DatePickerWidget({super.key, required this.isNewTask});
 
   @override
   Widget build(BuildContext context) {

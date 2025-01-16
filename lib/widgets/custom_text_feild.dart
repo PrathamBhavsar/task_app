@@ -15,6 +15,7 @@ class CustomTextField extends StatelessWidget {
     this.isPassword = false,
     this.isPhone = false,
     this.isEnabled = true,
+    this.isMultiline = false,
     this.prefixIcon,
     this.onChangedFunc,
   });
@@ -27,6 +28,7 @@ class CustomTextField extends StatelessWidget {
   final bool isPassword;
   final bool isPhone;
   final bool isEnabled;
+  final bool isMultiline;
   final Icon? prefixIcon;
   final Function(String)? onChangedFunc;
 
@@ -38,7 +40,7 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           focusNode: focusNode,
           enabled: isEnabled,
-          maxLines: null,
+          maxLines: isMultiline ? null : 1,
           obscureText: isPassword ? !provider.isVisible : false,
           onChanged: onChangedFunc,
           keyboardType: keyboardType ?? TextInputType.text,

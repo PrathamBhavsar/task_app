@@ -9,16 +9,19 @@ import 'package:task_app/views/task/methods/show_bottom_modal.dart';
 import 'package:task_app/views/task/widgets/agency_required_switch.dart';
 import 'package:task_app/views/task/widgets/client_name_dropdown.dart';
 import 'package:task_app/views/task/widgets/due_date_picker.dart';
+import 'package:task_app/views/task/widgets/measurement/measurement_widget.dart';
 import 'package:task_app/widgets/action_button.dart';
 import 'package:task_app/widgets/custom_tag.dart';
 import 'package:task_app/widgets/custom_text_feild.dart';
 
 class TaskDetailScreen extends StatefulWidget {
+  final bool isSalesperson;
   final bool isNewTask;
   final String dealNo;
 
   const TaskDetailScreen({
     Key? key,
+    required this.isSalesperson,
     required this.isNewTask,
     required this.dealNo,
   }) : super(key: key);
@@ -31,7 +34,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   final nameController = TextEditingController();
   final remarkController = TextEditingController();
 
-  final assigneeController = TextEditingController();
   final nameFocusNode = FocusNode();
   final remarkFocusNode = FocusNode();
 
@@ -54,7 +56,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   void dispose() {
     nameController.dispose();
     remarkController.dispose();
-    assigneeController.dispose();
     nameFocusNode.dispose();
     remarkFocusNode.dispose();
     TaskProvider.instance.resetTaskIndexes();
@@ -104,15 +105,19 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   isEnabled: false,
                   labelTxt: 'Address',
                   keyboardType: TextInputType.multiline,
+                  isMultiline: true,
                 ),
                 AppPaddings.gapH(20),
 
                 CustomTextField(
-                  controller: TextEditingController(text: '+91 8490088688'),
+                  controller: TextEditingController(text: '8490088688'),
                   isEnabled: false,
                   labelTxt: 'Contact Information',
+                  isPhone: true,
                 ),
-                AppPaddings.gapH(20),
+                _buildDivider(verticalPadding: 10),
+                AppPaddings.gapH(10),
+
                 CustomTextField(
                   controller: nameController,
                   focusNode: nameFocusNode,
@@ -125,9 +130,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   focusNode: remarkFocusNode,
                   labelTxt: 'Remarks',
                   hintTxt: 'Remarks',
+                  isMultiline: true,
                 ),
                 AppPaddings.gapH(20),
-                DueDatePicker(isNewTask: false),
+                DatePickerWidget(isNewTask: false),
+                AppPaddings.gapH(10),
                 _buildDivider(),
                 _buildDynamicRow(
                   context: context,
@@ -143,6 +150,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                               [AppKeys.name] ??
                           ""),
                   indexKey: IndexKeys.statusIndex,
+                  isSalesperson: true,
                 ),
                 _buildDynamicRow(
                   context: context,
@@ -161,6 +169,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         .toList(),
                   ),
                   indexKey: IndexKeys.salespersonIndex,
+                  isSalesperson: widget.isSalesperson,
                 ),
                 _buildDynamicRow(
                   context: context,
@@ -188,6 +197,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           ),
                         ),
                   indexKey: IndexKeys.designerIndex,
+                  isSalesperson: widget.isSalesperson,
                 ),
                 _buildDynamicRow(
                   context: context,
@@ -203,28 +213,32 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                               [AppKeys.name] ??
                           ""),
                   indexKey: IndexKeys.priorityIndex,
+                  isSalesperson: true,
                 ),
                 _buildDivider(),
-                const AgencyRequiredSwitch(),
-                if (provider.isAgencyRequired)
-                  _buildDynamicRow(
-                    context: context,
-                    label: UserRole.agency.role,
-                    dataList: data[AppKeys.fetchedAgencies],
-                    widget: OverlappingCircles(
-                      bgColors: data[AppKeys.fetchedAgencies]!
-                          .map(
-                            (user) => provider.stringToColor(
-                              user[UserDetails.profileBgColor],
-                            ),
-                          )
-                          .toList(),
-                      displayNames: data[AppKeys.fetchedAgencies]!
-                          .map((user) => user[UserDetails.name] as String)
-                          .toList(),
-                    ),
-                    indexKey: IndexKeys.agencyIndex,
+                AgencyRequiredSwitch(isSalesperson: widget.isSalesperson),
+                _buildDynamicRow(
+                  context: context,
+                  label: UserRole.agency.role,
+                  dataList: data[AppKeys.fetchedAgencies],
+                  widget: OverlappingCircles(
+                    bgColors: data[AppKeys.fetchedAgencies]!
+                        .map(
+                          (user) => provider.stringToColor(
+                            user[UserDetails.profileBgColor],
+                          ),
+                        )
+                        .toList(),
+                    displayNames: data[AppKeys.fetchedAgencies]!
+                        .map((user) => user[UserDetails.name] as String)
+                        .toList(),
                   ),
+                  indexKey: IndexKeys.agencyIndex,
+                  isSalesperson:
+                      widget.isSalesperson && provider.isAgencyRequired,
+                ),
+                MeasurementWidget(),
+
                 //   if (data['task_attachments'] != null &&
                 //       data['task_attachments']!.isNotEmpty)
                 //     _buildDynamicRow(
@@ -245,7 +259,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         bottomSheet: Padding(
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
           child: ActionBtn(
-            btnTxt: widget.isNewTask ? 'Create Task' : 'Edit Task',
+            btnTxt: widget.isNewTask
+                ? 'Create Task'
+                : widget.isSalesperson
+                    ? 'Edit Task'
+                    : 'Mark as In Progress',
             onPress: () async {
               showDialog(
                 context: context,
@@ -259,7 +277,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          widget.isNewTask ? 'Create Task?' : 'Edit Task?',
+                          widget.isNewTask
+                              ? 'Create Task'
+                              : widget.isSalesperson
+                                  ? 'Edit Task'
+                                  : 'Confirm Change',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: AppTexts.fW700,
@@ -280,7 +302,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                             AppPaddings.gapW(10),
                             Expanded(
                               child: ActionBtn(
-                                btnTxt: widget.isNewTask ? 'Create' : 'Edit',
+                                btnTxt: widget.isNewTask
+                                    ? 'Create'
+                                    : widget.isSalesperson
+                                        ? 'Edit'
+                                        : 'Confirm Change',
                                 onPress: () async {
                                   widget.isNewTask
                                       ? await TaskProvider.instance.createTask(
@@ -340,19 +366,23 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   }
 
   Widget _buildDynamicRow({
+    required bool isSalesperson,
     required BuildContext context,
     required String label,
     required String indexKey,
     required List<Map<String, dynamic>>? dataList,
     required Widget widget,
   }) {
-    return Padding(
-      padding: AppPaddings.appPadding,
-      child: _buildRowWithTextAndWidget(
-        label: label,
-        widget: widget,
-        onTap: () =>
-            showClientsBottomSheet(context, dataList ?? [], label, indexKey),
+    return Visibility(
+      visible: isSalesperson,
+      child: Padding(
+        padding: AppPaddings.appPadding,
+        child: _buildRowWithTextAndWidget(
+          label: label,
+          widget: widget,
+          onTap: () =>
+              showClientsBottomSheet(context, dataList ?? [], label, indexKey),
+        ),
       ),
     );
   }
@@ -398,13 +428,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     );
   }
 
-  Widget _buildDivider() {
-    return Column(
-      children: [
-        AppPaddings.gapH(10),
-        Divider(color: AppColors.primary),
-        AppPaddings.gapH(10),
-      ],
+  Widget _buildDivider({double verticalPadding = 0}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: verticalPadding),
+      child: Divider(color: AppColors.primary),
     );
   }
 }

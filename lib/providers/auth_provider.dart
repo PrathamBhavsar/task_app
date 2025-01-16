@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:task_app/constants/enums.dart';
+import 'package:task_app/models/user.dart';
 
 class AuthProvider extends ChangeNotifier {
   static final AuthProvider instance = AuthProvider._privateConstructor();
@@ -10,6 +11,13 @@ class AuthProvider extends ChangeNotifier {
 
   bool isVisible = false;
   UserRole currentUserRole = UserRole.salesperson;
+  UserModel? currentUser;
+
+  /// Sets currentUser
+  void setCurrentUser(user) {
+    currentUser = user;
+    notifyListeners();
+  }
 
   /// Toggle visibility
   void toggleVisibility() {

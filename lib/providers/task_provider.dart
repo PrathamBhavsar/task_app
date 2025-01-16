@@ -332,7 +332,8 @@ class TaskProvider extends ChangeNotifier {
   }
 
   Future<void> getTaskByDealNo(String dealNo) async {
-    final data = await SupabaseController.instance.getTaskById(dealNo);
+    // final data = await SupabaseController.instance.getTaskById(dealNo);
+    final data = DummyData.dummyTaskData;
     fetchedTaskData = data;
     logger.d(data);
 

@@ -10,8 +10,6 @@ import 'package:task_app/extensions/color_extension.dart';
 import 'package:task_app/models/user.dart';
 import 'dart:convert';
 
-import 'package:task_app/providers/task_provider.dart';
-
 class AuthController {
   static final AuthController instance = AuthController._privateConstructor();
   AuthController._privateConstructor();
