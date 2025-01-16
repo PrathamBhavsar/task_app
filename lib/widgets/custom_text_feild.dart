@@ -38,6 +38,7 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           focusNode: focusNode,
           enabled: isEnabled,
+          maxLines: null,
           obscureText: isPassword ? !provider.isVisible : false,
           onChanged: onChangedFunc,
           keyboardType: keyboardType ?? TextInputType.text,

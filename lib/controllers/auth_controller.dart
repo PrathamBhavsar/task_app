@@ -117,6 +117,7 @@ class AuthController {
     final userJson = prefs.getString('user');
 
     if (userJson != null) {
+      logger.d(userJson);
       return UserModel.fromJson(jsonDecode(userJson));
     }
     return null;

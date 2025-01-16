@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/constants/dummy_data.dart';
 import 'package:task_app/constants/enums.dart';
 import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/controllers/supabase_controller.dart';
@@ -23,7 +24,8 @@ class TaskProvider extends ChangeNotifier {
   DateTime dueDate = DateTime.now().add(Duration(days: 2));
   DateTime startDate = DateTime.now();
 
-  Map<String, List<Map<String, dynamic>>> fetchedData = {};
+  Map<String, List<Map<String, dynamic>>> fetchedData =
+      DummyData.dummyFetchedDataProvider;
   Map<String, dynamic> fetchedTaskData = {};
   Map<String, dynamic> fetchedOverallData = {};
 
@@ -351,7 +353,6 @@ class TaskProvider extends ChangeNotifier {
   void updateSelectedIndex(String field, dynamic index) {
     selectedIndices[field] = index;
     notifyListeners();
-    logger.i(selectedIndices);
   }
 
   /// Fetches all the data

@@ -96,6 +96,23 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   ),
                 ),
                 AppPaddings.gapH(20),
+
+                CustomTextField(
+                  controller: TextEditingController(
+                      text:
+                          ' This is a demo address textThis is a demo address textThis is a demo address textThis is a demo address text'),
+                  isEnabled: false,
+                  labelTxt: 'Address',
+                  keyboardType: TextInputType.multiline,
+                ),
+                AppPaddings.gapH(20),
+
+                CustomTextField(
+                  controller: TextEditingController(text: '+91 8490088688'),
+                  isEnabled: false,
+                  labelTxt: 'Contact Information',
+                ),
+                AppPaddings.gapH(20),
                 CustomTextField(
                   controller: nameController,
                   focusNode: nameFocusNode,

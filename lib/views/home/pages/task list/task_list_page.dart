@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/constants/dummy_data.dart';
+import 'package:task_app/constants/enums.dart';
 import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/models/user.dart';
 import 'package:task_app/providers/task_provider.dart';
@@ -22,12 +24,13 @@ class _TaskListPageState extends State<TaskListPage> {
   @override
   void initState() {
     super.initState();
-    _userFuture = AuthController.instance.getLoggedInUser();
-    _userFuture.then((user) {
-      if (user != null) {
-        TaskProvider.instance.setCurrentUser(user);
-      }
-    });
+    // _userFuture = AuthController.instance.getLoggedInUser();
+    // _userFuture.then((user) {
+    //   if (user != null) {
+    //     TaskProvider.instance.setCurrentUser(user);
+    //   }
+    // });
+    _userFuture = Future.delayed(Duration(seconds: 1));
   }
 
   @override
@@ -35,23 +38,31 @@ class _TaskListPageState extends State<TaskListPage> {
     return FutureBuilder<UserModel?>(
       future: _userFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (!snapshot.hasData) {
-          return const Center(
-            child: Text("No user found"),
-          );
-        }
+        // if (snapshot.connectionState == ConnectionState.waiting) {
+        //   return const Center(child: CircularProgressIndicator());
+        // }
+        //
+        // if (!snapshot.hasData) {
+        //   return const Center(
+        //     child: Text("No user found"),
+        //   );
+        // }
 
         return Consumer<TaskProvider>(
           builder:
               (BuildContext context, TaskProvider provider, Widget? child) {
-            final user = snapshot.data!;
+            // final user = snapshot.data!;
+            final user = UserModel(
+                name: 'Bhushan',
+                role: UserRole.agency,
+                email: 'a@gmail.com',
+                profileBgColor: 'ff358845');
 
-            final List<Map<String, dynamic>> _tabs =
-                provider.getTabsForRole(user.role, provider.fetchedData);
+            // final List<Map<String, dynamic>> _tabs =
+            //     provider.getTabsForRole(user.role, provider.fetchedData);
+
+            final List<Map<String, dynamic>> _tabs = provider.getTabsForRole(
+                user.role, DummyData.dummyFetchedDataProvider);
 
             return Column(
               children: [
@@ -97,7 +108,11 @@ class _TaskListPageState extends State<TaskListPage> {
                   child: IndexedStack(
                     index: provider.selectedListIndex,
                     children: _tabs.map((tab) {
-                      final taskList = provider.fetchedData[tab['key']] ?? [];
+                      // final taskList = provider.fetchedData[tab['key']] ?? [];
+
+                      final List<Map<String, dynamic>> taskList =
+                          DummyData.dummyFetchedData[tab['key']] ?? [];
+
                       return TasksList(
                         tasksList: taskList,
                         noListText: 'No ${tab['label']} Tasks',

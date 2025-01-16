@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_app/constants/app_colors.dart';
+import 'package:task_app/controllers/auth_controller.dart';
 import 'package:task_app/providers/auth_provider.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/router/app_router.dart';
@@ -19,7 +20,6 @@ void main() async {
   );
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool? isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
   runApp(
     ScreenUtilInit(
       designSize: const Size(375, 812),
