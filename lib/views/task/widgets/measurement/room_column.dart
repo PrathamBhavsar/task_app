@@ -9,10 +9,16 @@ class RoomColumn extends StatelessWidget {
     required this.roomNames,
     required this.windowNames,
     required this.sizes,
+    required this.windowAreas,
+    required this.windowTypes,
+    required this.windowRemarks,
   });
 
   final String roomNames;
   final List<String> windowNames;
+  final List<String> windowAreas;
+  final List<String> windowTypes;
+  final List<String> windowRemarks;
   final List<String> sizes;
 
   @override
@@ -26,6 +32,9 @@ class RoomColumn extends StatelessWidget {
           windowNames.length,
           (index) => WindowTile(
             windowName: windowNames[index],
+            windowArea: windowAreas[index],
+            windowType: windowTypes[index],
+            windowRemark: windowRemarks[index],
             size: sizes[index],
           ),
         ),

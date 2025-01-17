@@ -9,6 +9,27 @@ import 'package:task_app/views/task/widgets/measurement/room_column.dart';
 class MeasurementWidget extends StatelessWidget {
   const MeasurementWidget({super.key});
 
+  void _copyToClipboard(
+      BuildContext context, List<Map<String, dynamic>> rooms) {
+    final copyText = rooms.map((room) {
+      final windowsText =
+          (room['windows'] as List<Map<String, String>>).map((window) {
+        return '''  ${window['windowName']}
+        Size: ${window['size']}
+        Area: ${window['area']}
+        Type: ${window['type']}
+        Remarks: ${window['remarks']}''';
+      }).join('\n');
+      return '${room['roomName']}\n$windowsText';
+    }).join('\n\n');
+
+    Clipboard.setData(ClipboardData(text: copyText)).then((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Copied to your clipboard!')),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MeasurementProvider>(
@@ -21,7 +42,17 @@ class MeasurementWidget extends StatelessWidget {
             final windowName = windowEntry.key;
             final size =
                 "H: ${windowEntry.value['height'] ?? ''}, W: ${windowEntry.value['width'] ?? ''}";
-            return {'windowName': windowName, 'size': size};
+
+            final area = windowEntry.value['area'] ?? '';
+            final type = windowEntry.value['type'] ?? '';
+            final remarks = windowEntry.value['remarks'] ?? '';
+            return {
+              'windowName': windowName,
+              'size': size,
+              'area': area,
+              'type': type,
+              'remarks': remarks
+            };
           }).toList();
           return {'roomName': roomName, 'windows': windows};
         }).toList();
@@ -39,35 +70,14 @@ class MeasurementWidget extends StatelessWidget {
                     Row(
                       children: [
                         provider.rooms.isEmpty
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : IconButton(
                                 onPressed: () {
-                                  String copyText = '';
-                                  for (var room in rooms) {
-                                    if (room['windows'] != null) {
-                                      copyText += '${room['roomName']}\n';
-                                      for (var window in (room['windows']
-                                          as List<Map<String, String>>)) {
-                                        copyText +=
-                                            '  ${window['windowName']}: ${window['size']}\n';
-                                      }
-                                    }
-                                  }
-
-                                  Clipboard.setData(
-                                          ClipboardData(text: copyText))
-                                      .then((_) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text('Copied to your clipboard!'),
-                                      ),
-                                    );
-                                  });
+                                  _copyToClipboard(context, rooms);
                                 },
-                                icon: Icon(Icons.copy_rounded),
+                                icon: const Icon(Icons.copy_rounded),
                               ),
-                        Icon(Icons.arrow_forward_ios_rounded),
+                        const Icon(Icons.arrow_forward_ios_rounded),
                       ],
                     ),
                   ],
@@ -75,14 +85,14 @@ class MeasurementWidget extends StatelessWidget {
               ),
               AppPaddings.gapH(10),
               provider.rooms.isEmpty
-                  ? SizedBox.shrink()
+                  ? const SizedBox.shrink()
                   : Container(
                       decoration: BoxDecoration(
                         color: AppColors.textFieldBg,
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(18),
+                        padding: const EdgeInsets.all(18),
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -90,13 +100,20 @@ class MeasurementWidget extends StatelessWidget {
                           itemBuilder: (context, index) {
                             final Map<String, dynamic> room = rooms[index];
 
-                            if (room.isEmpty) {
-                              return Center(
-                                child: Text('empty'),
-                              );
-                            }
                             return RoomColumn(
                               roomNames: room['roomName']!,
+                              windowAreas:
+                                  (room['windows'] as List<Map<String, String>>)
+                                      .map<String>((window) => window['area']!)
+                                      .toList(),
+                              windowTypes:
+                                  (room['windows'] as List<Map<String, String>>)
+                                      .map<String>((window) => window['type']!)
+                                      .toList(),
+                              windowRemarks: (room['windows']
+                                      as List<Map<String, String>>)
+                                  .map<String>((window) => window['remarks']!)
+                                  .toList(),
                               windowNames: (room['windows']
                                           as List<Map<String, String>>?)
                                       ?.map<String>(

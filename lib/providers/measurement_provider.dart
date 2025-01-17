@@ -24,7 +24,6 @@ class MeasurementProvider with ChangeNotifier {
     windowMeasurements.putIfAbsent(roomName, () => {});
     windowMeasurements[roomName]!.putIfAbsent(windowName, () => {});
 
-    /// Update all provided measurements (e.g., height and width)
     measurements.forEach((key, value) {
       windowMeasurements[roomName]![windowName]![key] = value;
     });
@@ -86,16 +85,29 @@ class MeasurementProvider with ChangeNotifier {
     rooms.add({
       roomName: ['Window 1']
     });
-    windowMeasurements[roomName] = {};
+    windowMeasurements[roomName] = {
+      'Window 1': {
+        'height': '',
+        'width': '',
+        'area': '',
+        'type': '',
+        'remarks': '',
+      },
+    };
     notifyListeners();
   }
 
-  /// Add a new window to a specific room
   void addWindow(int roomIndex) {
     String roomName = rooms[roomIndex].keys.first;
     String newWindowName = 'Window ${rooms[roomIndex][roomName]!.length + 1}';
     rooms[roomIndex][roomName]?.add(newWindowName);
-    windowMeasurements[roomName]?[newWindowName] = {'height': '', 'width': ''};
+    windowMeasurements[roomName]?[newWindowName] = {
+      'height': '',
+      'width': '',
+      'area': '',
+      'type': '',
+      'remarks': '',
+    };
     notifyListeners();
   }
 
@@ -114,25 +126,31 @@ class MeasurementProvider with ChangeNotifier {
   }
 
   void saveAllChanges(
-      roomControllers, windowControllers, heightControllers, widthControllers) {
+    roomControllers,
+    windowControllers,
+    heightControllers,
+    widthControllers,
+    areaControllers,
+    typeControllers,
+    remarksControllers,
+  ) {
     rooms.asMap().forEach((roomIndex, room) {
       String oldRoomName = room.keys.first;
       String newRoomName = roomControllers[roomIndex]!.text;
 
-      /// Update room name if it has changed
       if (oldRoomName != newRoomName) {
         updateRoomName(oldRoomName: oldRoomName, newRoomName: newRoomName);
       }
 
       List<String> windows = room[oldRoomName]!;
-
-      /// Iterate through all windows in the room
       for (var windowName in windows) {
         String newWindowName = windowControllers[roomIndex]![windowName]!.text;
         String height = heightControllers[roomIndex]![windowName]!.text;
         String width = widthControllers[roomIndex]![windowName]!.text;
+        String area = areaControllers[roomIndex]![windowName]!.text;
+        String type = typeControllers[roomIndex]![windowName]!.text;
+        String remarks = remarksControllers[roomIndex]![windowName]!.text;
 
-        /// Update window name if it has changed
         if (windowName != newWindowName) {
           updateWindowName(
             roomName: newRoomName,
@@ -141,17 +159,20 @@ class MeasurementProvider with ChangeNotifier {
           );
         }
 
-        /// Batch update window measurements
         updateWindowMeasurements(
           roomName: newRoomName,
           windowName: newWindowName,
           measurements: {
             'height': height,
             'width': width,
+            'area': area,
+            'type': type,
+            'remarks': remarks,
           },
         );
       }
     });
+
     notifyListeners();
   }
 }

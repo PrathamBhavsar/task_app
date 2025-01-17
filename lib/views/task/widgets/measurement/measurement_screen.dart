@@ -17,6 +17,9 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
   final Map<int, Map<String, TextEditingController>> windowControllers = {};
   final Map<int, Map<String, TextEditingController>> heightControllers = {};
   final Map<int, Map<String, TextEditingController>> widthControllers = {};
+  final Map<int, Map<String, TextEditingController>> areaControllers = {};
+  final Map<int, Map<String, TextEditingController>> typeControllers = {};
+  final Map<int, Map<String, TextEditingController>> remarksControllers = {};
 
   @override
   void dispose() {
@@ -28,6 +31,15 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
       controllers.values.forEach((controller) => controller.dispose());
     });
     widthControllers.values.forEach((controllers) {
+      controllers.values.forEach((controller) => controller.dispose());
+    });
+    areaControllers.values.forEach((controllers) {
+      controllers.values.forEach((controller) => controller.dispose());
+    });
+    typeControllers.values.forEach((controllers) {
+      controllers.values.forEach((controller) => controller.dispose());
+    });
+    remarksControllers.values.forEach((controllers) {
       controllers.values.forEach((controller) => controller.dispose());
     });
 
@@ -66,6 +78,9 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                 windowControllers,
                 heightControllers,
                 widthControllers,
+                areaControllers,
+                typeControllers,
+                remarksControllers,
               ),
             ),
           ],
@@ -81,10 +96,33 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
               windowControllers.putIfAbsent(roomIndex, () => {});
               heightControllers.putIfAbsent(roomIndex, () => {});
               widthControllers.putIfAbsent(roomIndex, () => {});
+              areaControllers.putIfAbsent(roomIndex, () => {});
+              typeControllers.putIfAbsent(roomIndex, () => {});
+              remarksControllers.putIfAbsent(roomIndex, () => {});
 
               for (var windowName in windows) {
                 windowControllers[roomIndex]!.putIfAbsent(
                     windowName, () => TextEditingController(text: windowName));
+
+                areaControllers[roomIndex]!.putIfAbsent(
+                    windowName,
+                    () => TextEditingController(
+                        text: provider.windowMeasurements[roomName]?[windowName]
+                                ?['area'] ??
+                            ''));
+                typeControllers[roomIndex]!.putIfAbsent(
+                    windowName,
+                    () => TextEditingController(
+                        text: provider.windowMeasurements[roomName]?[windowName]
+                                ?['type'] ??
+                            ''));
+                remarksControllers[roomIndex]!.putIfAbsent(
+                    windowName,
+                    () => TextEditingController(
+                        text: provider.windowMeasurements[roomName]?[windowName]
+                                ?['remarks'] ??
+                            ''));
+
                 heightControllers[roomIndex]!.putIfAbsent(
                     windowName,
                     () => TextEditingController(
@@ -230,7 +268,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                                   Expanded(
                                                     child: CustomTextField(
                                                       controller:
-                                                          widthControllers[
+                                                          areaControllers[
                                                                   roomIndex]![
                                                               windowName]!,
                                                       hintTxt: 'Area',
@@ -260,7 +298,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                                   Expanded(
                                                     child: CustomTextField(
                                                       controller:
-                                                          widthControllers[
+                                                          typeControllers[
                                                                   roomIndex]![
                                                               windowName]!,
                                                       hintTxt: 'Type',
@@ -272,11 +310,9 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                               ),
                                               AppPaddings.gapH(10),
                                               CustomTextField(
-                                                controller: widthControllers[
+                                                controller: remarksControllers[
                                                     roomIndex]![windowName]!,
                                                 labelTxt: 'Remarks',
-                                                keyboardType:
-                                                    TextInputType.number,
                                               ),
                                             ],
                                           ),
