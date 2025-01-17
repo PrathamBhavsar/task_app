@@ -29,8 +29,30 @@ Room2
         style: 3 pleat
         remarks: "text remarks here"
 
+Measurement output
 
-
+{
+"Room 1": {
+ "Window 2": {
+   "height": "",
+   "width": ""
+ },
+ "Window 1": {
+   "height": "",
+   "width": ""
+ }
+},
+"Room 2": {
+ "Window 2": {
+   "height": "",
+   "width": ""
+ },
+ "Window 1": {
+   "height": "",
+   "width": ""
+ }
+}
+}
 
 All Data
 

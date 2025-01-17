@@ -99,6 +99,11 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                             ''));
               }
             });
+            if (provider.rooms.isEmpty) {
+              return Center(
+                child: Text('No Measurements yet!'),
+              );
+            }
             return Padding(
               padding: AppPaddings.appPadding,
               child: ListView.builder(

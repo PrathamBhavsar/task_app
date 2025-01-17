@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 
-class SizeTile extends StatelessWidget {
-  const SizeTile({super.key});
-
+class WindowTile extends StatelessWidget {
+  const WindowTile({super.key, required this.windowName, required this.size});
+  final String windowName;
+  final String size;
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Window 1',
+          windowName,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         Text(
-          '30 x 12',
+          size,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ],
