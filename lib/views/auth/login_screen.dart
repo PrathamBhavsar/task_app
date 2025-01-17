@@ -91,30 +91,35 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.visiblePassword,
                       isPassword: true,
                     ),
-                    Expanded(
-                      child: SizedBox(),
-                    ),
-                    const NavigationText(isLogin: false),
-                    AppPaddings.gapH(10),
-                    ActionBtn(
-                      btnTxt: 'Log in',
-                      onPress: () async {
-                        await AuthController.instance.login(
-                          context: context,
-                          email: emailController.text,
-                          password: passController.text,
-                        );
-                      },
-                      fontColor: AppColors.primary,
-                      backgroundColor: AppColors.orange,
-                    ),
-                    AppPaddings.gapH(10),
                   ],
                 ),
               ),
             ),
           ),
         ),
+        persistentFooterButtons: [
+          Column(
+            children: [
+              const NavigationText(isLogin: false),
+              AppPaddings.gapH(10),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+                child: ActionBtn(
+                  btnTxt: 'Log in',
+                  onPress: () async {
+                    await AuthController.instance.login(
+                      context: context,
+                      email: emailController.text,
+                      password: passController.text,
+                    );
+                  },
+                  fontColor: AppColors.primary,
+                  backgroundColor: AppColors.orange,
+                ),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

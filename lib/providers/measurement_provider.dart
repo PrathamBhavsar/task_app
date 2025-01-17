@@ -7,24 +7,27 @@ class MeasurementProvider with ChangeNotifier {
 
   MeasurementProvider._privateConstructor();
 
-  // Rooms structure: List of maps where key is the room name and value is a list of window names
+  /// Rooms structure: List of maps where key is the room name and value is a list of window names
   List<Map<String, List<String>>> rooms = [];
 
-  // Measurements structure: Map where key is room name and value is a map of window names and their dimensions
+  /// Measurements structure: Map where key is room name and value is a map of window names and their dimensions
   Map<String, Map<String, Map<String, String>>> windowMeasurements = {};
 
   var log = Logger();
 
   /// Update window measurement (height or width)
-  void updateWindowMeasurement({
+  void updateWindowMeasurements({
     required String roomName,
     required String windowName,
-    required String type,
-    required String value,
+    required Map<String, String> measurements,
   }) {
     windowMeasurements.putIfAbsent(roomName, () => {});
     windowMeasurements[roomName]!.putIfAbsent(windowName, () => {});
-    windowMeasurements[roomName]![windowName]![type] = value;
+
+    /// Update all provided measurements (e.g., height and width)
+    measurements.forEach((key, value) {
+      windowMeasurements[roomName]![windowName]![key] = value;
+    });
 
     log.i(windowMeasurements);
     notifyListeners();
@@ -42,7 +45,7 @@ class MeasurementProvider with ChangeNotifier {
       windowMeasurements[roomName]![newWindowName] = windowData!;
     }
 
-    // Update the room's window list
+    /// Update the room's window list
     var room = rooms.firstWhere((element) => element.containsKey(roomName));
     var windows = room[roomName]!;
     int windowIndex = windows.indexOf(oldWindowName);
@@ -64,7 +67,7 @@ class MeasurementProvider with ChangeNotifier {
       windowMeasurements[newRoomName] = roomData!;
     }
 
-    // Update the room list
+    /// Update the room list
     var roomIndex =
         rooms.indexWhere((element) => element.containsKey(oldRoomName));
     if (roomIndex != -1) {
@@ -90,10 +93,65 @@ class MeasurementProvider with ChangeNotifier {
   /// Add a new window to a specific room
   void addWindow(int roomIndex) {
     String roomName = rooms[roomIndex].keys.first;
-    String newWindowName =
-        'New Window ${rooms[roomIndex][roomName]!.length + 1}';
+    String newWindowName = 'Window ${rooms[roomIndex][roomName]!.length + 1}';
     rooms[roomIndex][roomName]?.add(newWindowName);
     windowMeasurements[roomName]?[newWindowName] = {'height': '', 'width': ''};
+    notifyListeners();
+  }
+
+  void deleteRoom(int roomIndex) {
+    String roomName = rooms[roomIndex].keys.first;
+    rooms.removeAt(roomIndex);
+    windowMeasurements.remove(roomName);
+    notifyListeners();
+  }
+
+  void deleteWindow(int roomIndex, String windowName) {
+    String roomName = rooms[roomIndex].keys.first;
+    rooms[roomIndex][roomName]?.remove(windowName);
+    windowMeasurements[roomName]?.remove(windowName);
+    notifyListeners();
+  }
+
+  void saveAllChanges(
+      roomControllers, windowControllers, heightControllers, widthControllers) {
+    rooms.asMap().forEach((roomIndex, room) {
+      String oldRoomName = room.keys.first;
+      String newRoomName = roomControllers[roomIndex]!.text;
+
+      /// Update room name if it has changed
+      if (oldRoomName != newRoomName) {
+        updateRoomName(oldRoomName: oldRoomName, newRoomName: newRoomName);
+      }
+
+      List<String> windows = room[oldRoomName]!;
+
+      /// Iterate through all windows in the room
+      for (var windowName in windows) {
+        String newWindowName = windowControllers[roomIndex]![windowName]!.text;
+        String height = heightControllers[roomIndex]![windowName]!.text;
+        String width = widthControllers[roomIndex]![windowName]!.text;
+
+        /// Update window name if it has changed
+        if (windowName != newWindowName) {
+          updateWindowName(
+            roomName: newRoomName,
+            oldWindowName: windowName,
+            newWindowName: newWindowName,
+          );
+        }
+
+        /// Batch update window measurements
+        updateWindowMeasurements(
+          roomName: newRoomName,
+          windowName: newWindowName,
+          measurements: {
+            'height': height,
+            'width': width,
+          },
+        );
+      }
+    });
     notifyListeners();
   }
 }

@@ -7,6 +7,31 @@ creates
         | Add Measurement **
 Measurement Complete | Measurement Complete
 
+
+Demo Measurement
+
+Room1
+    window 1: 25h, 30w, 12mtr
+        rails: Company A railings
+        style: Arabian
+        remarks: "text remarks here"
+
+    window 2: 20h, 50w, 18mtr
+        rails: Company B railings
+            style: 3 pleat
+            remarks: "text remarks here"
+
+Room2
+    bedback: 5h, 5w, 3mtr
+
+    window 1: 20h, 50w, 18mtr
+        rails: Company B railings
+        style: 3 pleat
+        remarks: "text remarks here"
+
+
+
+
 All Data
 
  {
