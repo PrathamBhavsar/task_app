@@ -158,7 +158,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                           decoration: BoxDecoration(
                             color: AppColors.textFieldBg,
                             border: Border.all(width: 2),
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: AppConsts.radius,
                           ),
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(10, 16, 10, 10),

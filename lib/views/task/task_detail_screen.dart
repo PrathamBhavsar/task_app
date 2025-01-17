@@ -271,7 +271,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   builder: (context) {
                     return AlertDialog(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: AppConsts.radius,
                         side: BorderSide(width: 2),
                       ),
                       content: Column(
@@ -359,7 +359,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
           width: 60,
           decoration: BoxDecoration(
             color: AppColors.green,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: AppConsts.radius,
           ),
           child: Icon(icon, size: 32),
         ),

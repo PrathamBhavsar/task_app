@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/constants/app_keys.dart';
 import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/widgets/custom_tag.dart';
@@ -24,7 +25,7 @@ class ClientsBottomSheetWidget extends StatelessWidget {
           padding: EdgeInsets.all(12),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: AppConsts.radius,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -42,8 +43,8 @@ class ClientsBottomSheetWidget extends StatelessWidget {
                   final index = entry.key;
                   final user = entry.value;
                   final userName = user[AppKeys.name];
-                  final Color color = TaskProvider.instance
-                      .stringToColor(user[AppKeys.color] ?? user[UserDetails.profileBgColor]);
+                  final Color color = TaskProvider.instance.stringToColor(
+                      user[AppKeys.color] ?? user[UserDetails.profileBgColor]);
 
                   bool isSelected = false;
                   if (indexKey == IndexKeys.agencyIndex ||

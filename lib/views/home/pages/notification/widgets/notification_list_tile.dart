@@ -13,7 +13,7 @@ class NotificationListTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: AppConsts.radius,
         border: Border.all(width: 2),
       ),
       child: Padding(

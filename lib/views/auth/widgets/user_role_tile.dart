@@ -25,7 +25,7 @@ class UserRoleTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected ? AppColors.green : Colors.white,
             border: Border.all(width: 2.w),
-            borderRadius: AppTexts.borderRadius,
+            borderRadius: AppConsts.radius,
           ),
           child: Center(
             child: Text(

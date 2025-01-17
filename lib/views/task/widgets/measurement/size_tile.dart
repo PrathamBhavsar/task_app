@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_app/constants/app_colors.dart';
 
 class WindowTile extends StatelessWidget {
   WindowTile(
@@ -14,7 +15,7 @@ class WindowTile extends StatelessWidget {
   final String windowRemark;
   final String size;
 
-  TextStyle textStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
+  TextStyle textStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w500);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,7 +25,7 @@ class WindowTile extends StatelessWidget {
           children: [
             Text(
               windowName,
-              style: textStyle,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
             ),
             Text(
               size,
@@ -40,7 +41,7 @@ class WindowTile extends StatelessWidget {
               style: textStyle,
             ),
             Text(
-              windowArea,
+              "$windowArea mtr",
               style: textStyle,
             ),
           ],
@@ -71,6 +72,7 @@ class WindowTile extends StatelessWidget {
             ),
           ],
         ),
+        AppPaddings.gapH(5)
       ],
     );
   }

@@ -21,7 +21,7 @@ class CustomPickerFeild extends StatelessWidget {
               width: 60,
               decoration: BoxDecoration(
                 color: AppColors.orange,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: AppConsts.radius,
               ),
               child: Center(
                 child: Icon(Icons.calendar_month_rounded),

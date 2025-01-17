@@ -100,7 +100,7 @@ class CustomTextField extends StatelessWidget {
   OutlineInputBorder _outlineInputBorder(BorderSide borderSide) {
     return OutlineInputBorder(
       borderSide: borderSide,
-      borderRadius: AppTexts.borderRadius,
+      borderRadius: AppConsts.radius,
     );
   }
 }
