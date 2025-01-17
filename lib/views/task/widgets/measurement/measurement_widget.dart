@@ -91,7 +91,9 @@ class MeasurementWidget extends StatelessWidget {
                             final Map<String, dynamic> room = rooms[index];
 
                             if (room.isEmpty) {
-                              return Center(child: Text('empty'));
+                              return Center(
+                                child: Text('empty'),
+                              );
                             }
                             return RoomColumn(
                               roomNames: room['roomName']!,

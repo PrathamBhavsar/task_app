@@ -12,8 +12,8 @@ abstract class MyRouter {
   static GoRouter router(bool isLoggedIn) {
     return GoRouter(
         initialLocation: isLoggedIn
-            ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
-            // ? '/measurement'
+            // ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
+            ? '/measurement'
             : '/signup',
         routes: [
           GoRoute(

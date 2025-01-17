@@ -123,7 +123,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.fromLTRB(10, 16, 10, 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -149,50 +149,137 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                   return Padding(
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 5),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: CustomTextField(
-                                            controller: windowControllers[
-                                                roomIndex]![windowName]!,
-                                            labelTxt: 'Window Name',
+                                    child: ExpansionTile(
+                                      tilePadding: EdgeInsets.zero,
+                                      title: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: CustomTextField(
+                                              controller: windowControllers[
+                                                  roomIndex]![windowName]!,
+                                              labelTxt: 'Window Name',
+                                            ),
                                           ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: CustomTextField(
+                                                    controller:
+                                                        heightControllers[
+                                                                roomIndex]![
+                                                            windowName]!,
+                                                    labelTxt: 'H',
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 10),
+                                                Expanded(
+                                                  child: CustomTextField(
+                                                    controller:
+                                                        widthControllers[
+                                                                roomIndex]![
+                                                            windowName]!,
+                                                    labelTxt: 'W',
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.close,
+                                                color: Colors.red),
+                                            onPressed: () {
+                                              provider.deleteWindow(
+                                                  roomIndex, windowName);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      children: [
+                                        _buildDivider(
+                                          horizontalPadding: 10,
                                         ),
-                                        SizedBox(width: 10),
-                                        Expanded(
-                                          child: Row(
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: Column(
                                             children: [
-                                              Expanded(
-                                                child: CustomTextField(
-                                                  controller: heightControllers[
-                                                      roomIndex]![windowName]!,
-                                                  labelTxt: 'Height',
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      'Area',
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: CustomTextField(
+                                                      controller:
+                                                          widthControllers[
+                                                                  roomIndex]![
+                                                              windowName]!,
+                                                      hintTxt: 'Area',
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBox(width: 10),
-                                              Expanded(
-                                                child: CustomTextField(
-                                                  controller: widthControllers[
-                                                      roomIndex]![windowName]!,
-                                                  labelTxt: 'Width',
-                                                  keyboardType:
-                                                      TextInputType.number,
-                                                ),
+                                              AppPaddings.gapH(10),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: Text(
+                                                      'Rail Type',
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: CustomTextField(
+                                                      controller:
+                                                          widthControllers[
+                                                                  roomIndex]![
+                                                              windowName]!,
+                                                      hintTxt: 'Type',
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              AppPaddings.gapH(10),
+                                              CustomTextField(
+                                                controller: widthControllers[
+                                                    roomIndex]![windowName]!,
+                                                labelTxt: 'Remarks',
+                                                keyboardType:
+                                                    TextInputType.number,
                                               ),
                                             ],
                                           ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.close,
-                                              color: Colors.red),
-                                          onPressed: () {
-                                            provider.deleteWindow(
-                                                roomIndex, windowName);
-                                          },
                                         ),
                                       ],
                                     ),
@@ -204,7 +291,6 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                   fontColor: AppColors.primary,
                                   onPress: () => provider.addWindow(roomIndex),
                                 ),
-                                AppPaddings.gapH(20),
                               ],
                             ),
                           ),
@@ -222,10 +308,14 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
     );
   }
 
-  Widget _buildDivider() {
+  Widget _buildDivider(
+      {double verticalPadding = 0,
+      double horizontalPadding = 0,
+      Color color = AppColors.primary}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Divider(color: AppColors.primary),
+      padding: EdgeInsets.symmetric(
+          vertical: verticalPadding, horizontal: horizontalPadding),
+      child: Divider(color: color),
     );
   }
 }
