@@ -16,6 +16,10 @@ class QuotationProvider with ChangeNotifier {
         0;
   }
 
+  String getMaterial(String roomName, String windowName) {
+    return roomDetails[roomName]?[windowName]?['material'] ?? "";
+  }
+
   void setRate(String roomName, String windowName, double newRate) {
     if (roomDetails.containsKey(roomName) &&
         roomDetails[roomName]!.containsKey(windowName)) {
@@ -31,5 +35,33 @@ class QuotationProvider with ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  double calculateTotalAmount() {
+    double totalAmount = 0.0;
+
+    roomDetails.forEach((roomName, windows) {
+      windows.forEach((windowName, windowDetails) {
+        double amount = double.tryParse(windowDetails['amount'] ?? '0') ?? 0;
+        totalAmount += amount;
+      });
+    });
+
+    return totalAmount;
+  }
+
+  double calculateRoomTotal(String roomName) {
+    double roomTotal = 0.0;
+
+    // Check if room exists
+    if (roomDetails.containsKey(roomName)) {
+      // Sum amounts for all windows in the room
+      roomDetails[roomName]!.forEach((windowName, windowDetails) {
+        double amount = double.tryParse(windowDetails['amount'] ?? '0') ?? 0;
+        roomTotal += amount;
+      });
+    }
+
+    return roomTotal;
   }
 }

@@ -62,11 +62,6 @@ class _QuotationScreenState extends State<QuotationScreen> {
                     };
                   });
                 });
-
-                // Here you can handle the updatedQuotation as needed.
-                // For example, you can send it to a server or save it locally.
-
-                // Printing the updated quotation JSON for now
                 print(updatedQuotation);
               },
               child: const Text('Finish Quotation'),
@@ -74,7 +69,19 @@ class _QuotationScreenState extends State<QuotationScreen> {
           ),
         ],
         appBar: AppBar(
-          title: const Text('Quotation'),
+          title: Text(
+            'Quotation',
+            style: AppTexts.appBarStyle,
+          ),
+          actions: [
+            Consumer<QuotationProvider>(
+                builder: (context, quotationProvider, child) {
+              return Text(
+                QuotationProvider.instance.calculateTotalAmount().toString(),
+                style: AppTexts.headingStyle,
+              );
+            })
+          ],
         ),
         body: Consumer<QuotationProvider>(
           builder: (context, quotationProvider, child) {
@@ -85,7 +92,7 @@ class _QuotationScreenState extends State<QuotationScreen> {
                 itemBuilder: (context, roomIndex) {
                   String roomName =
                       quotationProvider.roomDetails.keys.elementAt(roomIndex);
-                  var windows = quotationProvider.roomDetails[roomName]!;
+                  final windows = quotationProvider.roomDetails[roomName]!;
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
@@ -94,15 +101,14 @@ class _QuotationScreenState extends State<QuotationScreen> {
                       children: [
                         Text(
                           roomName,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: AppTexts.tileHeading,
                         ),
                         _buildDivider(),
                         ...windows.keys.map((windowName) {
                           double rate =
                               quotationProvider.getRate(roomName, windowName);
+                          String material = quotationProvider.getMaterial(
+                              roomName, windowName);
                           double area = double.tryParse(
                                   quotationProvider.roomDetails[roomName]
                                           ?[windowName]?['area'] ??
@@ -111,42 +117,52 @@ class _QuotationScreenState extends State<QuotationScreen> {
                           double amount = area * rate;
 
                           rateControllers.putIfAbsent(
-                              windowName,
-                              () =>
-                                  TextEditingController(text: rate.toString()));
+                            windowName,
+                            () => TextEditingController(
+                              text: rate.toString(),
+                            ),
+                          );
                           materialControllers.putIfAbsent(
-                              windowName,
-                              () =>
-                                  TextEditingController(text: rate.toString()));
+                            windowName,
+                            () => TextEditingController(text: material),
+                          );
 
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             child: ExpansionTile(
+                              tilePadding: EdgeInsets.zero,
                               title: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(windowName),
-                                  Text('Area: $area'),
+                                  Text(
+                                    windowName,
+                                    style: AppTexts.tileTitle,
+                                  ),
+                                  Text(
+                                    'Area: $area',
+                                    style: AppTexts.tileTitle,
+                                  ),
                                 ],
                               ),
                               children: [
-                                _buildDivider(),
+                                _buildDivider(
+                                  horizontalPadding: 10,
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
                                   child: Column(
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Expanded(
+                                          Expanded(
                                             flex: 2,
                                             child: Text(
                                               'Material',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                              style: AppTexts.tileSubtitle,
                                             ),
                                           ),
                                           Expanded(
@@ -158,16 +174,16 @@ class _QuotationScreenState extends State<QuotationScreen> {
                                           ),
                                         ],
                                       ),
+                                      AppPaddings.gapH(10),
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Expanded(
+                                          Expanded(
                                             flex: 2,
                                             child: Text(
                                               'Rate',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                              style: AppTexts.tileSubtitle,
                                             ),
                                           ),
                                           Expanded(
@@ -190,24 +206,22 @@ class _QuotationScreenState extends State<QuotationScreen> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 10),
+                                      AppPaddings.gapH(10),
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          const Expanded(
+                                          Expanded(
                                             flex: 2,
                                             child: Text(
                                               'Amount',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                              style: AppTexts.tileSubtitle,
                                             ),
                                           ),
                                           Expanded(
                                             child: Text(
                                               amount.toStringAsFixed(2),
-                                              style:
-                                                  const TextStyle(fontSize: 18),
+                                              style: AppTexts.tileSubtitle,
                                             ),
                                           ),
                                         ],

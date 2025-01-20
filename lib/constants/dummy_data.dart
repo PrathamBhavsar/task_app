@@ -5,8 +5,8 @@ class DummyData {
         "height": "5",
         "width": "5",
         "area": "8", // Placeholder value
-        "type": "",
-        "remarks": "",
+        "type": "d",
+        "remarks": "d",
         "material": "asd",
         "rate": "10", // Placeholder value for rate
         "amount": "0", // Initial amount value
@@ -15,8 +15,8 @@ class DummyData {
         "height": "4",
         "width": "4",
         "area": "11", // Placeholder value
-        "type": "",
-        "remarks": "",
+        "type": "d",
+        "remarks": "d",
         "material": "asdas",
         "rate": "15", // Placeholder value for rate
         "amount": "0", // Initial amount value

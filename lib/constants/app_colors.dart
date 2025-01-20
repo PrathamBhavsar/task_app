@@ -52,10 +52,23 @@ class AppTexts {
 
   static TextStyle textStyleFS = TextStyle(fontSize: 22, fontWeight: fW700);
   static TextStyle headingStyle =
-      TextStyle(fontSize: 22, fontWeight: fW700, fontFamily: 'Poppins');
+      TextStyle(fontSize: 22.sp, fontWeight: fW700, fontFamily: 'Poppins');
 
   static TextStyle appBarStyle =
-      TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 32.sp, fontWeight: FontWeight.bold);
+
+  static TextStyle tileSubtitle = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w500,
+  );
+  static TextStyle tileTitle = TextStyle(
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w700,
+  );
+  static TextStyle tileHeading = TextStyle(
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w700,
+  );
 }
 
 class AppConsts {
