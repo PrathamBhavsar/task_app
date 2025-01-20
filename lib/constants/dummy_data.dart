@@ -1,4 +1,29 @@
 class DummyData {
+  static final Map<String, Map<String, Map<String, String>>> roomDetails = {
+    "Room 1": {
+      "Window 1": {
+        "height": "5",
+        "width": "5",
+        "area": "8", // Placeholder value
+        "type": "",
+        "remarks": "",
+        "material": "asd",
+        "rate": "10", // Placeholder value for rate
+        "amount": "0", // Initial amount value
+      },
+      "Window 2": {
+        "height": "4",
+        "width": "4",
+        "area": "11", // Placeholder value
+        "type": "",
+        "remarks": "",
+        "material": "asdas",
+        "rate": "15", // Placeholder value for rate
+        "amount": "0", // Initial amount value
+      },
+    },
+  };
+
   static final Map<String, dynamic> dummyTaskData = {
     "name": "test",
     "status": "Quotation: Created",

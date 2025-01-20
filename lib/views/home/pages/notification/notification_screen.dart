@@ -15,9 +15,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
-        title: const Text(
+        title: Text(
           'Notifications',
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          style: AppTexts.appBarStyle,
         ),
       ),
       body: Padding(

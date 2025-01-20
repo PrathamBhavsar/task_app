@@ -66,9 +66,9 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           forceMaterialTransparency: true,
-          title: const Text(
+          title: Text(
             'Measurement',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            style: AppTexts.appBarStyle,
           ),
           actions: [
             IconButton(

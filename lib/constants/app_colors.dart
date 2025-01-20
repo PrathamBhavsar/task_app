@@ -53,6 +53,9 @@ class AppTexts {
   static TextStyle textStyleFS = TextStyle(fontSize: 22, fontWeight: fW700);
   static TextStyle headingStyle =
       TextStyle(fontSize: 22, fontWeight: fW700, fontFamily: 'Poppins');
+
+  static TextStyle appBarStyle =
+      TextStyle(fontSize: 32, fontWeight: FontWeight.bold);
 }
 
 class AppConsts {

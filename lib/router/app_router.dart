@@ -7,6 +7,7 @@ import 'package:task_app/views/home/pages/notification/notification_screen.dart'
 import 'package:task_app/views/home/pages/task%20list/task_list_page.dart';
 import 'package:task_app/views/task/task_detail_screen.dart';
 import 'package:task_app/views/task/widgets/measurement/measurement_screen.dart';
+import 'package:task_app/views/task/widgets/quotation/quotation_screen.dart';
 
 abstract class MyRouter {
   static GoRouter router(bool isLoggedIn) {
@@ -68,6 +69,12 @@ abstract class MyRouter {
             name: 'measurement',
             builder: (BuildContext context, GoRouterState state) =>
                 const MeasurementScreen(),
+          ),
+          GoRoute(
+            path: '/quotation',
+            name: 'quotation',
+            builder: (BuildContext context, GoRouterState state) =>
+                const QuotationScreen(),
           ),
         ]);
   }

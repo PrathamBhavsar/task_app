@@ -139,19 +139,31 @@ class MeasurementProvider with ChangeNotifier {
       String oldRoomName = room.keys.first;
       String newRoomName = roomControllers[roomIndex]!.text;
 
+      // Update room name if changed
       if (oldRoomName != newRoomName) {
         updateRoomName(oldRoomName: oldRoomName, newRoomName: newRoomName);
       }
 
       List<String> windows = room[oldRoomName]!;
-      for (var windowName in windows) {
-        String newWindowName = windowControllers[roomIndex]![windowName]!.text;
-        String height = heightControllers[roomIndex]![windowName]!.text;
-        String width = widthControllers[roomIndex]![windowName]!.text;
-        String area = areaControllers[roomIndex]![windowName]!.text;
-        String type = typeControllers[roomIndex]![windowName]!.text;
-        String remarks = remarksControllers[roomIndex]![windowName]!.text;
+      windows.forEach((windowName) {
+        // Retrieve all window-related data in a single step
+        var controllers = {
+          'windowName': windowControllers[roomIndex]![windowName]!,
+          'height': heightControllers[roomIndex]![windowName]!,
+          'width': widthControllers[roomIndex]![windowName]!,
+          'area': areaControllers[roomIndex]![windowName]!,
+          'type': typeControllers[roomIndex]![windowName]!,
+          'remarks': remarksControllers[roomIndex]![windowName]!,
+        };
 
+        String newWindowName = controllers['windowName']!.text;
+        String height = controllers['height']!.text;
+        String width = controllers['width']!.text;
+        String area = controllers['area']!.text;
+        String type = controllers['type']!.text;
+        String remarks = controllers['remarks']!.text;
+
+        // Update window name if changed
         if (windowName != newWindowName) {
           updateWindowName(
             roomName: newRoomName,
@@ -160,6 +172,7 @@ class MeasurementProvider with ChangeNotifier {
           );
         }
 
+        // Update window measurements
         updateWindowMeasurements(
           roomName: newRoomName,
           windowName: newWindowName,
@@ -171,9 +184,10 @@ class MeasurementProvider with ChangeNotifier {
             'remarks': remarks,
           },
         );
-      }
+      });
     });
 
+    // Notify listeners after saving all changes
     notifyListeners();
   }
 }

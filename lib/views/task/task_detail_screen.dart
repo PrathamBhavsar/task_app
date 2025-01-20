@@ -10,6 +10,7 @@ import 'package:task_app/views/task/widgets/agency_required_switch.dart';
 import 'package:task_app/views/task/widgets/client_name_dropdown.dart';
 import 'package:task_app/views/task/widgets/due_date_picker.dart';
 import 'package:task_app/views/task/widgets/measurement/measurement_widget.dart';
+import 'package:task_app/views/task/widgets/quotation/quotation_widget.dart';
 import 'package:task_app/widgets/action_button.dart';
 import 'package:task_app/widgets/custom_tag.dart';
 import 'package:task_app/widgets/custom_text_feild.dart';
@@ -70,9 +71,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           forceMaterialTransparency: true,
-          title: const Text(
+          title: Text(
             'Task Details',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            style: AppTexts.appBarStyle,
           ),
         ),
         body: Consumer<TaskProvider>(
@@ -82,6 +83,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             return Padding(
               padding: AppPaddings.appPadding,
               child: ListView(children: [
+                MeasurementWidget(),
+                QuotationWidget(),
                 _buildRowWithIconAndWidget(
                   icon: Icons.person_2_rounded,
                   widget: _dropdownWidget(
@@ -237,7 +240,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   isSalesperson:
                       widget.isSalesperson && provider.isAgencyRequired,
                 ),
-                MeasurementWidget(),
 
                 //   if (data['task_attachments'] != null &&
                 //       data['task_attachments']!.isNotEmpty)
