@@ -16,25 +16,25 @@ class UserRoleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Flexible(
-      flex: 2,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.green : Colors.white,
-            border: Border.all(width: 2.w),
-            borderRadius: AppConsts.radius,
-          ),
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: AppTexts.fW700,
+        flex: 2,
+        child: GestureDetector(
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.green : Colors.white,
+              border: Border.all(width: 2.w),
+              borderRadius: AppConsts.radius,
+            ),
+            child: Center(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
 }

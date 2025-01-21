@@ -10,7 +10,8 @@ class DatePickerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Consumer<TaskProvider>(
-      builder: (BuildContext context, TaskProvider provider, Widget? child) => Row(
+        builder: (BuildContext context, TaskProvider provider, Widget? child) =>
+            Row(
           children: [
             _buildDatePicker(
               context,
@@ -37,7 +38,7 @@ class DatePickerWidget extends StatelessWidget {
             ),
           ],
         ),
-    );
+      );
 
   Widget _buildDatePicker(
     BuildContext context,
@@ -46,51 +47,53 @@ class DatePickerWidget extends StatelessWidget {
     required String label,
     required DateTime date,
     required void Function(DateTime) onDateSelected,
-  }) => Flexible(
-      child: GestureDetector(
-        onTap: () async {
-          DateTime initialDate = date;
-          DateTime firstDate = isNewTask ? DateTime.now() : DateTime(2000);
-          DateTime lastDate = DateTime(2101);
+  }) =>
+      Flexible(
+        child: GestureDetector(
+          onTap: () async {
+            DateTime initialDate = date;
+            DateTime firstDate = isNewTask ? DateTime.now() : DateTime(2000);
+            DateTime lastDate = DateTime(2101);
 
-          DateTime? selectedDate = await showDatePicker(
-            context: context,
-            initialDate: initialDate,
-            firstDate: firstDate,
-            lastDate: lastDate,
-          );
+            DateTime? selectedDate = await showDatePicker(
+              context: context,
+              initialDate: initialDate,
+              firstDate: firstDate,
+              lastDate: lastDate,
+            );
 
-          if (selectedDate != null) {
-            onDateSelected(selectedDate);
-          }
-        },
-        child: Container(
-          padding: AppPaddings.appPadding,
-          decoration: BoxDecoration(
-            border: Border.all(width: 2),
-            borderRadius: AppConsts.radius,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 16, fontWeight: AppTexts.fW700),
-              ),
-              AppPaddings.gapH(10),
-              Row(
-                children: [
-                  Icon(Icons.calendar_month_rounded),
-                  AppPaddings.gapW(5),
-                  Text(
-                    provider.formatDate(date),
-                    style: TextStyle(fontSize: 20, fontWeight: AppTexts.fW700),
-                  ),
-                ],
-              ),
-            ],
+            if (selectedDate != null) {
+              onDateSelected(selectedDate);
+            }
+          },
+          child: Container(
+            padding: AppPaddings.appPadding,
+            decoration: BoxDecoration(
+              border: Border.all(width: 2),
+              borderRadius: AppConsts.radius,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+                AppPaddings.gapH(10),
+                Row(
+                  children: [
+                    Icon(Icons.calendar_month_rounded),
+                    AppPaddings.gapW(5),
+                    Text(
+                      provider.formatDate(date),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
 }

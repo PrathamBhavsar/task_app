@@ -16,50 +16,49 @@ class ClientNameDropdown extends StatelessWidget {
   final bool isNewTask;
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: onTap,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Client Name',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: TextStyle(fontSize: 22, fontWeight: AppTexts.fW700),
-                  ),
-                  AppPaddings.gapW(8),
-                  Icon(Icons.arrow_drop_down_rounded)
-                ],
-              ),
-            ],
-          ),
-          !isNewTask
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+        onTap: onTap,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Client Name',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      'Deal No',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      name,
+                      style: AppTexts.headingStyle,
                     ),
-                    Text(
-                      dealNo,
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: AppTexts.fW700),
-                    ),
+                    AppPaddings.gapW(8),
+                    Icon(Icons.arrow_drop_down_rounded)
                   ],
-                )
-              : SizedBox.shrink(),
-        ],
-      ),
-    );
+                ),
+              ],
+            ),
+            !isNewTask
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        'Deal No',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        dealNo,
+                        style: AppTexts.headingStyle,
+                      ),
+                    ],
+                  )
+                : SizedBox.shrink(),
+          ],
+        ),
+      );
 }

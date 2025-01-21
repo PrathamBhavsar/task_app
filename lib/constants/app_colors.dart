@@ -47,14 +47,17 @@ class AppPaddings {
 }
 
 class AppTexts {
-  static const fW700 = FontWeight.w700;
   static var borderWidth = Border.all(width: 2);
 
-  static TextStyle textStyleFS = TextStyle(fontSize: 22, fontWeight: fW700);
-  static TextStyle headingStyle = TextStyle(fontSize: 22.sp, fontWeight: fW700);
+  static TextStyle headingStyle = TextStyle(
+    fontSize: 22.sp,
+    fontWeight: FontWeight.w700,
+  );
 
-  static TextStyle appBarStyle =
-      TextStyle(fontSize: 32.sp, fontWeight: FontWeight.bold);
+  static TextStyle appBarStyle = TextStyle(
+    fontSize: 32.sp,
+    fontWeight: FontWeight.bold,
+  );
 
   static TextStyle tileSubtitle = TextStyle(
     fontSize: 16.sp,
@@ -73,8 +76,8 @@ class AppTexts {
     fontWeight: FontWeight.w700,
   );
 
-  static const TextStyle buttonText = TextStyle(
-    fontSize: 22,
+  static TextStyle buttonText = TextStyle(
+    fontSize: 22.sp,
     fontWeight: FontWeight.w900,
   );
 }

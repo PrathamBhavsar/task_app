@@ -10,47 +10,44 @@ class NotificationListTile extends StatelessWidget {
   final String date;
   @override
   Widget build(BuildContext context) => Container(
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: AppConsts.radius,
-        border: Border.all(width: 2),
-      ),
-      child: Padding(
-        padding: AppPaddings.appPadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: AppTexts.fW700,
-                  ),
-                ),
-              ],
-            ),
-            AppPaddings.gapH(8),
-            Row(
-              children: [
-                const Icon(
-                  Icons.calendar_today_rounded,
-                  size: 22,
-                ),
-                AppPaddings.gapW(8),
-                Text(
-                  TaskProvider.instance.formatDate(date),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-              ],
-            ),
-          ],
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: AppConsts.radius,
+          border: Border.all(width: 2),
         ),
-      ),
-    );
+        child: Padding(
+          padding: AppPaddings.appPadding,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    text,
+                    style: AppTexts.headingStyle,
+                  ),
+                ],
+              ),
+              AppPaddings.gapH(8),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_today_rounded,
+                    size: 22,
+                  ),
+                  AppPaddings.gapW(8),
+                  Text(
+                    TaskProvider.instance.formatDate(date),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
 }

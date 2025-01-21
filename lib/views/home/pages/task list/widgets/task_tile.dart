@@ -15,85 +15,82 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          final dealNo = task['deal_no'];
-          context.push(
-              '/taskDetails?isSalesperson=$isSalesperson&isNewTask=false&dealNo=$dealNo');
-        },
-        splashColor: AppColors.primary.withOpacity(0.1),
-        child: Container(
-          height: 148.h,
-          decoration: BoxDecoration(
-            borderRadius: AppConsts.radius,
-            border: Border.all(width: 2),
-          ),
-          child: Padding(
-            padding: AppPaddings.appPadding,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      task['name'] ?? '',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: AppTexts.fW700,
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            final dealNo = task['deal_no'];
+            context.push(
+                '/taskDetails?isSalesperson=$isSalesperson&isNewTask=false&dealNo=$dealNo');
+          },
+          splashColor: AppColors.primary.withOpacity(0.1),
+          child: Container(
+            height: 148.h,
+            decoration: BoxDecoration(
+              borderRadius: AppConsts.radius,
+              border: Border.all(width: 2),
+            ),
+            child: Padding(
+              padding: AppPaddings.appPadding,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        task['name'] ?? '',
+                        style: AppTexts.headingStyle,
                       ),
-                    ),
-                    CircleIcons(
-                      icon: Icons.more_horiz_rounded,
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    CustomTag(
-                      color: AppColors.green,
-                      text: task['priority'] ?? '',
-                    ),
-                    AppPaddings.gapW(8),
-                    CustomTag(
-                      color: AppColors.pink,
-                      text: task['status'] ?? '',
-                    ),
-                  ],
-                ),
-                AppPaddings.gapH(8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.calendar_today_rounded,
-                          size: 22,
-                        ),
-                        AppPaddings.gapW(8),
-                        Text(
-                          TaskProvider.instance.formatDate(task['due_date']),
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: AppTexts.fW700,
+                      CircleIcons(
+                        icon: Icons.more_horiz_rounded,
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      CustomTag(
+                        color: AppColors.green,
+                        text: task['priority'] ?? '',
+                      ),
+                      AppPaddings.gapW(8),
+                      CustomTag(
+                        color: AppColors.pink,
+                        text: task['status'] ?? '',
+                      ),
+                    ],
+                  ),
+                  AppPaddings.gapH(8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.calendar_today_rounded,
+                            size: 22,
                           ),
-                        )
-                      ],
-                    ),
-                    OverlappingCircles(
-                        bgColors: [AppColors.orange, AppColors.pink],
-                        displayNames: ['AppColors.orange', 'AppColors.pink']),
-                  ],
-                ),
-              ],
+                          AppPaddings.gapW(8),
+                          Text(
+                            TaskProvider.instance.formatDate(task['due_date']),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          )
+                        ],
+                      ),
+                      OverlappingCircles(
+                          bgColors: [AppColors.orange, AppColors.pink],
+                          displayNames: ['AppColors.orange', 'AppColors.pink']),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
 }
 // }
 // import 'package:flutter/material.dart';
@@ -132,7 +129,7 @@ class TaskTile extends StatelessWidget {
 //                     task['name'] ?? '',
 //                     style: TextStyle(
 //                       fontSize: 22,
-//                       fontWeight: AppTexts.fW700,
+//                       fontWeight: FontWeight.w700,
 //                     ),
 //                   ),
 //                   CircleIcons(
@@ -169,7 +166,7 @@ class TaskTile extends StatelessWidget {
 //                         TaskProvider.instance.formatDate(task['due_date']),
 //                         style: TextStyle(
 //                           fontSize: 16,
-//                           fontWeight: AppTexts.fW700,
+//                           fontWeight: FontWeight.w700,
 //                         ),
 //                       )
 //                     ],
