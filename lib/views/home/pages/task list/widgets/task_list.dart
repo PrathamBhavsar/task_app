@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/task_tile.dart';
+import '../../../../../constants/app_colors.dart';
+import 'task_tile.dart';
 
 class TasksList extends StatelessWidget {
   const TasksList(
@@ -12,8 +12,7 @@ class TasksList extends StatelessWidget {
   final String noListText;
   final bool isSalesperson;
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: AppPaddings.appPadding,
       child: ListView.builder(
         itemCount: tasksList.length,
@@ -34,5 +33,4 @@ class TasksList extends StatelessWidget {
         },
       ),
     );
-  }
 }

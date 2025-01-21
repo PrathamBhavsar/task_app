@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/constants/dummy_data.dart';
-import 'package:task_app/constants/enums.dart';
-import 'package:task_app/controllers/auth_controller.dart';
-import 'package:task_app/models/user.dart';
-import 'package:task_app/providers/auth_provider.dart';
-import 'package:task_app/providers/task_provider.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/task_list.dart';
-import 'package:task_app/views/home/pages/widgets/chip_label_widget.dart';
-import 'package:task_app/widgets/circle_icons.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../constants/dummy_data.dart';
+import '../../../../constants/enums.dart';
+import '../../../../models/user.dart';
+import '../../../../providers/task_provider.dart';
+import 'widgets/task_list.dart';
+import '../widgets/chip_label_widget.dart';
 
 class TaskListPage extends StatefulWidget {
   const TaskListPage({super.key});
@@ -35,8 +31,7 @@ class _TaskListPageState extends State<TaskListPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<UserModel?>(
+  Widget build(BuildContext context) => FutureBuilder<UserModel?>(
       future: _userFuture,
       builder: (context, snapshot) {
         // if (snapshot.connectionState == ConnectionState.waiting) {
@@ -63,8 +58,8 @@ class _TaskListPageState extends State<TaskListPage> {
             // final List<Map<String, dynamic>> _tabs =
             //     provider.getTabsForRole(user.role, provider.fetchedData);
 
-            final List<Map<String, dynamic>> _tabs = provider.getTabsForRole(
-              user!.role,
+            final List<Map<String, dynamic>> tabs = provider.getTabsForRole(
+              user.role,
               DummyData.dummyFetchedDataProvider,
             );
 
@@ -77,13 +72,13 @@ class _TaskListPageState extends State<TaskListPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: List.generate(
-                        _tabs.length,
+                        tabs.length,
                         (index) => Padding(
                           padding: const EdgeInsets.only(right: 8),
                           child: ChoiceChip(
                             showCheckmark: false,
                             label: ChipLabelWidget(
-                              tabs: _tabs,
+                              tabs: tabs,
                               index: index,
                               selectedIndex: provider.selectedListIndex,
                             ),
@@ -111,7 +106,7 @@ class _TaskListPageState extends State<TaskListPage> {
                 Expanded(
                   child: IndexedStack(
                     index: provider.selectedListIndex,
-                    children: _tabs.map((tab) {
+                    children: tabs.map((tab) {
                       // final taskList = provider.fetchedData[tab['key']] ?? [];
 
                       final List<Map<String, dynamic>> taskList =
@@ -132,5 +127,4 @@ class _TaskListPageState extends State<TaskListPage> {
         );
       },
     );
-  }
 }

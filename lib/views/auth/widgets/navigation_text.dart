@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:go_router/go_router.dart';
-import 'package:task_app/constants/app_colors.dart';
+import '../../../constants/app_colors.dart';
 
 class NavigationText extends StatelessWidget {
   final bool isLogin;
@@ -11,8 +11,7 @@ class NavigationText extends StatelessWidget {
   const NavigationText({super.key, required this.isLogin});
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
       child: Center(
         child: RichText(
@@ -45,5 +44,4 @@ class NavigationText extends StatelessWidget {
         ),
       ),
     );
-  }
 }

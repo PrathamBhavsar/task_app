@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
+import '../../../../constants/app_colors.dart';
 
 class ChipLabelWidget extends StatelessWidget {
   const ChipLabelWidget(
@@ -11,8 +11,7 @@ class ChipLabelWidget extends StatelessWidget {
   final int index;
   final int selectedIndex;
   @override
-  Widget build(BuildContext context) {
-    return Row(
+  Widget build(BuildContext context) => Row(
       children: [
         Text(
           tabs[index]['label'],
@@ -42,5 +41,4 @@ class ChipLabelWidget extends StatelessWidget {
         ),
       ],
     );
-  }
 }

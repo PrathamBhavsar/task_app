@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
+import '../constants/app_colors.dart';
 
 class CustomPickerFeild extends StatelessWidget {
   const CustomPickerFeild({
@@ -10,10 +10,9 @@ class CustomPickerFeild extends StatelessWidget {
   final String text;
   final Function() onTap;
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         height: 60,
         child: Row(
           children: [
@@ -36,5 +35,4 @@ class CustomPickerFeild extends StatelessWidget {
         ),
       ),
     );
-  }
 }

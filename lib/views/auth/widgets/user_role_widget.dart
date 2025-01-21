@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/constants/enums.dart';
-import 'package:task_app/providers/auth_provider.dart';
-import 'package:task_app/views/auth/widgets/user_role_tile.dart';
+import '../../../constants/app_colors.dart';
+import '../../../constants/enums.dart';
+import '../../../providers/auth_provider.dart';
+import 'user_role_tile.dart';
 
 class UserRoleWidget extends StatelessWidget {
   const UserRoleWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       height: 60,
       child: Consumer<AuthProvider>(
-        builder: (BuildContext context, AuthProvider provider, Widget? child) {
-          return Row(
+        builder: (BuildContext context, AuthProvider provider, Widget? child) => Row(
             mainAxisSize: MainAxisSize.max,
             children: [
               UserRoleTile(
@@ -29,9 +27,7 @@ class UserRoleWidget extends StatelessWidget {
                 isSelected: provider.currentUserRole == UserRole.agency,
               ),
             ],
-          );
-        },
+          ),
       ),
     );
-  }
 }

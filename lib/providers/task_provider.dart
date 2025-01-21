@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/constants/dummy_data.dart';
-import 'package:task_app/constants/enums.dart';
-import 'package:task_app/constants/app_keys.dart';
-import 'package:task_app/controllers/supabase_controller.dart';
-import 'package:task_app/models/user.dart';
+import '../constants/app_colors.dart';
+import '../constants/dummy_data.dart';
+import '../constants/enums.dart';
+import '../constants/app_keys.dart';
+import '../controllers/supabase_controller.dart';
+import '../models/user.dart';
 
 class TaskProvider extends ChangeNotifier {
   static final TaskProvider instance = TaskProvider._privateConstructor();
@@ -445,7 +445,7 @@ class TaskProvider extends ChangeNotifier {
       final designer = fetchedData[AppKeys.fetchedDesigners]!.firstWhere(
           (user) => user[SupabaseKeys.id] == userId,
           orElse: () => {});
-      if (designer!.isNotEmpty) {
+      if (designer.isNotEmpty) {
         userDetails.add({
           UserDetails.profileBgColor: designer[UserDetails.profileBgColor],
           UserDetails.name: designer[UserDetails.name],

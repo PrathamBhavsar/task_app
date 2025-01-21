@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/constants/app_keys.dart';
-import 'package:task_app/providers/task_provider.dart';
-import 'package:task_app/widgets/custom_tag.dart';
+import '../../../constants/app_colors.dart';
+import '../../../constants/app_keys.dart';
+import '../../../providers/task_provider.dart';
+import '../../../widgets/custom_tag.dart';
 
 class ClientsBottomSheetWidget extends StatelessWidget {
   final List<Map<String, dynamic>> list;
@@ -11,17 +11,15 @@ class ClientsBottomSheetWidget extends StatelessWidget {
   final String indexKey;
 
   const ClientsBottomSheetWidget({
-    Key? key,
+    super.key,
     required this.list,
     required this.name,
     required this.indexKey,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<TaskProvider>(
-      builder: (context, provider, child) {
-        return Container(
+  Widget build(BuildContext context) => Consumer<TaskProvider>(
+      builder: (context, provider, child) => Container(
           padding: EdgeInsets.all(12),
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
@@ -90,8 +88,6 @@ class ClientsBottomSheetWidget extends StatelessWidget {
               const SizedBox(height: 20),
             ],
           ),
-        );
-      },
+        ),
     );
-  }
 }

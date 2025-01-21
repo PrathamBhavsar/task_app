@@ -4,10 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:task_app/constants/enums.dart';
-import 'package:task_app/constants/app_keys.dart';
-import 'package:task_app/extensions/color_extension.dart';
-import 'package:task_app/models/user.dart';
+import '../constants/enums.dart';
+import '../constants/app_keys.dart';
+import '../extensions/color_extension.dart';
+import '../models/user.dart';
 import 'dart:convert';
 
 class AuthController {
@@ -33,7 +33,7 @@ class AuthController {
       final profileBgColor = RandomColorString.generateRandomColorString();
 
       UserModel user = UserModel(
-        id: res.user?.id ?? null,
+        id: res.user?.id,
         name: name,
         email: email,
         profileBgColor: profileBgColor,

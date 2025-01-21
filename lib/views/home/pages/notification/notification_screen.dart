@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/views/home/pages/notification/widgets/notificationList.dart';
+import '../../../../constants/app_colors.dart';
+import 'widgets/notificationList.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -11,8 +11,7 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
         title: Text(
@@ -25,5 +24,4 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: NotificationList(),
       ),
     );
-  }
 }

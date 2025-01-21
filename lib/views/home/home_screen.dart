@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/task_provider.dart';
-import 'package:task_app/views/home/pages/dashboard/dashboard_page.dart';
-import 'package:task_app/views/home/pages/task%20list/task_list_page.dart';
+import '../../constants/app_colors.dart';
+import 'pages/dashboard/dashboard_page.dart';
+import 'pages/task%20list/task_list_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,8 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/taskDetails?isNewTask=true'),
       ),
@@ -45,10 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _currentPageIndex = index;
           });
         },
-        itemBuilder: (context, index) {
-          return pages[index];
-        },
+        itemBuilder: (context, index) => pages[index],
       ),
     );
-  }
 }

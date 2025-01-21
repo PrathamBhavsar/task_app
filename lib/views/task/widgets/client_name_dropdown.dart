@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
+import '../../../constants/app_colors.dart';
 
 class ClientNameDropdown extends StatelessWidget {
   const ClientNameDropdown(
@@ -15,8 +15,7 @@ class ClientNameDropdown extends StatelessWidget {
   final String dealNo;
   final bool isNewTask;
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,5 +62,4 @@ class ClientNameDropdown extends StatelessWidget {
         ],
       ),
     );
-  }
 }

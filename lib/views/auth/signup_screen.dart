@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/controllers/auth_controller.dart';
-import 'package:task_app/providers/auth_provider.dart';
-import 'package:task_app/views/auth/widgets/navigation_text.dart';
-import 'package:task_app/views/auth/widgets/user_role_widget.dart';
-import 'package:task_app/widgets/action_button.dart';
-import 'package:task_app/widgets/custom_text_feild.dart';
+import '../../constants/app_colors.dart';
+import '../../controllers/auth_controller.dart';
+import '../../providers/auth_provider.dart';
+import 'widgets/navigation_text.dart';
+import 'widgets/user_role_widget.dart';
+import '../../widgets/action_button.dart';
+import '../../widgets/custom_text_feild.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -54,8 +54,7 @@ class _SignupScreenState extends State<SignupScreen> {
     TextInputType keyboardType = TextInputType.text,
     bool isPassword = false,
     bool isPhone = false,
-  }) {
-    return CustomTextField(
+  }) => CustomTextField(
       controller: controller,
       focusNode: focusNode,
       labelTxt: label,
@@ -64,11 +63,9 @@ class _SignupScreenState extends State<SignupScreen> {
       isPassword: isPassword,
       isPhone: isPhone,
     );
-  }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
           body: SingleChildScrollView(
@@ -160,5 +157,4 @@ class _SignupScreenState extends State<SignupScreen> {
             )
           ]),
     );
-  }
 }

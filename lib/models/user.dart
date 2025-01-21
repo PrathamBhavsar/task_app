@@ -1,4 +1,4 @@
-import 'package:task_app/constants/enums.dart';
+import '../constants/enums.dart';
 
 class UserModel {
   final String? id;
@@ -19,8 +19,7 @@ class UserModel {
     required this.profileBgColor,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
       id: json['id'],
       name: json['name'],
       role: UserRole.fromString(json['role']),
@@ -31,10 +30,8 @@ class UserModel {
           : null,
       profileBgColor: json['profile_bg_color'],
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'id': id,
       'name': name,
       'role': role.role,
@@ -43,5 +40,4 @@ class UserModel {
       'created_at': createdAt?.toIso8601String(),
       'profile_bg_color': profileBgColor,
     };
-  }
 }

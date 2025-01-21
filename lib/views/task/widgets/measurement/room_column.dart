@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/views/task/widgets/measurement/size_tile.dart';
-import 'package:task_app/views/task/widgets/measurement/title_tile.dart';
+import '../../../../constants/app_colors.dart';
+import 'size_tile.dart';
+import 'title_tile.dart';
 
 class RoomColumn extends StatelessWidget {
   const RoomColumn({
@@ -22,8 +22,7 @@ class RoomColumn extends StatelessWidget {
   final List<String> sizes;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleTile(roomName: roomNames),
@@ -41,5 +40,4 @@ class RoomColumn extends StatelessWidget {
         AppPaddings.gapH(10),
       ],
     );
-  }
 }

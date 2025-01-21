@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:task_app/providers/measurement_provider.dart';
+import 'measurement_provider.dart';
 
 class QuotationProvider with ChangeNotifier {
   static final QuotationProvider instance =
@@ -46,15 +46,11 @@ class QuotationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  double getRate(String roomName, String windowName) {
-    return double.tryParse(
+  double getRate(String roomName, String windowName) => double.tryParse(
             roomDetails[roomName]?[windowName]?['rate'] ?? '0') ??
         0;
-  }
 
-  String getMaterial(String roomName, String windowName) {
-    return quotationDetails[roomName]?[windowName]?['material'] ?? "";
-  }
+  String getMaterial(String roomName, String windowName) => quotationDetails[roomName]?[windowName]?['material'] ?? "";
 
   void setRate(String roomName, String windowName, double newRate) {
     if (roomDetails.containsKey(roomName) &&

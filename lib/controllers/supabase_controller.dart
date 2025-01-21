@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:task_app/constants/enums.dart';
-import 'package:task_app/constants/app_keys.dart';
-import 'package:task_app/controllers/auth_controller.dart';
-import 'package:task_app/models/task.dart';
-import 'package:task_app/models/user.dart';
+import '../constants/enums.dart';
+import '../constants/app_keys.dart';
+import 'auth_controller.dart';
+import '../models/task.dart';
+import '../models/user.dart';
 
 class SupabaseController {
   static final SupabaseController instance =
@@ -21,8 +21,7 @@ class SupabaseController {
   }
 
   /// fetches overall counts
-  Future<Map<String, dynamic>> getOverallCounts() async {
-    return await _executeQuery(() async {
+  Future<Map<String, dynamic>> getOverallCounts() async => await _executeQuery(() async {
           final UserModel? user =
               await AuthController.instance.getLoggedInUser();
           final response = await supabase.rpc(
@@ -33,7 +32,6 @@ class SupabaseController {
           return response;
         }) ??
         {};
-  }
 
   /// creates a task in supabase
   Future<void> createTask({
@@ -267,8 +265,7 @@ class SupabaseController {
     return null;
   }
 
-  Future<Map<String, dynamic>> getTaskById(String dealNo) async {
-    return await _executeQuery(() async {
+  Future<Map<String, dynamic>> getTaskById(String dealNo) async => await _executeQuery(() async {
           final response = await supabase.rpc(
             FunctionKeys.getTaskByDealNoFunc,
             params: {FunctionKeys.dealNoParam: dealNo},
@@ -276,11 +273,9 @@ class SupabaseController {
           return response;
         }) ??
         {};
-  }
 
   /// Get all tasks
-  Future<Map<String, dynamic>> getAllTasks() async {
-    return await _executeQuery(() async {
+  Future<Map<String, dynamic>> getAllTasks() async => await _executeQuery(() async {
           final UserModel? user =
               await AuthController.instance.getLoggedInUser();
 
@@ -299,7 +294,6 @@ class SupabaseController {
           return response;
         }) ??
         {};
-  }
 
   Future<Map<String, dynamic>> getSalesTasks(String userId) async {
     try {
@@ -399,8 +393,7 @@ class SupabaseController {
     String? select,
     String? orderBy,
     bool ascending = true,
-  }) async {
-    return await _executeQuery(() async {
+  }) async => await _executeQuery(() async {
           var query = supabase.from(table).select(select ?? "");
 
           filters?.forEach((key, value) {
@@ -415,5 +408,4 @@ class SupabaseController {
           return (response as List<dynamic>).cast<Map<String, dynamic>>();
         }) ??
         [];
-  }
 }

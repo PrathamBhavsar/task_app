@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_app/views/auth/login_screen.dart';
-import 'package:task_app/views/auth/signup_screen.dart';
-import 'package:task_app/views/home/home_screen.dart';
-import 'package:task_app/views/home/pages/notification/notification_screen.dart';
-import 'package:task_app/views/home/pages/task%20list/task_list_page.dart';
-import 'package:task_app/views/task/task_detail_screen.dart';
-import 'package:task_app/views/task/widgets/measurement/measurement_screen.dart';
-import 'package:task_app/views/task/widgets/quotation/quotation_screen.dart';
+import '../views/auth/login_screen.dart';
+import '../views/auth/signup_screen.dart';
+import '../views/home/home_screen.dart';
+import '../views/home/pages/notification/notification_screen.dart';
+import '../views/home/pages/task%20list/task_list_page.dart';
+import '../views/task/task_detail_screen.dart';
+import '../views/task/widgets/measurement/measurement_screen.dart';
+import '../views/task/widgets/quotation/quotation_screen.dart';
 
 abstract class MyRouter {
-  static GoRouter router(bool isLoggedIn) {
-    return GoRouter(
+  static GoRouter router(bool isLoggedIn) => GoRouter(
         initialLocation: isLoggedIn
             ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
             // ? '/measurement'
@@ -78,5 +77,4 @@ abstract class MyRouter {
                 const QuotationScreen(),
           ),
         ]);
-  }
 }

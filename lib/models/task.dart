@@ -1,7 +1,7 @@
-import 'package:task_app/models/attachment.dart';
-import 'package:task_app/models/client.dart';
-import 'package:task_app/models/designer.dart';
-import 'package:task_app/models/user.dart';
+import 'attachment.dart';
+import 'client.dart';
+import 'designer.dart';
+import 'user.dart';
 
 class TaskModel {
   final String? id;
@@ -38,8 +38,7 @@ class TaskModel {
     this.taskSalespersons,
   });
 
-  factory TaskModel.fromJson(Map<String, dynamic> json) {
-    return TaskModel(
+  factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
       id: json['id'],
       name: json['name'],
       status: json['status'],
@@ -68,10 +67,8 @@ class TaskModel {
           .map((salesperson) => UserModel.fromJson(salesperson))
           .toList(),
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'name': name,
       'status': status,
       'deal_no': dealNo,
@@ -81,5 +78,4 @@ class TaskModel {
       'created_by': createdBy,
       'start_date': startDate.toIso8601String(),
     };
-  }
 }

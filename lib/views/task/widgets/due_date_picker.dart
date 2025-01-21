@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/task_provider.dart';
+import '../../../constants/app_colors.dart';
+import '../../../providers/task_provider.dart';
 
 class DatePickerWidget extends StatelessWidget {
   final bool isNewTask;
 
-  DatePickerWidget({super.key, required this.isNewTask});
+  const DatePickerWidget({super.key, required this.isNewTask});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<TaskProvider>(
-      builder: (BuildContext context, TaskProvider provider, Widget? child) {
-        return Row(
+  Widget build(BuildContext context) => Consumer<TaskProvider>(
+      builder: (BuildContext context, TaskProvider provider, Widget? child) => Row(
           children: [
             _buildDatePicker(
               context,
@@ -38,10 +36,8 @@ class DatePickerWidget extends StatelessWidget {
               },
             ),
           ],
-        );
-      },
+        ),
     );
-  }
 
   Widget _buildDatePicker(
     BuildContext context,
@@ -50,8 +46,7 @@ class DatePickerWidget extends StatelessWidget {
     required String label,
     required DateTime date,
     required void Function(DateTime) onDateSelected,
-  }) {
-    return Flexible(
+  }) => Flexible(
       child: GestureDetector(
         onTap: () async {
           DateTime initialDate = date;
@@ -98,5 +93,4 @@ class DatePickerWidget extends StatelessWidget {
         ),
       ),
     );
-  }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/main.dart';
+import '../../../constants/app_colors.dart';
 
 class UserRoleTile extends StatelessWidget {
   const UserRoleTile({
@@ -16,8 +15,7 @@ class UserRoleTile extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(BuildContext context) {
-    return Flexible(
+  Widget build(BuildContext context) => Flexible(
       flex: 2,
       child: GestureDetector(
         onTap: onTap,
@@ -39,5 +37,4 @@ class UserRoleTile extends StatelessWidget {
         ),
       ),
     );
-  }
 }

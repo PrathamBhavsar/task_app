@@ -11,8 +11,7 @@ class CircleIcons extends StatelessWidget {
   final Function() onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
@@ -28,5 +27,4 @@ class CircleIcons extends StatelessWidget {
         ),
       ),
     );
-  }
 }

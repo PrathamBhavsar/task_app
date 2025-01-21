@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/task_provider.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
-import 'package:task_app/widgets/circle_icons.dart';
-import 'package:task_app/widgets/custom_tag.dart';
+import '../../../../../constants/app_colors.dart';
+import '../../../../../providers/task_provider.dart';
+import 'overlapping_circles.dart';
+import '../../../../../widgets/circle_icons.dart';
+import '../../../../../widgets/custom_tag.dart';
 
 class TaskTile extends StatelessWidget {
   const TaskTile({super.key, required this.task, this.isSalesperson = true});
@@ -14,8 +14,7 @@ class TaskTile extends StatelessWidget {
   final bool isSalesperson;
 
   @override
-  Widget build(BuildContext context) {
-    return Material(
+  Widget build(BuildContext context) => Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
@@ -95,7 +94,6 @@ class TaskTile extends StatelessWidget {
         ),
       ),
     );
-  }
 }
 // }
 // import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/controllers/supabase_controller.dart';
+import '../../../constants/app_colors.dart';
+import '../../../controllers/supabase_controller.dart';
 
 class AttachmentsList extends StatelessWidget {
   const AttachmentsList(
@@ -9,8 +9,7 @@ class AttachmentsList extends StatelessWidget {
   final String dealNo;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (attachmentsList.isNotEmpty) ...[
@@ -79,7 +78,6 @@ class AttachmentsList extends StatelessWidget {
         ),
       ],
     );
-  }
 
   Color _getColorBasedOnExtension(String extension) {
     switch (extension) {

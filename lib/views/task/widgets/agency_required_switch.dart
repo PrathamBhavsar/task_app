@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/task_provider.dart';
+import '../../../constants/app_colors.dart';
+import '../../../providers/task_provider.dart';
 
 class AgencyRequiredSwitch extends StatelessWidget {
   const AgencyRequiredSwitch({super.key, required this.isSalesperson});
 
   final bool isSalesperson;
   @override
-  Widget build(BuildContext context) {
-    return Visibility(
+  Widget build(BuildContext context) => Visibility(
       visible: isSalesperson,
       child: Padding(
         padding: AppPaddings.appPadding,
-        child: Container(
+        child: SizedBox(
           height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,5 +35,4 @@ class AgencyRequiredSwitch extends StatelessWidget {
         ),
       ),
     );
-  }
 }

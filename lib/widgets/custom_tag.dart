@@ -13,8 +13,7 @@ class CustomTag extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
         border: Border.all(width: 2),
@@ -45,5 +44,4 @@ class CustomTag extends StatelessWidget {
         ],
       ),
     );
-  }
 }

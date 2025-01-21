@@ -19,8 +19,7 @@ class DesignerModel {
     this.createdAt,
   });
 
-  factory DesignerModel.fromJson(Map<String, dynamic> json) {
-    return DesignerModel(
+  factory DesignerModel.fromJson(Map<String, dynamic> json) => DesignerModel(
       id: json['id'],
       code: json['code'],
       name: json['name'],
@@ -32,15 +31,12 @@ class DesignerModel {
           ? DateTime.parse(json['created_at'])
           : null,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'code': code,
       'name': name,
       'address': address,
       'firm_name': firmName,
       'contact_no': contactNo,
     };
-  }
 }

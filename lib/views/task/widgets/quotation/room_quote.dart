@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/quotation_provider.dart';
-import 'package:task_app/views/task/widgets/measurement/size_tile.dart';
-import 'package:task_app/views/task/widgets/measurement/title_tile.dart';
+import '../../../../constants/app_colors.dart';
+import '../measurement/title_tile.dart';
 
 class RoomQuote extends StatelessWidget {
   const RoomQuote({
@@ -27,8 +25,7 @@ class RoomQuote extends StatelessWidget {
   final List<String> windowMaterials;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleTile(
@@ -51,7 +48,6 @@ class RoomQuote extends StatelessWidget {
         AppPaddings.gapH(10),
       ],
     );
-  }
 }
 
 class QuoteWindowTile extends StatelessWidget {
@@ -75,8 +71,7 @@ class QuoteWindowTile extends StatelessWidget {
 
   TextStyle textStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w500);
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -159,5 +154,4 @@ class QuoteWindowTile extends StatelessWidget {
         AppPaddings.gapH(5)
       ],
     );
-  }
 }

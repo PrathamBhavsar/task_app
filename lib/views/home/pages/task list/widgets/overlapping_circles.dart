@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import 'package:task_app/constants/app_colors.dart';
+import '../../../../../constants/app_colors.dart';
 
 class OverlappingCircles extends StatelessWidget {
   final List<Color> bgColors;

@@ -9,7 +9,5 @@ extension RandomColorString on String {
     return 'ff$colorValue';
   }
 
-  static Color toColor(String hexColor) {
-    return Color(int.parse(hexColor, radix: 16));
-  }
+  static Color toColor(String hexColor) => Color(int.parse(hexColor, radix: 16));
 }

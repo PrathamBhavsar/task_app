@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/auth_provider.dart';
+import '../constants/app_colors.dart';
+import '../providers/auth_provider.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -33,10 +33,8 @@ class CustomTextField extends StatelessWidget {
   final Function(String)? onChangedFunc;
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, provider, child) {
-        return TextField(
+  Widget build(BuildContext context) => Consumer<AuthProvider>(
+      builder: (context, provider, child) => TextField(
           controller: controller,
           focusNode: focusNode,
           enabled: isEnabled,
@@ -53,13 +51,10 @@ class CustomTextField extends StatelessWidget {
           style: _textStyle(AppColors.primary, 18, AppTexts.fW700),
           textAlignVertical: TextAlignVertical.center,
           decoration: _buildInputDecoration(provider),
-        );
-      },
+        ),
     );
-  }
 
-  InputDecoration _buildInputDecoration(AuthProvider provider) {
-    return InputDecoration(
+  InputDecoration _buildInputDecoration(AuthProvider provider) => InputDecoration(
       contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       prefixIcon: prefixIcon,
       prefixIconColor: AppColors.primary,
@@ -91,16 +86,11 @@ class CustomTextField extends StatelessWidget {
         const BorderSide(width: 2, color: AppColors.primary),
       ),
     );
-  }
 
-  TextStyle _textStyle(Color color, double fontSize, FontWeight fontWeight) {
-    return TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight);
-  }
+  TextStyle _textStyle(Color color, double fontSize, FontWeight fontWeight) => TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight);
 
-  OutlineInputBorder _outlineInputBorder(BorderSide borderSide) {
-    return OutlineInputBorder(
+  OutlineInputBorder _outlineInputBorder(BorderSide borderSide) => OutlineInputBorder(
       borderSide: borderSide,
       borderRadius: AppConsts.radius,
     );
-  }
 }

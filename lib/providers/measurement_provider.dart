@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 
 class MeasurementProvider with ChangeNotifier {
@@ -145,7 +144,7 @@ class MeasurementProvider with ChangeNotifier {
       }
 
       List<String> windows = room[oldRoomName]!;
-      windows.forEach((windowName) {
+      for (var windowName in windows) {
         // Retrieve all window-related data in a single step
         var controllers = {
           'windowName': windowControllers[roomIndex]![windowName]!,
@@ -184,7 +183,7 @@ class MeasurementProvider with ChangeNotifier {
             'remarks': remarks,
           },
         );
-      });
+      }
     });
 
     // Notify listeners after saving all changes

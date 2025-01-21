@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/providers/quotation_provider.dart';
+import '../../../../providers/quotation_provider.dart';
 
 class TitleTile extends StatelessWidget {
   const TitleTile({super.key, required this.roomName, this.isQuote = false});
   final String roomName;
   final bool isQuote;
   @override
-  Widget build(BuildContext context) {
-    return Row(
+  Widget build(BuildContext context) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
@@ -21,5 +20,4 @@ class TitleTile extends StatelessWidget {
           ),
       ],
     );
-  }
 }

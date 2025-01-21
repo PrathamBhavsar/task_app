@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/constants/dummy_data.dart';
-import 'package:task_app/providers/task_provider.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/task_tile.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../constants/dummy_data.dart';
+import '../../../../providers/task_provider.dart';
+import '../task%20list/widgets/task_tile.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -32,8 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
+  Widget build(BuildContext context) => FutureBuilder(
       future: _userFuture,
       builder: (context, snapshot) {
         final screenWidth = MediaQuery.of(context).size.width;
@@ -95,7 +94,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              if (items.length > 0)
+                              if (items.isNotEmpty)
                                 _buildPageColumn(
                                   items[0],
                                   items.length > 1 ? items[1] : null,
@@ -143,7 +142,6 @@ class _DashboardPageState extends State<DashboardPage> {
         );
       },
     );
-  }
 
   Widget _buildPageViews<T>({
     required List<T> data,
@@ -151,8 +149,7 @@ class _DashboardPageState extends State<DashboardPage> {
     required Function(int) onPageChanged,
     required Widget Function(BuildContext, int) itemBuilder,
     double height = 148.0,
-  }) {
-    return Container(
+  }) => SizedBox(
       height: height.h,
       child: PageView.builder(
         controller: controller,
@@ -162,29 +159,23 @@ class _DashboardPageState extends State<DashboardPage> {
         itemBuilder: itemBuilder,
       ),
     );
-  }
 
-  Widget _buildTodayTasks(List<Map<String, dynamic>> tasks) {
-    return _buildPageViews(
+  Widget _buildTodayTasks(List<Map<String, dynamic>> tasks) => _buildPageViews(
       data: tasks,
       controller: _taskPageController,
       onPageChanged: (page) {
         TaskProvider.instance.updateCurrentTodayTaskPage(page);
       },
-      itemBuilder: (context, index) {
-        return Padding(
+      itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.only(bottom: 10, right: 10),
           child: TaskTile(task: tasks[index]),
-        );
-      },
+        ),
     );
-  }
 
   Widget _buildPageColumn(
       Map<String, dynamic>? topItem,
       Map<String, dynamic>? bottomItem,
-      List<Map<String, dynamic>>? taskStatusColors) {
-    return Flexible(
+      List<Map<String, dynamic>>? taskStatusColors) => Flexible(
       flex: 1,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -195,7 +186,6 @@ class _DashboardPageState extends State<DashboardPage> {
         ],
       ),
     );
-  }
 
   Widget _buildTile(
       Map<String, dynamic> data, List<Map<String, dynamic>>? taskStatusColors) {
@@ -243,13 +233,11 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildDotIndicator(int pageCount, int currentPage) {
-    return Padding(
+  Widget _buildDotIndicator(int pageCount, int currentPage) => Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(pageCount, (index) {
-          return AnimatedContainer(
+        children: List.generate(pageCount, (index) => AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             margin: const EdgeInsets.symmetric(horizontal: 4.0),
             width: currentPage == index ? 8 : 3,
@@ -258,9 +246,7 @@ class _DashboardPageState extends State<DashboardPage> {
               color: currentPage == index ? AppColors.primary : Colors.grey,
               shape: BoxShape.circle,
             ),
-          );
-        }),
+          )),
       ),
     );
-  }
 }

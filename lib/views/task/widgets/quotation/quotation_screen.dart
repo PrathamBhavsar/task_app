@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/quotation_provider.dart';
-import 'package:task_app/widgets/custom_text_feild.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../providers/quotation_provider.dart';
+import '../../../../widgets/custom_text_feild.dart';
 
 class QuotationScreen extends StatefulWidget {
   const QuotationScreen({super.key});
@@ -18,14 +18,17 @@ class _QuotationScreenState extends State<QuotationScreen> {
 
   @override
   void dispose() {
-    rateControllers.values.forEach((controller) => controller.dispose());
-    materialControllers.values.forEach((controller) => controller.dispose());
+    for (var controller in rateControllers.values) {
+      controller.dispose();
+    }
+    for (var controller in materialControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         extendBody: true,
@@ -36,8 +39,7 @@ class _QuotationScreenState extends State<QuotationScreen> {
           ),
           actions: [
             Consumer<QuotationProvider>(
-                builder: (context, quotationProvider, child) {
-              return Row(
+                builder: (context, quotationProvider, child) => Row(
                 children: [
                   Text(
                     quotationProvider.calculateTotalAmount().toString(),
@@ -88,13 +90,11 @@ class _QuotationScreenState extends State<QuotationScreen> {
                     },
                   )
                 ],
-              );
-            })
+              ))
           ],
         ),
         body: Consumer<QuotationProvider>(
-          builder: (context, quotationProvider, child) {
-            return Padding(
+          builder: (context, quotationProvider, child) => Padding(
               padding: const EdgeInsets.all(16),
               child: ListView.builder(
                 itemCount: quotationProvider.roomDetails.keys.length,
@@ -242,27 +242,23 @@ class _QuotationScreenState extends State<QuotationScreen> {
                               ],
                             ),
                           );
-                        }).toList(),
+                        }),
                       ],
                     ),
                   );
                 },
               ),
-            );
-          },
+            ),
         ),
       ),
     );
-  }
 
   Widget _buildDivider(
       {double verticalPadding = 0,
       double horizontalPadding = 0,
-      Color color = AppColors.primary}) {
-    return Padding(
+      Color color = AppColors.primary}) => Padding(
       padding: EdgeInsets.symmetric(
           vertical: verticalPadding, horizontal: horizontalPadding),
       child: Divider(color: color),
     );
-  }
 }

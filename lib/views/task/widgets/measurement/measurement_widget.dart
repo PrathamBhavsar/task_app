@@ -3,16 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/measurement_provider.dart';
-import 'package:task_app/views/task/widgets/measurement/room_column.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../providers/measurement_provider.dart';
+import 'room_column.dart';
 
 class MeasurementWidget extends StatelessWidget {
   const MeasurementWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<MeasurementProvider>(
+  Widget build(BuildContext context) => Consumer<MeasurementProvider>(
       builder:
           (BuildContext context, MeasurementProvider provider, Widget? child) {
         // Transforming data into the required format
@@ -140,19 +139,16 @@ class MeasurementWidget extends StatelessWidget {
         );
       },
     );
-  }
 
   void _copyToClipboard(
       BuildContext context, List<Map<String, dynamic>> rooms) {
     final copyText = rooms.map((room) {
       final windowsText =
-          (room['windows'] as List<Map<String, String>>).map((window) {
-        return '''  ${window['windowName']}
+          (room['windows'] as List<Map<String, String>>).map((window) => '''  ${window['windowName']}
         Size: ${window['size']}
         Area: ${window['area']}
         Type: ${window['type']}
-        Remarks: ${window['remarks']}''';
-      }).join('\n');
+        Remarks: ${window['remarks']}''').join('\n');
       return '${room['roomName']}\n$windowsText';
     }).join('\n\n');
 

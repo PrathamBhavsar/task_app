@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/task_provider.dart';
+import '../../../../../constants/app_colors.dart';
+import '../../../../../providers/task_provider.dart';
 
 class NotificationListTile extends StatelessWidget {
   const NotificationListTile(
@@ -9,8 +9,7 @@ class NotificationListTile extends StatelessWidget {
   final String text;
   final String date;
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) => Container(
       decoration: BoxDecoration(
         color: color,
         borderRadius: AppConsts.radius,
@@ -54,5 +53,4 @@ class NotificationListTile extends StatelessWidget {
         ),
       ),
     );
-  }
 }

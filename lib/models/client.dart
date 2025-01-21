@@ -15,8 +15,7 @@ class ClientModel {
     this.createdAt,
   });
 
-  factory ClientModel.fromJson(Map<String, dynamic> json) {
-    return ClientModel(
+  factory ClientModel.fromJson(Map<String, dynamic> json) => ClientModel(
       id: json['id'],
       name: json['name'],
       address: json['address'],
@@ -25,13 +24,10 @@ class ClientModel {
           ? DateTime.parse(json['created_at'])
           : null,
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'name': name,
       'address': address,
       'contact_no': contactNo,
     };
-  }
 }

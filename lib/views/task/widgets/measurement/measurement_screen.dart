@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/measurement_provider.dart';
-import 'package:task_app/widgets/action_button.dart';
-import 'package:task_app/widgets/custom_text_feild.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../providers/measurement_provider.dart';
+import '../../../../widgets/action_button.dart';
+import '../../../../widgets/custom_text_feild.dart';
 
 class MeasurementScreen extends StatefulWidget {
   const MeasurementScreen({super.key});
@@ -24,32 +24,45 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
 
   @override
   void dispose() {
-    roomControllers.values.forEach((controller) => controller.dispose());
-    windowControllers.values.forEach((controllers) {
-      controllers.values.forEach((controller) => controller.dispose());
-    });
-    heightControllers.values.forEach((controllers) {
-      controllers.values.forEach((controller) => controller.dispose());
-    });
-    widthControllers.values.forEach((controllers) {
-      controllers.values.forEach((controller) => controller.dispose());
-    });
-    areaControllers.values.forEach((controllers) {
-      controllers.values.forEach((controller) => controller.dispose());
-    });
-    typeControllers.values.forEach((controllers) {
-      controllers.values.forEach((controller) => controller.dispose());
-    });
-    remarksControllers.values.forEach((controllers) {
-      controllers.values.forEach((controller) => controller.dispose());
-    });
+    for (var controller in roomControllers.values) {
+      controller.dispose();
+    }
+    for (var controllers in windowControllers.values) {
+      for (var controller in controllers.values) {
+        controller.dispose();
+      }
+    }
+    for (var controllers in heightControllers.values) {
+      for (var controller in controllers.values) {
+        controller.dispose();
+      }
+    }
+    for (var controllers in widthControllers.values) {
+      for (var controller in controllers.values) {
+        controller.dispose();
+      }
+    }
+    for (var controllers in areaControllers.values) {
+      for (var controller in controllers.values) {
+        controller.dispose();
+      }
+    }
+    for (var controllers in typeControllers.values) {
+      for (var controller in controllers.values) {
+        controller.dispose();
+      }
+    }
+    for (var controllers in remarksControllers.values) {
+      for (var controller in controllers.values) {
+        controller.dispose();
+      }
+    }
 
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         extendBody: true,
@@ -60,7 +73,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
               btnTxt: 'Add Room',
               fontColor: Colors.white,
               backgroundColor: AppColors.primary,
-              onPress: () => MeasurementProvider.instance.addRoom(),
+              onPress: MeasurementProvider.instance.addRoom,
             ),
           )
         ],
@@ -192,8 +205,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                   ],
                                 ),
                                 _buildDivider(),
-                                ...windows.map((windowName) {
-                                  return Padding(
+                                ...windows.map((windowName) => Padding(
                                     padding:
                                         const EdgeInsets.symmetric(vertical: 5),
                                     child: ExpansionTile(
@@ -326,8 +338,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                         ),
                                       ],
                                     ),
-                                  );
-                                }).toList(),
+                                  )),
                                 ActionBtn(
                                   btnTxt: 'Add Window',
                                   backgroundColor: Colors.white,
@@ -349,16 +360,13 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
         // bottomSheet: ,
       ),
     );
-  }
 
   Widget _buildDivider(
       {double verticalPadding = 0,
       double horizontalPadding = 0,
-      Color color = AppColors.primary}) {
-    return Padding(
+      Color color = AppColors.primary}) => Padding(
       padding: EdgeInsets.symmetric(
           vertical: verticalPadding, horizontal: horizontalPadding),
       child: Divider(color: color),
     );
-  }
 }

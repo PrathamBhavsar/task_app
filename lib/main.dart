@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/controllers/auth_controller.dart';
-import 'package:task_app/providers/auth_provider.dart';
-import 'package:task_app/providers/measurement_provider.dart';
-import 'package:task_app/providers/quotation_provider.dart';
-import 'package:task_app/providers/task_provider.dart';
-import 'package:task_app/router/app_router.dart';
-import 'package:task_app/secrets/app_secrets.dart';
+import 'constants/app_colors.dart';
+import 'providers/auth_provider.dart';
+import 'providers/measurement_provider.dart';
+import 'providers/quotation_provider.dart';
+import 'providers/task_provider.dart';
+import 'router/app_router.dart';
+import 'secrets/app_secrets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,8 +52,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.isLoggedIn});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
+  Widget build(BuildContext context) => MaterialApp.router(
       theme: ThemeData(
         fontFamily: 'Poppins',
         primaryTextTheme: TextTheme(),
@@ -69,5 +66,4 @@ class MyApp extends StatelessWidget {
       ),
       routerConfig: MyRouter.router(isLoggedIn),
     );
-  }
 }

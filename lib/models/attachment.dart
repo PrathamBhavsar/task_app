@@ -13,8 +13,7 @@ class AttachmentModel {
     required this.attachmentName,
   });
 
-  factory AttachmentModel.fromJson(Map<String, dynamic> json) {
-    return AttachmentModel(
+  factory AttachmentModel.fromJson(Map<String, dynamic> json) => AttachmentModel(
       id: json['id'],
       taskId: json['task_id'],
       createdAt: json['created_at'] != null
@@ -23,12 +22,9 @@ class AttachmentModel {
       attachmentUrl: json['attachment_url'],
       attachmentName: json['attachment_name'],
     );
-  }
 
-  Map<String, dynamic> toJson() {
-    return {
+  Map<String, dynamic> toJson() => {
       'attachment_url': attachmentUrl,
       'attachment_name': attachmentName,
     };
-  }
 }

@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/constants/enums.dart';
-import 'package:task_app/constants/app_keys.dart';
-import 'package:task_app/providers/task_provider.dart';
-import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
-import 'package:task_app/views/task/methods/show_bottom_modal.dart';
-import 'package:task_app/views/task/widgets/agency_required_switch.dart';
-import 'package:task_app/views/task/widgets/attachment_list.dart';
-import 'package:task_app/views/task/widgets/client_name_dropdown.dart';
-import 'package:task_app/views/task/widgets/due_date_picker.dart';
-import 'package:task_app/views/task/widgets/measurement/measurement_widget.dart';
-import 'package:task_app/views/task/widgets/quotation/quotation_widget.dart';
-import 'package:task_app/widgets/action_button.dart';
-import 'package:task_app/widgets/custom_tag.dart';
-import 'package:task_app/widgets/custom_text_feild.dart';
+import '../../constants/app_colors.dart';
+import '../../constants/enums.dart';
+import '../../constants/app_keys.dart';
+import '../../providers/task_provider.dart';
+import '../home/pages/task%20list/widgets/overlapping_circles.dart';
+import 'methods/show_bottom_modal.dart';
+import 'widgets/agency_required_switch.dart';
+import 'widgets/attachment_list.dart';
+import 'widgets/client_name_dropdown.dart';
+import 'widgets/due_date_picker.dart';
+import 'widgets/measurement/measurement_widget.dart';
+import 'widgets/quotation/quotation_widget.dart';
+import '../../widgets/action_button.dart';
+import '../../widgets/custom_tag.dart';
+import '../../widgets/custom_text_feild.dart';
 
-import '../../constants/dummy_data.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final bool isSalesperson;
@@ -24,11 +23,11 @@ class TaskDetailScreen extends StatefulWidget {
   final String dealNo;
 
   const TaskDetailScreen({
-    Key? key,
+    super.key,
     required this.isSalesperson,
     required this.isNewTask,
     required this.dealNo,
-  }) : super(key: key);
+  });
 
   @override
   State<TaskDetailScreen> createState() => _TaskDetailScreenState();
@@ -67,8 +66,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context) => GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         extendBody: true,
@@ -285,8 +283,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               onPress: () async {
                 showDialog(
                   context: context,
-                  builder: (context) {
-                    return AlertDialog(
+                  builder: (context) => AlertDialog(
                       shape: RoundedRectangleBorder(
                         borderRadius: AppConsts.radius,
                         side: BorderSide(width: 2),
@@ -350,8 +347,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                           ),
                         ],
                       ),
-                    );
-                  },
+                    ),
                 );
               },
               fontColor: AppColors.primary,
@@ -361,13 +357,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         ],
       ),
     );
-  }
 
   Widget _buildRowWithIconAndWidget({
     required IconData icon,
     required Widget widget,
-  }) {
-    return Row(
+  }) => Row(
       children: [
         Container(
           height: 60,
@@ -382,7 +376,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         Expanded(child: widget),
       ],
     );
-  }
 
   Widget _buildDynamicRow({
     required bool isSalesperson,
@@ -391,8 +384,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     required String indexKey,
     required List<Map<String, dynamic>>? dataList,
     required Widget widget,
-  }) {
-    return Visibility(
+  }) => Visibility(
       visible: isSalesperson,
       child: Padding(
         padding: AppPaddings.appPadding,
@@ -404,7 +396,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         ),
       ),
     );
-  }
 
   Widget _dropdownWidget({
     required BuildContext context,
@@ -416,8 +407,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     required String defaultText,
     required bool isNewTask,
     required String dealNo,
-  }) {
-    return ClientNameDropdown(
+  }) => ClientNameDropdown(
       name: dataList?.isNotEmpty == true ? dataList![index][name] : defaultText,
       clientList: dataList ?? [],
       onTap: () =>
@@ -425,16 +415,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
       dealNo: dealNo,
       isNewTask: isNewTask,
     );
-  }
 
   Widget _buildRowWithTextAndWidget({
     required String label,
     required Widget widget,
     VoidCallback? onTap,
-  }) {
-    return GestureDetector(
+  }) => GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -445,12 +433,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         ),
       ),
     );
-  }
 
-  Widget _buildDivider({double verticalPadding = 0}) {
-    return Padding(
+  Widget _buildDivider({double verticalPadding = 0}) => Padding(
       padding: EdgeInsets.symmetric(vertical: verticalPadding),
       child: Divider(color: AppColors.primary),
     );
-  }
 }

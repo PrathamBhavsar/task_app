@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
+import '../constants/app_colors.dart';
 
 class ActionBtn extends StatelessWidget {
   const ActionBtn({
@@ -16,8 +16,7 @@ class ActionBtn extends StatelessWidget {
   final Color backgroundColor;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
+  Widget build(BuildContext context) => SizedBox(
       height: 60,
       width: double.infinity,
       child: ElevatedButton(
@@ -39,5 +38,4 @@ class ActionBtn extends StatelessWidget {
         ),
       ),
     );
-  }
 }

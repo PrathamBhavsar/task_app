@@ -3,16 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:task_app/constants/app_colors.dart';
-import 'package:task_app/providers/quotation_provider.dart';
-import 'package:task_app/views/task/widgets/quotation/room_quote.dart';
+import '../../../../constants/app_colors.dart';
+import '../../../../providers/quotation_provider.dart';
+import 'room_quote.dart';
 
 class QuotationWidget extends StatelessWidget {
   const QuotationWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<QuotationProvider>(
+  Widget build(BuildContext context) => Consumer<QuotationProvider>(
       builder:
           (BuildContext context, QuotationProvider provider, Widget? child) {
         final List<Map<String, dynamic>> rooms =
@@ -158,7 +157,6 @@ class QuotationWidget extends StatelessWidget {
         );
       },
     );
-  }
 
   void _copyToClipboard(
       BuildContext context, List<Map<String, dynamic>> rooms) {
@@ -179,7 +177,7 @@ class QuotationWidget extends StatelessWidget {
     }).join('\n\n');
 
     final finalText =
-        '$copyText\n\nTotal Amount: \₹ ${totalAmount.toStringAsFixed(2)}';
+        '$copyText\n\nTotal Amount: ₹ ${totalAmount.toStringAsFixed(2)}';
 
     Clipboard.setData(ClipboardData(text: finalText)).then((_) {
       Fluttertoast.showToast(msg: 'Copied to your clipboard!');

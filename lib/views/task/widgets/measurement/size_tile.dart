@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/app_colors.dart';
+import '../../../../constants/app_colors.dart';
 
 class WindowTile extends StatelessWidget {
   WindowTile(
@@ -17,8 +17,7 @@ class WindowTile extends StatelessWidget {
 
   TextStyle textStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w500);
   @override
-  Widget build(BuildContext context) {
-    return Column(
+  Widget build(BuildContext context) => Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,5 +74,4 @@ class WindowTile extends StatelessWidget {
         AppPaddings.gapH(5)
       ],
     );
-  }
 }
