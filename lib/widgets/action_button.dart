@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_app/constants/app_colors.dart';
 
 class ActionBtn extends StatelessWidget {
   const ActionBtn({
@@ -25,17 +26,15 @@ class ActionBtn extends StatelessWidget {
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
               side: const BorderSide(width: 2),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: AppConsts.radius,
             ),
           ),
           backgroundColor: WidgetStateProperty.all(backgroundColor),
         ),
         child: Text(
           btnTxt,
-          style: TextStyle(
+          style: AppTexts.buttonText.copyWith(
             color: fontColor,
-            fontSize: 22,
-            fontWeight: FontWeight.w900,
           ),
         ),
       ),

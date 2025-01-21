@@ -82,43 +82,64 @@ class QuotationWidget extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(18),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: rooms.length,
-                          itemBuilder: (context, index) {
-                            final Map<String, dynamic> room = rooms[index];
+                        child: Column(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: rooms.length,
+                              itemBuilder: (context, index) {
+                                final Map<String, dynamic> room = rooms[index];
 
-                            return RoomQuote(
-                              roomNames: room['roomName']!,
-                              windowAreas: (room['windows'] as List<dynamic>)
-                                  .map<String>((window) =>
-                                      (window as Map<String, String>)['area']!)
-                                  .toList(),
-                              windowRates: (room['windows'] as List<dynamic>)
-                                  .map<String>((window) =>
-                                      (window as Map<String, String>)['rate']!)
-                                  .toList(),
-                              windowAmounts: (room['windows'] as List<dynamic>)
-                                  .map<String>((window) => (window
-                                      as Map<String, String>)['amount']!)
-                                  .toList(),
-                              windowNames: (room['windows'] as List<dynamic>?)
-                                      ?.map<String>((window) => (window as Map<
-                                          String, String>)['windowName']!)
-                                      .toList() ??
-                                  [],
-                              windowMaterials: (room['windows']
-                                          as List<dynamic>?)
-                                      ?.map<String>((window) => (window
-                                          as Map<String, String>)['material']!)
-                                      .toList() ??
-                                  [],
-                              totalAmount: provider
-                                  .calculateRoomTotal(room['roomName']!)
-                                  .toString(),
-                            );
-                          },
+                                return RoomQuote(
+                                  roomNames: room['roomName']!,
+                                  windowAreas:
+                                      (room['windows'] as List<dynamic>)
+                                          .map<String>((window) => (window
+                                              as Map<String, String>)['area']!)
+                                          .toList(),
+                                  windowRates:
+                                      (room['windows'] as List<dynamic>)
+                                          .map<String>((window) => (window
+                                              as Map<String, String>)['rate']!)
+                                          .toList(),
+                                  windowAmounts: (room['windows']
+                                          as List<dynamic>)
+                                      .map<String>((window) => (window
+                                          as Map<String, String>)['amount']!)
+                                      .toList(),
+                                  windowNames: (room['windows']
+                                              as List<dynamic>?)
+                                          ?.map<String>((window) =>
+                                              (window as Map<String, String>)[
+                                                  'windowName']!)
+                                          .toList() ??
+                                      [],
+                                  windowMaterials: (room['windows']
+                                              as List<dynamic>?)
+                                          ?.map<String>((window) =>
+                                              (window as Map<String, String>)[
+                                                  'material']!)
+                                          .toList() ??
+                                      [],
+                                );
+                              },
+                            ),
+                            AppPaddings.gapH(10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Total',
+                                  style: AppTexts.tileTitle1,
+                                ),
+                                Text(
+                                  provider.calculateTotalAmount().toString(),
+                                  style: AppTexts.tileTitle1,
+                                ),
+                              ],
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -141,8 +162,7 @@ class QuotationWidget extends StatelessWidget {
        
       Material: ${window['material']}
       Rate: ${window['rate']}
-      Amount: ${window['amount']}
-      ''';
+      Amount: ${window['amount']}''';
       }).join('\n');
 
       return '${room['roomName']}\n$windowsText';

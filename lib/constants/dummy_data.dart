@@ -22,7 +22,22 @@ class DummyData {
         "amount": "0", // Initial amount value
       },
     },
+    "Room 2": {
+      "Window 1": {
+        "height": "5",
+        "width": "5",
+        "area": "8", // Placeholder value
+        "type": "d",
+        "remarks": "d",
+        "material": "asd",
+        "rate": "10", // Placeholder value for rate
+        "amount": "0", // Initial amount value
+      },
+    },
   };
+
+  static final Map<String, Map<String, Map<String, String>>>
+      dummyTaskAttachments = {};
 
   static final Map<String, dynamic> dummyTaskData = {
     "name": "test",
@@ -68,7 +83,15 @@ class DummyData {
         "profile_bg_color": "ff5cd669"
       }
     ],
-    "task_attachments": [null],
+    "task_attachments": [
+      {
+        "id": " 1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+        "attachment_url": "Bhushan.jpg",
+        "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+        "created_at": "2025-01-02T07:35:50.240763+00:00",
+        "attachment_name": "attachment 2"
+      }
+    ],
     "task_salespersons": [
       {
         "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",

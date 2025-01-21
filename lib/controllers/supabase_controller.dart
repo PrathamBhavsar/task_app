@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_app/constants/enums.dart';
@@ -14,6 +15,12 @@ class SupabaseController {
   final supabase = Supabase.instance.client;
   final Logger log = Logger();
 
+  Future<void> downloadAttachment(String fileName, dealNo) async {
+    final Uint8List file =
+        await supabase.storage.from('bucket').download("$dealNo/$fileName");
+  }
+
+  /// fetches overall counts
   Future<Map<String, dynamic>> getOverallCounts() async {
     return await _executeQuery(() async {
           final UserModel? user =

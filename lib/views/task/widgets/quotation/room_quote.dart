@@ -13,7 +13,6 @@ class RoomQuote extends StatelessWidget {
     required this.windowRates,
     required this.windowAmounts,
     required this.windowMaterials,
-    required this.totalAmount,
   });
 
   final String roomNames;
@@ -22,7 +21,6 @@ class RoomQuote extends StatelessWidget {
   final List<String> windowRates;
   final List<String> windowAmounts;
   final List<String> windowMaterials;
-  final String totalAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +40,6 @@ class RoomQuote extends StatelessWidget {
             windowRate: windowRates[index],
             windowAmount: windowAmounts[index],
             windowArea: windowAreas[index],
-            totalAmount: totalAmount,
           ),
         ),
         AppPaddings.gapH(10),
@@ -52,20 +49,19 @@ class RoomQuote extends StatelessWidget {
 }
 
 class QuoteWindowTile extends StatelessWidget {
-  QuoteWindowTile(
-      {super.key,
-      required this.windowName,
-      required this.windowArea,
-      required this.windowMaterial,
-      required this.windowRate,
-      required this.windowAmount,
-      required this.totalAmount});
+  QuoteWindowTile({
+    super.key,
+    required this.windowName,
+    required this.windowArea,
+    required this.windowMaterial,
+    required this.windowRate,
+    required this.windowAmount,
+  });
   final String windowName;
   final String windowMaterial;
   final String windowRate;
   final String windowAmount;
   final String windowArea;
-  final String totalAmount;
 
   TextStyle textStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w500);
   @override
@@ -115,25 +111,11 @@ class QuoteWindowTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'amount',
+              'Amount',
               style: textStyle,
             ),
             Text(
               windowAmount,
-              style: textStyle,
-            ),
-          ],
-        ),
-        AppPaddings.gapH(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Total Amount',
-              style: textStyle,
-            ),
-            Text(
-              totalAmount,
               style: textStyle,
             ),
           ],

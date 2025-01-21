@@ -7,6 +7,7 @@ import 'package:task_app/providers/task_provider.dart';
 import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'package:task_app/views/task/methods/show_bottom_modal.dart';
 import 'package:task_app/views/task/widgets/agency_required_switch.dart';
+import 'package:task_app/views/task/widgets/attachment_list.dart';
 import 'package:task_app/views/task/widgets/client_name_dropdown.dart';
 import 'package:task_app/views/task/widgets/due_date_picker.dart';
 import 'package:task_app/views/task/widgets/measurement/measurement_widget.dart';
@@ -14,6 +15,8 @@ import 'package:task_app/views/task/widgets/quotation/quotation_widget.dart';
 import 'package:task_app/widgets/action_button.dart';
 import 'package:task_app/widgets/custom_tag.dart';
 import 'package:task_app/widgets/custom_text_feild.dart';
+
+import '../../constants/dummy_data.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final bool isSalesperson;
@@ -83,8 +86,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             return Padding(
               padding: AppPaddings.appPadding,
               child: ListView(children: [
-                MeasurementWidget(),
-                QuotationWidget(),
                 _buildRowWithIconAndWidget(
                   icon: Icons.person_2_rounded,
                   widget: _dropdownWidget(
@@ -240,20 +241,30 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                   isSalesperson:
                       widget.isSalesperson && provider.isAgencyRequired,
                 ),
+                MeasurementWidget(),
+                QuotationWidget(),
 
-                //   if (data['task_attachments'] != null &&
-                //       data['task_attachments']!.isNotEmpty)
-                //     _buildDynamicRow(
-                //       context: context,
-                //       label: 'Attachments',
-                //       dataList: data['task_attachments'],
-                //       widget: SizedBox.shrink(),
-                //       field: 'attachment',
-                //     ),
-                //   AttachmentsList(
-                //       attachmentsList: data['task_attachments'] ?? []),
+                AttachmentsList(
+                  attachmentsList: [
+                    {
+                      "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+                      "attachment_url": "Bhushan.jpg",
+                      "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+                      "created_at": "2025-01-02T07:35:50.240763+00:00",
+                      "attachment_name": "attachment 2"
+                    },
+                    {
+                      "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+                      "attachment_url": "dd.pdf",
+                      "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+                      "created_at": "2025-01-02T07:35:50.240763+00:00",
+                      "attachment_name": "ss.png"
+                    }
+                  ],
+                  dealNo: widget.dealNo,
+                ),
 
-                AppPaddings.gapH(70),
+                // AppPaddings.gapH(70),
               ]),
             );
           },
@@ -338,8 +349,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     );
                   },
                 );
-                ;
-                ;
               },
               fontColor: AppColors.primary,
               backgroundColor: AppColors.orange,

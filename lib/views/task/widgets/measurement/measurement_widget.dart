@@ -21,13 +21,11 @@ class MeasurementWidget extends StatelessWidget {
                 .map((entry) {
                   final roomName = entry.key;
 
-                  // Filter out empty windows
                   final List<Map<String, dynamic>> windows = entry.value.entries
                       .map((windowEntry) {
                         final windowName = windowEntry.key;
                         final windowData = windowEntry.value;
 
-                        // Skip the window if all fields are empty or null
                         final filteredWindowData = {
                           'height': windowData['height'],
                           'width': windowData['width'],
@@ -37,9 +35,8 @@ class MeasurementWidget extends StatelessWidget {
                         }..removeWhere((key, value) =>
                             value == null || value.toString().isEmpty);
 
-                        // Skip the window if no valid data exists after filtering
                         if (filteredWindowData.isEmpty) {
-                          return null; // Indicate this window should not be included
+                          return null;
                         }
 
                         final size =
@@ -56,7 +53,6 @@ class MeasurementWidget extends StatelessWidget {
                       .cast<Map<String, dynamic>>()
                       .toList();
 
-                  // Skip the room if there are no valid windows
                   if (windows.isEmpty) {
                     return null;
                   }

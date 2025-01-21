@@ -51,8 +51,7 @@ class AppTexts {
   static var borderWidth = Border.all(width: 2);
 
   static TextStyle textStyleFS = TextStyle(fontSize: 22, fontWeight: fW700);
-  static TextStyle headingStyle =
-      TextStyle(fontSize: 22.sp, fontWeight: fW700, fontFamily: 'Poppins');
+  static TextStyle headingStyle = TextStyle(fontSize: 22.sp, fontWeight: fW700);
 
   static TextStyle appBarStyle =
       TextStyle(fontSize: 32.sp, fontWeight: FontWeight.bold);
@@ -61,13 +60,22 @@ class AppTexts {
     fontSize: 16.sp,
     fontWeight: FontWeight.w500,
   );
-  static TextStyle tileTitle = TextStyle(
+  static TextStyle tileTitle2 = TextStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.w700,
   );
   static TextStyle tileHeading = TextStyle(
     fontSize: 20.sp,
     fontWeight: FontWeight.w700,
+  );
+  static TextStyle tileTitle1 = TextStyle(
+    fontSize: 20.sp,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const TextStyle buttonText = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w900,
   );
 }
 

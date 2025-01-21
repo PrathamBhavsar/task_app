@@ -137,11 +137,11 @@ class _QuotationScreenState extends State<QuotationScreen> {
                                 children: [
                                   Text(
                                     windowName,
-                                    style: AppTexts.tileTitle,
+                                    style: AppTexts.tileTitle2,
                                   ),
                                   Text(
                                     'Area: $area',
-                                    style: AppTexts.tileTitle,
+                                    style: AppTexts.tileTitle2,
                                   ),
                                 ],
                               ),

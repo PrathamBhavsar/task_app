@@ -302,8 +302,6 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                                                   roomIndex]![
                                                               windowName]!,
                                                       hintTxt: 'Type',
-                                                      keyboardType:
-                                                          TextInputType.number,
                                                     ),
                                                   ),
                                                 ],
