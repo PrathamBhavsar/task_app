@@ -13,10 +13,14 @@ class RoomQuote extends StatelessWidget {
     required this.windowRates,
     required this.windowAmounts,
     required this.windowMaterials,
+    required this.windowTypes,
+    required this.windowRemarks,
   });
 
   final String roomNames;
   final List<String> windowNames;
+  final List<String> windowTypes;
+  final List<String> windowRemarks;
   final List<String> windowAreas;
   final List<String> windowRates;
   final List<String> windowAmounts;
@@ -37,9 +41,11 @@ class RoomQuote extends StatelessWidget {
           (index) => QuoteWindowTile(
             windowName: windowNames[index],
             windowMaterial: windowMaterials[index],
+            windowType: windowTypes[index],
             windowRate: windowRates[index],
             windowAmount: windowAmounts[index],
             windowArea: windowAreas[index],
+            windowRemark: windowRemarks[index],
           ),
         ),
         AppPaddings.gapH(10),
@@ -56,12 +62,16 @@ class QuoteWindowTile extends StatelessWidget {
     required this.windowMaterial,
     required this.windowRate,
     required this.windowAmount,
+    required this.windowType,
+    required this.windowRemark,
   });
   final String windowName;
+  final String windowType;
   final String windowMaterial;
   final String windowRate;
   final String windowAmount;
   final String windowArea;
+  final String windowRemark;
 
   TextStyle textStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w500);
   @override
@@ -77,6 +87,19 @@ class QuoteWindowTile extends StatelessWidget {
             ),
             Text(
               "Area: $windowArea",
+              style: textStyle,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Type',
+              style: textStyle,
+            ),
+            Text(
+              windowType,
               style: textStyle,
             ),
           ],
@@ -116,6 +139,19 @@ class QuoteWindowTile extends StatelessWidget {
             ),
             Text(
               windowAmount,
+              style: textStyle,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Remarks',
+              style: textStyle,
+            ),
+            Text(
+              windowRemark,
               style: textStyle,
             ),
           ],

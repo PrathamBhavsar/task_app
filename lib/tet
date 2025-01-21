@@ -8,6 +8,26 @@ creates
 Measurement Complete | Measurement Complete
 
 
+{
+   "Room 1": {
+     "Window 1": {
+       "height": "2",
+       "width": "55",
+       "area": "22",
+       "type": "22",
+       "remarks": "test"
+     },
+     "Window 2": {
+       "height": "99",
+       "width": "88",
+       "area": "8",
+       "type": "8",
+       "remarks": "x"
+     }
+   }
+ }
+
+
 Demo Measurement
 
 Room1
@@ -343,99 +363,3 @@ Task Data
      }
    ]
  }
-ExpansionTile(
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(windowName),
-                                  Text('Area: $area'),
-                                ],
-                              ),
-                              children: [
-                                _buildDivider(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              'Material',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: CustomTextField(
-                                              controller: materialControllers[
-                                                  windowName],
-                                              hintTxt: 'Material',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              'Rate',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: CustomTextField(
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              controller:
-                                                  rateControllers[windowName],
-                                              hintTxt: 'Rate',
-                                              onChangedFunc: (value) {
-                                                double newRate =
-                                                    double.tryParse(value) ??
-                                                        0.0;
-                                                quotationProvider.setRate(
-                                                    roomName,
-                                                    windowName,
-                                                    newRate);
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: [
-                                          const Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              'Amount',
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              amount.toStringAsFixed(2),
-                                              style:
-                                                  const TextStyle(fontSize: 18),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )

@@ -144,7 +144,7 @@ class DummyData {
         "task_order": 6,
         "created_at": "2025-01-07T08:57:08.726362+00:00",
         "slug": "measurement_made",
-        "color": "ff321512",
+        "color": "ffADA1A0",
         "name": "Measurement: Completed",
         "category": "Measurement"
       },
@@ -404,7 +404,7 @@ class DummyData {
         "task_order": 6,
         "created_at": "2025-01-07T08:57:08.726362+00:00",
         "slug": "measurement_made",
-        "color": "ff321512",
+        "color": "ffADA1A0",
         "name": "Measurement: Completed",
         "category": "Measurement"
       },

@@ -15,36 +15,39 @@ class QuotationWidget extends StatelessWidget {
     return Consumer<QuotationProvider>(
       builder:
           (BuildContext context, QuotationProvider provider, Widget? child) {
-        final List<Map<String, dynamic>> rooms = provider.roomDetails.entries
-            .map((entry) {
-              final roomName = entry.key;
+        final List<Map<String, dynamic>> rooms =
+            provider.quotationDetails.entries
+                .map((entry) {
+                  final roomName = entry.key;
 
-              final List<Map<String, dynamic>> windows = entry.value.entries
-                  .map((windowEntry) {
-                    final windowName = windowEntry.key;
-                    final windowData = windowEntry.value;
+                  final List<Map<String, dynamic>> windows = entry.value.entries
+                      .map((windowEntry) {
+                        final windowName = windowEntry.key;
+                        final windowData = windowEntry.value;
 
-                    return {
-                      'windowName': windowName,
-                      'area': windowData['area'] ?? '',
-                      'material': windowData['material'] ?? '',
-                      'rate': windowData['rate'] ?? '0',
-                      'amount': windowData['amount'] ?? '0',
-                    };
-                  })
-                  .where((window) => window != null)
-                  .cast<Map<String, dynamic>>()
-                  .toList();
+                        return {
+                          'windowName': windowName,
+                          'area': windowData['area'] ?? '',
+                          'material': windowData['material'] ?? '',
+                          'type': windowData['type'] ?? '',
+                          'rate': windowData['rate'] ?? '0',
+                          'amount': windowData['amount'] ?? '0',
+                          'remarks': windowData['remarks'] ?? '',
+                        };
+                      })
+                      .where((window) => window != null)
+                      .cast<Map<String, dynamic>>()
+                      .toList();
 
-              if (windows.isEmpty) {
-                return null;
-              }
+                  if (windows.isEmpty) {
+                    return null;
+                  }
 
-              return {'roomName': roomName, 'windows': windows};
-            })
-            .where((room) => room != null)
-            .cast<Map<String, dynamic>>()
-            .toList();
+                  return {'roomName': roomName, 'windows': windows};
+                })
+                .where((room) => room != null)
+                .cast<Map<String, dynamic>>()
+                .toList();
 
         return Padding(
           padding: AppPaddings.appPadding,
@@ -93,35 +96,42 @@ class QuotationWidget extends StatelessWidget {
 
                                 return RoomQuote(
                                   roomNames: room['roomName']!,
+                                  windowTypes:
+                                      (room['windows'] as List<dynamic>)
+                                          .map<String>((window) =>
+                                              (window['type'] ?? '').toString())
+                                          .toList(),
+                                  windowRemarks: (room['windows']
+                                          as List<dynamic>)
+                                      .map<String>((window) =>
+                                          (window['remarks'] ?? '').toString())
+                                      .toList(),
                                   windowAreas:
                                       (room['windows'] as List<dynamic>)
-                                          .map<String>((window) => (window
-                                              as Map<String, String>)['area']!)
+                                          .map<String>((window) =>
+                                              (window['area'] ?? '').toString())
                                           .toList(),
                                   windowRates:
                                       (room['windows'] as List<dynamic>)
-                                          .map<String>((window) => (window
-                                              as Map<String, String>)['rate']!)
+                                          .map<String>((window) =>
+                                              (window['rate'] ?? '').toString())
                                           .toList(),
                                   windowAmounts: (room['windows']
                                           as List<dynamic>)
-                                      .map<String>((window) => (window
-                                          as Map<String, String>)['amount']!)
+                                      .map<String>((window) =>
+                                          (window['amount'] ?? '').toString())
                                       .toList(),
-                                  windowNames: (room['windows']
-                                              as List<dynamic>?)
-                                          ?.map<String>((window) =>
-                                              (window as Map<String, String>)[
-                                                  'windowName']!)
-                                          .toList() ??
-                                      [],
+                                  windowNames:
+                                      (room['windows'] as List<dynamic>)
+                                          .map<String>((window) =>
+                                              (window['windowName'] ?? '')
+                                                  .toString())
+                                          .toList(),
                                   windowMaterials: (room['windows']
-                                              as List<dynamic>?)
-                                          ?.map<String>((window) =>
-                                              (window as Map<String, String>)[
-                                                  'material']!)
-                                          .toList() ??
-                                      [],
+                                          as List<dynamic>)
+                                      .map<String>((window) =>
+                                          (window['material'] ?? '').toString())
+                                      .toList(),
                                 );
                               },
                             ),

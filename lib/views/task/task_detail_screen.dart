@@ -71,6 +71,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        extendBody: true,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           forceMaterialTransparency: true,
@@ -243,25 +244,28 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                 ),
                 MeasurementWidget(),
                 QuotationWidget(),
-
-                AttachmentsList(
-                  attachmentsList: [
-                    {
-                      "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
-                      "attachment_url": "Bhushan.jpg",
-                      "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
-                      "created_at": "2025-01-02T07:35:50.240763+00:00",
-                      "attachment_name": "attachment 2"
-                    },
-                    {
-                      "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
-                      "attachment_url": "dd.pdf",
-                      "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
-                      "created_at": "2025-01-02T07:35:50.240763+00:00",
-                      "attachment_name": "ss.png"
-                    }
-                  ],
-                  dealNo: widget.dealNo,
+                _buildDivider(),
+                Padding(
+                  padding: AppPaddings.appPadding,
+                  child: AttachmentsList(
+                    attachmentsList: [
+                      {
+                        "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+                        "attachment_url": "Bhushan.jpg",
+                        "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+                        "created_at": "2025-01-02T07:35:50.240763+00:00",
+                        "attachment_name": "attachment 2"
+                      },
+                      {
+                        "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+                        "attachment_url": "dd.pdf",
+                        "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+                        "created_at": "2025-01-02T07:35:50.240763+00:00",
+                        "attachment_name": "ss.png"
+                      }
+                    ],
+                    dealNo: widget.dealNo,
+                  ),
                 ),
 
                 // AppPaddings.gapH(70),

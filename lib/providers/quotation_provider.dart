@@ -1,14 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/constants/dummy_data.dart';
+import 'package:logger/logger.dart';
+import 'package:task_app/providers/measurement_provider.dart';
 
 class QuotationProvider with ChangeNotifier {
   static final QuotationProvider instance =
       QuotationProvider._privateConstructor();
 
   QuotationProvider._privateConstructor();
+  var log = Logger();
 
   final Map<String, Map<String, Map<String, String>>> roomDetails =
-      DummyData.roomDetails;
+      MeasurementProvider.instance.windowMeasurements;
+
+  // New variable for quotation-specific use
+  final Map<String, Map<String, Map<String, dynamic>>> quotationDetails = {};
+
+  void saveAllQuotations(
+      Map<String, Map<String, Map<String, dynamic>>> updatedQuotation) {
+    // Clear the quotationDetails before saving new data
+    quotationDetails.clear();
+
+    // Iterate over measurements to preserve its structure and merge data
+    roomDetails.forEach((roomName, windows) {
+      quotationDetails[roomName] = {};
+
+      windows.forEach((windowName, measurements) {
+        final updatedData = updatedQuotation[roomName]?[windowName] ?? {};
+
+        // Create a new map combining measurements and updated quotation details
+        quotationDetails[roomName]![windowName] = {
+          'area': measurements['area'],
+          'type': measurements['type'],
+          'material': updatedData['material'] ?? '',
+          'rate': updatedData['rate'] ?? '',
+          'remarks': measurements['remarks'],
+          // Calculate the amount dynamically
+          'amount': ((double.tryParse(measurements['area'] ?? '0') ?? 0) *
+                  (updatedData['rate'] ?? 0))
+              .toStringAsFixed(2),
+        };
+      });
+    });
+
+    log.d(quotationDetails);
+    notifyListeners();
+  }
 
   double getRate(String roomName, String windowName) {
     return double.tryParse(
@@ -17,7 +53,7 @@ class QuotationProvider with ChangeNotifier {
   }
 
   String getMaterial(String roomName, String windowName) {
-    return roomDetails[roomName]?[windowName]?['material'] ?? "";
+    return quotationDetails[roomName]?[windowName]?['material'] ?? "";
   }
 
   void setRate(String roomName, String windowName, double newRate) {

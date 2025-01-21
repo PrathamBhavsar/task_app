@@ -15,7 +15,8 @@ abstract class MyRouter {
         initialLocation: isLoggedIn
             ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
             // ? '/measurement'
-            : '/signup',
+            // : '/signup',
+            : '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019',
         routes: [
           GoRoute(
             path: '/home',

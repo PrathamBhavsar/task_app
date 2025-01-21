@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/providers/quotation_provider.dart';
@@ -28,46 +29,6 @@ class _QuotationScreenState extends State<QuotationScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         extendBody: true,
-        persistentFooterButtons: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
-            child: ElevatedButton(
-              onPressed: () {
-                // Collecting updated rate and amount data
-                Map<String, dynamic> updatedQuotation = {};
-                final quotationProvider =
-                    Provider.of<QuotationProvider>(context, listen: false);
-
-                quotationProvider.roomDetails.forEach((roomName, windows) {
-                  updatedQuotation[roomName] = {};
-                  windows.forEach((windowName, windowDetails) {
-                    double rate = double.tryParse(
-                            rateControllers[windowName]?.text ?? '0') ??
-                        0.0;
-                    String material =
-                        materialControllers[windowName]?.text ?? "";
-                    double area =
-                        double.tryParse(windowDetails['area'] ?? '0') ?? 0.0;
-                    double amount = rate * area;
-
-                    updatedQuotation[roomName]![windowName] = {
-                      'height': windowDetails['height'],
-                      'width': windowDetails['width'],
-                      'area': windowDetails['area'],
-                      'type': windowDetails['type'],
-                      'remarks': windowDetails['remarks'],
-                      'material': material,
-                      'rate': rate.toString(),
-                      'amount': amount.toStringAsFixed(2),
-                    };
-                  });
-                });
-                print(updatedQuotation);
-              },
-              child: const Text('Finish Quotation'),
-            ),
-          ),
-        ],
         appBar: AppBar(
           title: Text(
             'Quotation',
@@ -76,9 +37,57 @@ class _QuotationScreenState extends State<QuotationScreen> {
           actions: [
             Consumer<QuotationProvider>(
                 builder: (context, quotationProvider, child) {
-              return Text(
-                QuotationProvider.instance.calculateTotalAmount().toString(),
-                style: AppTexts.headingStyle,
+              return Row(
+                children: [
+                  Text(
+                    quotationProvider.calculateTotalAmount().toString(),
+                    style: AppTexts.headingStyle,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.save),
+                    onPressed: () {
+                      final quotationProvider = Provider.of<QuotationProvider>(
+                          context,
+                          listen: false);
+
+                      Map<String, Map<String, Map<String, dynamic>>>
+                          updatedQuotation = {};
+
+                      quotationProvider.roomDetails
+                          .forEach((roomName, windows) {
+                        updatedQuotation[roomName] = {};
+                        windows.forEach((windowName, windowDetails) {
+                          double rate = double.tryParse(
+                                  rateControllers[windowName]?.text ?? '0') ??
+                              0.0;
+                          String material =
+                              materialControllers[windowName]?.text ?? "";
+                          double area =
+                              double.tryParse(windowDetails['area'] ?? '0') ??
+                                  0.0;
+                          double amount = rate * area;
+
+                          updatedQuotation[roomName]![windowName] = {
+                            'material': material,
+                            'rate': rate,
+                            'amount': amount.toStringAsFixed(2),
+                            'area': windowDetails['area'],
+                            'type': windowDetails['type'],
+                            'remarks': windowDetails['remarks'],
+                          };
+                        });
+                      });
+
+                      quotationProvider.saveAllQuotations(updatedQuotation);
+                      context.pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content:
+                                Text('Quotation details saved successfully!')),
+                      );
+                    },
+                  )
+                ],
               );
             })
           ],
@@ -192,15 +201,16 @@ class _QuotationScreenState extends State<QuotationScreen> {
                                                   TextInputType.number,
                                               controller:
                                                   rateControllers[windowName],
-                                              hintTxt: 'Rate',
+                                              hintTxt: '0.0',
                                               onChangedFunc: (value) {
                                                 double newRate =
                                                     double.tryParse(value) ??
                                                         0.0;
                                                 quotationProvider.setRate(
-                                                    roomName,
-                                                    windowName,
-                                                    newRate);
+                                                  roomName,
+                                                  windowName,
+                                                  newRate,
+                                                );
                                               },
                                             ),
                                           ),

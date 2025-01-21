@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:task_app/constants/app_colors.dart';
 import 'package:task_app/providers/measurement_provider.dart';
@@ -72,17 +73,25 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.save),
-              onPressed: () => MeasurementProvider.instance.saveAllChanges(
-                roomControllers,
-                windowControllers,
-                heightControllers,
-                widthControllers,
-                areaControllers,
-                typeControllers,
-                remarksControllers,
-              ),
-            ),
+                icon: Icon(Icons.save),
+                onPressed: () {
+                  MeasurementProvider.instance.saveAllChanges(
+                    roomControllers,
+                    windowControllers,
+                    heightControllers,
+                    widthControllers,
+                    areaControllers,
+                    typeControllers,
+                    remarksControllers,
+                  );
+
+                  context.pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Measurement saved!'),
+                    ),
+                  );
+                }),
           ],
         ),
         body: Consumer<MeasurementProvider>(
