@@ -18,6 +18,7 @@ class CustomTextField extends StatelessWidget {
     this.isMultiline = false,
     this.prefixIcon,
     this.onChangedFunc,
+    this.onTap,
   });
 
   final TextEditingController? controller;
@@ -31,6 +32,7 @@ class CustomTextField extends StatelessWidget {
   final bool isMultiline;
   final Icon? prefixIcon;
   final Function(String)? onChangedFunc;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => Consumer<AuthProvider>(
@@ -41,6 +43,7 @@ class CustomTextField extends StatelessWidget {
           maxLines: isMultiline ? null : 1,
           obscureText: isPassword ? !provider.isVisible : false,
           onChanged: onChangedFunc,
+          onTap: onTap,
           keyboardType: keyboardType ?? TextInputType.text,
           inputFormatters: isPhone
               ? [
@@ -48,7 +51,7 @@ class CustomTextField extends StatelessWidget {
                   LengthLimitingTextInputFormatter(10),
                 ]
               : null,
-          style: _textStyle(AppColors.primary, 18, FontWeight.w700),
+          style: _textStyle(AppColors.primary, 20, FontWeight.w700),
           textAlignVertical: TextAlignVertical.center,
           decoration: _buildInputDecoration(provider),
         ),
@@ -57,7 +60,7 @@ class CustomTextField extends StatelessWidget {
   InputDecoration _buildInputDecoration(AuthProvider provider) =>
       InputDecoration(
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         prefixIcon: prefixIcon,
         prefixIconColor: AppColors.primary,
         suffixIcon: isPassword

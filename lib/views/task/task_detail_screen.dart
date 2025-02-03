@@ -9,6 +9,7 @@ import 'methods/show_bottom_modal.dart';
 import 'widgets/agency_required_switch.dart';
 import 'widgets/attachment_list.dart';
 import 'widgets/client_name_dropdown.dart';
+import 'widgets/task_detail_widgets.dart';
 import 'widgets/due_date_picker.dart';
 import 'widgets/measurement/measurement_widget.dart';
 import 'widgets/quotation/quotation_widget.dart';
@@ -41,6 +42,11 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   @override
   void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus();
+    });
     if (!widget.isNewTask) {
       TaskProvider.instance.getTaskByDealNo(widget.dealNo).then((_) {
         setState(() {
@@ -51,7 +57,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
         });
       });
     }
-    super.initState();
   }
 
   @override
@@ -67,192 +72,199 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
   @override
   Widget build(BuildContext context) => GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          extendBody: true,
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            forceMaterialTransparency: true,
-            title: Text(
-              'Task Details',
-              style: AppTexts.appBarStyle,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            dividerTheme: const DividerThemeData(
+              color: Colors.transparent,
             ),
           ),
-          body: Consumer<TaskProvider>(
-            builder: (context, provider, child) {
-              final data = provider.fetchedData;
+          child: Scaffold(
+            extendBody: true,
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              forceMaterialTransparency: true,
+              title: Text(
+                'Task Details',
+                style: AppTexts.appBarStyle,
+              ),
+            ),
+            body: Consumer<TaskProvider>(
+              builder: (context, provider, child) {
+                final data = provider.fetchedData;
 
-              return Padding(
-                padding: AppPaddings.appPadding,
-                child: ListView(children: [
-                  _buildRowWithIconAndWidget(
-                    icon: Icons.person_2_rounded,
-                    widget: _dropdownWidget(
+                return Padding(
+                  padding: AppPaddings.appPadding,
+                  child: ListView(children: [
+                    RowWithIconAndWidget(
+                      icon: Icons.person_2_rounded,
+                      widget: DropDownWidget(
+                        context: context,
+                        dataList: data['clients'],
+                        title: 'Clients',
+                        index: provider.selectedIndices[IndexKeys.clientIndex],
+                        name: 'name',
+                        indexKey: 'client',
+                        defaultText: "No Clients Yet",
+                        isNewTask: widget.isNewTask,
+                        dealNo: widget.dealNo,
+                      ),
+                    ),
+                    AppPaddings.gapH(20),
+                    CustomTextField(
+                      controller: TextEditingController(
+                          text:
+                              'This is a demo address textThis is a demo address textThis is a demo address textThis is a demo address text'),
+                      isEnabled: false,
+                      labelTxt: 'Address',
+                      keyboardType: TextInputType.multiline,
+                      isMultiline: true,
+                    ),
+                    AppPaddings.gapH(20),
+
+                    CustomTextField(
+                      controller: TextEditingController(text: '8490088688'),
+                      isEnabled: false,
+                      labelTxt: 'Contact Information',
+                      isPhone: true,
+                    ),
+                    _buildDivider(verticalPadding: 10),
+                    AppPaddings.gapH(10),
+                    CustomTextField(
+                      controller: nameController,
+                      focusNode: nameFocusNode,
+                      labelTxt: 'Task Name',
+                      hintTxt: 'Task Name',
+                    ),
+                    AppPaddings.gapH(20),
+                    CustomTextField(
+                      controller: remarkController,
+                      focusNode: remarkFocusNode,
+                      labelTxt: 'Remarks',
+                      hintTxt: 'Remarks',
+                      isMultiline: true,
+                    ),
+                    AppPaddings.gapH(20),
+                    DatePickerWidget(isNewTask: false),
+                    AppPaddings.gapH(10),
+                    _buildDivider(),
+                    DynamicRow(
                       context: context,
-                      dataList: data['clients'],
-                      title: 'Clients',
-                      index: provider.selectedIndices[IndexKeys.clientIndex],
-                      name: 'name',
-                      indexKey: 'client',
-                      defaultText: "No Clients Yet",
-                      isNewTask: widget.isNewTask,
-                      dealNo: widget.dealNo,
+                      label: 'Status',
+                      isStatus: true,
+                      dataList: data[SupabaseKeys.taskStatusTable],
+                      widget: CustomTag(
+                          color: provider.stringToColor(
+                              data[SupabaseKeys.taskStatusTable]?[provider
+                                      .selectedIndices[IndexKeys.statusIndex]]
+                                  [AppKeys.color]),
+                          text: data[SupabaseKeys.taskStatusTable]?[provider
+                                      .selectedIndices[IndexKeys.statusIndex]]
+                                  [AppKeys.name] ??
+                              ""),
+                      indexKey: IndexKeys.statusIndex,
+                      isSalesperson: true,
                     ),
-                  ),
-                  AppPaddings.gapH(20),
-
-                  CustomTextField(
-                    controller: TextEditingController(
-                        text:
-                            ' This is a demo address textThis is a demo address textThis is a demo address textThis is a demo address text'),
-                    isEnabled: false,
-                    labelTxt: 'Address',
-                    keyboardType: TextInputType.multiline,
-                    isMultiline: true,
-                  ),
-                  AppPaddings.gapH(20),
-
-                  CustomTextField(
-                    controller: TextEditingController(text: '8490088688'),
-                    isEnabled: false,
-                    labelTxt: 'Contact Information',
-                    isPhone: true,
-                  ),
-                  _buildDivider(verticalPadding: 10),
-                  AppPaddings.gapH(10),
-
-                  CustomTextField(
-                    controller: nameController,
-                    focusNode: nameFocusNode,
-                    labelTxt: 'Task Name',
-                    hintTxt: 'Task Name',
-                  ),
-                  AppPaddings.gapH(20),
-                  CustomTextField(
-                    controller: remarkController,
-                    focusNode: remarkFocusNode,
-                    labelTxt: 'Remarks',
-                    hintTxt: 'Remarks',
-                    isMultiline: true,
-                  ),
-                  AppPaddings.gapH(20),
-                  DatePickerWidget(isNewTask: false),
-                  AppPaddings.gapH(10),
-                  _buildDivider(),
-                  _buildDynamicRow(
-                    context: context,
-                    label: 'Status',
-                    dataList: data[SupabaseKeys.taskStatusTable],
-                    widget: CustomTag(
-                        color: provider.stringToColor(
-                            data[SupabaseKeys.taskStatusTable]?[provider
-                                    .selectedIndices[IndexKeys.statusIndex]]
-                                [AppKeys.color]),
-                        text: data[SupabaseKeys.taskStatusTable]?[provider
-                                    .selectedIndices[IndexKeys.statusIndex]]
-                                [AppKeys.name] ??
-                            ""),
-                    indexKey: IndexKeys.statusIndex,
-                    isSalesperson: true,
-                  ),
-                  _buildDynamicRow(
-                    context: context,
-                    label: 'Assigned For',
-                    dataList: data[AppKeys.fetchedSalespersons],
-                    widget: OverlappingCircles(
-                      bgColors: (data[AppKeys.fetchedSalespersons] ?? [])
-                          .map(
-                            (user) => provider.stringToColor(
-                              user[UserDetails.profileBgColor],
+                    DynamicRow(
+                      context: context,
+                      label: 'Assigned For',
+                      dataList: data[AppKeys.fetchedSalespersons],
+                      widget: OverlappingCircles(
+                        bgColors: (data[AppKeys.fetchedSalespersons] ?? [])
+                            .map(
+                              (user) => provider.stringToColor(
+                                user[UserDetails.profileBgColor],
+                              ),
+                            )
+                            .toList(),
+                        displayNames: (data[AppKeys.fetchedSalespersons] ?? [])
+                            .map((user) => user[UserDetails.name] as String)
+                            .toList(),
+                      ),
+                      indexKey: IndexKeys.salespersonIndex,
+                      isSalesperson: widget.isSalesperson,
+                    ),
+                    DynamicRow(
+                      context: context,
+                      label: 'Designers',
+                      dataList: data[AppKeys.fetchedDesigners],
+                      widget: provider.selectedIndices[IndexKeys.designerIndex]!
+                              .isNotEmpty
+                          ? OverlappingCircles(
+                              bgColors: (data[AppKeys.fetchedDesigners] ?? [])
+                                  .map(
+                                    (user) => provider.stringToColor(
+                                      user[UserDetails.profileBgColor],
+                                    ),
+                                  )
+                                  .toList(),
+                              displayNames:
+                                  (data[AppKeys.fetchedDesigners] ?? [])
+                                      .map((user) =>
+                                          user[UserDetails.name] as String)
+                                      .toList(),
+                            )
+                          : Text(
+                              'None',
+                              style: AppTexts.headingStyle,
                             ),
-                          )
-                          .toList(),
-                      displayNames: (data[AppKeys.fetchedSalespersons] ?? [])
-                          .map((user) => user[UserDetails.name] as String)
-                          .toList(),
+                      indexKey: IndexKeys.designerIndex,
+                      isSalesperson: widget.isSalesperson,
                     ),
-                    indexKey: IndexKeys.salespersonIndex,
-                    isSalesperson: widget.isSalesperson,
-                  ),
-                  _buildDynamicRow(
-                    context: context,
-                    label: 'Designers',
-                    dataList: data[AppKeys.fetchedDesigners],
-                    widget: provider.selectedIndices[IndexKeys.designerIndex]!
-                            .isNotEmpty
-                        ? OverlappingCircles(
-                            bgColors: (data[AppKeys.fetchedDesigners] ?? [])
-                                .map(
-                                  (user) => provider.stringToColor(
-                                    user[UserDetails.profileBgColor],
-                                  ),
-                                )
-                                .toList(),
-                            displayNames: (data[AppKeys.fetchedDesigners] ?? [])
-                                .map((user) => user[UserDetails.name] as String)
-                                .toList(),
-                          )
-                        : Text(
-                            'None',
-                            style: AppTexts.headingStyle,
-                          ),
-                    indexKey: IndexKeys.designerIndex,
-                    isSalesperson: widget.isSalesperson,
-                  ),
-                  _buildDynamicRow(
-                    context: context,
-                    label: 'Priority',
-                    dataList: data[SupabaseKeys.taskPriorityTable],
-                    widget: CustomTag(
-                        color: provider.stringToColor(
-                            data[SupabaseKeys.taskPriorityTable]?[provider
-                                    .selectedIndices[IndexKeys.priorityIndex]]
-                                [AppKeys.color]),
-                        text: data[SupabaseKeys.taskPriorityTable]?[provider
-                                    .selectedIndices[IndexKeys.priorityIndex]]
-                                [AppKeys.name] ??
-                            ""),
-                    indexKey: IndexKeys.priorityIndex,
-                    isSalesperson: true,
-                  ),
-                  _buildDivider(),
-                  AgencyRequiredSwitch(isSalesperson: widget.isSalesperson),
-                  _buildDynamicRow(
-                    context: context,
-                    label: UserRole.agency.role,
-                    dataList: data[AppKeys.fetchedAgencies],
-                    widget: OverlappingCircles(
-                      bgColors: data[AppKeys.fetchedAgencies]!
-                          .map(
-                            (user) => provider.stringToColor(
-                              user[UserDetails.profileBgColor],
-                            ),
-                          )
-                          .toList(),
-                      displayNames: data[AppKeys.fetchedAgencies]!
-                          .map((user) => user[UserDetails.name] as String)
-                          .toList(),
+                    DynamicRow(
+                      context: context,
+                      label: 'Priority',
+                      dataList: data[SupabaseKeys.taskPriorityTable],
+                      widget: CustomTag(
+                          color: provider.stringToColor(
+                              data[SupabaseKeys.taskPriorityTable]?[provider
+                                      .selectedIndices[IndexKeys.priorityIndex]]
+                                  [AppKeys.color]),
+                          text: data[SupabaseKeys.taskPriorityTable]?[provider
+                                      .selectedIndices[IndexKeys.priorityIndex]]
+                                  [AppKeys.name] ??
+                              ""),
+                      indexKey: IndexKeys.priorityIndex,
+                      isSalesperson: true,
                     ),
-                    indexKey: IndexKeys.agencyIndex,
-                    isSalesperson:
-                        widget.isSalesperson && provider.isAgencyRequired,
-                  ),
-                  MeasurementWidget(),
-                  QuotationWidget(),
-                  _buildDivider(),
-                  Padding(
-                    padding: AppPaddings.appPadding,
-                    child: AttachmentsList(
+                    _buildDivider(),
+                    AgencyRequiredSwitch(isSalesperson: widget.isSalesperson),
+                    DynamicRow(
+                      context: context,
+                      label: UserRole.agency.role,
+                      dataList: data[AppKeys.fetchedAgencies],
+                      widget: OverlappingCircles(
+                        bgColors: data[AppKeys.fetchedAgencies]!
+                            .map(
+                              (user) => provider.stringToColor(
+                                user[UserDetails.profileBgColor],
+                              ),
+                            )
+                            .toList(),
+                        displayNames: data[AppKeys.fetchedAgencies]!
+                            .map((user) => user[UserDetails.name] as String)
+                            .toList(),
+                      ),
+                      indexKey: IndexKeys.agencyIndex,
+                      isSalesperson:
+                          widget.isSalesperson && provider.isAgencyRequired,
+                    ),
+                    MeasurementWidget(),
+                    QuotationWidget(),
+                    _buildDivider(),
+                    AttachmentsList(
                       attachmentsList: [
                         {
                           "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
-                          "attachment_url": "Bhushan.jpg",
+                          "attachment_url":
+                              "https://dpgwbagzdsabjejngivi.supabase.co/storage/v1/object/public/bucket/25-0019/ss.png",
                           "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
                           "created_at": "2025-01-02T07:35:50.240763+00:00",
                           "attachment_name": "attachment 2"
                         },
                         {
                           "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
-                          "attachment_url": "dd.pdf",
+                          "attachment_url":
+                              "https://dpgwbagzdsabjejngivi.supabase.co/storage/v1/object/public/bucket/25-0019/generated.pdf",
                           "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
                           "created_at": "2025-01-02T07:35:50.240763+00:00",
                           "attachment_name": "ss.png"
@@ -260,178 +272,96 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       ],
                       dealNo: widget.dealNo,
                     ),
-                  ),
 
-                  // AppPaddings.gapH(70),
-                ]),
-              );
-            },
-          ),
-          persistentFooterButtons: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
-              child: ActionBtn(
-                btnTxt: widget.isNewTask
-                    ? 'Create Task'
-                    : widget.isSalesperson
-                        ? 'Edit Task'
-                        : 'Mark as In Progress',
-                onPress: () async {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: AppConsts.radius,
-                        side: BorderSide(width: 2),
-                      ),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            widget.isNewTask
-                                ? 'Create Task'
-                                : widget.isSalesperson
-                                    ? 'Edit Task'
-                                    : 'Confirm Change',
-                            style: AppTexts.headingStyle,
-                          ),
-                          AppPaddings.gapH(20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: ActionBtn(
-                                  btnTxt: 'Cancel',
-                                  onPress: () => Navigator.of(context).pop(),
-                                  fontColor: AppColors.primary,
-                                  backgroundColor: AppColors.pink,
+                    // AppPaddings.gapH(70),
+                  ]),
+                );
+              },
+            ),
+            persistentFooterButtons: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
+                child: ActionBtn(
+                  btnTxt: widget.isNewTask
+                      ? 'Create Task'
+                      : widget.isSalesperson
+                          ? 'Edit Task'
+                          : 'Mark as In Progress',
+                  onPress: () async {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: AppConsts.radius,
+                          side: BorderSide(width: 2),
+                        ),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              widget.isNewTask
+                                  ? 'Create Task'
+                                  : widget.isSalesperson
+                                      ? 'Edit Task'
+                                      : 'Confirm Change',
+                              style: AppTexts.headingStyle,
+                            ),
+                            AppPaddings.gapH(20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: ActionBtn(
+                                    btnTxt: 'Cancel',
+                                    onPress: () => Navigator.of(context).pop(),
+                                    fontColor: AppColors.primary,
+                                    backgroundColor: AppColors.pink,
+                                  ),
                                 ),
-                              ),
-                              AppPaddings.gapW(10),
-                              Expanded(
-                                child: ActionBtn(
-                                  btnTxt: widget.isNewTask
-                                      ? 'Create'
-                                      : widget.isSalesperson
-                                          ? 'Edit'
-                                          : 'Confirm Change',
-                                  onPress: () async {
-                                    widget.isNewTask
-                                        ? await TaskProvider.instance
-                                            .createTask(
-                                            nameController.text,
-                                            remarkController.text,
-                                          )
-                                        : await TaskProvider.instance
-                                            .updateTask(
-                                            nameController.text,
-                                            remarkController.text,
-                                            widget.dealNo,
-                                          );
-                                    // await TaskProvider.instance.fetchAllData();
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
-                                  },
-                                  fontColor: AppColors.primary,
-                                  backgroundColor: AppColors.green,
+                                AppPaddings.gapW(10),
+                                Expanded(
+                                  child: ActionBtn(
+                                    btnTxt: widget.isNewTask
+                                        ? 'Create'
+                                        : widget.isSalesperson
+                                            ? 'Edit'
+                                            : 'Confirm Change',
+                                    onPress: () async {
+                                      widget.isNewTask
+                                          ? await TaskProvider.instance
+                                              .createTask(
+                                              nameController.text,
+                                              remarkController.text,
+                                            )
+                                          : await TaskProvider.instance
+                                              .updateTask(
+                                              nameController.text,
+                                              remarkController.text,
+                                              widget.dealNo,
+                                            );
+                                      // await TaskProvider.instance.fetchAllData();
+                                      Navigator.of(context).pop();
+                                      Navigator.of(context).pop();
+                                    },
+                                    fontColor: AppColors.primary,
+                                    backgroundColor: AppColors.green,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-                fontColor: AppColors.primary,
-                backgroundColor: AppColors.orange,
+                    );
+                  },
+                  fontColor: AppColors.primary,
+                  backgroundColor: AppColors.orange,
+                ),
               ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildRowWithIconAndWidget({
-    required IconData icon,
-    required Widget widget,
-  }) =>
-      Row(
-        children: [
-          Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              color: AppColors.green,
-              borderRadius: AppConsts.radius,
-            ),
-            child: Icon(icon, size: 32),
-          ),
-          AppPaddings.gapW(10),
-          Expanded(child: widget),
-        ],
-      );
-
-  Widget _buildDynamicRow({
-    required bool isSalesperson,
-    required BuildContext context,
-    required String label,
-    required String indexKey,
-    required List<Map<String, dynamic>>? dataList,
-    required Widget widget,
-  }) =>
-      Visibility(
-        visible: isSalesperson,
-        child: Padding(
-          padding: AppPaddings.appPadding,
-          child: _buildRowWithTextAndWidget(
-            label: label,
-            widget: widget,
-            onTap: () => showClientsBottomSheet(
-                context, dataList ?? [], label, indexKey),
-          ),
-        ),
-      );
-
-  Widget _dropdownWidget({
-    required BuildContext context,
-    required List<Map<String, dynamic>>? dataList,
-    required int index,
-    required String title,
-    required String name,
-    required String indexKey,
-    required String defaultText,
-    required bool isNewTask,
-    required String dealNo,
-  }) =>
-      ClientNameDropdown(
-        name:
-            dataList?.isNotEmpty == true ? dataList![index][name] : defaultText,
-        clientList: dataList ?? [],
-        onTap: () =>
-            showClientsBottomSheet(context, dataList ?? [], title, indexKey),
-        dealNo: dealNo,
-        isNewTask: isNewTask,
-      );
-
-  Widget _buildRowWithTextAndWidget({
-    required String label,
-    required Widget widget,
-    VoidCallback? onTap,
-  }) =>
-      GestureDetector(
-        onTap: onTap,
-        child: SizedBox(
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(label, style: AppTexts.headingStyle),
-              widget,
             ],
           ),
         ),
       );
-
   Widget _buildDivider({double verticalPadding = 0}) => Padding(
         padding: EdgeInsets.symmetric(vertical: verticalPadding),
         child: Divider(color: AppColors.primary),

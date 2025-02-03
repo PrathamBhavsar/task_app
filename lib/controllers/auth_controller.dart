@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../constants/enums.dart';
 import '../constants/app_keys.dart';
@@ -10,12 +9,15 @@ import '../extensions/color_extension.dart';
 import '../models/user.dart';
 import 'dart:convert';
 
+import '../services/shared_pref_service.dart';
+
 class AuthController {
   static final AuthController instance = AuthController._privateConstructor();
   AuthController._privateConstructor();
 
   final supabase = Supabase.instance.client;
   var logger = Logger();
+  var prefs = SharedPrefService();
 
   Future<void> signUp({
     required BuildContext context,
@@ -79,17 +81,14 @@ class AuthController {
   }
 
   Future<void> logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('isLoggedIn');
-    await prefs.remove('user');
+    await prefs.clear();
     await supabase.auth.signOut();
     context.goNamed('signup');
   }
 
   Future<void> _saveLoginState(BuildContext context, UserModel user) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
-    await prefs.setString('user', jsonEncode(user.toJson()));
+    await prefs.saveUser(jsonEncode(user.toJson()));
+    await prefs.setLoggedIn(true);
     context.goNamed('home');
   }
 
@@ -111,8 +110,7 @@ class AuthController {
   }
 
   Future<UserModel?> getLoggedInUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userJson = prefs.getString('user');
+    final userJson = prefs.getUser();
 
     if (userJson != null) {
       logger.d(userJson);

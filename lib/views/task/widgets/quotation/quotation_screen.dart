@@ -29,72 +29,70 @@ class _QuotationScreenState extends State<QuotationScreen> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        extendBody: true,
-        appBar: AppBar(
-          title: Text(
-            'Quotation',
-            style: AppTexts.appBarStyle,
-          ),
-          actions: [
-            Consumer<QuotationProvider>(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Scaffold(
+          extendBody: true,
+          appBar: AppBar(
+            title: Text(
+              'Quotation',
+              style: AppTexts.appBarStyle,
+            ),
+            actions: [
+              Consumer<QuotationProvider>(
                 builder: (context, quotationProvider, child) => Row(
-                children: [
-                  Text(
-                    quotationProvider.calculateTotalAmount().toString(),
-                    style: AppTexts.headingStyle,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.save),
-                    onPressed: () {
-                      final quotationProvider = Provider.of<QuotationProvider>(
-                          context,
-                          listen: false);
+                  children: [
+                    Text(
+                      quotationProvider.calculateTotalAmount().toString(),
+                      style: AppTexts.headingStyle,
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.save),
+                      onPressed: () {
+                        Map<String, Map<String, Map<String, dynamic>>>
+                            updatedQuotation = {};
 
-                      Map<String, Map<String, Map<String, dynamic>>>
-                          updatedQuotation = {};
+                        quotationProvider.roomDetails
+                            .forEach((roomName, windows) {
+                          updatedQuotation[roomName] = {};
+                          windows.forEach((windowName, windowDetails) {
+                            double rate = double.tryParse(
+                                    rateControllers[windowName]?.text ?? '0') ??
+                                0.0;
+                            String material =
+                                materialControllers[windowName]?.text ?? "";
+                            double area =
+                                double.tryParse(windowDetails['area'] ?? '0') ??
+                                    0.0;
+                            double amount = rate * area;
 
-                      quotationProvider.roomDetails
-                          .forEach((roomName, windows) {
-                        updatedQuotation[roomName] = {};
-                        windows.forEach((windowName, windowDetails) {
-                          double rate = double.tryParse(
-                                  rateControllers[windowName]?.text ?? '0') ??
-                              0.0;
-                          String material =
-                              materialControllers[windowName]?.text ?? "";
-                          double area =
-                              double.tryParse(windowDetails['area'] ?? '0') ??
-                                  0.0;
-                          double amount = rate * area;
-
-                          updatedQuotation[roomName]![windowName] = {
-                            'material': material,
-                            'rate': rate,
-                            'amount': amount.toStringAsFixed(2),
-                            'area': windowDetails['area'],
-                            'type': windowDetails['type'],
-                            'remarks': windowDetails['remarks'],
-                          };
+                            updatedQuotation[roomName]![windowName] = {
+                              'material': material,
+                              'rate': rate,
+                              'amount': amount.toStringAsFixed(2),
+                              'area': windowDetails['area'],
+                              'type': windowDetails['type'],
+                              'remarks': windowDetails['remarks'],
+                            };
+                          });
                         });
-                      });
 
-                      quotationProvider.saveAllQuotations(updatedQuotation);
-                      context.pop();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        quotationProvider.saveAllQuotations(updatedQuotation);
+                        context.pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
                             content:
-                                Text('Quotation details saved successfully!')),
-                      );
-                    },
-                  )
-                ],
-              ))
-          ],
-        ),
-        body: Consumer<QuotationProvider>(
-          builder: (context, quotationProvider, child) => Padding(
+                                Text('Quotation details saved successfully!'),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          body: Consumer<QuotationProvider>(
+            builder: (context, quotationProvider, child) => Padding(
               padding: const EdgeInsets.all(16),
               child: ListView.builder(
                 itemCount: quotationProvider.roomDetails.keys.length,
@@ -128,8 +126,7 @@ class _QuotationScreenState extends State<QuotationScreen> {
                           rateControllers.putIfAbsent(
                             windowName,
                             () => TextEditingController(
-                              text: rate.toString(),
-                            ),
+                                text: rate == 0.0 ? "" : rate.toString()),
                           );
                           materialControllers.putIfAbsent(
                             windowName,
@@ -249,16 +246,17 @@ class _QuotationScreenState extends State<QuotationScreen> {
                 },
               ),
             ),
+          ),
         ),
-      ),
-    );
+      );
 
   Widget _buildDivider(
-      {double verticalPadding = 0,
-      double horizontalPadding = 0,
-      Color color = AppColors.primary}) => Padding(
-      padding: EdgeInsets.symmetric(
-          vertical: verticalPadding, horizontal: horizontalPadding),
-      child: Divider(color: color),
-    );
+          {double verticalPadding = 0,
+          double horizontalPadding = 0,
+          Color color = AppColors.primary}) =>
+      Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: verticalPadding, horizontal: horizontalPadding),
+        child: Divider(color: color),
+      );
 }

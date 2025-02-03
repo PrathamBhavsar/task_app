@@ -34,7 +34,6 @@ class QuotationProvider with ChangeNotifier {
           'material': updatedData['material'] ?? '',
           'rate': updatedData['rate'] ?? '',
           'remarks': measurements['remarks'],
-          // Calculate the amount dynamically
           'amount': ((double.tryParse(measurements['area'] ?? '0') ?? 0) *
                   (updatedData['rate'] ?? 0))
               .toStringAsFixed(2),
@@ -46,11 +45,11 @@ class QuotationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  double getRate(String roomName, String windowName) => double.tryParse(
-            roomDetails[roomName]?[windowName]?['rate'] ?? '0') ??
-        0;
+  double getRate(String roomName, String windowName) =>
+      double.tryParse(roomDetails[roomName]?[windowName]?['rate'] ?? '0') ?? 0;
 
-  String getMaterial(String roomName, String windowName) => quotationDetails[roomName]?[windowName]?['material'] ?? "";
+  String getMaterial(String roomName, String windowName) =>
+      quotationDetails[roomName]?[windowName]?['material'] ?? "";
 
   void setRate(String roomName, String windowName, double newRate) {
     if (roomDetails.containsKey(roomName) &&

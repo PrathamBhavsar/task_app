@@ -10,6 +10,7 @@ import 'providers/quotation_provider.dart';
 import 'providers/task_provider.dart';
 import 'router/app_router.dart';
 import 'secrets/app_secrets.dart';
+import 'services/shared_pref_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,8 +19,10 @@ void main() async {
     url: AppSecrets.supabaseUrl,
     anonKey: AppSecrets.supabaseSecureKey,
   );
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool? isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+  await SharedPrefService().init();
+  var prefs = SharedPrefService();
+  bool isLoggedIn = prefs.isLoggedIn();
+
   runApp(
     ScreenUtilInit(
       designSize: const Size(375, 812),
@@ -53,17 +56,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-        primaryTextTheme: TextTheme(),
-        primaryColor: AppColors.primary,
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: AppColors.primarySwatch,
-          accentColor: AppColors.textFieldBg,
-        ).copyWith(
-          secondary: AppColors.green,
+        theme: ThemeData(
+          fontFamily: 'Poppins',
+          primaryTextTheme: TextTheme(),
+          primaryColor: AppColors.primary,
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: AppColors.primarySwatch,
+            accentColor: AppColors.textFieldBg,
+          ).copyWith(
+            secondary: AppColors.green,
+          ),
         ),
-      ),
-      routerConfig: MyRouter.router(isLoggedIn),
-    );
+        routerConfig: MyRouter.router(isLoggedIn),
+      );
 }
