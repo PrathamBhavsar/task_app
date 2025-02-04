@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_colors.dart';
 
 class ActionBtn extends StatelessWidget {
@@ -17,25 +18,25 @@ class ActionBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-      height: 60,
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onPress,
-        style: ButtonStyle(
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-              side: const BorderSide(width: 2),
-              borderRadius: AppConsts.radius,
+        height: 60.h,
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: onPress,
+          style: ButtonStyle(
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                side: const BorderSide(width: 2),
+                borderRadius: AppConsts.radius,
+              ),
+            ),
+            backgroundColor: WidgetStateProperty.all(backgroundColor),
+          ),
+          child: Text(
+            btnTxt,
+            style: AppTexts.buttonText.copyWith(
+              color: fontColor,
             ),
           ),
-          backgroundColor: WidgetStateProperty.all(backgroundColor),
         ),
-        child: Text(
-          btnTxt,
-          style: AppTexts.buttonText.copyWith(
-            color: fontColor,
-          ),
-        ),
-      ),
-    );
+      );
 }

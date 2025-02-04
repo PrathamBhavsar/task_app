@@ -4,10 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../../models/measurement.dart';
 import '../../../../providers/measurement_provider.dart';
+import 'size_tile.dart';
 
 class MeasurementWidget extends StatelessWidget {
-
   final bool isNewTask;
   const MeasurementWidget({super.key, required this.isNewTask});
 
@@ -108,26 +109,106 @@ class MeasurementWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                provider.pickedPhoto!.name.length > 15
-                                    ? "${provider.pickedPhoto!.name.substring(0, 10)}...${provider.pickedPhoto!.name.split('.').last}"
-                                    : provider.pickedPhoto!.name,
+                                provider.trimmedFileName(),
                                 overflow: TextOverflow.ellipsis,
                                 style: AppTexts.tileTitle2,
                               ),
                               Row(
                                 children: [
-                                  widget.isNewTask
+                                  isNewTask
+                                      ? IconButton(
+                                          onPressed: () async {},
+                                          icon: const Icon(
+                                              Icons.download_rounded),
+                                        )
+                                      : SizedBox.shrink(),
+                                  AppPaddings.gapW(5),
                                   IconButton(
-                                    onPressed: () async {},
-                                    icon: const Icon(Icons.download_rounded),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  IconButton(
-                                    onPressed: () {},
+                                    onPressed: () =>
+                                        provider.clearPickedImage(),
                                     icon: const Icon(Icons.close_rounded),
                                   ),
                                 ],
                               )
+                            ],
+                          ),
+                        ),
+                      ),
+                provider.costs.isEmpty
+                    ? const SizedBox.shrink()
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.textFieldBg,
+                          borderRadius: AppConsts.radius,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(18),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Name',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'Rate',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'Area',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    'Total',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: provider.costs.length,
+                                itemBuilder: (context, index) {
+                                  final AdditionalCost cost =
+                                      provider.costs[index];
+
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(cost.name),
+                                      Text(cost.rate.toString()),
+                                      Text(cost.area.toString()),
+                                      Text(cost.total.toString()),
+                                    ],
+                                  );
+                                },
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Total',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w800),
+                                  ),
+                                  Text(
+                                    provider.totalAdditionalCost.toString(),
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w800),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),

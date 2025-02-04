@@ -5,6 +5,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
+import '../models/measurement.dart';
+
 class MeasurementProvider with ChangeNotifier {
   static final MeasurementProvider _instance =
       MeasurementProvider._privateConstructor();
@@ -22,6 +24,20 @@ class MeasurementProvider with ChangeNotifier {
   var log = Logger();
 
   XFile? pickedPhoto;
+
+  String trimmedFileName() {
+    if (pickedPhoto!.name.length > 10) {
+      return "${pickedPhoto!.name.substring(0, 10)}...${pickedPhoto!.name.split('.').last}";
+    } else {
+      return pickedPhoto!.name;
+    }
+  }
+
+  void clearPickedImage() {
+    pickedPhoto = null;
+    notifyListeners();
+  }
+
   Future<void> pickImage(ImageSource source) async {
     ImagePicker picker = ImagePicker();
 
@@ -29,6 +45,32 @@ class MeasurementProvider with ChangeNotifier {
         source: source, imageQuality: 25, requestFullMetadata: true);
 
     log.d(pickedPhoto!.name);
+    notifyListeners();
+  }
+
+  List<AdditionalCost> _costs = [];
+
+  List<AdditionalCost> get costs => _costs;
+
+  double get totalAdditionalCost =>
+      _costs.fold(0, (sum, item) => sum + item.total);
+
+  void addCost() {
+    _costs.add(AdditionalCost(name: '', rate: 0, area: 0));
+    notifyListeners();
+  }
+
+  void removeCost() {
+    _costs.removeAt(costs.length - 1);
+    notifyListeners();
+  }
+
+  void updateCost(int index, {String? name, double? rate, double? area}) {
+    final cost = _costs[index];
+    if (name != null) cost.name = name;
+    if (rate != null) cost.rate = rate;
+    if (area != null) cost.area = area;
+    cost.total = cost.rate * cost.area;
     notifyListeners();
   }
 
@@ -69,7 +111,6 @@ class MeasurementProvider with ChangeNotifier {
       windows[windowIndex] = newWindowName;
     }
 
-    log.i(windowMeasurements);
     notifyListeners();
   }
 
@@ -91,7 +132,6 @@ class MeasurementProvider with ChangeNotifier {
       rooms[roomIndex] = {newRoomName: windows};
     }
 
-    log.i(windowMeasurements);
     notifyListeners();
   }
 

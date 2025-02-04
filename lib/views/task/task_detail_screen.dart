@@ -30,10 +30,8 @@ class TaskDetailScreen extends StatefulWidget {
 }
 
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
-  late final TextEditingController nameController;
-  late final TextEditingController remarkController;
-  late final FocusNode nameFocusNode;
-  late final FocusNode remarkFocusNode;
+  final FocusNode nameFocusNode = FocusNode();
+  final FocusNode remarkFocusNode = FocusNode();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -41,32 +39,17 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
     });
 
     if (!widget.isNewTask) {
-      TaskProvider.instance.getTaskByDealNo(widget.dealNo).then((_) {
-        nameController = TextEditingController(
-            text: TaskProvider.instance.fetchedTaskData['name'] ?? '');
-        remarkController = TextEditingController(
-            text: TaskProvider.instance.fetchedTaskData['remarks'] ?? '');
-      });
-    } else {
-      nameController = TextEditingController(
-          text: widget.isNewTask
-              ? TaskProvider.instance.fetchedData[AppKeys.fetchedClients[
-                  TaskProvider
-                      .instance.selectedIndices[IndexKeys.clientIndex]][0]]
-              : TaskProvider.instance.fetchedTaskData['name']);
-      remarkController = TextEditingController();
+      TaskProvider.instance.getTaskByDealNo(
+        widget.dealNo,
+      );
     }
-
-    nameFocusNode = FocusNode();
-    remarkFocusNode = FocusNode();
-
     super.initState();
   }
 
   @override
   void dispose() {
-    nameController.dispose();
-    remarkController.dispose();
+    // TaskProvider.instance.nameController.dispose();
+    // TaskProvider.instance.remarkController.dispose();
     TaskProvider.instance.resetTaskIndexes();
     super.dispose();
   }
@@ -132,14 +115,14 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     _buildDivider(verticalPadding: 10),
                     AppPaddings.gapH(10),
                     CustomTextField(
-                      controller: nameController,
+                      controller: TaskProvider.instance.nameController,
                       focusNode: nameFocusNode,
                       labelTxt: 'Task Name',
                       hintTxt: 'Task Name',
                     ),
                     AppPaddings.gapH(20),
                     CustomTextField(
-                      controller: remarkController,
+                      controller: TaskProvider.instance.remarkController,
                       focusNode: remarkFocusNode,
                       labelTxt: 'Remarks',
                       hintTxt: 'Remarks',
@@ -250,7 +233,9 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       isSalesperson:
                           widget.isSalesperson && provider.isAgencyRequired,
                     ),
-                    MeasurementWidget(isNewTask: widget.isNewTask,),
+                    MeasurementWidget(
+                      isNewTask: widget.isNewTask,
+                    ),
                     // _buildDivider(),
                     // AttachmentsList(
                     //   attachmentsList: [
@@ -331,13 +316,17 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                                       widget.isNewTask
                                           ? await TaskProvider.instance
                                               .createTask(
-                                              nameController.text,
-                                              remarkController.text,
+                                              TaskProvider
+                                                  .instance.nameController.text,
+                                              TaskProvider.instance
+                                                  .remarkController.text,
                                             )
                                           : await TaskProvider.instance
                                               .updateTask(
-                                              nameController.text,
-                                              remarkController.text,
+                                              TaskProvider
+                                                  .instance.nameController.text,
+                                              TaskProvider.instance
+                                                  .remarkController.text,
                                               widget.dealNo,
                                             );
                                       // await TaskProvider.instance.fetchAllData();

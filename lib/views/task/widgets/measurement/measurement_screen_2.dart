@@ -1,13 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../../models/measurement.dart';
 import '../../../../providers/measurement_provider.dart';
 import '../../../../widgets/action_button.dart';
-import '../../../../widgets/custom_text_feild.dart';
+import 'additional_cost_widget.dart';
+import 'datagrid/r.dart';
 
 class MeasurementScreen2 extends StatefulWidget {
   const MeasurementScreen2({super.key});
@@ -70,37 +72,53 @@ class _MeasurementScreen2State extends State<MeasurementScreen2> {
                 style: AppTexts.appBarStyle,
               ),
             ),
-            body: Consumer<MeasurementProvider>(
-              builder: (context, provider, child) => Padding(
-                padding: AppPaddings.appPadding,
-                child: provider.pickedPhoto != null
-                    ? ClipRRect(
-                        borderRadius: AppConsts.radius,
-                        child: Image.file(
-                          File(provider.pickedPhoto!.path),
-                          fit: BoxFit.cover,
+            body: SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              child: Consumer<MeasurementProvider>(
+                builder: (context, provider, child) => Padding(
+                  padding: AppPaddings.appPadding,
+                  child: provider.pickedPhoto == null
+                      ? Center(
+                          child: Padding(
+                            padding: AppPaddings.appPadding,
+                            child: Text('No Photos added!'),
+                          ),
+                        )
+                      : Column(
+                          children: [
+                            AdditionalCostsWidget(),
+                            provider.costs.isEmpty
+                                ? ActionBtn(
+                                    btnTxt: 'Add Additional Costs',
+                                    onPress: () => provider.addCost(),
+                                    fontColor: AppColors.primary,
+                                    backgroundColor: Colors.white,
+                                  )
+                                : SizedBox.shrink(),
+                            ClipRRect(
+                              borderRadius: AppConsts.radius,
+                              child: Image.file(
+                                File(provider.pickedPhoto!.path),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            AppPaddings.gapH(5),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                provider.trimmedFileName(),
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTexts.tileTitle2,
+                              ),
+                            ),
+                            AppPaddings.gapH(120),
+                          ],
                         ),
-                      )
-                    : Center(
-                        child: Padding(
-                          padding: AppPaddings.appPadding,
-                          child: Text('No Photos added!'),
-                        ),
-                      ),
+                ),
               ),
             ),
             // bottomSheet: ,
           ),
         ),
-      );
-
-  Widget _buildDivider(
-          {double verticalPadding = 0,
-          double horizontalPadding = 0,
-          Color color = AppColors.primary}) =>
-      Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: verticalPadding, horizontal: horizontalPadding),
-        child: Divider(color: color),
       );
 }

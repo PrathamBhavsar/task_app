@@ -59,6 +59,14 @@ class TaskProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController remarkController = TextEditingController();
+
+  void initializeControllers() {
+    nameController.text = fetchedTaskData['name'] ?? '';
+    remarkController.text = fetchedTaskData['remarks'] ?? '';
+  }
+
   /// gets overall counts
   Future<void> getOverallCounts() async {
     final data = await SupabaseController.instance.getOverallCounts();
@@ -339,6 +347,7 @@ class TaskProvider extends ChangeNotifier {
     final data = DummyData.dummyTaskData;
     fetchedTaskData = data;
     logger.d(data);
+    initializeControllers();
 
     setStartDate(DateTime.parse(data['start_date']));
     setDueDate(DateTime.parse(data['due_date']));
