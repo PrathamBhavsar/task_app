@@ -265,88 +265,85 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
               },
             ),
             persistentFooterButtons: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
-                child: ActionBtn(
-                  btnTxt: widget.isNewTask
-                      ? 'Create Task'
-                      : widget.isSalesperson
-                          ? 'Edit Task'
-                          : 'Mark as In Progress',
-                  onPress: () async {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: AppConsts.radius,
-                          side: BorderSide(width: 2),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              widget.isNewTask
-                                  ? 'Create Task'
-                                  : widget.isSalesperson
-                                      ? 'Edit Task'
-                                      : 'Confirm Change',
-                              style: AppTexts.headingStyle,
-                            ),
-                            AppPaddings.gapH(20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: ActionBtn(
-                                    btnTxt: 'Cancel',
-                                    onPress: () => Navigator.of(context).pop(),
-                                    fontColor: AppColors.primary,
-                                    backgroundColor: AppColors.pink,
-                                  ),
-                                ),
-                                AppPaddings.gapW(10),
-                                Expanded(
-                                  child: ActionBtn(
-                                    btnTxt: widget.isNewTask
-                                        ? 'Create'
-                                        : widget.isSalesperson
-                                            ? 'Edit'
-                                            : 'Confirm Change',
-                                    onPress: () async {
-                                      widget.isNewTask
-                                          ? await TaskProvider.instance
-                                              .createTask(
-                                              TaskProvider
-                                                  .instance.nameController.text,
-                                              TaskProvider.instance
-                                                  .remarkController.text,
-                                            )
-                                          : await TaskProvider.instance
-                                              .updateTask(
-                                              TaskProvider
-                                                  .instance.nameController.text,
-                                              TaskProvider.instance
-                                                  .remarkController.text,
-                                              widget.dealNo,
-                                            );
-                                      // await TaskProvider.instance.fetchAllData();
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                    },
-                                    fontColor: AppColors.primary,
-                                    backgroundColor: AppColors.green,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+              ActionBtn(
+                btnTxt: widget.isNewTask
+                    ? 'Create Task'
+                    : widget.isSalesperson
+                        ? 'Edit Task'
+                        : 'Mark as In Progress',
+                onPress: () async {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: AppConsts.radius,
+                        side: BorderSide(width: 2),
                       ),
-                    );
-                  },
-                  fontColor: AppColors.primary,
-                  backgroundColor: AppColors.orange,
-                ),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            widget.isNewTask
+                                ? 'Create Task'
+                                : widget.isSalesperson
+                                    ? 'Edit Task'
+                                    : 'Confirm Change',
+                            style: AppTexts.headingStyle,
+                          ),
+                          AppPaddings.gapH(20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: ActionBtn(
+                                  btnTxt: 'Cancel',
+                                  onPress: () => Navigator.of(context).pop(),
+                                  fontColor: AppColors.primary,
+                                  backgroundColor: AppColors.pink,
+                                ),
+                              ),
+                              AppPaddings.gapW(10),
+                              Expanded(
+                                child: ActionBtn(
+                                  btnTxt: widget.isNewTask
+                                      ? 'Create'
+                                      : widget.isSalesperson
+                                          ? 'Edit'
+                                          : 'Confirm Change',
+                                  onPress: () async {
+                                    widget.isNewTask
+                                        ? await TaskProvider.instance
+                                            .createTask(
+                                            TaskProvider
+                                                .instance.nameController.text,
+                                            TaskProvider
+                                                .instance.remarkController.text,
+                                          )
+                                        : await TaskProvider.instance
+                                            .updateTask(
+                                            TaskProvider
+                                                .instance.nameController.text,
+                                            TaskProvider
+                                                .instance.remarkController.text,
+                                            widget.dealNo,
+                                          );
+                                    // await TaskProvider.instance.fetchAllData();
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pop();
+                                  },
+                                  fontColor: AppColors.primary,
+                                  backgroundColor: AppColors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                fontColor: AppColors.primary,
+                backgroundColor: AppColors.orange,
               ),
             ],
           ),

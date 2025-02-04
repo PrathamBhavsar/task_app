@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../constants/app_colors.dart';
+import '../../../../helpers/number_formatter.dart';
 import '../../../../providers/measurement_provider.dart';
 
 class AdditionalCostsWidget extends StatelessWidget {
@@ -14,18 +14,18 @@ class AdditionalCostsWidget extends StatelessWidget {
           children: [
             Text(
               "Additional Costs",
-              style: AppTexts.tileTitle1,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            AppPaddings.gapH(10),
+            const SizedBox(height: 10),
             ...List.generate(provider.costs.length, (index) {
               final cost = provider.costs[index];
-              if (provider.costs.isEmpty) return Text("No costs added");
+
               return Row(
                 children: [
                   Expanded(
                     flex: 4,
                     child: TextFormField(
-                      initialValue: cost.name,
+                      controller: provider.nameControllers[index],
                       style: txtStyle,
                       decoration: const InputDecoration(
                         labelText: "Cost name",
@@ -35,45 +35,42 @@ class AdditionalCostsWidget extends StatelessWidget {
                           provider.updateCost(index, name: value),
                     ),
                   ),
-                  AppPaddings.gapW(5),
+                  const SizedBox(width: 5),
                   Expanded(
                     flex: 1,
                     child: TextFormField(
-                      // initialValue: cost.rate.toString(),
+                      controller: provider.rateControllers[index],
                       style: txtStyle,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                          labelText: "Rate", labelStyle: labelStyle),
+                        labelText: "Rate",
+                        labelStyle: labelStyle,
+                      ),
                       onChanged: (value) => provider.updateCost(index,
                           rate: double.tryParse(value) ?? 0),
                     ),
                   ),
-                  AppPaddings.gapW(5),
+                  const SizedBox(width: 5),
                   Expanded(
                     flex: 1,
                     child: TextFormField(
-                      // initialValue: cost.area.toString(),
+                      controller: provider.areaControllers[index],
                       style: txtStyle,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
-                          labelText: "Area", labelStyle: labelStyle),
+                        labelText: "Area",
+                        labelStyle: labelStyle,
+                      ),
                       onChanged: (value) => provider.updateCost(index,
                           area: double.tryParse(value) ?? 0),
                     ),
                   ),
-                  AppPaddings.gapW(5),
+                  const SizedBox(width: 5),
                   Text(
-                    "\₹ ${cost.total.toStringAsFixed(2)}",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    "₹ ${NumberFormatter.format(cost.total)}",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  // IconButton(
-                  //   icon: Icon(
-                  //     Icons.close_rounded,
-                  //     color: Colors.red,
-                  //     size: 16,
-                  //   ),
-                  //   onPressed: () => provider.removeCost(index),
-                  // ),
                 ],
               );
             }),
@@ -82,19 +79,19 @@ class AdditionalCostsWidget extends StatelessWidget {
               children: [
                 TextButton.icon(
                   onPressed: provider.addCost,
-                  icon: Icon(Icons.add),
-                  label: Text(
+                  icon: const Icon(Icons.add),
+                  label: const Text(
                     "Add Cost",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
                 TextButton.icon(
                   onPressed: provider.removeCost,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.close_rounded,
                     color: Colors.redAccent,
                   ),
-                  label: Text(
+                  label: const Text(
                     "Remove Cost",
                     style: TextStyle(
                       fontSize: 16,
@@ -108,10 +105,12 @@ class AdditionalCostsWidget extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "Total: \₹ ${provider.totalAdditionalCost.toStringAsFixed(2)}",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                "Total: ₹ ${NumberFormatter.format(provider.totalAdditionalCost)}",
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
+            AppPaddings.gapH(10),
           ],
         ),
       );

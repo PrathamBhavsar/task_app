@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
+import '../helpers/number_formatter.dart';
 import '../models/measurement.dart';
 
 class MeasurementProvider with ChangeNotifier {
@@ -50,26 +50,52 @@ class MeasurementProvider with ChangeNotifier {
 
   List<AdditionalCost> _costs = [];
 
+  Map<int, TextEditingController> nameControllers = {};
+  Map<int, TextEditingController> rateControllers = {};
+  Map<int, TextEditingController> areaControllers = {};
+
   List<AdditionalCost> get costs => _costs;
 
   double get totalAdditionalCost =>
       _costs.fold(0, (sum, item) => sum + item.total);
 
   void addCost() {
+    int index = _costs.length;
     _costs.add(AdditionalCost(name: '', rate: 0, area: 0));
+
+    // Initialize controllers
+    nameControllers[index] = TextEditingController();
+    rateControllers[index] = TextEditingController();
+    areaControllers[index] = TextEditingController();
+
     notifyListeners();
   }
 
   void removeCost() {
-    _costs.removeAt(costs.length - 1);
-    notifyListeners();
+    if (_costs.isNotEmpty) {
+      int lastIndex = _costs.length - 1;
+      _costs.removeAt(lastIndex);
+      nameControllers.remove(lastIndex);
+      rateControllers.remove(lastIndex);
+      areaControllers.remove(lastIndex);
+      notifyListeners();
+    }
   }
 
   void updateCost(int index, {String? name, double? rate, double? area}) {
     final cost = _costs[index];
-    if (name != null) cost.name = name;
-    if (rate != null) cost.rate = rate;
-    if (area != null) cost.area = area;
+    if (name != null) {
+      cost.name = name;
+      nameControllers[index]?.text = name;
+    }
+    if (rate != null) {
+      cost.rate = rate;
+      rateControllers[index]?.text = NumberFormatter.format(rate);
+    }
+    if (area != null) {
+      cost.area = area;
+      areaControllers[index]?.text = NumberFormatter.format(area);
+    }
     cost.total = cost.rate * cost.area;
     notifyListeners();
   }

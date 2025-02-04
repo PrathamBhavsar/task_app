@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../../helpers/number_formatter.dart';
 import '../../../../models/measurement.dart';
 import '../../../../providers/measurement_provider.dart';
 import 'size_tile.dart';
@@ -184,9 +185,9 @@ class MeasurementWidget extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(cost.name),
-                                      Text(cost.rate.toString()),
-                                      Text(cost.area.toString()),
-                                      Text(cost.total.toString()),
+                                      Text(NumberFormatter.format(cost.rate)),
+                                      Text(NumberFormatter.format(cost.area)),
+                                      Text(NumberFormatter.format(cost.total)),
                                     ],
                                   );
                                 },
@@ -202,7 +203,8 @@ class MeasurementWidget extends StatelessWidget {
                                         fontWeight: FontWeight.w800),
                                   ),
                                   Text(
-                                    provider.totalAdditionalCost.toString(),
+                                    NumberFormatter.format(
+                                        provider.totalAdditionalCost),
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w800),
