@@ -3,10 +3,13 @@ import 'package:logger/logger.dart';
 import 'measurement_provider.dart';
 
 class QuotationProvider with ChangeNotifier {
-  static final QuotationProvider instance =
+  static final QuotationProvider _instance =
       QuotationProvider._privateConstructor();
 
   QuotationProvider._privateConstructor();
+
+  static QuotationProvider get instance => _instance;
+
   var log = Logger();
 
   final Map<String, Map<String, Map<String, String>>> roomDetails =

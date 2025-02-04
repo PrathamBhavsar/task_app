@@ -9,9 +9,11 @@ import '../controllers/supabase_controller.dart';
 import '../models/user.dart';
 
 class TaskProvider extends ChangeNotifier {
-  static final TaskProvider instance = TaskProvider._privateConstructor();
+  static final TaskProvider _instance = TaskProvider._privateConstructor();
 
   TaskProvider._privateConstructor();
+
+  static TaskProvider get instance => _instance;
 
   final Logger logger = Logger();
 
@@ -27,7 +29,7 @@ class TaskProvider extends ChangeNotifier {
   Map<String, List<Map<String, dynamic>>> fetchedData =
       DummyData.dummyFetchedDataProvider;
 
-  Map<String, dynamic> fetchedTaskData = {};
+  Map<String, dynamic> fetchedTaskData = DummyData.dummyTaskData;
   Map<String, dynamic> fetchedOverallData = {};
 
   UserModel? _currentUser;

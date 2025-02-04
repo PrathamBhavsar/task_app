@@ -5,14 +5,10 @@ import '../../constants/enums.dart';
 import '../../constants/app_keys.dart';
 import '../../providers/task_provider.dart';
 import '../home/pages/task%20list/widgets/overlapping_circles.dart';
-import 'methods/show_bottom_modal.dart';
 import 'widgets/agency_required_switch.dart';
-import 'widgets/attachment_list.dart';
-import 'widgets/client_name_dropdown.dart';
 import 'widgets/task_detail_widgets.dart';
 import 'widgets/due_date_picker.dart';
 import 'widgets/measurement/measurement_widget.dart';
-import 'widgets/quotation/quotation_widget.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_feild.dart';
@@ -34,37 +30,43 @@ class TaskDetailScreen extends StatefulWidget {
 }
 
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
-  final nameController = TextEditingController();
-  final remarkController = TextEditingController();
-
-  final nameFocusNode = FocusNode();
-  final remarkFocusNode = FocusNode();
-
+  late final TextEditingController nameController;
+  late final TextEditingController remarkController;
+  late final FocusNode nameFocusNode;
+  late final FocusNode remarkFocusNode;
   @override
   void initState() {
-    super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus();
     });
+
     if (!widget.isNewTask) {
       TaskProvider.instance.getTaskByDealNo(widget.dealNo).then((_) {
-        setState(() {
-          nameController.text =
-              TaskProvider.instance.fetchedTaskData['name'] ?? '';
-          remarkController.text =
-              TaskProvider.instance.fetchedTaskData['remarks'] ?? '';
-        });
+        nameController = TextEditingController(
+            text: TaskProvider.instance.fetchedTaskData['name'] ?? '');
+        remarkController = TextEditingController(
+            text: TaskProvider.instance.fetchedTaskData['remarks'] ?? '');
       });
+    } else {
+      nameController = TextEditingController(
+          text: widget.isNewTask
+              ? TaskProvider.instance.fetchedData[AppKeys.fetchedClients[
+                  TaskProvider
+                      .instance.selectedIndices[IndexKeys.clientIndex]][0]]
+              : TaskProvider.instance.fetchedTaskData['name']);
+      remarkController = TextEditingController();
     }
+
+    nameFocusNode = FocusNode();
+    remarkFocusNode = FocusNode();
+
+    super.initState();
   }
 
   @override
   void dispose() {
     nameController.dispose();
     remarkController.dispose();
-    nameFocusNode.dispose();
-    remarkFocusNode.dispose();
     TaskProvider.instance.resetTaskIndexes();
     super.dispose();
   }
@@ -248,30 +250,29 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       isSalesperson:
                           widget.isSalesperson && provider.isAgencyRequired,
                     ),
-                    MeasurementWidget(),
-                    QuotationWidget(),
-                    _buildDivider(),
-                    AttachmentsList(
-                      attachmentsList: [
-                        {
-                          "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
-                          "attachment_url":
-                              "https://dpgwbagzdsabjejngivi.supabase.co/storage/v1/object/public/bucket/25-0019/ss.png",
-                          "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
-                          "created_at": "2025-01-02T07:35:50.240763+00:00",
-                          "attachment_name": "attachment 2"
-                        },
-                        {
-                          "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
-                          "attachment_url":
-                              "https://dpgwbagzdsabjejngivi.supabase.co/storage/v1/object/public/bucket/25-0019/generated.pdf",
-                          "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
-                          "created_at": "2025-01-02T07:35:50.240763+00:00",
-                          "attachment_name": "ss.png"
-                        }
-                      ],
-                      dealNo: widget.dealNo,
-                    ),
+                    MeasurementWidget(isNewTask: widget.isNewTask,),
+                    // _buildDivider(),
+                    // AttachmentsList(
+                    //   attachmentsList: [
+                    //     {
+                    //       "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+                    //       "attachment_url":
+                    //           "https://dpgwbagzdsabjejngivi.supabase.co/storage/v1/object/public/bucket/25-0019/ss.png",
+                    //       "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+                    //       "created_at": "2025-01-02T07:35:50.240763+00:00",
+                    //       "attachment_name": "attachment 2"
+                    //     },
+                    //     {
+                    //       "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
+                    //       "attachment_url":
+                    //           "https://dpgwbagzdsabjejngivi.supabase.co/storage/v1/object/public/bucket/25-0019/generated.pdf",
+                    //       "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
+                    //       "created_at": "2025-01-02T07:35:50.240763+00:00",
+                    //       "attachment_name": "ss.png"
+                    //     }
+                    //   ],
+                    //   dealNo: widget.dealNo,
+                    // ),
 
                     // AppPaddings.gapH(70),
                   ]),

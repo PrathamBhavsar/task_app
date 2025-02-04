@@ -5,150 +5,196 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../providers/measurement_provider.dart';
-import 'room_column.dart';
 
 class MeasurementWidget extends StatelessWidget {
-  const MeasurementWidget({super.key});
+
+  final bool isNewTask;
+  const MeasurementWidget({super.key, required this.isNewTask});
 
   @override
   Widget build(BuildContext context) => Consumer<MeasurementProvider>(
-      builder:
-          (BuildContext context, MeasurementProvider provider, Widget? child) {
-        // Transforming data into the required format
-        final List<Map<String, dynamic>> rooms =
-            provider.windowMeasurements.entries
-                .map((entry) {
-                  final roomName = entry.key;
+        builder: (BuildContext context, MeasurementProvider provider,
+            Widget? child) {
+          // Transforming data into the required format
+          final List<Map<String, dynamic>> rooms =
+              provider.windowMeasurements.entries
+                  .map((entry) {
+                    final roomName = entry.key;
 
-                  final List<Map<String, dynamic>> windows = entry.value.entries
-                      .map((windowEntry) {
-                        final windowName = windowEntry.key;
-                        final windowData = windowEntry.value;
+                    final List<Map<String, dynamic>> windows =
+                        entry.value.entries
+                            .map((windowEntry) {
+                              final windowName = windowEntry.key;
+                              final windowData = windowEntry.value;
 
-                        final filteredWindowData = {
-                          'height': windowData['height'],
-                          'width': windowData['width'],
-                          'area': windowData['area'],
-                          'type': windowData['type'],
-                          'remarks': windowData['remarks'],
-                        }..removeWhere((key, value) =>
-                            value == null || value.toString().isEmpty);
+                              final filteredWindowData = {
+                                'height': windowData['height'],
+                                'width': windowData['width'],
+                                'area': windowData['area'],
+                                'type': windowData['type'],
+                                'remarks': windowData['remarks'],
+                              }..removeWhere((key, value) =>
+                                  value == null || value.toString().isEmpty);
 
-                        if (filteredWindowData.isEmpty) {
-                          return null;
-                        }
+                              if (filteredWindowData.isEmpty) {
+                                return null;
+                              }
 
-                        final size =
-                            "H: ${filteredWindowData['height'] ?? ''}, W: ${filteredWindowData['width'] ?? ''}";
-                        return {
-                          'windowName': windowName,
-                          'size': size,
-                          'area': filteredWindowData['area'] ?? '',
-                          'type': filteredWindowData['type'] ?? '',
-                          'remarks': filteredWindowData['remarks'] ?? '',
-                        };
-                      })
-                      .where((window) => window != null)
-                      .cast<Map<String, dynamic>>()
-                      .toList();
+                              final size =
+                                  "H: ${filteredWindowData['height'] ?? ''}, W: ${filteredWindowData['width'] ?? ''}";
+                              return {
+                                'windowName': windowName,
+                                'size': size,
+                                'area': filteredWindowData['area'] ?? '',
+                                'type': filteredWindowData['type'] ?? '',
+                                'remarks': filteredWindowData['remarks'] ?? '',
+                              };
+                            })
+                            .where((window) => window != null)
+                            .cast<Map<String, dynamic>>()
+                            .toList();
 
-                  if (windows.isEmpty) {
-                    return null;
-                  }
+                    if (windows.isEmpty) {
+                      return null;
+                    }
 
-                  return {'roomName': roomName, 'windows': windows};
-                })
-                .where((room) => room != null)
-                .cast<Map<String, dynamic>>()
-                .toList();
+                    return {'roomName': roomName, 'windows': windows};
+                  })
+                  .where((room) => room != null)
+                  .cast<Map<String, dynamic>>()
+                  .toList();
 
-        return Padding(
-          padding: AppPaddings.appPadding,
-          child: Column(
-            children: [
-              InkWell(
-                onTap: () => context.pushNamed('measurement'),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Measurement', style: AppTexts.headingStyle),
-                    Row(
-                      children: [
-                        provider.rooms.isEmpty
-                            ? const SizedBox.shrink()
-                            : IconButton(
-                                onPressed: () {
-                                  _copyToClipboard(context, rooms);
-                                },
-                                icon: const Icon(Icons.copy_rounded),
-                              ),
-                        const Icon(Icons.arrow_forward_ios_rounded),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              AppPaddings.gapH(10),
-              provider.rooms.isEmpty
-                  ? const SizedBox.shrink()
-                  : Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.textFieldBg,
-                        borderRadius: AppConsts.radius,
+          return Padding(
+            padding: AppPaddings.appPadding,
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: () {
+                    context.pushNamed('measurement2');
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Measurement', style: AppTexts.headingStyle),
+                      Row(
+                        children: [
+                          provider.rooms.isEmpty
+                              ? const SizedBox.shrink()
+                              : IconButton(
+                                  onPressed: () {
+                                    _copyToClipboard(context, rooms);
+                                  },
+                                  icon: const Icon(Icons.copy_rounded),
+                                ),
+                          const Icon(Icons.arrow_forward_ios_rounded),
+                        ],
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(18),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: rooms.length,
-                          itemBuilder: (context, index) {
-                            final Map<String, dynamic> room = rooms[index];
-
-                            return RoomColumn(
-                              roomNames: room['roomName']!,
-                              windowAreas: (room['windows'] as List<dynamic>)
-                                  .map<String>((window) =>
-                                      (window as Map<String, String>)['area']!)
-                                  .toList(),
-                              windowTypes: (room['windows'] as List<dynamic>)
-                                  .map<String>((window) =>
-                                      (window as Map<String, String>)['type']!)
-                                  .toList(),
-                              windowRemarks: (room['windows'] as List<dynamic>)
-                                  .map<String>((window) => (window
-                                      as Map<String, String>)['remarks']!)
-                                  .toList(),
-                              windowNames: (room['windows'] as List<dynamic>?)
-                                      ?.map<String>((window) => (window as Map<
-                                          String, String>)['windowName']!)
-                                      .toList() ??
-                                  [],
-                              sizes: (room['windows'] as List<dynamic>?)
-                                      ?.map<String>((window) => (window
-                                          as Map<String, String>)['size']!)
-                                      .toList() ??
-                                  [],
-                            );
-                          },
+                    ],
+                  ),
+                ),
+                AppPaddings.gapH(10),
+                provider.pickedPhoto == null
+                    ? SizedBox.shrink()
+                    : Container(
+                        decoration: BoxDecoration(
+                          borderRadius: AppConsts.radius,
+                          border: Border.all(width: 2),
+                        ),
+                        height: 60,
+                        margin: const EdgeInsets.only(bottom: 8.0),
+                        child: Padding(
+                          padding: AppPaddings.appPadding,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                provider.pickedPhoto!.name.length > 15
+                                    ? "${provider.pickedPhoto!.name.substring(0, 10)}...${provider.pickedPhoto!.name.split('.').last}"
+                                    : provider.pickedPhoto!.name,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTexts.tileTitle2,
+                              ),
+                              Row(
+                                children: [
+                                  widget.isNewTask
+                                  IconButton(
+                                    onPressed: () async {},
+                                    icon: const Icon(Icons.download_rounded),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.close_rounded),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-            ],
-          ),
-        );
-      },
-    );
+                // provider.rooms.isEmpty
+                //     ? const SizedBox.shrink()
+                //     : Container(
+                //         decoration: BoxDecoration(
+                //           color: AppColors.textFieldBg,
+                //           borderRadius: AppConsts.radius,
+                //         ),
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(18),
+                //           child: ListView.builder(
+                //             shrinkWrap: true,
+                //             physics: const NeverScrollableScrollPhysics(),
+                //             itemCount: rooms.length,
+                //             itemBuilder: (context, index) {
+                //               final Map<String, dynamic> room = rooms[index];
+                //
+                //               return RoomColumn(
+                //                 roomNames: room['roomName']!,
+                //                 windowAreas: (room['windows'] as List<dynamic>)
+                //                     .map<String>((window) => (window
+                //                         as Map<String, String>)['area']!)
+                //                     .toList(),
+                //                 windowTypes: (room['windows'] as List<dynamic>)
+                //                     .map<String>((window) => (window
+                //                         as Map<String, String>)['type']!)
+                //                     .toList(),
+                //                 windowRemarks:
+                //                     (room['windows'] as List<dynamic>)
+                //                         .map<String>((window) => (window
+                //                             as Map<String, String>)['remarks']!)
+                //                         .toList(),
+                //                 windowNames: (room['windows'] as List<dynamic>?)
+                //                         ?.map<String>((window) =>
+                //                             (window as Map<String, String>)[
+                //                                 'windowName']!)
+                //                         .toList() ??
+                //                     [],
+                //                 sizes: (room['windows'] as List<dynamic>?)
+                //                         ?.map<String>((window) => (window
+                //                             as Map<String, String>)['size']!)
+                //                         .toList() ??
+                //                     [],
+                //               );
+                //             },
+                //           ),
+                //         ),
+                //       ),
+              ],
+            ),
+          );
+        },
+      );
 
   void _copyToClipboard(
       BuildContext context, List<Map<String, dynamic>> rooms) {
     final copyText = rooms.map((room) {
-      final windowsText =
-          (room['windows'] as List<Map<String, String>>).map((window) => '''  ${window['windowName']}
+      final windowsText = (room['windows'] as List<Map<String, String>>)
+          .map((window) => '''  ${window['windowName']}
         Size: ${window['size']}
         Area: ${window['area']}
         Type: ${window['type']}
-        Remarks: ${window['remarks']}''').join('\n');
+        Remarks: ${window['remarks']}''')
+          .join('\n');
       return '${room['roomName']}\n$windowsText';
     }).join('\n\n');
 

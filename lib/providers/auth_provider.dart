@@ -4,9 +4,12 @@ import '../constants/enums.dart';
 import '../models/user.dart';
 
 class AuthProvider extends ChangeNotifier {
-  static final AuthProvider instance = AuthProvider._privateConstructor();
+  static final AuthProvider _instance = AuthProvider._privateConstructor();
 
   AuthProvider._privateConstructor();
+
+  static AuthProvider get instance => _instance;
+
   var logger = Logger();
 
   bool isVisible = false;

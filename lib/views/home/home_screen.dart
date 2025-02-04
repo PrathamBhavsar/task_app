@@ -26,24 +26,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/taskDetails?isNewTask=true'),
-      ),
-      appBar: AppBar(
-        title: Text(
-          pageTitles[_currentPageIndex],
-          style: AppTexts.appBarStyle,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => context.push('/taskDetails?isNewTask=true'),
         ),
-      ),
-      body: PageView.builder(
-        controller: pageController,
-        itemCount: pages.length,
-        onPageChanged: (index) {
-          setState(() {
-            _currentPageIndex = index;
-          });
-        },
-        itemBuilder: (context, index) => pages[index],
-      ),
-    );
+        appBar: AppBar(
+          title: Text(
+            pageTitles[_currentPageIndex],
+            style: AppTexts.appBarStyle,
+          ),
+        ),
+        body: PageView.builder(
+          controller: pageController,
+          itemCount: pages.length,
+          onPageChanged: (index) {
+            setState(() {
+              _currentPageIndex = index;
+            });
+          },
+          itemBuilder: (context, index) => pages[index],
+        ),
+      );
 }

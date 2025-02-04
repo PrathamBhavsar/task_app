@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
 class MeasurementProvider with ChangeNotifier {
-  static final MeasurementProvider instance =
+  static final MeasurementProvider _instance =
       MeasurementProvider._privateConstructor();
 
   MeasurementProvider._privateConstructor();
+
+  static MeasurementProvider get instance => _instance;
 
   /// Rooms structure: List of maps where key is the room name and value is a list of window names
   List<Map<String, List<String>>> rooms = [];
@@ -14,6 +20,17 @@ class MeasurementProvider with ChangeNotifier {
   Map<String, Map<String, Map<String, String>>> windowMeasurements = {};
 
   var log = Logger();
+
+  XFile? pickedPhoto;
+  Future<void> pickImage(ImageSource source) async {
+    ImagePicker picker = ImagePicker();
+
+    pickedPhoto = await picker.pickImage(
+        source: source, imageQuality: 25, requestFullMetadata: true);
+
+    log.d(pickedPhoto!.name);
+    notifyListeners();
+  }
 
   /// Update window measurement (height or width)
   void updateWindowMeasurements({
