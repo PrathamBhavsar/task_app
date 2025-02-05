@@ -276,7 +276,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     context: context,
                     builder: (context) => AlertDialog(
                       shape: RoundedRectangleBorder(
-                        borderRadius: AppConsts.radius,
+                        borderRadius: AppBorders.radius,
                         side: BorderSide(width: 2),
                       ),
                       content: Column(

@@ -26,7 +26,7 @@ class TaskTile extends StatelessWidget {
           child: Container(
             height: 148.h,
             decoration: BoxDecoration(
-              borderRadius: AppConsts.radius,
+              borderRadius: AppBorders.radius,
               border: Border.all(width: 2),
             ),
             child: Padding(

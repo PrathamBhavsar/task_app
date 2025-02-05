@@ -29,7 +29,7 @@ class CustomBottomSheetWidget extends StatelessWidget {
             padding: EdgeInsets.all(12),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              borderRadius: AppConsts.radius,
+              borderRadius: AppBorders.radius,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -81,7 +81,7 @@ class QuotationWidget extends StatelessWidget {
                     : Container(
                         decoration: BoxDecoration(
                           color: AppColors.textFieldBg,
-                          borderRadius: AppConsts.radius,
+                          borderRadius: AppBorders.radius,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(18),

@@ -26,7 +26,7 @@ class ActionBtn extends StatelessWidget {
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(
                 side: const BorderSide(width: 2),
-                borderRadius: AppConsts.radius,
+                borderRadius: AppBorders.radius,
               ),
             ),
             backgroundColor: WidgetStateProperty.all(backgroundColor),

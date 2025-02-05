@@ -11,28 +11,28 @@ class CustomPickerFeild extends StatelessWidget {
   final Function() onTap;
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: onTap,
-      child: SizedBox(
-        height: 60,
-        child: Row(
-          children: [
-            Container(
-              width: 60,
-              decoration: BoxDecoration(
-                color: AppColors.orange,
-                borderRadius: AppConsts.radius,
+        onTap: onTap,
+        child: SizedBox(
+          height: 60,
+          child: Row(
+            children: [
+              Container(
+                width: 60,
+                decoration: BoxDecoration(
+                  color: AppColors.orange,
+                  borderRadius: AppBorders.radius,
+                ),
+                child: Center(
+                  child: Icon(Icons.calendar_month_rounded),
+                ),
               ),
-              child: Center(
-                child: Icon(Icons.calendar_month_rounded),
-              ),
-            ),
-            AppPaddings.gapW(20),
-            Text(
-              text,
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
-            )
-          ],
+              AppPaddings.gapW(20),
+              Text(
+                text,
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }

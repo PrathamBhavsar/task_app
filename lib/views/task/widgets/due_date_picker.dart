@@ -70,7 +70,7 @@ class DatePickerWidget extends StatelessWidget {
             padding: AppPaddings.appPadding,
             decoration: BoxDecoration(
               border: Border.all(width: 2),
-              borderRadius: AppConsts.radius,
+              borderRadius: AppBorders.radius,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

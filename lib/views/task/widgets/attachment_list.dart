@@ -42,7 +42,7 @@ class AttachmentsList extends StatelessWidget {
                 return Container(
                   decoration: BoxDecoration(
                     color: bgColor,
-                    borderRadius: AppConsts.radius,
+                    borderRadius: AppBorders.radius,
                     border: Border.all(width: 2),
                   ),
                   height: 60,

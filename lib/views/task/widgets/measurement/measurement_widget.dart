@@ -99,7 +99,7 @@ class MeasurementWidget extends StatelessWidget {
                     ? SizedBox.shrink()
                     : Container(
                         decoration: BoxDecoration(
-                          borderRadius: AppConsts.radius,
+                          borderRadius: AppBorders.radius,
                           border: Border.all(width: 2),
                         ),
                         height: 60,
@@ -140,7 +140,7 @@ class MeasurementWidget extends StatelessWidget {
                     : Container(
                         decoration: BoxDecoration(
                           color: AppColors.textFieldBg,
-                          borderRadius: AppConsts.radius,
+                          borderRadius: AppBorders.radius,
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(18),
@@ -186,7 +186,7 @@ class MeasurementWidget extends StatelessWidget {
                                     children: [
                                       Text(cost.name),
                                       Text(NumberFormatter.format(cost.rate)),
-                                      Text(NumberFormatter.format(cost.area)),
+                                      Text(NumberFormatter.format(cost.qty)),
                                       Text(NumberFormatter.format(cost.total)),
                                     ],
                                   );

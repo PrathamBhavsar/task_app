@@ -18,7 +18,7 @@ class RowWithIconAndWidget extends StatelessWidget {
             width: 60,
             decoration: BoxDecoration(
               color: AppColors.green,
-              borderRadius: AppConsts.radius,
+              borderRadius: AppBorders.radius,
             ),
             child: Icon(icon, size: 32),
           ),

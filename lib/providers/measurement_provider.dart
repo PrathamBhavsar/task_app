@@ -52,7 +52,7 @@ class MeasurementProvider with ChangeNotifier {
 
   Map<int, TextEditingController> nameControllers = {};
   Map<int, TextEditingController> rateControllers = {};
-  Map<int, TextEditingController> areaControllers = {};
+  Map<int, TextEditingController> qtyControllers = {};
 
   List<AdditionalCost> get costs => _costs;
 
@@ -61,12 +61,12 @@ class MeasurementProvider with ChangeNotifier {
 
   void addCost() {
     int index = _costs.length;
-    _costs.add(AdditionalCost(name: '', rate: 0, area: 0));
+    _costs.add(AdditionalCost(name: '', rate: 0, qty: 0));
 
     // Initialize controllers
     nameControllers[index] = TextEditingController();
     rateControllers[index] = TextEditingController();
-    areaControllers[index] = TextEditingController();
+    qtyControllers[index] = TextEditingController();
 
     notifyListeners();
   }
@@ -77,12 +77,12 @@ class MeasurementProvider with ChangeNotifier {
       _costs.removeAt(lastIndex);
       nameControllers.remove(lastIndex);
       rateControllers.remove(lastIndex);
-      areaControllers.remove(lastIndex);
+      qtyControllers.remove(lastIndex);
       notifyListeners();
     }
   }
 
-  void updateCost(int index, {String? name, double? rate, double? area}) {
+  void updateCost(int index, {String? name, double? rate, double? qty}) {
     final cost = _costs[index];
     if (name != null) {
       cost.name = name;
@@ -92,11 +92,11 @@ class MeasurementProvider with ChangeNotifier {
       cost.rate = rate;
       rateControllers[index]?.text = NumberFormatter.format(rate);
     }
-    if (area != null) {
-      cost.area = area;
-      areaControllers[index]?.text = NumberFormatter.format(area);
+    if (qty != null) {
+      cost.qty = qty;
+      qtyControllers[index]?.text = NumberFormatter.format(qty);
     }
-    cost.total = cost.rate * cost.area;
+    cost.total = cost.rate * cost.qty;
     notifyListeners();
   }
 

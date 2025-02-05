@@ -51,7 +51,7 @@ class CustomTextField extends StatelessWidget {
                   LengthLimitingTextInputFormatter(10),
                 ]
               : null,
-          style: _textStyle(AppColors.primary, 20, FontWeight.w700),
+          style: AppTexts.inputTextStyle,
           textAlignVertical: TextAlignVertical.center,
           decoration: _buildInputDecoration(provider),
         ),
@@ -78,26 +78,17 @@ class CustomTextField extends StatelessWidget {
         fillColor: AppColors.textFieldBg,
         filled: true,
         prefixText: isPhone ? "+91 " : null,
-        prefixStyle: _textStyle(AppColors.primary, 18, FontWeight.w900),
+        prefixStyle: AppTexts.inputLabelTextStyle,
         labelText: labelTxt,
-        labelStyle: _textStyle(AppColors.primary, 18, FontWeight.w900),
+        labelStyle: AppTexts.inputLabelTextStyle,
         hintText: hintTxt,
-        hintStyle: _textStyle(AppColors.accent, 18, FontWeight.w900),
-        border: _outlineInputBorder(BorderSide.none),
-        focusedErrorBorder: _outlineInputBorder(
+        hintStyle: AppTexts.inputHintTextStyle,
+        border: AppBorders.outlineTFBorder(BorderSide.none),
+        focusedErrorBorder: AppBorders.outlineTFBorder(
           const BorderSide(width: 2, color: AppColors.error),
         ),
-        focusedBorder: _outlineInputBorder(
+        focusedBorder: AppBorders.outlineTFBorder(
           const BorderSide(width: 2, color: AppColors.primary),
         ),
-      );
-
-  TextStyle _textStyle(Color color, double fontSize, FontWeight fontWeight) =>
-      TextStyle(color: color, fontSize: fontSize, fontWeight: fontWeight);
-
-  OutlineInputBorder _outlineInputBorder(BorderSide borderSide) =>
-      OutlineInputBorder(
-        borderSide: borderSide,
-        borderRadius: AppConsts.radius,
       );
 }

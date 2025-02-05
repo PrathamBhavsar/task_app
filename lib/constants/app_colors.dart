@@ -80,8 +80,30 @@ class AppTexts {
     fontSize: 22.sp,
     fontWeight: FontWeight.w900,
   );
+
+  static TextStyle inputTextStyle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w700,
+  );
+
+  static TextStyle inputLabelTextStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
+
+  static TextStyle inputHintTextStyle = TextStyle(
+    color: AppColors.accent,
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
 }
 
-class AppConsts {
+class AppBorders {
   static var radius = BorderRadius.circular(15);
+
+  static OutlineInputBorder outlineTFBorder(BorderSide borderSide) =>
+      OutlineInputBorder(
+        borderSide: borderSide,
+        borderRadius: radius,
+      );
 }

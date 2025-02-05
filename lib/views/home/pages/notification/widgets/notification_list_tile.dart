@@ -12,7 +12,7 @@ class NotificationListTile extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         decoration: BoxDecoration(
           color: color,
-          borderRadius: AppConsts.radius,
+          borderRadius: AppBorders.radius,
           border: Border.all(width: 2),
         ),
         child: Padding(
