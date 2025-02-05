@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import '../../../../../constants/app_colors.dart';
+import '../../../../../constants/app_consts.dart';
 
 class OverlappingCircles extends StatelessWidget {
   final List<Color> bgColors;
@@ -98,16 +98,16 @@ class OverlappingCircles extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: borderColor, 
-                    width: borderWidth, 
+                    color: borderColor,
+                    width: borderWidth,
                   ),
-                  color: bgColors[index], 
+                  color: bgColors[index],
                 ),
                 child: Center(
                   child: Text(
                     initials,
                     style: TextStyle(
-                        fontSize: fontSize, 
+                        fontSize: fontSize,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary),
                   ),

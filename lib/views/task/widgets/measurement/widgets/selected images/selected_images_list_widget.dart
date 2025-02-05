@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../constants/app_colors.dart';
-import '../../../../providers/measurement_provider.dart';
+import '../../../../../../constants/app_consts.dart';
+import '../../../../../../providers/measurement_provider.dart';
 import 'picked_file_widget.dart';
 
 class SelectedImagesListWidget extends StatelessWidget {

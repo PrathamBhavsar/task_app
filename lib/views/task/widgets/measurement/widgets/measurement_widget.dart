@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../constants/app_colors.dart';
-import '../../../../helpers/file_name_helper.dart';
-import '../../../../helpers/number_helper.dart';
-import '../../../../models/measurement.dart';
-import '../../../../providers/measurement_provider.dart';
-import 'picked_file_widget.dart';
-import 'size_tile.dart';
+import '../../../../../constants/app_consts.dart';
+import '../../../../../extensions/app_paddings.dart';
+import '../../../../../helpers/indian_number_system_helper.dart';
+import '../../../../../helpers/number_helper.dart';
+import '../../../../../models/measurement.dart';
+import '../../../../../providers/measurement_provider.dart';
+import 'selected images/picked_file_widget.dart';
 
 class MeasurementWidget extends StatelessWidget {
   final bool isNewTask;
@@ -96,7 +96,7 @@ class MeasurementWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                AppPaddings.gapH(10),
+                10.hGap,
                 provider.pickedPhotos.isEmpty
                     ? SizedBox.shrink()
                     : ListView.builder(
@@ -162,7 +162,8 @@ class MeasurementWidget extends StatelessWidget {
                                       Text(cost.name),
                                       Text(NumberHelper.format(cost.rate)),
                                       Text(NumberHelper.format(cost.qty)),
-                                      Text(NumberHelper.format(cost.total)),
+                                      Text(IndianNumberHelper.format(
+                                          cost.total)),
                                     ],
                                   );
                                 },
@@ -178,7 +179,7 @@ class MeasurementWidget extends StatelessWidget {
                                         fontWeight: FontWeight.w800),
                                   ),
                                   Text(
-                                    NumberHelper.format(
+                                    IndianNumberHelper.format(
                                         provider.totalAdditionalCost),
                                     style: TextStyle(
                                         fontSize: 20,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../constants/app_colors.dart';
-import '../measurement/title_tile.dart';
+import '../../../../extensions/app_paddings.dart';
+import '../measurement/widgets/old measurement widgets/title_tile.dart';
 
 class RoomQuote extends StatelessWidget {
   const RoomQuote({
@@ -26,28 +26,28 @@ class RoomQuote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TitleTile(
-          roomName: roomNames,
-          isQuote: true,
-        ),
-        AppPaddings.gapH(8),
-        ...List.generate(
-          windowNames.length,
-          (index) => QuoteWindowTile(
-            windowName: windowNames[index],
-            windowMaterial: windowMaterials[index],
-            windowType: windowTypes[index],
-            windowRate: windowRates[index],
-            windowAmount: windowAmounts[index],
-            windowArea: windowAreas[index],
-            windowRemark: windowRemarks[index],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TitleTile(
+            roomName: roomNames,
+            isQuote: true,
           ),
-        ),
-        AppPaddings.gapH(10),
-      ],
-    );
+          8.hGap,
+          ...List.generate(
+            windowNames.length,
+            (index) => QuoteWindowTile(
+              windowName: windowNames[index],
+              windowMaterial: windowMaterials[index],
+              windowType: windowTypes[index],
+              windowRate: windowRates[index],
+              windowAmount: windowAmounts[index],
+              windowArea: windowAreas[index],
+              windowRemark: windowRemarks[index],
+            ),
+          ),
+          10.hGap,
+        ],
+      );
 }
 
 class QuoteWindowTile extends StatelessWidget {
@@ -72,86 +72,86 @@ class QuoteWindowTile extends StatelessWidget {
   TextStyle textStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.w500);
   @override
   Widget build(BuildContext context) => Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              windowName,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
-            ),
-            Text(
-              "Area: $windowArea",
-              style: textStyle,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Type',
-              style: textStyle,
-            ),
-            Text(
-              windowType,
-              style: textStyle,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Material',
-              style: textStyle,
-            ),
-            Text(
-              windowMaterial,
-              style: textStyle,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Rate',
-              style: textStyle,
-            ),
-            Text(
-              windowRate,
-              style: textStyle,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Amount',
-              style: textStyle,
-            ),
-            Text(
-              windowAmount,
-              style: textStyle,
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Remarks',
-              style: textStyle,
-            ),
-            Text(
-              windowRemark,
-              style: textStyle,
-            ),
-          ],
-        ),
-        AppPaddings.gapH(5)
-      ],
-    );
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                windowName,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+              ),
+              Text(
+                "Area: $windowArea",
+                style: textStyle,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Type',
+                style: textStyle,
+              ),
+              Text(
+                windowType,
+                style: textStyle,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Material',
+                style: textStyle,
+              ),
+              Text(
+                windowMaterial,
+                style: textStyle,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Rate',
+                style: textStyle,
+              ),
+              Text(
+                windowRate,
+                style: textStyle,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Amount',
+                style: textStyle,
+              ),
+              Text(
+                windowAmount,
+                style: textStyle,
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Remarks',
+                style: textStyle,
+              ),
+              Text(
+                windowRemark,
+                style: textStyle,
+              ),
+            ],
+          ),
+          5.hGap
+        ],
+      );
 }

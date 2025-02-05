@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../constants/app_colors.dart';
+import '../../../../constants/app_consts.dart';
+import '../../../../extensions/app_paddings.dart';
+import '../../../../helpers/indian_number_system_helper.dart';
 import '../../../../providers/quotation_provider.dart';
 import 'room_quote.dart';
 
@@ -75,7 +77,7 @@ class QuotationWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                AppPaddings.gapH(10),
+                10.hGap,
                 provider.roomDetails.isEmpty
                     ? const SizedBox.shrink()
                     : Container(
@@ -138,7 +140,7 @@ class QuotationWidget extends StatelessWidget {
                                   );
                                 },
                               ),
-                              AppPaddings.gapH(10),
+                              10.hGap,
                               totalAmount == 0.0
                                   ? Row(
                                       mainAxisAlignment:
@@ -184,7 +186,7 @@ class QuotationWidget extends StatelessWidget {
     }).join('\n\n');
 
     final finalText =
-        '$copyText\n\nTotal Amount: ₹ ${totalAmount.toStringAsFixed(2)}';
+        '$copyText\n\nTotal Amount: ₹ ${IndianNumberHelper.format(totalAmount)}';
 
     Clipboard.setData(ClipboardData(text: finalText)).then((_) {
       Fluttertoast.showToast(msg: 'Copied to your clipboard!');

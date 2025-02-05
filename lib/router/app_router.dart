@@ -13,7 +13,7 @@ import '../views/task/widgets/quotation/quotation_screen.dart';
 abstract class MyRouter {
   static GoRouter router(bool isLoggedIn) => GoRouter(
         initialLocation: isLoggedIn
-            ? '/measurement2'
+            ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
             // ? '/home'
             // : '/signup',
             : '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019',

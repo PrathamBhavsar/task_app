@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../constants/app_colors.dart';
+import '../../constants/app_consts.dart';
 import '../../constants/enums.dart';
 import '../../constants/app_keys.dart';
+import '../../extensions/app_paddings.dart';
 import '../../providers/task_provider.dart';
 import '../home/pages/task%20list/widgets/overlapping_circles.dart';
 import 'widgets/agency_required_switch.dart';
 import 'widgets/task_detail_widgets.dart';
 import 'widgets/due_date_picker.dart';
-import 'widgets/measurement/measurement_widget.dart';
+import 'widgets/measurement/widgets/measurement_widget.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
@@ -30,8 +31,8 @@ class TaskDetailScreen extends StatefulWidget {
 }
 
 class _TaskDetailScreenState extends State<TaskDetailScreen> {
-  final FocusNode nameFocusNode = FocusNode();
-  final FocusNode remarkFocusNode = FocusNode();
+  // final FocusNode nameFocusNode = FocusNode();
+  // final FocusNode remarkFocusNode = FocusNode();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -56,7 +57,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
+        onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
         child: Theme(
           data: Theme.of(context).copyWith(
             dividerTheme: const DividerThemeData(
@@ -94,7 +95,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                         dealNo: widget.dealNo,
                       ),
                     ),
-                    AppPaddings.gapH(20),
+                    20.hGap,
                     CustomTextField(
                       controller: TextEditingController(
                           text:
@@ -104,7 +105,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       keyboardType: TextInputType.multiline,
                       isMultiline: true,
                     ),
-                    AppPaddings.gapH(20),
+                    20.hGap,
 
                     CustomTextField(
                       controller: TextEditingController(text: '8490088688'),
@@ -113,24 +114,24 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       isPhone: true,
                     ),
                     AppConsts.buildDivider(verticalPadding: 10),
-                    AppPaddings.gapH(10),
+                    10.hGap,
                     CustomTextField(
                       controller: TaskProvider.instance.nameController,
-                      focusNode: nameFocusNode,
+                      // focusNode: nameFocusNode,
                       labelTxt: 'Task Name',
                       hintTxt: 'Task Name',
                     ),
-                    AppPaddings.gapH(20),
+                    20.hGap,
                     CustomTextField(
                       controller: TaskProvider.instance.remarkController,
-                      focusNode: remarkFocusNode,
+                      // focusNode: remarkFocusNode,
                       labelTxt: 'Remarks',
                       hintTxt: 'Remarks',
                       isMultiline: true,
                     ),
-                    AppPaddings.gapH(20),
+                    20.hGap,
                     DatePickerWidget(isNewTask: false),
-                    AppPaddings.gapH(10),
+                    10.hGap,
                     AppConsts.buildDivider(),
                     DynamicRow(
                       context: context,
@@ -290,7 +291,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                                     : 'Confirm Change',
                             style: AppTexts.headingStyle,
                           ),
-                          AppPaddings.gapH(20),
+                          20.hGap,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -302,7 +303,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                                   backgroundColor: AppColors.pink,
                                 ),
                               ),
-                              AppPaddings.gapW(10),
+                              10.wGap,
                               Expanded(
                                 child: ActionBtn(
                                   btnTxt: widget.isNewTask

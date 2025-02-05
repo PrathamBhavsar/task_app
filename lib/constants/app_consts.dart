@@ -41,9 +41,9 @@ class AppColors {
 
 class AppPaddings {
   static EdgeInsets appPadding = const EdgeInsets.all(10);
-
-  static Widget gapH(double h) => SizedBox(height: h);
-  static Widget gapW(double w) => SizedBox(width: w);
+//
+//   static Widget gapH(double h) => SizedBox(height: h);
+//   static Widget gapW(double w) => SizedBox(width: w);
 }
 
 class AppTexts {

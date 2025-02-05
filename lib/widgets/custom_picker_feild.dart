@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
+import '../constants/app_consts.dart';
+import '../extensions/app_paddings.dart';
 
 class CustomPickerFeild extends StatelessWidget {
   const CustomPickerFeild({
@@ -26,7 +27,7 @@ class CustomPickerFeild extends StatelessWidget {
                   child: Icon(Icons.calendar_month_rounded),
                 ),
               ),
-              AppPaddings.gapW(20),
+              20.wGap,
               Text(
                 text,
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),

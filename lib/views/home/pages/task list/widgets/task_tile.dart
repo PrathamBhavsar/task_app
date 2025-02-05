@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../../constants/app_colors.dart';
+import '../../../../../constants/app_consts.dart';
+import '../../../../../extensions/app_paddings.dart';
 import '../../../../../providers/task_provider.dart';
 import 'overlapping_circles.dart';
 import '../../../../../widgets/circle_icons.dart';
@@ -53,14 +54,14 @@ class TaskTile extends StatelessWidget {
                         color: AppColors.green,
                         text: task['priority'] ?? '',
                       ),
-                      AppPaddings.gapW(8),
+                      8.wGap,
                       CustomTag(
                         color: AppColors.pink,
                         text: task['status'] ?? '',
                       ),
                     ],
                   ),
-                  AppPaddings.gapH(8),
+                  8.hGap,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -70,7 +71,7 @@ class TaskTile extends StatelessWidget {
                             Icons.calendar_today_rounded,
                             size: 22,
                           ),
-                          AppPaddings.gapW(8),
+                          8.wGap,
                           Text(
                             TaskProvider.instance.formatDate(task['due_date']),
                             style: TextStyle(
@@ -95,7 +96,7 @@ class TaskTile extends StatelessWidget {
 // }
 // import 'package:flutter/material.dart';
 // import 'package:go_router/go_router.dart';
-// import 'package:task_app/constants/app_colors.dart';
+// import 'package:task_app/constants/app_consts.dart';
 // import 'package:task_app/constants/app_keys.dart';
 // import 'package:task_app/providers/task_provider.dart';
 // import 'package:task_app/views/home/pages/task%20list/widgets/overlapping_circles.dart';
@@ -144,14 +145,14 @@ class TaskTile extends StatelessWidget {
 //                     color: AppColors.green,
 //                     text: task['priority'] ?? '',
 //                   ),
-//                   AppPaddings.gapW(8),
+//                   8.wGap,
 //                   CustomTag(
 //                     color: AppColors.pink,
 //                     text: task['status'] ?? '',
 //                   ),
 //                 ],
 //               ),
-//               AppPaddings.gapH(8),
+//               8.hGap,
 //               Row(
 //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                 children: [
@@ -161,7 +162,7 @@ class TaskTile extends StatelessWidget {
 //                         Icons.calendar_today_rounded,
 //                         size: 22,
 //                       ),
-//                       AppPaddings.gapW(8),
+//                       8.wGap,
 //                       Text(
 //                         TaskProvider.instance.formatDate(task['due_date']),
 //                         style: TextStyle(

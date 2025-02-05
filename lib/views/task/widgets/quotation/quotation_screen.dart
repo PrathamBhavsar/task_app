@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../constants/app_colors.dart';
+import '../../../../constants/app_consts.dart';
+import '../../../../extensions/app_paddings.dart';
 import '../../../../providers/quotation_provider.dart';
 import '../../../../widgets/custom_text_field.dart';
 
@@ -29,7 +30,7 @@ class _QuotationScreenState extends State<QuotationScreen> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
+        onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
         child: Scaffold(
           extendBody: true,
           appBar: AppBar(
@@ -180,7 +181,7 @@ class _QuotationScreenState extends State<QuotationScreen> {
                                           ),
                                         ],
                                       ),
-                                      AppPaddings.gapH(10),
+                                      10.hGap,
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -213,7 +214,7 @@ class _QuotationScreenState extends State<QuotationScreen> {
                                           ),
                                         ],
                                       ),
-                                      AppPaddings.gapH(10),
+                                      10.hGap,
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,

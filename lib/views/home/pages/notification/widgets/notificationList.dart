@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../../constants/app_colors.dart';
+import '../../../../../constants/app_consts.dart';
 import 'notification_list_tile.dart';
 
 class NotificationList extends StatelessWidget {
@@ -7,7 +7,7 @@ class NotificationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView.builder(
-      itemBuilder: (context, index) => Padding(
+        itemBuilder: (context, index) => Padding(
           padding: EdgeInsets.only(bottom: 10),
           child: NotificationListTile(
             color: AppColors.purple,
@@ -15,5 +15,5 @@ class NotificationList extends StatelessWidget {
             text: 'task assigned',
           ),
         ),
-    );
+      );
 }

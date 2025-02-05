@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../constants/app_colors.dart';
+import '../../../constants/app_consts.dart';
+import '../../../extensions/app_paddings.dart';
 
 class ClientNameDropdown extends StatelessWidget {
   const ClientNameDropdown(
@@ -36,7 +37,7 @@ class ClientNameDropdown extends StatelessWidget {
                       name,
                       style: AppTexts.headingStyle,
                     ),
-                    AppPaddings.gapW(8),
+                    8.wGap,
                     Icon(Icons.arrow_drop_down_rounded)
                   ],
                 ),

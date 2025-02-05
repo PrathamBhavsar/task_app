@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../constants/app_colors.dart';
-import '../../../../helpers/file_name_helper.dart';
+import '../../../../../../constants/app_consts.dart';
+import '../../../../../../extensions/app_paddings.dart';
+import '../../../../../../helpers/file_name_helper.dart';
 
 class PickedFileWidget extends StatelessWidget {
   const PickedFileWidget(
@@ -41,7 +42,7 @@ class PickedFileWidget extends StatelessWidget {
                           icon: const Icon(Icons.download_rounded),
                         )
                       : SizedBox.shrink(),
-                  AppPaddings.gapW(5),
+                  5.wGap,
                   IconButton(
                     onPressed: onCancel,
                     icon: const Icon(Icons.close_rounded),

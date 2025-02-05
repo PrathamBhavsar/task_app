@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/app_colors.dart';
+import '../../../constants/app_consts.dart';
+import '../../../extensions/app_paddings.dart';
 import '../../../providers/task_provider.dart';
 
 class DatePickerWidget extends StatelessWidget {
@@ -23,7 +24,7 @@ class DatePickerWidget extends StatelessWidget {
                 provider.setStartDate(selectedDate);
               },
             ),
-            AppPaddings.gapW(10),
+            10.wGap,
             _buildDatePicker(
               context,
               provider,
@@ -79,11 +80,11 @@ class DatePickerWidget extends StatelessWidget {
                   label,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
-                AppPaddings.gapH(10),
+                10.hGap,
                 Row(
                   children: [
                     Icon(Icons.calendar_month_rounded),
-                    AppPaddings.gapW(5),
+                    5.wGap,
                     Text(
                       provider.formatDate(date),
                       style:

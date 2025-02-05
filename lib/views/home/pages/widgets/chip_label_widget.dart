@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../constants/app_colors.dart';
+import '../../../../constants/app_consts.dart';
+import '../../../../extensions/app_paddings.dart';
 
 class ChipLabelWidget extends StatelessWidget {
   const ChipLabelWidget(
@@ -12,33 +13,33 @@ class ChipLabelWidget extends StatelessWidget {
   final int selectedIndex;
   @override
   Widget build(BuildContext context) => Row(
-      children: [
-        Text(
-          tabs[index]['label'],
-          style: TextStyle(
-            color: selectedIndex == index ? Colors.white : AppColors.primary,
-            fontWeight: FontWeight.w900,
-            fontSize: 18,
+        children: [
+          Text(
+            tabs[index]['label'],
+            style: TextStyle(
+              color: selectedIndex == index ? Colors.white : AppColors.primary,
+              fontWeight: FontWeight.w900,
+              fontSize: 18,
+            ),
           ),
-        ),
-        AppPaddings.gapW(10),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-          decoration: BoxDecoration(
-            color: tabs[index]['color'],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Text(
-              '${tabs[index]['count']}',
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: AppColors.primary,
+          10.wGap,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: tabs[index]['color'],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: Text(
+                '${tabs[index]['count']}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.primary,
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
 }

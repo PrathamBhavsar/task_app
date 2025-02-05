@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_colors.dart';
+import '../../constants/app_consts.dart';
 import '../../controllers/auth_controller.dart';
+import '../../extensions/app_paddings.dart';
 import '../../providers/auth_provider.dart';
 import 'widgets/navigation_text.dart';
 import 'widgets/user_role_widget.dart';
@@ -67,7 +68,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
+        onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
         child: Theme(
           data: Theme.of(context).copyWith(
             dividerTheme: const DividerThemeData(
@@ -85,7 +86,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       padding: AppPaddings.appPadding,
                       child: Column(
                         children: [
-                          AppPaddings.gapH(200),
+                          200.hGap,
                           const Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -96,14 +97,14 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                           ),
-                          AppPaddings.gapH(20),
+                          20.hGap,
                           _buildTextField(
                             controller: nameController,
                             focusNode: nameFocusNode,
                             label: "Name",
                             hint: "Enter your name",
                           ),
-                          AppPaddings.gapH(10),
+                          10.hGap,
                           _buildTextField(
                             controller: phoneController,
                             focusNode: phoneFocusNode,
@@ -112,7 +113,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             keyboardType: TextInputType.phone,
                             isPhone: true,
                           ),
-                          AppPaddings.gapH(10),
+                          10.hGap,
                           _buildTextField(
                             controller: emailController,
                             focusNode: emailFocusNode,
@@ -120,7 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             hint: "Enter your email",
                             keyboardType: TextInputType.emailAddress,
                           ),
-                          AppPaddings.gapH(10),
+                          10.hGap,
                           _buildTextField(
                             controller: passController,
                             focusNode: passFocusNode,
@@ -129,7 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             keyboardType: TextInputType.visiblePassword,
                             isPassword: true,
                           ),
-                          AppPaddings.gapH(10),
+                          10.hGap,
                           const UserRoleWidget(),
                           const SizedBox(height: 20),
                         ],
@@ -142,7 +143,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 Column(
                   children: [
                     const NavigationText(isLogin: true),
-                    AppPaddings.gapH(10),
+                    10.hGap,
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
                       child: ActionBtn(

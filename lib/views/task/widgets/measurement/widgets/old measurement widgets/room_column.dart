@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../constants/app_colors.dart';
+import '../../../../../../extensions/app_paddings.dart';
 import 'size_tile.dart';
 import 'title_tile.dart';
 
@@ -23,21 +23,21 @@ class RoomColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TitleTile(roomName: roomNames),
-        AppPaddings.gapH(8),
-        ...List.generate(
-          windowNames.length,
-          (index) => WindowTile(
-            windowName: windowNames[index],
-            windowArea: windowAreas[index],
-            windowType: windowTypes[index],
-            windowRemark: windowRemarks[index],
-            size: sizes[index],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TitleTile(roomName: roomNames),
+          8.hGap,
+          ...List.generate(
+            windowNames.length,
+            (index) => WindowTile(
+              windowName: windowNames[index],
+              windowArea: windowAreas[index],
+              windowType: windowTypes[index],
+              windowRemark: windowRemarks[index],
+              size: sizes[index],
+            ),
           ),
-        ),
-        AppPaddings.gapH(10),
-      ],
-    );
+          10.hGap,
+        ],
+      );
 }

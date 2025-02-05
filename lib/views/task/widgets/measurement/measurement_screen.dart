@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../constants/app_colors.dart';
+import '../../../../constants/app_consts.dart';
+import '../../../../extensions/app_paddings.dart';
 import '../../../../providers/measurement_provider.dart';
 import '../../../../widgets/action_button.dart';
 import '../../../../widgets/custom_text_field.dart';
@@ -63,7 +64,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
+        onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
         child: Theme(
           data: Theme.of(context).copyWith(
             dividerTheme: const DividerThemeData(
@@ -340,7 +341,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                    AppPaddings.gapH(10),
+                                                    10.hGap,
                                                     Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -370,7 +371,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                    AppPaddings.gapH(10),
+                                                    10.hGap,
                                                     CustomTextField(
                                                       controller:
                                                           remarksControllers[

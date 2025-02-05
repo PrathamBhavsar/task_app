@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'constants/app_colors.dart';
+import 'constants/app_consts.dart';
 import 'providers/auth_provider.dart';
 import 'providers/measurement_provider.dart';
 import 'providers/quotation_provider.dart';

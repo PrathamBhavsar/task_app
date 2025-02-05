@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import '../constants/app_colors.dart';
+import '../constants/app_consts.dart';
 import '../constants/dummy_data.dart';
 import '../constants/enums.dart';
 import '../constants/app_keys.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../constants/app_colors.dart';
+import '../../../constants/app_consts.dart';
+import '../../../extensions/app_paddings.dart';
 import '../methods/show_bottom_modal.dart';
 import 'client_name_dropdown.dart';
 
@@ -22,7 +23,7 @@ class RowWithIconAndWidget extends StatelessWidget {
             ),
             child: Icon(icon, size: 32),
           ),
-          AppPaddings.gapW(10),
+          10.wGap,
           Expanded(child: widget),
         ],
       );

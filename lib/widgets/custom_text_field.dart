@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../constants/app_colors.dart';
+import '../constants/app_consts.dart';
 import '../providers/auth_provider.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -37,6 +37,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Consumer<AuthProvider>(
         builder: (context, provider, child) => TextField(
+          autofocus: false,
           controller: controller,
           focusNode: focusNode,
           enabled: isEnabled,

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,7 +53,7 @@ class MeasurementProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<AdditionalCost> _costs = [];
+  final List<AdditionalCost> _costs = [];
 
   Map<int, TextEditingController> nameControllers = {};
   Map<int, TextEditingController> rateControllers = {};

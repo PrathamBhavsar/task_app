@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../constants/app_colors.dart';
-import '../../../../../../helpers/number_helper.dart';
+import '../../../../../../constants/app_consts.dart';
+import '../../../../../../helpers/indian_number_system_helper.dart';
 import '../../../../../../providers/measurement_provider.dart';
 import '../../../../../../widgets/action_button.dart';
 import 'widgets/cost_tile.dart';
 
 class AdditionalCostsList extends StatelessWidget {
   final MeasurementProvider provider;
-  const AdditionalCostsList({required this.provider});
+  const AdditionalCostsList({super.key, required this.provider});
 
   @override
   Widget build(BuildContext context) => Column(
@@ -26,7 +26,7 @@ class AdditionalCostsList extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                      "Total: ₹ ${NumberHelper.format(provider.totalAdditionalCost)}",
+                      "Total: ₹ ${IndianNumberHelper.format(provider.totalAdditionalCost)}",
                       style: const TextStyle(
                           fontSize: 20, fontWeight: FontWeight.bold)),
                 ),
@@ -52,14 +52,24 @@ class _CostControls extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton.icon(
-              onPressed: provider.addCost,
-              icon: const Icon(Icons.add),
-              label: const Text("Add Cost")),
+            onPressed: provider.addCost,
+            icon: const Icon(
+              Icons.add,
+            ),
+            label: Text(
+              "Add Cost",
+              style: AppTexts.tileTitle2,
+            ),
+          ),
           TextButton.icon(
               onPressed: provider.removeCost,
               icon: const Icon(Icons.close_rounded, color: Colors.redAccent),
-              label: const Text("Remove Cost",
-                  style: TextStyle(color: Colors.redAccent))),
+              label: Text(
+                "Remove Cost",
+                style: AppTexts.tileTitle2.copyWith(
+                  color: Colors.redAccent,
+                ),
+              )),
         ],
       );
 }

@@ -46,6 +46,8 @@ dependencies:
   image_picker: ^1.1.2
   syncfusion_flutter_datagrid: ^28.2.4
 
+  collection: any
+  get: ^4.6.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

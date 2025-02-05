@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../constants/app_colors.dart';
+import '../../constants/app_consts.dart';
 import 'pages/dashboard/dashboard_page.dart';
 import 'pages/task%20list/task_list_page.dart';
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../../constants/app_colors.dart';
+import '../../../../../constants/app_consts.dart';
+import '../../../../../extensions/app_paddings.dart';
 import '../../../../../providers/task_provider.dart';
 
 class NotificationListTile extends StatelessWidget {
@@ -29,14 +30,14 @@ class NotificationListTile extends StatelessWidget {
                   ),
                 ],
               ),
-              AppPaddings.gapH(8),
+              8.hGap,
               Row(
                 children: [
                   const Icon(
                     Icons.calendar_today_rounded,
                     size: 22,
                   ),
-                  AppPaddings.gapW(8),
+                  8.wGap,
                   Text(
                     TaskProvider.instance.formatDate(date),
                     style: TextStyle(

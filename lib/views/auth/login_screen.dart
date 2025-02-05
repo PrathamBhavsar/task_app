@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_colors.dart';
+import '../../constants/app_consts.dart';
 import '../../controllers/auth_controller.dart';
+import '../../extensions/app_paddings.dart';
 import 'widgets/navigation_text.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
+        onTap: () => FocusManager.instance.primaryFocus!.unfocus(),
         child: Theme(
           data: Theme.of(context).copyWith(
             dividerTheme: const DividerThemeData(
@@ -67,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: AppPaddings.appPadding,
                     child: Column(
                       children: [
-                        AppPaddings.gapH(200),
+                        200.hGap,
                         const Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
@@ -78,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        AppPaddings.gapH(20),
+                        20.hGap,
                         _buildTextField(
                           controller: emailController,
                           focusNode: emailFocusNode,
@@ -86,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           hint: "Enter your email",
                           keyboardType: TextInputType.emailAddress,
                         ),
-                        AppPaddings.gapH(10),
+                        10.hGap,
                         _buildTextField(
                           controller: passController,
                           focusNode: passFocusNode,
@@ -105,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Column(
                 children: [
                   const NavigationText(isLogin: false),
-                  AppPaddings.gapH(10),
+                  10.hGap,
                   Padding(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
                     child: ActionBtn(

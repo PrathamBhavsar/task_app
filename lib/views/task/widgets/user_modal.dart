@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../constants/app_colors.dart';
+import '../../../constants/app_consts.dart';
 import '../../../constants/app_keys.dart';
+import '../../../extensions/app_paddings.dart';
 import '../../../providers/task_provider.dart';
 import '../../../widgets/custom_tag.dart';
 
@@ -39,7 +41,7 @@ class CustomBottomSheetWidget extends StatelessWidget {
                   name,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                 ),
-                AppPaddings.gapH(10),
+                10.hGap,
                 isStatus
                     ? Expanded(
                         child: ListView.builder(
@@ -58,7 +60,7 @@ class CustomBottomSheetWidget extends StatelessWidget {
                             return GestureDetector(
                               onTap: () {
                                 provider.updateSelectedIndex(indexKey, index);
-                                Navigator.pop(context);
+                                context.pop();
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 8),
@@ -92,7 +94,7 @@ class CustomBottomSheetWidget extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               provider.updateSelectedIndex(indexKey, index);
-                              Navigator.pop(context);
+                              context.pop();
                             },
                             child: CustomTag(
                               color: color,
