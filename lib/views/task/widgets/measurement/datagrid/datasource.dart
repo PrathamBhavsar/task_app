@@ -16,12 +16,12 @@ class EmployeeDataSource extends DataGridSource {
 
   List<DataGridRow> dataGridRows = [];
 
-  /// Helps to hold the new value of all editable widget.
+  /// Helps to hold the new value of all editable widgets.
   /// Based on the new value we will commit the new value into the corresponding
   /// [DataGridCell] on [onSubmitCell] method.
   dynamic newCellValue;
 
-  /// Help to control the editable text in [TextField] widget.
+  /// Help to control the editable text in [TextField] widgets.
   TextEditingController editingController = TextEditingController();
 
   @override
@@ -88,7 +88,7 @@ class EmployeeDataSource extends DataGridSource {
   @override
   Widget? buildEditWidget(DataGridRow dataGridRow,
       RowColumnIndex rowColumnIndex, GridColumn column, CellSubmit submitCell) {
-    // Text going to display on editable widget
+    // Text going to display on editable widgets
     final String displayText = dataGridRow
             .getCells()
             .firstWhereOrNull((DataGridCell dataGridCell) =>

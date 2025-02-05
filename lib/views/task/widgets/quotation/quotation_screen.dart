@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../providers/quotation_provider.dart';
-import '../../../../widgets/custom_text_feild.dart';
+import '../../../../widgets/custom_text_field.dart';
 
 class QuotationScreen extends StatefulWidget {
   const QuotationScreen({super.key});
@@ -110,7 +110,7 @@ class _QuotationScreenState extends State<QuotationScreen> {
                           roomName,
                           style: AppTexts.tileHeading,
                         ),
-                        _buildDivider(),
+                        AppConsts.buildDivider(),
                         ...windows.keys.map((windowName) {
                           double rate =
                               quotationProvider.getRate(roomName, windowName);
@@ -152,7 +152,7 @@ class _QuotationScreenState extends State<QuotationScreen> {
                                 ],
                               ),
                               children: [
-                                _buildDivider(
+                                AppConsts.buildDivider(
                                   horizontalPadding: 10,
                                 ),
                                 Padding(
@@ -248,15 +248,5 @@ class _QuotationScreenState extends State<QuotationScreen> {
             ),
           ),
         ),
-      );
-
-  Widget _buildDivider(
-          {double verticalPadding = 0,
-          double horizontalPadding = 0,
-          Color color = AppColors.primary}) =>
-      Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: verticalPadding, horizontal: horizontalPadding),
-        child: Divider(color: color),
       );
 }

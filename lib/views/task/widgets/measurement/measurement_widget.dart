@@ -4,9 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/app_colors.dart';
-import '../../../../helpers/number_formatter.dart';
+import '../../../../helpers/file_name_helper.dart';
+import '../../../../helpers/number_helper.dart';
 import '../../../../models/measurement.dart';
 import '../../../../providers/measurement_provider.dart';
+import 'picked_file_widget.dart';
 import 'size_tile.dart';
 
 class MeasurementWidget extends StatelessWidget {
@@ -95,44 +97,17 @@ class MeasurementWidget extends StatelessWidget {
                   ),
                 ),
                 AppPaddings.gapH(10),
-                provider.pickedPhoto == null
+                provider.pickedPhotos.isEmpty
                     ? SizedBox.shrink()
-                    : Container(
-                        decoration: BoxDecoration(
-                          borderRadius: AppBorders.radius,
-                          border: Border.all(width: 2),
-                        ),
-                        height: 60,
-                        margin: const EdgeInsets.only(bottom: 8.0),
-                        child: Padding(
-                          padding: AppPaddings.appPadding,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                provider.trimmedFileName(),
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTexts.tileTitle2,
-                              ),
-                              Row(
-                                children: [
-                                  isNewTask
-                                      ? IconButton(
-                                          onPressed: () async {},
-                                          icon: const Icon(
-                                              Icons.download_rounded),
-                                        )
-                                      : SizedBox.shrink(),
-                                  AppPaddings.gapW(5),
-                                  IconButton(
-                                    onPressed: () =>
-                                        provider.clearPickedImage(),
-                                    icon: const Icon(Icons.close_rounded),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: provider.pickedPhotos.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            PickedFileWidget(
+                          fileName: provider.pickedPhotos[index].name,
+                          onCancel: () => provider.deletePickedImage(index),
+                          isNewTask: isNewTask,
                         ),
                       ),
                 provider.costs.isEmpty
@@ -185,9 +160,9 @@ class MeasurementWidget extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(cost.name),
-                                      Text(NumberFormatter.format(cost.rate)),
-                                      Text(NumberFormatter.format(cost.qty)),
-                                      Text(NumberFormatter.format(cost.total)),
+                                      Text(NumberHelper.format(cost.rate)),
+                                      Text(NumberHelper.format(cost.qty)),
+                                      Text(NumberHelper.format(cost.total)),
                                     ],
                                   );
                                 },
@@ -203,7 +178,7 @@ class MeasurementWidget extends StatelessWidget {
                                         fontWeight: FontWeight.w800),
                                   ),
                                   Text(
-                                    NumberFormatter.format(
+                                    NumberHelper.format(
                                         provider.totalAdditionalCost),
                                     style: TextStyle(
                                         fontSize: 20,

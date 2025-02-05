@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../providers/measurement_provider.dart';
 import '../../../../widgets/action_button.dart';
-import '../../../../widgets/custom_text_feild.dart';
+import '../../../../widgets/custom_text_field.dart';
 
 class MeasurementScreen extends StatefulWidget {
   const MeasurementScreen({super.key});
@@ -222,7 +222,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                         ),
                                       ],
                                     ),
-                                    _buildDivider(),
+                                    AppConsts.buildDivider(),
                                     ...windows.map((windowName) => Padding(
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 5),
@@ -299,7 +299,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                                               ],
                                             ),
                                             children: [
-                                              _buildDivider(
+                                              AppConsts.buildDivider(
                                                 horizontalPadding: 10,
                                               ),
                                               Padding(
@@ -406,15 +406,5 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
             // bottomSheet: ,
           ),
         ),
-      );
-
-  Widget _buildDivider(
-          {double verticalPadding = 0,
-          double horizontalPadding = 0,
-          Color color = AppColors.primary}) =>
-      Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: verticalPadding, horizontal: horizontalPadding),
-        child: Divider(color: color),
       );
 }

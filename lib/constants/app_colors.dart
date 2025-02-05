@@ -107,3 +107,15 @@ class AppBorders {
         borderRadius: radius,
       );
 }
+
+class AppConsts {
+  static Widget buildDivider(
+          {double verticalPadding = 0,
+          double horizontalPadding = 0,
+          Color color = AppColors.primary}) =>
+      Padding(
+        padding: EdgeInsets.symmetric(
+            vertical: verticalPadding, horizontal: horizontalPadding),
+        child: Divider(color: color),
+      );
+}

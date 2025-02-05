@@ -5,7 +5,7 @@ import '../../providers/auth_provider.dart';
 import 'widgets/navigation_text.dart';
 import 'widgets/user_role_widget.dart';
 import '../../widgets/action_button.dart';
-import '../../widgets/custom_text_feild.dart';
+import '../../widgets/custom_text_field.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});

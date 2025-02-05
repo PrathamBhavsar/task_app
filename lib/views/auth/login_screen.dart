@@ -3,7 +3,7 @@ import '../../constants/app_colors.dart';
 import '../../controllers/auth_controller.dart';
 import 'widgets/navigation_text.dart';
 import '../../widgets/action_button.dart';
-import '../../widgets/custom_text_feild.dart';
+import '../../widgets/custom_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

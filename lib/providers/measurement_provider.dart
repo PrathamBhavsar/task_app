@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
-import '../helpers/number_formatter.dart';
+import '../helpers/number_helper.dart';
 import '../models/measurement.dart';
 
 class MeasurementProvider with ChangeNotifier {
@@ -23,28 +23,34 @@ class MeasurementProvider with ChangeNotifier {
 
   var log = Logger();
 
-  XFile? pickedPhoto;
+  List<XFile> pickedPhotos = [];
 
-  String trimmedFileName() {
-    if (pickedPhoto!.name.length > 10) {
-      return "${pickedPhoto!.name.substring(0, 10)}...${pickedPhoto!.name.split('.').last}";
-    } else {
-      return pickedPhoto!.name;
-    }
-  }
+  List<String> dropdownItems = [
+    'Stitching - Full',
+    'Stitching - Half',
+    'Steaming - Full',
+    'Steaming - Half',
+    'Fitting'
+  ];
 
-  void clearPickedImage() {
-    pickedPhoto = null;
+  void deletePickedImage(int index) {
+    pickedPhotos.removeAt(index);
     notifyListeners();
   }
 
-  Future<void> pickImage(ImageSource source) async {
+  Future<void> pickImages(ImageSource source) async {
     ImagePicker picker = ImagePicker();
 
-    pickedPhoto = await picker.pickImage(
-        source: source, imageQuality: 25, requestFullMetadata: true);
+    if (source == ImageSource.camera) {
+      final pickedPhoto = await picker.pickImage(
+          source: source, imageQuality: 25, requestFullMetadata: true);
+      pickedPhotos.add(pickedPhoto!);
+    } else {
+      pickedPhotos = await picker.pickMultiImage(
+          limit: 5, imageQuality: 25, requestFullMetadata: true);
+    }
 
-    log.d(pickedPhoto!.name);
+    log.d(pickedPhotos.length);
     notifyListeners();
   }
 
@@ -90,11 +96,11 @@ class MeasurementProvider with ChangeNotifier {
     }
     if (rate != null) {
       cost.rate = rate;
-      rateControllers[index]?.text = NumberFormatter.format(rate);
+      rateControllers[index]?.text = NumberHelper.format(rate);
     }
     if (qty != null) {
       cost.qty = qty;
-      qtyControllers[index]?.text = NumberFormatter.format(qty);
+      qtyControllers[index]?.text = NumberHelper.format(qty);
     }
     cost.total = cost.rate * cost.qty;
     notifyListeners();

@@ -11,7 +11,7 @@ import 'widgets/due_date_picker.dart';
 import 'widgets/measurement/measurement_widget.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_tag.dart';
-import '../../widgets/custom_text_feild.dart';
+import '../../widgets/custom_text_field.dart';
 
 class TaskDetailScreen extends StatefulWidget {
   final bool isSalesperson;
@@ -112,7 +112,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       labelTxt: 'Contact Information',
                       isPhone: true,
                     ),
-                    _buildDivider(verticalPadding: 10),
+                    AppConsts.buildDivider(verticalPadding: 10),
                     AppPaddings.gapH(10),
                     CustomTextField(
                       controller: TaskProvider.instance.nameController,
@@ -131,7 +131,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     AppPaddings.gapH(20),
                     DatePickerWidget(isNewTask: false),
                     AppPaddings.gapH(10),
-                    _buildDivider(),
+                    AppConsts.buildDivider(),
                     DynamicRow(
                       context: context,
                       label: 'Status',
@@ -211,7 +211,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       indexKey: IndexKeys.priorityIndex,
                       isSalesperson: true,
                     ),
-                    _buildDivider(),
+                    AppConsts.buildDivider(),
                     AgencyRequiredSwitch(isSalesperson: widget.isSalesperson),
                     DynamicRow(
                       context: context,
@@ -236,7 +236,7 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     MeasurementWidget(
                       isNewTask: widget.isNewTask,
                     ),
-                    // _buildDivider(),
+                    // AppConsts.buildDivider(),
                     // AttachmentsList(
                     //   attachmentsList: [
                     //     {
@@ -348,9 +348,5 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
             ],
           ),
         ),
-      );
-  Widget _buildDivider({double verticalPadding = 0}) => Padding(
-        padding: EdgeInsets.symmetric(vertical: verticalPadding),
-        child: Divider(color: AppColors.primary),
       );
 }
