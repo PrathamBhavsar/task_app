@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../constants/app_consts.dart';
 import '../../constants/enums.dart';
@@ -106,7 +107,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                       isMultiline: true,
                     ),
                     20.hGap,
-
                     CustomTextField(
                       controller: TextEditingController(text: '8490088688'),
                       isEnabled: false,
@@ -237,30 +237,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                     MeasurementWidget(
                       isNewTask: widget.isNewTask,
                     ),
-                    // AppConsts.buildDivider(),
-                    // AttachmentsList(
-                    //   attachmentsList: [
-                    //     {
-                    //       "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
-                    //       "attachment_url":
-                    //           "https://dpgwbagzdsabjejngivi.supabase.co/storage/v1/object/public/bucket/25-0019/ss.png",
-                    //       "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
-                    //       "created_at": "2025-01-02T07:35:50.240763+00:00",
-                    //       "attachment_name": "attachment 2"
-                    //     },
-                    //     {
-                    //       "id": "1c92cb0c-f0f1-4715-a5ad-8104952847e7",
-                    //       "attachment_url":
-                    //           "https://dpgwbagzdsabjejngivi.supabase.co/storage/v1/object/public/bucket/25-0019/generated.pdf",
-                    //       "task_id": "d476cc80-a212-4b2b-bfc2-9e002c0cd8d2",
-                    //       "created_at": "2025-01-02T07:35:50.240763+00:00",
-                    //       "attachment_name": "ss.png"
-                    //     }
-                    //   ],
-                    //   dealNo: widget.dealNo,
-                    // ),
-
-                    // AppPaddings.gapH(70),
                   ]),
                 );
               },
@@ -329,8 +305,8 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> {
                                             widget.dealNo,
                                           );
                                     // await TaskProvider.instance.fetchAllData();
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
+                                    context.pop();
+                                    context.pop();
                                   },
                                   fontColor: AppColors.primary,
                                   backgroundColor: AppColors.green,
