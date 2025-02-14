@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'constants/app_consts.dart';
-import 'providers/auth_provider.dart';
-import 'providers/measurement_provider.dart';
-import 'providers/quotation_provider.dart';
-import 'providers/task_provider.dart';
-import 'router/app_router.dart';
-import 'secrets/app_secrets.dart';
-import 'services/shared_pref_service.dart';
+
+import 'core/constants/app_consts.dart';
+import 'old/providers/auth_provider.dart';
+import 'old/providers/measurement_provider.dart';
+import 'old/providers/quotation_provider.dart';
+import 'old/providers/task_provider.dart';
+import 'old/router/app_router.dart';
+import 'old/secrets/app_secrets.dart';
+import 'old/services/shared_pref_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
