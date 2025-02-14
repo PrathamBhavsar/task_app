@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
+import 'data/repositories/user_repository.dart';
+import 'domain/use_cases/local_user_use_cases.dart';
+import 'domain/use_cases/remote_user_use_cases.dart';
 import 'old/providers/auth_provider.dart';
 import 'old/providers/measurement_provider.dart';
 import 'old/providers/quotation_provider.dart';
@@ -11,6 +14,7 @@ import 'old/providers/task_provider.dart';
 import 'old/router/app_router.dart';
 import 'old/secrets/app_secrets.dart';
 import 'old/services/shared_pref_service.dart';
+import 'presentation/providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,17 +34,15 @@ void main() async {
       splitScreenMode: true,
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider<AuthProvider>(
-            create: (_) => AuthProvider.instance,
-          ),
-          ChangeNotifierProvider<TaskProvider>(
-            create: (_) => TaskProvider.instance,
-          ),
-          ChangeNotifierProvider<MeasurementProvider>(
-            create: (_) => MeasurementProvider.instance,
-          ),
-          ChangeNotifierProvider<QuotationProvider>(
-            create: (_) => QuotationProvider.instance,
+          ChangeNotifierProvider(
+            create: (_) => UserProvider(
+              GetRemoteUsersUseCase(
+                UserRepository(),
+              ),
+              GetLocalUsersUseCase(
+                UserRepository(),
+              ),
+            ),
           ),
         ],
         child: MyApp(isLoggedIn: isLoggedIn),
