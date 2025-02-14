@@ -16,7 +16,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'task_app.db');
     return await openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: (db, version) async {
         await db.execute('''
         CREATE TABLE users (
@@ -29,15 +29,37 @@ class DatabaseHelper {
           profile_bg_color TEXT
         )
           ''');
+
+        await db.execute('''
+        CREATE TABLE designers (
+          id BLOB PRIMARY KEY, 
+          created_at TEXT NOT NULL, 
+          code BIGINT(20), 
+          name TEXT, 
+          firm_name TEXT, 
+          contact_no TEXT, 
+          address TEXT,  
+          profile_bg_color TEXT
+        )
+          ''');
       },
     );
   }
 
-  Future<void> insertOrUpdateUser(Map<String, dynamic> customer) async {
+  Future<void> insertOrUpdateUser(Map<String, dynamic> user) async {
     final db = await database;
     await db.insert(
       LocalDbKeys.usersTable,
-      customer,
+      user,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> insertOrUpdateDesigner(Map<String, dynamic> designer) async {
+    final db = await database;
+    await db.insert(
+      LocalDbKeys.designersTable,
+      designer,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -47,8 +69,18 @@ class DatabaseHelper {
     return await db.query(LocalDbKeys.usersTable);
   }
 
+  Future<List<Map<String, dynamic>>> getDesigners() async {
+    final db = await database;
+    return await db.query(LocalDbKeys.designersTable);
+  }
+
   Future<void> deleteAllUsers() async {
     final db = await database;
     await db.delete(LocalDbKeys.usersTable);
+  }
+
+  Future<void> deleteAllDesigners() async {
+    final db = await database;
+    await db.delete(LocalDbKeys.designersTable);
   }
 }

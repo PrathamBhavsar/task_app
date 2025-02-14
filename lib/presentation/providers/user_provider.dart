@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../core/dto/user_dto.dart';
 import '../../data/models/user.dart';
-import '../../domain/use_cases/local_user_use_cases.dart';
-import '../../domain/use_cases/remote_user_use_cases.dart';
+import '../../domain/use_cases/user_use_cases.dart';
 
 class UserProvider extends ChangeNotifier {
-  final GetRemoteUsersUseCase _getUsersUseCase;
-  final GetLocalUsersUseCase _getLocalUsersUseCase;
+  final GetUsersUseCase _getUsersUseCase;
 
   List<User> _users = [];
   List<User> get users => _users;
@@ -15,20 +13,11 @@ class UserProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  UserProvider(this._getUsersUseCase, this._getLocalUsersUseCase);
+  UserProvider(this._getUsersUseCase);
 
   Future<void> fetchUsers() async {
     _isLoading = true;
     notifyListeners();
-
-    ///try local db first
-    _users = await _getLocalUsersUseCase.execute();
-
-    if (_users.isNotEmpty) {
-      _isLoading = false;
-      notifyListeners();
-      return;
-    }
 
     UserDTO requestDTO = UserDTO(action: 'create');
     final response = await _getUsersUseCase.execute(requestDTO);

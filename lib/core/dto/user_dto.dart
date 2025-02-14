@@ -1,4 +1,4 @@
-import 'sto.dart';
+import 'dto.dart';
 
 class UserDTO extends ApiDTO {
   final String name;

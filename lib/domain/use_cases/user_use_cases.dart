@@ -3,10 +3,10 @@ import '../../core/dto/user_dto.dart';
 import '../../data/models/user.dart';
 import '../../data/repositories/user_repository.dart';
 
-class GetRemoteUsersUseCase {
+class GetUsersUseCase {
   final UserRepository repository;
 
-  GetRemoteUsersUseCase(this.repository);
+  GetUsersUseCase(this.repository);
 
   Future<ApiResponse<List<User>>> execute(UserDTO userDTO) async {
     final response = await repository.fetchUsers(userDTO);
@@ -19,9 +19,10 @@ class GetRemoteUsersUseCase {
     }
 
     return ApiResponse(
-        success: false,
-        statusCode: response.statusCode,
-        message: response.message,
-        data: []);
+      success: false,
+      statusCode: response.statusCode,
+      message: response.message,
+      data: [],
+    );
   }
 }

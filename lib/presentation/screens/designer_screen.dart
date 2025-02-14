@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/models/designer.dart';
 import '../../data/models/user.dart';
+import '../providers/designer_provider.dart';
 import '../providers/user_provider.dart';
 
 class UserScreen extends StatelessWidget {
@@ -9,24 +11,24 @@ class UserScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<UserProvider>(context);
+    final provider = Provider.of<DesignerProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Products")),
+      appBar: AppBar(title: Text("Designer")),
       body: provider.isLoading
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
-              itemCount: provider.users.length,
+              itemCount: provider.designers.length,
               itemBuilder: (context, index) {
-                final User user = provider.users[index];
+                final Designer user = provider.designers[index];
                 return ListTile(
                   title: Text(user.name),
-                  subtitle: Text(user.role),
+                  subtitle: Text(user.firmName),
                 );
               },
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: provider.fetchUsers,
+        onPressed: provider.fetchDesigners,
         child: Icon(Icons.refresh),
       ),
     );
