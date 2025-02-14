@@ -1,3 +1,4 @@
+import '../../data/models/user.dart';
 import '../../data/repositories/user_repository.dart';
 
 class GetLocalUsersUseCase {
@@ -5,5 +6,5 @@ class GetLocalUsersUseCase {
 
   GetLocalUsersUseCase(this.repository);
 
-  Future<List<String>> execute() async => await repository.getUsersFromDB();
+  Future<List<User>> execute() async => await repository.getUsersFromDB();
 }

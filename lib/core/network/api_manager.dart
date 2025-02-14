@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../data/models/api_response.dart';
 import 'package:flutter/material.dart';
+import '../../old/secrets/app_secrets.dart';
 import 'api_endpoints.dart';
 
 class ApiManager {
@@ -14,6 +15,13 @@ class ApiManager {
     _dio = Dio(BaseOptions(baseUrl: ApiEndpoints.baseUrl));
 
     _dio.interceptors.addAll([
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          String? token = AppSecrets.apiKey;
+          options.headers["Authorization"] = "Bearer $token";
+          return handler.next(options);
+        },
+      ),
       LogInterceptor(
         error: true,
         responseBody: true,
@@ -64,7 +72,7 @@ class ApiManager {
         url,
         options:
             options ?? Options(headers: {"Content-Type": "application/json"}),
-        queryParameters: queryParameters,
+        queryParameters: queryParameters ?? {},
       );
 
       return ApiResponse.fromDioResponse<T>(response, fromJsonT);

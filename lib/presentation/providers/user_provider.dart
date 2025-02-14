@@ -22,13 +22,13 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
 
     ///try local db first
-    // _customers = await _getLocalUsersUseCase.execute();
-    //
-    // if (_customers.isNotEmpty) {
-    //   _isLoading = false;
-    //   notifyListeners();
-    //   return;
-    // }
+    _users = await _getLocalUsersUseCase.execute();
+
+    if (_users.isNotEmpty) {
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
 
     UserDTO requestDTO = UserDTO(action: 'create');
     final response = await _getUsersUseCase.execute(requestDTO);

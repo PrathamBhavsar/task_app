@@ -5,51 +5,54 @@ import '../../core/dto/user_dto.dart';
 import '../../core/network/api_endpoints.dart';
 import '../../core/network/api_manager.dart';
 import '../models/api_response.dart';
+import '../models/user.dart';
 
 class UserRepository {
   final ApiManager _apiManager = ApiManager();
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
-  Future<ApiResponse<List<String>>> fetchUsers(UserDTO requestDTO) async {
+  Future<ApiResponse<List<User>>> fetchUsers(UserDTO requestDTO) async {
     try {
-      final response = await _apiManager.post<List<String>>(
+      final response = await _apiManager.get<List<User>>(
         ApiEndpoints.user,
-        fromJsonT: (data) => (data as List).map((e) => e.toString()).toList(),
+        fromJsonT: (data) =>
+            (data as List).map((e) => User.fromJson(e)).toList(),
       );
 
       if (response.success && response.data != null) {
         await _storeUsersInDB(response.data!);
       }
+
       return response;
     } catch (e) {
-      return ApiResponse<List<String>>(
+      return ApiResponse<List<User>>(
         success: false,
         statusCode: 500,
-        message: "Failed to fetch users: $e",
+        message: "Failed to fetch products: $e",
         data: [],
       );
     }
   }
 
-  Future<void> _storeUsersInDB(List<String> users) async {
+  Future<void> _storeUsersInDB(List<User> products) async {
     var db = await _dbHelper.database;
-    Batch batch = db.batch();
-
-    for (var user in users) {
-      batch.insert(
+    for (var product in products) {
+      await db.insert(
         LocalDbKeys.usersTable,
-        {"name": user},
+        product.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
     }
-
-    await batch.commit(noResult: true);
   }
 
-  Future<List<String>> getUsersFromDB() async {
+  Future<List<User>> getUsersFromDB() async {
     var db = await _dbHelper.database;
-    var result = await db.query("users");
+    var result = await db.query(LocalDbKeys.usersTable);
+    return result.map(User.fromJson).toList();
+  }
 
-    return result.map((row) => row["name"] as String).toList();
+  Future<void> deleteAllUsers() async {
+    var db = await _dbHelper.database;
+    await db.delete(LocalDbKeys.usersTable);
   }
 }

@@ -16,19 +16,19 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'task_app.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 4,
       onCreate: (db, version) async {
         await db.execute('''
-          CREATE TABLE users (
-            id BINARY(16) PRIMARY KEY,
-            created_at TIMESTAMP NOT NULL,
-            name TEXT,
-            email TEXT,
-            password VARCHAR(225),
-            role enum('admin', 'salesperson', 'agency'),
-            profile_bg_color TEXT
-          )
-        ''');
+        CREATE TABLE users (
+          id BLOB PRIMARY KEY, 
+          created_at TEXT NOT NULL, 
+          name TEXT, 
+          email TEXT, 
+          password TEXT, 
+          role TEXT CHECK(role IN ('admin', 'salesperson', 'agency')), 
+          profile_bg_color TEXT
+        )
+          ''');
       },
     );
   }

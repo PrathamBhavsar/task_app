@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../presentation/screens/user_screen.dart';
 import '../views/auth/login_screen.dart';
 import '../views/auth/signup_screen.dart';
 import '../views/home/home_screen.dart';
@@ -12,12 +13,18 @@ import '../views/task/widgets/quotation/quotation_screen.dart';
 
 abstract class MyRouter {
   static GoRouter router(bool isLoggedIn) => GoRouter(
-        initialLocation: isLoggedIn
-            ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
-            // ? '/home'
-            // : '/signup',
-            : '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019',
+        initialLocation: true
+            // ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
+            ? '/user'
+            : '/signup',
+        // : '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019',
         routes: [
+          GoRoute(
+            path: '/user',
+            name: 'user',
+            builder: (BuildContext context, GoRouterState state) =>
+                const UserScreen(),
+          ),
           GoRoute(
             path: '/home',
             name: 'home',
