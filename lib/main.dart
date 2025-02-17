@@ -4,14 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
-import 'data/repositories/designer_repository.dart';
+import 'data/repositories/client_repository.dart';
 import 'data/repositories/user_repository.dart';
-import 'domain/use_cases/designer_use_cases.dart';
+import 'domain/use_cases/client_use_cases.dart';
 import 'domain/use_cases/user_use_cases.dart';
 import 'old/router/app_router.dart';
 import 'old/secrets/app_secrets.dart';
 import 'old/services/shared_pref_service.dart';
-import 'presentation/providers/designer_provider.dart';
+import 'presentation/providers/client_provider.dart';
 import 'presentation/providers/user_provider.dart';
 
 void main() async {
@@ -33,9 +33,9 @@ void main() async {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => DesignerProvider(
-              GetDesignersUseCase(
-                DesignerRepository(),
+            create: (_) => ClientProvider(
+              GetClientsUseCase(
+                ClientRepository(),
               ),
             ),
           ),

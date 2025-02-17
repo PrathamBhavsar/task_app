@@ -1,10 +1,11 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import '../constants/local_db.dart';
-
 class DatabaseHelper {
   static Database? _database;
+  static final DatabaseHelper instance = DatabaseHelper._init();
+
+  DatabaseHelper._init();
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -16,11 +17,11 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'task_app.db');
     return await openDatabase(
       path,
-      version: 5,
+      version: 7,
       onCreate: (db, version) async {
         await db.execute('''
         CREATE TABLE users (
-          id BLOB PRIMARY KEY, 
+          id TEXT PRIMARY KEY, 
           created_at TEXT NOT NULL, 
           name TEXT, 
           email TEXT, 
@@ -28,59 +29,68 @@ class DatabaseHelper {
           role TEXT CHECK(role IN ('admin', 'salesperson', 'agency')), 
           profile_bg_color TEXT
         )
-          ''');
+        ''');
 
         await db.execute('''
         CREATE TABLE designers (
-          id BLOB PRIMARY KEY, 
+          id TEXT PRIMARY KEY, 
           created_at TEXT NOT NULL, 
-          code BIGINT(20), 
+          code INTEGER, 
           name TEXT, 
           firm_name TEXT, 
           contact_no TEXT, 
           address TEXT,  
           profile_bg_color TEXT
         )
-          ''');
+        ''');
+
+        await db.execute('''
+        CREATE TABLE clients (
+          id TEXT PRIMARY KEY, 
+          created_at TEXT NOT NULL, 
+          name TEXT, 
+          contact_no TEXT, 
+          address TEXT
+        )
+        ''');
       },
     );
   }
 
-  Future<void> insertOrUpdateUser(Map<String, dynamic> user) async {
+  /// Insert or update a single record in the table
+  Future<void> insertOrUpdate(String table, Map<String, dynamic> data) async {
     final db = await database;
     await db.insert(
-      LocalDbKeys.usersTable,
-      user,
+      table,
+      data,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  Future<void> insertOrUpdateDesigner(Map<String, dynamic> designer) async {
+  /// Store a list of records in the table
+  Future<void> storeAllData(
+      String table, List<Map<String, dynamic>> dataList) async {
     final db = await database;
-    await db.insert(
-      LocalDbKeys.designersTable,
-      designer,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    Batch batch = db.batch();
+    for (var data in dataList) {
+      batch.insert(
+        table,
+        data,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+    await batch.commit(noResult: true);
   }
 
-  Future<List<Map<String, dynamic>>> getUsers() async {
+  /// Get all records from the table
+  Future<List<Map<String, dynamic>>> getAll(String table) async {
     final db = await database;
-    return await db.query(LocalDbKeys.usersTable);
+    return await db.query(table);
   }
 
-  Future<List<Map<String, dynamic>>> getDesigners() async {
+  /// Delete all records from the specified table
+  Future<void> deleteAll(String table) async {
     final db = await database;
-    return await db.query(LocalDbKeys.designersTable);
-  }
-
-  Future<void> deleteAllUsers() async {
-    final db = await database;
-    await db.delete(LocalDbKeys.usersTable);
-  }
-
-  Future<void> deleteAllDesigners() async {
-    final db = await database;
-    await db.delete(LocalDbKeys.designersTable);
+    await db.delete(table);
   }
 }

@@ -1,4 +1,3 @@
-import 'package:sqflite/sqflite.dart';
 import '../../core/constants/local_db.dart';
 import '../../core/database/database_helper.dart';
 import '../../core/dto/designer_dto.dart';
@@ -9,13 +8,16 @@ import '../models/designer.dart';
 
 class DesignerRepository {
   final ApiManager _apiManager = ApiManager();
-  final DatabaseHelper _dbHelper = DatabaseHelper();
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
   Future<ApiResponse<List<Designer>>> fetchDesigners(
       DesignerDTO requestDTO) async {
     try {
-      /// Try designers from local DB first
-      List<Designer> localDesigners = await getDesignersFromDB();
+      // Try fetching designers from the local database
+      List<Map<String, dynamic>> localData =
+          await _dbHelper.getAll(LocalDbKeys.designersTable);
+      List<Designer> localDesigners = localData.map(Designer.fromJson).toList();
+
       if (localDesigners.isNotEmpty) {
         return ApiResponse(
           success: true,
@@ -25,15 +27,16 @@ class DesignerRepository {
         );
       }
 
+      // Fetch from API if no local data exists
       final response = await _apiManager.get<List<Designer>>(
         ApiEndpoints.designer,
         fromJsonT: (data) =>
             (data as List).map((e) => Designer.fromJson(e)).toList(),
       );
 
-      // Store designers in local DB
       if (response.success && response.data != null) {
-        await _storeDesignersInDB(response.data!);
+        await _dbHelper.storeAllData(LocalDbKeys.designersTable,
+            response.data!.map((c) => c.toJson()).toList());
       }
 
       return response;
@@ -47,38 +50,14 @@ class DesignerRepository {
     }
   }
 
-  /// Store designers in local database
-  Future<void> _storeDesignersInDB(List<Designer> designers) async {
-    var db = await _dbHelper.database;
-    for (var designer in designers) {
-      await db.insert(
-        LocalDbKeys.designersTable,
-        designer.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-  }
-
-  /// Get designers from local database
-  Future<List<Designer>> getDesignersFromDB() async {
-    var db = await _dbHelper.database;
-    var result = await db.query(LocalDbKeys.designersTable);
-    return result.map(Designer.fromJson).toList();
-  }
-
-  /// Insert or update designer
+  /// Insert or update a designer in the local database
   Future<void> insertOrUpdateDesigner(Designer designer) async {
-    var db = await _dbHelper.database;
-    await db.insert(
-      LocalDbKeys.designersTable,
-      designer.toJson(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await _dbHelper.insertOrUpdate(
+        LocalDbKeys.designersTable, designer.toJson());
   }
 
-  /// Delete all designers from local database
+  /// Delete all designers from the local database
   Future<void> deleteAllDesigners() async {
-    var db = await _dbHelper.database;
-    await db.delete(LocalDbKeys.designersTable);
+    await _dbHelper.deleteAll(LocalDbKeys.designersTable);
   }
 }

@@ -1,4 +1,3 @@
-import 'package:sqflite/sqflite.dart';
 import '../../core/constants/local_db.dart';
 import '../../core/database/database_helper.dart';
 import '../../core/dto/user_dto.dart';
@@ -9,12 +8,15 @@ import '../models/user.dart';
 
 class UserRepository {
   final ApiManager _apiManager = ApiManager();
-  final DatabaseHelper _dbHelper = DatabaseHelper();
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
   Future<ApiResponse<List<User>>> fetchUsers(UserDTO requestDTO) async {
     try {
-      /// Try users from local DB first
-      List<User> localUsers = await getUsersFromDB();
+      // Try fetching users from the local database
+      List<Map<String, dynamic>> localData =
+          await _dbHelper.getAll(LocalDbKeys.usersTable);
+      List<User> localUsers = localData.map(User.fromJson).toList();
+
       if (localUsers.isNotEmpty) {
         return ApiResponse(
           success: true,
@@ -24,15 +26,16 @@ class UserRepository {
         );
       }
 
+      // Fetch from API if no local data exists
       final response = await _apiManager.get<List<User>>(
         ApiEndpoints.user,
         fromJsonT: (data) =>
             (data as List).map((e) => User.fromJson(e)).toList(),
       );
 
-      // Store users in local DB
       if (response.success && response.data != null) {
-        await _storeUsersInDB(response.data!);
+        await _dbHelper.storeAllData(LocalDbKeys.usersTable,
+            response.data!.map((c) => c.toJson()).toList());
       }
 
       return response;
@@ -46,38 +49,13 @@ class UserRepository {
     }
   }
 
-  /// Store users in local database
-  Future<void> _storeUsersInDB(List<User> users) async {
-    var db = await _dbHelper.database;
-    for (var user in users) {
-      await db.insert(
-        LocalDbKeys.usersTable,
-        user.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
-  }
-
-  /// Get users from local database
-  Future<List<User>> getUsersFromDB() async {
-    var db = await _dbHelper.database;
-    var result = await db.query(LocalDbKeys.usersTable);
-    return result.map(User.fromJson).toList();
-  }
-
-  /// Insert or update user
+  /// Insert or update a user in the local database
   Future<void> insertOrUpdateUser(User user) async {
-    var db = await _dbHelper.database;
-    await db.insert(
-      LocalDbKeys.usersTable,
-      user.toJson(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await _dbHelper.insertOrUpdate(LocalDbKeys.usersTable, user.toJson());
   }
 
-  /// Delete all users from local database
+  /// Delete all users from the local database
   Future<void> deleteAllUsers() async {
-    var db = await _dbHelper.database;
-    await db.delete(LocalDbKeys.usersTable);
+    await _dbHelper.deleteAll(LocalDbKeys.usersTable);
   }
 }
