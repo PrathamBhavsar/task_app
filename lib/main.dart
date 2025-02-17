@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
-import 'data/repositories/client_repository.dart';
-import 'domain/use_cases/client_use_cases.dart';
+import 'data/repositories/status_repository.dart';
+import 'domain/use_cases/status_use_cases.dart';
 import 'old/router/app_router.dart';
 import 'old/secrets/app_secrets.dart';
 import 'old/services/shared_pref_service.dart';
-import 'presentation/providers/client_provider.dart';
+import 'presentation/providers/status_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +30,9 @@ void main() async {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => ClientProvider(
-              GetClientsUseCase(
-                ClientRepository(),
+            create: (_) => StatusProvider(
+              GetStatusesUseCase(
+                StatusRepository(),
               ),
             ),
           ),

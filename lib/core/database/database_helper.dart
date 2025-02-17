@@ -17,7 +17,7 @@ class DatabaseHelper {
     String path = join(await getDatabasesPath(), 'task_app.db');
     return await openDatabase(
       path,
-      version: 7,
+      version: 9,
       onCreate: (db, version) async {
         await db.execute('''
         CREATE TABLE users (
@@ -51,6 +51,17 @@ class DatabaseHelper {
           name TEXT, 
           contact_no TEXT, 
           address TEXT
+        )
+        ''');
+
+        await db.execute('''
+        CREATE TABLE status (
+          task_order TEXT PRIMARY KEY, 
+          created_at TEXT NOT NULL, 
+          name TEXT, 
+          slug TEXT, 
+          color TEXT,
+          category TEXT
         )
         ''');
       },
