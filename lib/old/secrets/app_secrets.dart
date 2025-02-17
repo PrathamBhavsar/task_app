@@ -5,5 +5,5 @@ class AppSecrets {
   static String supabaseSecureKey =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRwZ3diYWd6ZHNhYmplam5naXZpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNTYzMTA3NiwiZXhwIjoyMDUxMjA3MDc2fQ.P_GcxAWZXPoVf0mhkQgBRSS5klej1Rs7m4nDBdqs7hA";
 
-  static String apiKey = "your-secure-api-token";
+  static String apiKey = "a;lskdfjireckhgelskhfcca";
 }
