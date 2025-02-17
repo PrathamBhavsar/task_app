@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/enums/user_role.dart';
 import '../../core/dto/login_dto.dart';
 import '../../core/dto/register_dto.dart';
 import '../../data/models/user.dart';

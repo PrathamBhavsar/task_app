@@ -1,0 +1,84 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../../data/models/client.dart';
+import '../../data/models/designer.dart';
+import '../../data/models/priority.dart';
+import '../../data/models/status.dart';
+import '../providers/home_provider.dart';
+
+class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<HomeProvider>(context);
+
+    return Scaffold(
+      appBar: AppBar(title: Text("Dashboard")),
+      body: provider.isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: provider.priorities.length,
+                    itemBuilder: (context, index) {
+                      final Priority priority = provider.priorities[index];
+                      return ListTile(
+                        subtitle: Text(priority.name),
+                      );
+                    },
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: provider.statuses.length,
+                    itemBuilder: (context, index) {
+                      final Status status = provider.statuses[index];
+                      return ListTile(
+                        subtitle: Text(status.name),
+                      );
+                    },
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: provider.clients.length,
+                    itemBuilder: (context, index) {
+                      final Client client = provider.clients[index];
+                      return ListTile(
+                        subtitle: Text(client.name),
+                      );
+                    },
+                  ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: provider.designers.length,
+                    itemBuilder: (context, index) {
+                      final Designer designer = provider.designers[index];
+                      return ListTile(
+                        subtitle: Text(designer.name),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+      persistentFooterButtons: [
+        TextButton(
+          onPressed: provider.fetchAllData,
+          child: Text('fetch'),
+        ),
+        TextButton(
+          onPressed: () => context.pushNamed('dashboard'),
+          child: Text('next'),
+        ),
+      ],
+    );
+  }
+}

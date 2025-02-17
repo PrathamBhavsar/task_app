@@ -4,19 +4,24 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
+import 'core/router/app_router.dart';
 import 'data/repositories/auth_repository.dart';
+import 'data/repositories/client_repository.dart';
+import 'data/repositories/designer_repository.dart';
 import 'data/repositories/priority_repository.dart';
 import 'data/repositories/status_repository.dart';
+import 'data/repositories/task_repository.dart';
 import 'domain/use_cases/auth_use_cases.dart';
+import 'domain/use_cases/client_use_cases.dart';
+import 'domain/use_cases/designer_use_cases.dart';
 import 'domain/use_cases/priority_use_cases.dart';
 import 'domain/use_cases/status_use_cases.dart';
-import 'old/providers/auth_provider.dart';
-import 'old/router/app_router.dart';
+import 'domain/use_cases/task_use_cases.dart';
 import 'old/secrets/secrets.dart';
 import 'old/services/shared_pref_service.dart';
 import 'presentation/providers/auth_provider.dart';
-import 'presentation/providers/priority_provider.dart';
-import 'presentation/providers/status_provider.dart';
+import 'presentation/providers/home_provider.dart';
+import 'presentation/providers/task_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,9 +42,32 @@ void main() async {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
+            create: (_) => HomeProvider(
+              getStatusesUseCase: GetStatusesUseCase(
+                StatusRepository(),
+              ),
+              getPrioritiesUseCase: GetPrioritiesUseCase(
+                PriorityRepository(),
+              ),
+              getDesignersUseCase: GetDesignersUseCase(
+                DesignerRepository(),
+              ),
+              getClientsUseCase: GetClientsUseCase(
+                ClientRepository(),
+              ),
+            ),
+          ),
+          ChangeNotifierProvider(
             create: (_) => AuthenticationProvider(
               AuthUseCase(
                 AuthRepository(),
+              ),
+            ),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => TaskProvider(
+              GetTasksUseCase(
+                TaskRepository(),
               ),
             ),
           ),

@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../old/views/auth/login_screen.dart';
+import '../../old/views/auth/signup_screen.dart';
+import '../../old/views/home/home_screen.dart';
+import '../../old/views/home/pages/notification/notification_screen.dart';
+import '../../old/views/home/pages/task list/task_list_page.dart';
+import '../../old/views/task/task_detail_screen.dart';
+import '../../old/views/task/widgets/measurement/measurement_screen.dart';
+import '../../old/views/task/widgets/measurement/measurement_screen_2.dart';
+import '../../old/views/task/widgets/quotation/quotation_screen.dart';
+import '../../presentation/screens/dashboard.dart';
 import '../../presentation/screens/designer_screen.dart';
-import '../views/auth/login_screen.dart';
-import '../views/auth/signup_screen.dart';
-import '../views/home/home_screen.dart';
-import '../views/home/pages/notification/notification_screen.dart';
-import '../views/home/pages/task list/task_list_page.dart';
-import '../views/task/task_detail_screen.dart';
-import '../views/task/widgets/measurement/measurement_screen.dart';
-import '../views/task/widgets/measurement/measurement_screen_2.dart';
-import '../views/task/widgets/quotation/quotation_screen.dart';
 
 abstract class MyRouter {
   static GoRouter router(bool isLoggedIn) => GoRouter(
         initialLocation: true
             // ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
-            ? '/user'
+            ? '/splash'
             : '/signup',
         // : '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019',
         routes: [
           GoRoute(
-            path: '/user',
-            name: 'user',
+            path: '/splash',
+            name: 'splash',
             builder: (BuildContext context, GoRouterState state) =>
-                const UserScreen(),
+                const SplashScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard',
+            name: 'dashboard',
+            builder: (BuildContext context, GoRouterState state) =>
+                const DashboardScreen(),
           ),
           GoRoute(
             path: '/home',
