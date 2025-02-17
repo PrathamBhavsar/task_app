@@ -27,7 +27,8 @@ class DatabaseHelper {
           email TEXT, 
           password TEXT, 
           role TEXT CHECK(role IN ('admin', 'salesperson', 'agency')), 
-          profile_bg_color TEXT
+          profile_bg_color TEXT,
+          api_token TEXT
         )
         ''');
 

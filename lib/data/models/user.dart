@@ -4,6 +4,7 @@ class User {
   final String email;
   final String role;
   final String profileBgColor;
+  final String? apiToken;
   final DateTime createdAt;
 
   User({
@@ -12,6 +13,7 @@ class User {
     required this.email,
     required this.role,
     required this.profileBgColor,
+    this.apiToken,
     required this.createdAt,
   });
 
@@ -21,6 +23,7 @@ class User {
         email: json['email'],
         role: json['role'],
         profileBgColor: json['profile_bg_color'],
+        apiToken: json['api_token'],
         createdAt: DateTime.parse(json['created_at']),
       );
 

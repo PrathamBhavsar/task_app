@@ -4,13 +4,17 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
+import 'data/repositories/auth_repository.dart';
 import 'data/repositories/priority_repository.dart';
 import 'data/repositories/status_repository.dart';
+import 'domain/use_cases/auth_use_cases.dart';
 import 'domain/use_cases/priority_use_cases.dart';
 import 'domain/use_cases/status_use_cases.dart';
+import 'old/providers/auth_provider.dart';
 import 'old/router/app_router.dart';
 import 'old/secrets/secrets.dart';
 import 'old/services/shared_pref_service.dart';
+import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/priority_provider.dart';
 import 'presentation/providers/status_provider.dart';
 
@@ -33,9 +37,9 @@ void main() async {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => PriorityProvider(
-              GetPrioritiesUseCase(
-                PriorityRepository(),
+            create: (_) => AuthenticationProvider(
+              AuthUseCase(
+                AuthRepository(),
               ),
             ),
           ),
