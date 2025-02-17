@@ -1,6 +1,5 @@
 import '../../core/constants/local_db.dart';
 import '../../core/database/database_helper.dart';
-import '../../core/dto/client_dto.dart';
 import '../../core/network/api_endpoints.dart';
 import '../../core/network/api_manager.dart';
 import '../models/api_response.dart';
@@ -10,7 +9,7 @@ class ClientRepository {
   final ApiManager _apiManager = ApiManager();
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-  Future<ApiResponse<List<Client>>> fetchClients(ClientDTO requestDTO) async {
+  Future<ApiResponse<List<Client>>> fetchClients() async {
     try {
       // Try fetching clients from the local database
       List<Map<String, dynamic>> localData =

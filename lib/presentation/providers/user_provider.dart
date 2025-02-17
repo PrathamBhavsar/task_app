@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/dto/user_dto.dart';
 import '../../data/models/user.dart';
 import '../../domain/use_cases/user_use_cases.dart';
 
@@ -19,8 +18,7 @@ class UserProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    UserDTO requestDTO = UserDTO(action: 'create');
-    final response = await _getUsersUseCase.execute(requestDTO);
+    final response = await _getUsersUseCase.execute();
 
     if (response.success && response.data != null) {
       _users = response.data!;

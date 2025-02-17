@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import '../../core/constants/enums.dart';
+import '../../core/constants/enums/user_role.dart';
 import '../../old/models/user.dart';
 
 class AuthProvider extends ChangeNotifier {

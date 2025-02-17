@@ -1,30 +1,57 @@
+import '../constants/enums/dto_action.dart';
 import 'dto.dart';
 
-class ClientDTO extends ApiDTO {
+class CreateClientDTO extends ApiDTO {
   final String name;
-
   final String address;
   final String contactNo;
 
-  ClientDTO({
-    required super.action,
+  CreateClientDTO({
     required this.name,
     required this.address,
     required this.contactNo,
-  });
+  }) : super(action: DtoAction.create);
 
   @override
   Map<String, dynamic> toJson() => {
-        "action": action,
+        "action": action.action,
         "name": name,
         "address": address,
         "contact_no": contactNo,
       };
+}
 
-  factory ClientDTO.fromJson(Map<String, dynamic> json) => ClientDTO(
-        action: json["action"] ?? "",
-        name: json["name"] ?? "",
-        address: json["address"] ?? "",
-        contactNo: json["contact_no"] ?? "",
-      );
+class UpdateClientDTO extends ApiDTO {
+  final String id;
+  final String name;
+  final String address;
+  final String contactNo;
+
+  UpdateClientDTO({
+    required this.id,
+    required this.name,
+    required this.address,
+    required this.contactNo,
+  }) : super(action: DtoAction.update);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "action": action.action,
+        "id": id,
+        "name": name,
+        "address": address,
+        "contact_no": contactNo,
+      };
+}
+
+class DeleteClientDTO extends ApiDTO {
+  final String id;
+
+  DeleteClientDTO({required this.id}) : super(action: DtoAction.delete);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "action": action.action,
+        "id": id,
+      };
 }

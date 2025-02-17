@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/constants/app_keys.dart';
-import '../../core/constants/enums.dart';
+import '../../core/constants/enums/user_role.dart';
 import '../extensions/color_extension.dart';
 import '../models/user.dart';
 import 'dart:convert';

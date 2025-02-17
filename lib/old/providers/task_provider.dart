@@ -5,7 +5,7 @@ import '../../core/constants/app_consts.dart';
 
 import '../../core/constants/app_keys.dart';
 import '../../core/constants/dummy_data.dart';
-import '../../core/constants/enums.dart';
+import '../../core/constants/enums/user_role.dart';
 import '../../old/controllers/supabase_controller.dart';
 import '../../old/models/user.dart';
 

@@ -1,4 +1,4 @@
-import '../../core/constants/enums.dart';
+import '../../core/constants/enums/user_role.dart';
 
 class UserModel {
   final String? id;

@@ -1,6 +1,5 @@
 import '../../core/constants/local_db.dart';
 import '../../core/database/database_helper.dart';
-import '../../core/dto/designer_dto.dart';
 import '../../core/network/api_endpoints.dart';
 import '../../core/network/api_manager.dart';
 import '../models/api_response.dart';
@@ -10,8 +9,7 @@ class DesignerRepository {
   final ApiManager _apiManager = ApiManager();
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-  Future<ApiResponse<List<Designer>>> fetchDesigners(
-      DesignerDTO requestDTO) async {
+  Future<ApiResponse<List<Designer>>> fetchDesigners() async {
     try {
       // Try fetching designers from the local database
       List<Map<String, dynamic>> localData =

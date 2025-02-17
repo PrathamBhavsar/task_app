@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/dto/designer_dto.dart';
-import '../../core/dto/user_dto.dart';
 import '../../data/models/designer.dart';
-import '../../data/models/user.dart';
 import '../../domain/use_cases/designer_use_cases.dart';
-import '../../domain/use_cases/user_use_cases.dart';
 
 class DesignerProvider extends ChangeNotifier {
   final GetDesignersUseCase _getDesignersUseCase;
@@ -22,15 +18,7 @@ class DesignerProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    DesignerDTO requestDTO = DesignerDTO(
-        action: 'create',
-        code: '',
-        name: '',
-        firmName: '',
-        address: '',
-        contactNo: '',
-        profileBgColor: '');
-    final response = await _getDesignersUseCase.execute(requestDTO);
+    final response = await _getDesignersUseCase.execute();
 
     if (response.success && response.data != null) {
       _designers = response.data!;

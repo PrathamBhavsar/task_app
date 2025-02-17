@@ -1,5 +1,4 @@
 import '../../../data/models/api_response.dart';
-import '../../core/dto/designer_dto.dart';
 import '../../data/models/designer.dart';
 import '../../data/repositories/designer_repository.dart';
 
@@ -8,8 +7,8 @@ class GetDesignersUseCase {
 
   GetDesignersUseCase(this.repository);
 
-  Future<ApiResponse<List<Designer>>> execute(DesignerDTO designerDTO) async {
-    final response = await repository.fetchDesigners(designerDTO);
+  Future<ApiResponse<List<Designer>>> execute() async {
+    final response = await repository.fetchDesigners();
 
     if (response.success && response.data != null) {
       List<Designer> users = List<Designer>.from(response.data!);

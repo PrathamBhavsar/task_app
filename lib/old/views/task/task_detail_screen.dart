@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_consts.dart';
 import '../../../core/constants/app_keys.dart';
-import '../../../core/constants/enums.dart';
+import '../../../core/constants/enums/user_role.dart';
 import '../../extensions/app_paddings.dart';
 import '../../providers/task_provider.dart';
 import '../home/pages/task list/widgets/overlapping_circles.dart';

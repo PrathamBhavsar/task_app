@@ -1,5 +1,7 @@
+import '../constants/enums/dto_action.dart';
+
 abstract class ApiDTO {
-  final String action;
+  final DtoAction action;
 
   ApiDTO({required this.action});
 

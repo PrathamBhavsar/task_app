@@ -1,37 +1,70 @@
+import '../constants/enums/dto_action.dart';
+import '../constants/enums/user_role.dart';
 import 'dto.dart';
 
-class UserDTO extends ApiDTO {
+class CreateUserDTO extends ApiDTO {
   final String name;
   final String email;
   final String password;
-  final String role;
+  final UserRole role;
   final String profileBgColor;
 
-  UserDTO({
-    required super.action,
-    this.name = "",
-    this.email = "",
-    this.password = "",
-    this.role = "",
-    this.profileBgColor = "",
-  });
+  CreateUserDTO({
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.role,
+    required this.profileBgColor,
+  }) : super(action: DtoAction.create);
 
   @override
   Map<String, dynamic> toJson() => {
-        "action": action,
+        "action": action.action,
         "name": name,
         "email": email,
         "password": password,
         "role": role,
         "profile_bg_color": profileBgColor,
       };
+}
 
-  factory UserDTO.fromJson(Map<String, dynamic> json) => UserDTO(
-        action: json["action"] ?? "",
-        name: json["name"] ?? "",
-        email: json["email"] ?? "",
-        password: json["password"] ?? "",
-        role: json["role"] ?? "",
-        profileBgColor: json["profile_bg_color"] ?? "",
-      );
+class UpdateUserDTO extends ApiDTO {
+  final String id;
+  final String name;
+  final String email;
+  final String password;
+  final UserRole role;
+  final String profileBgColor;
+
+  UpdateUserDTO({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.password,
+    required this.role,
+    required this.profileBgColor,
+  }) : super(action: DtoAction.update);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "action": action.action,
+        "id": id,
+        "name": name,
+        "email": email,
+        "password": password,
+        "role": role,
+        "profile_bg_color": profileBgColor,
+      };
+}
+
+class DeleteUserDTO extends ApiDTO {
+  final String id;
+
+  DeleteUserDTO({required this.id}) : super(action: DtoAction.delete);
+
+  @override
+  Map<String, dynamic> toJson() => {
+        "action": action.action,
+        "id": id,
+      };
 }

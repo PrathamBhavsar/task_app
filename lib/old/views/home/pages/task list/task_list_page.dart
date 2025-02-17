@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../../core/constants/app_consts.dart';
 
 import '../../../../../core/constants/dummy_data.dart';
-import '../../../../../core/constants/enums.dart';
+import '../../../../../core/constants/enums/user_role.dart';
 import '../../../../models/user.dart';
 import '../../../../providers/task_provider.dart';
 import 'widgets/task_list.dart';

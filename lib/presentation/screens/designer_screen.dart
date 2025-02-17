@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/models/client.dart';
-import '../../data/models/user.dart';
 import '../providers/client_provider.dart';
-import '../providers/user_provider.dart';
 
 class UserScreen extends StatelessWidget {
   const UserScreen({super.key});

@@ -5,14 +5,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
 import 'data/repositories/client_repository.dart';
-import 'data/repositories/user_repository.dart';
 import 'domain/use_cases/client_use_cases.dart';
-import 'domain/use_cases/user_use_cases.dart';
 import 'old/router/app_router.dart';
 import 'old/secrets/app_secrets.dart';
 import 'old/services/shared_pref_service.dart';
 import 'presentation/providers/client_provider.dart';
-import 'presentation/providers/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/constants/enums.dart';
+import '../../../../core/constants/enums/user_role.dart';
 import '../../../extensions/app_paddings.dart';
 import '../../../providers/auth_provider.dart';
 import 'user_role_tile.dart';
