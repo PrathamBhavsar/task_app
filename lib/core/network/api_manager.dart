@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../data/models/api_response.dart';
 import 'package:flutter/material.dart';
-import '../../old/secrets/app_secrets.dart';
+import '../../old/secrets/secrets.dart';
 import 'api_endpoints.dart';
 
 class ApiManager {

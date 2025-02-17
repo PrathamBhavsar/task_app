@@ -64,6 +64,14 @@ class DatabaseHelper {
           category TEXT
         )
         ''');
+
+        await db.execute('''
+        CREATE TABLE priority (
+          name TEXT PRIMARY KEY, 
+          created_at TEXT NOT NULL,  
+          color TEXT
+        )
+        ''');
       },
     );
   }

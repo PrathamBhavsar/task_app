@@ -13,7 +13,7 @@ class StatusRepository {
     try {
       // Try fetching statuses from the local database
       List<Map<String, dynamic>> localData =
-          await _dbHelper.getAll(LocalDbKeys.statusesTable);
+          await _dbHelper.getAll(LocalDbKeys.statusTable);
       List<Status> localStatuses = localData.map(Status.fromJson).toList();
 
       if (localStatuses.isNotEmpty) {
@@ -33,7 +33,7 @@ class StatusRepository {
       );
 
       if (response.success && response.data != null) {
-        await _dbHelper.storeAllData(LocalDbKeys.statusesTable,
+        await _dbHelper.storeAllData(LocalDbKeys.statusTable,
             response.data!.map((c) => c.toJson()).toList());
       }
 
@@ -50,11 +50,11 @@ class StatusRepository {
 
   /// Insert or update a status in the local database
   Future<void> insertOrUpdateStatus(Status status) async {
-    await _dbHelper.insertOrUpdate(LocalDbKeys.statusesTable, status.toJson());
+    await _dbHelper.insertOrUpdate(LocalDbKeys.statusTable, status.toJson());
   }
 
   /// Delete all statuses from the local database
   Future<void> deleteAllStatuses() async {
-    await _dbHelper.deleteAll(LocalDbKeys.statusesTable);
+    await _dbHelper.deleteAll(LocalDbKeys.statusTable);
   }
 }

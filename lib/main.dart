@@ -4,11 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
+import 'data/repositories/priority_repository.dart';
 import 'data/repositories/status_repository.dart';
+import 'domain/use_cases/priority_use_cases.dart';
 import 'domain/use_cases/status_use_cases.dart';
 import 'old/router/app_router.dart';
-import 'old/secrets/app_secrets.dart';
+import 'old/secrets/secrets.dart';
 import 'old/services/shared_pref_service.dart';
+import 'presentation/providers/priority_provider.dart';
 import 'presentation/providers/status_provider.dart';
 
 void main() async {
@@ -30,9 +33,9 @@ void main() async {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (_) => StatusProvider(
-              GetStatusesUseCase(
-                StatusRepository(),
+            create: (_) => PriorityProvider(
+              GetPrioritiesUseCase(
+                PriorityRepository(),
               ),
             ),
           ),
