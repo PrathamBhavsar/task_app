@@ -14,7 +14,7 @@ class AuthRepository {
   Future<ApiResponse<User>> fetchCurrentUser() async {
     try {
       List<Map<String, dynamic>> localUsers =
-          await _dbHelper.getAll(LocalDbKeys.usersTable);
+          await _dbHelper.getAll(LocalDbKeys.userTable);
       if (localUsers.isNotEmpty) {
         User user = localUsers.map(User.fromJson).first;
         await insertOrUpdateUser(user);
@@ -46,7 +46,7 @@ class AuthRepository {
 
       if (response.success && response.data != null) {
         await _dbHelper.insertOrUpdate(
-          LocalDbKeys.usersTable,
+          LocalDbKeys.currentUserTable,
           response.data!.toJson(),
         );
       }
@@ -70,7 +70,7 @@ class AuthRepository {
 
       if (response.success && response.data != null) {
         await _dbHelper.insertOrUpdate(
-          LocalDbKeys.usersTable,
+          LocalDbKeys.currentUserTable,
           response.data!.toJson(),
         );
       }
@@ -90,11 +90,11 @@ class AuthRepository {
 
   /// Insert or update a user in the local database
   Future<void> insertOrUpdateUser(User user) async {
-    await _dbHelper.insertOrUpdate(LocalDbKeys.usersTable, user.toJson());
+    await _dbHelper.insertOrUpdate(LocalDbKeys.currentUserTable, user.toJson());
   }
 
   /// Delete all users from the local database
   Future<void> deleteAllUsers() async {
-    await _dbHelper.deleteAll(LocalDbKeys.usersTable);
+    await _dbHelper.deleteAll(LocalDbKeys.currentUserTable);
   }
 }

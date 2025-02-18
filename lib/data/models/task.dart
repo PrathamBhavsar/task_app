@@ -32,7 +32,7 @@ class Task {
         dueDate: json['due_date'],
         priority: json['priority'],
         createdBy: json['created_by'],
-        remarks: json['remarks'],
+        remarks: json['remarks'] ?? "",
         status: json['status'],
       );
 

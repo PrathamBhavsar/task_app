@@ -13,7 +13,7 @@ class UserRepository {
     try {
       // Try fetching users from the local database
       List<Map<String, dynamic>> localData =
-          await _dbHelper.getAll(LocalDbKeys.usersTable);
+          await _dbHelper.getAll(LocalDbKeys.userTable);
       List<User> localUsers = localData.map(User.fromJson).toList();
 
       if (localUsers.isNotEmpty) {
@@ -33,7 +33,7 @@ class UserRepository {
       );
 
       if (response.success && response.data != null) {
-        await _dbHelper.storeAllData(LocalDbKeys.usersTable,
+        await _dbHelper.storeAllData(LocalDbKeys.userTable,
             response.data!.map((c) => c.toJson()).toList());
       }
 
@@ -50,11 +50,11 @@ class UserRepository {
 
   /// Insert or update a user in the local database
   Future<void> insertOrUpdateUser(User user) async {
-    await _dbHelper.insertOrUpdate(LocalDbKeys.usersTable, user.toJson());
+    await _dbHelper.insertOrUpdate(LocalDbKeys.userTable, user.toJson());
   }
 
   /// Delete all users from the local database
   Future<void> deleteAllUsers() async {
-    await _dbHelper.deleteAll(LocalDbKeys.usersTable);
+    await _dbHelper.deleteAll(LocalDbKeys.userTable);
   }
 }

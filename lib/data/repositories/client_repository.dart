@@ -13,7 +13,7 @@ class ClientRepository {
     try {
       // Try fetching clients from the local database
       List<Map<String, dynamic>> localData =
-          await _dbHelper.getAll(LocalDbKeys.clientsTable);
+          await _dbHelper.getAll(LocalDbKeys.clientTable);
       List<Client> localClients = localData.map(Client.fromJson).toList();
 
       if (localClients.isNotEmpty) {
@@ -33,7 +33,7 @@ class ClientRepository {
       );
 
       if (response.success && response.data != null) {
-        await _dbHelper.storeAllData(LocalDbKeys.clientsTable,
+        await _dbHelper.storeAllData(LocalDbKeys.clientTable,
             response.data!.map((c) => c.toJson()).toList());
       }
 
@@ -50,11 +50,11 @@ class ClientRepository {
 
   /// Insert or update a client in the local database
   Future<void> insertOrUpdateClient(Client client) async {
-    await _dbHelper.insertOrUpdate(LocalDbKeys.clientsTable, client.toJson());
+    await _dbHelper.insertOrUpdate(LocalDbKeys.clientTable, client.toJson());
   }
 
   /// Delete all clients from the local database
   Future<void> deleteAllClients() async {
-    await _dbHelper.deleteAll(LocalDbKeys.clientsTable);
+    await _dbHelper.deleteAll(LocalDbKeys.clientTable);
   }
 }

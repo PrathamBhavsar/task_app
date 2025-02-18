@@ -9,8 +9,8 @@ import '../../old/views/task/task_detail_screen.dart';
 import '../../old/views/task/widgets/measurement/measurement_screen.dart';
 import '../../old/views/task/widgets/measurement/measurement_screen_2.dart';
 import '../../old/views/task/widgets/quotation/quotation_screen.dart';
-import '../../presentation/screens/dashboard.dart';
-import '../../presentation/screens/designer_screen.dart';
+import '../../presentation/screens/splash_screen.dart';
+import '../../presentation/screens/dash.dart';
 
 abstract class MyRouter {
   static GoRouter router(bool isLoggedIn) => GoRouter(
@@ -21,16 +21,16 @@ abstract class MyRouter {
         // : '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019',
         routes: [
           GoRoute(
+            path: '/dashboard',
+            name: 'dashboard',
+            builder: (BuildContext context, GoRouterState state) =>
+                const Dash(),
+          ),
+          GoRoute(
             path: '/splash',
             name: 'splash',
             builder: (BuildContext context, GoRouterState state) =>
                 const SplashScreen(),
-          ),
-          GoRoute(
-            path: '/dashboard',
-            name: 'dashboard',
-            builder: (BuildContext context, GoRouterState state) =>
-                const DashboardScreen(),
           ),
           GoRoute(
             path: '/home',

@@ -13,7 +13,7 @@ class DesignerRepository {
     try {
       // Try fetching designers from the local database
       List<Map<String, dynamic>> localData =
-          await _dbHelper.getAll(LocalDbKeys.designersTable);
+          await _dbHelper.getAll(LocalDbKeys.designerTable);
       List<Designer> localDesigners = localData.map(Designer.fromJson).toList();
 
       if (localDesigners.isNotEmpty) {
@@ -33,7 +33,7 @@ class DesignerRepository {
       );
 
       if (response.success && response.data != null) {
-        await _dbHelper.storeAllData(LocalDbKeys.designersTable,
+        await _dbHelper.storeAllData(LocalDbKeys.designerTable,
             response.data!.map((c) => c.toJson()).toList());
       }
 
@@ -51,11 +51,11 @@ class DesignerRepository {
   /// Insert or update a designer in the local database
   Future<void> insertOrUpdateDesigner(Designer designer) async {
     await _dbHelper.insertOrUpdate(
-        LocalDbKeys.designersTable, designer.toJson());
+        LocalDbKeys.designerTable, designer.toJson());
   }
 
   /// Delete all designers from the local database
   Future<void> deleteAllDesigners() async {
-    await _dbHelper.deleteAll(LocalDbKeys.designersTable);
+    await _dbHelper.deleteAll(LocalDbKeys.designerTable);
   }
 }

@@ -4,15 +4,15 @@ import 'package:provider/provider.dart';
 import '../../data/models/task.dart';
 import '../providers/task_provider.dart';
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+class Dash extends StatelessWidget {
+  const Dash({super.key});
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Splash")),
+      appBar: AppBar(title: Text("Dashboard")),
       body: provider.isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(

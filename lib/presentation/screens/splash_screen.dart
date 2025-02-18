@@ -8,15 +8,15 @@ import '../../data/models/priority.dart';
 import '../../data/models/status.dart';
 import '../providers/home_provider.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<HomeProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Dashboard")),
+      appBar: AppBar(title: Text("Splash")),
       body: provider.isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
