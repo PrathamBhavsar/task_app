@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../old/views/auth/login_screen.dart';
 import '../../old/views/auth/signup_screen.dart';
-import '../../old/views/home/home_screen.dart';
 import '../../old/views/home/pages/notification/notification_screen.dart';
 import '../../old/views/home/pages/task list/task_list_page.dart';
 import '../../old/views/task/task_detail_screen.dart';
 import '../../old/views/task/widgets/measurement/measurement_screen.dart';
 import '../../old/views/task/widgets/measurement/measurement_screen_2.dart';
 import '../../old/views/task/widgets/quotation/quotation_screen.dart';
+import '../../presentation/providers/task_provider.dart';
 import '../../presentation/screens/splash/splash_screen.dart';
 import '../../presentation/screens/home/dash.dart';
+import '../../presentation/screens/task/detail.dart';
 
 abstract class MyRouter {
   static GoRouter router(bool isLoggedIn) => GoRouter(
@@ -31,6 +33,19 @@ abstract class MyRouter {
             name: 'home',
             builder: (BuildContext context, GoRouterState state) =>
                 const Home(),
+          ),
+          GoRoute(
+            path: '/taskDetail/:taskId',
+            builder: (context, state) {
+              final taskId = state.pathParameters['taskId']!;
+
+              final task = context
+                  .read<TaskProvider>()
+                  .tasks
+                  .firstWhere((task) => task.id == taskId);
+
+              return DetailScreen(task: task);
+            },
           ),
           GoRoute(
             path: '/login',

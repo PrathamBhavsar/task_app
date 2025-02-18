@@ -3,13 +3,15 @@ import '../../core/dto/get_tasks_dto.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
 import '../../domain/use_cases/task_use_cases.dart';
-import 'auth_provider.dart';
 
 class TaskProvider extends ChangeNotifier {
   final GetTasksUseCase _getTasksUseCase;
 
   List<DashboardStatus> _dashboardDetails = [];
   List<DashboardStatus> get dashboardDetails => _dashboardDetails;
+
+  late Task _selectedTask;
+  Task get selectedTask => _selectedTask;
 
   List<Task> _tasks = [];
   List<Task> get tasks => _tasks;
@@ -40,10 +42,24 @@ class TaskProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final response = await _getTasksUseCase.executeDashboard();
+    final response = await _getTasksUseCase.getDashboardDetails();
 
     if (response.success && response.data != null) {
       _dashboardDetails = response.data!;
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> fetchTask(String id) async {
+    _isLoading = true;
+    notifyListeners();
+
+    final response = await _getTasksUseCase.getTask(id);
+
+    if (response.success && response.data != null) {
+      _selectedTask = response.data!;
     }
 
     _isLoading = false;

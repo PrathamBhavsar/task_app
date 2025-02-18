@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../data/models/dashboard_detail.dart';
-import '../../../../data/models/task.dart';
 import '../../../providers/task_provider.dart';
 
 class Page1 extends StatelessWidget {

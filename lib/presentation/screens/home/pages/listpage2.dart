@@ -31,9 +31,12 @@ class Page2 extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: provider.tasks.length,
                     itemBuilder: (context, index) {
-                      final Task priority = provider.tasks[index];
-                      return ListTile(
-                        subtitle: Text(priority.name),
+                      final Task task = provider.tasks[index];
+                      return InkWell(
+                        onTap: () => context.push('/taskDetail/${task.id}'),
+                        child: ListTile(
+                          subtitle: Text(task.name),
+                        ),
                       );
                     },
                   ),

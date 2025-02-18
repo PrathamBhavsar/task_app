@@ -4,15 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
-import 'core/router/app_router.dart';
 import 'core/router/router.dart';
-import 'data/repositories/auth_repository.dart';
 import 'data/repositories/client_repository.dart';
 import 'data/repositories/designer_repository.dart';
 import 'data/repositories/priority_repository.dart';
 import 'data/repositories/status_repository.dart';
 import 'data/repositories/task_repository.dart';
-import 'domain/use_cases/auth_use_cases.dart';
 import 'domain/use_cases/client_use_cases.dart';
 import 'domain/use_cases/designer_use_cases.dart';
 import 'domain/use_cases/priority_use_cases.dart';

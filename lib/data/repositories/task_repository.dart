@@ -3,7 +3,6 @@ import '../../core/database/database_helper.dart';
 import '../../core/dto/get_tasks_dto.dart';
 import '../../core/network/api_endpoints.dart';
 import '../../core/network/api_manager.dart';
-import '../../presentation/providers/auth_provider.dart';
 import '../models/api_response.dart';
 import '../models/dashboard_detail.dart';
 import '../models/task.dart';
@@ -69,6 +68,23 @@ class TaskRepository {
       statusCode: 500,
       message: "Failed to fetch dashboard details",
       data: [],
+    );
+  }
+
+  Future<ApiResponse<Task>> fetchTask(String id) async {
+    Task? dashboardData = await _dbHelper.getTaskById(id);
+    if (dashboardData != null) {
+      return ApiResponse(
+        success: true,
+        statusCode: 200,
+        message: "Fetched task from local DB",
+        data: dashboardData,
+      );
+    }
+    return ApiResponse(
+      success: false,
+      statusCode: 500,
+      message: "Failed to fetch task",
     );
   }
 

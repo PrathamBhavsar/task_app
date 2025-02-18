@@ -27,7 +27,7 @@ class GetTasksUseCase {
     );
   }
 
-  Future<ApiResponse<List<DashboardStatus>>> executeDashboard() async {
+  Future<ApiResponse<List<DashboardStatus>>> getDashboardDetails() async {
     final response = await repository.dashBoardDetails();
 
     if (response.success && response.data != null) {
@@ -45,6 +45,27 @@ class GetTasksUseCase {
       statusCode: response.statusCode,
       message: response.message,
       data: [],
+    );
+  }
+
+  Future<ApiResponse<Task>> getTask(String id) async {
+    final response = await repository.fetchTask(id);
+
+    if (response.success && response.data != null) {
+      Task task = response.data!;
+
+      return ApiResponse(
+        success: true,
+        statusCode: 200,
+        message: "Success",
+        data: task,
+      );
+    }
+
+    return ApiResponse(
+      success: false,
+      statusCode: response.statusCode,
+      message: response.message,
     );
   }
 }

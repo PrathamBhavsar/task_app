@@ -2,6 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import '../../data/models/dashboard_detail.dart';
+import '../../data/models/task.dart';
 import '../constants/local_db.dart';
 
 class DatabaseHelper {
@@ -158,6 +159,15 @@ class DatabaseHelper {
         ''');
 
     return result.map(DashboardStatus.fromJson).toList();
+  }
+
+  /// Dashboard details
+  Future<Task?> getTaskById(String id) async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+    SELECT * FROM tasks WHERE id = '$id';
+        ''');
+    return Task.fromJson(result.first);
   }
 
   /// Insert or update a single record in the table
