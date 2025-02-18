@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import '../../../../core/constants/app_consts.dart';
 import '../../../../data/models/dashboard_detail.dart';
 import '../../../../old/extensions/app_paddings.dart';
+import '../../../../old/views/home/pages/task list/widgets/task_tile.dart';
 import '../../../providers/task_provider.dart';
 import 'widgets/page_view.dart';
+import 'widgets/task_tileee.dart';
 
 class Page2 extends StatelessWidget {
   const Page2({super.key});
@@ -32,6 +34,8 @@ class Page2 extends StatelessWidget {
     final categorizedDetails = _groupByCategory(provider.dashboardDetails);
     final sortedCategories = categorizedDetails.keys.toList()..sort();
 
+    final dueTodayTasks = provider.dueTodayTasks;
+
     if (sortedCategories.isEmpty) {
       return Scaffold(
         appBar: AppBar(
@@ -51,6 +55,9 @@ class Page2 extends StatelessWidget {
       return _buildCategoryPage(category, categoryItems);
     }).toList();
 
+    List<Widget> dueTodayTasksWidgets =
+        dueTodayTasks.map((task) => TaskTile1(task: task)).toList();
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -67,6 +74,13 @@ class Page2 extends StatelessWidget {
             ExpandablePageView(
               children: categoryWidgets,
             ),
+            dueTodayTasksWidgets.isNotEmpty
+                ? ExpandablePageView(
+                    children: dueTodayTasksWidgets,
+                  )
+                : Center(
+                    child: Text("No Tasks Due Today"),
+                  ),
           ],
         ),
       ),

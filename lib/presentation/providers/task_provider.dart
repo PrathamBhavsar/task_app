@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../core/dto/get_tasks_dto.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
@@ -13,8 +14,11 @@ class TaskProvider extends ChangeNotifier {
   late Task _selectedTask;
   Task get selectedTask => _selectedTask;
 
-  List<Task> _tasks = [];
-  List<Task> get tasks => _tasks;
+  List<Task> _dueTodayTasks = [];
+  List<Task> get dueTodayTasks => _dueTodayTasks;
+
+  List<Task> _allTasks = [];
+  List<Task> get allTasks => _allTasks;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -47,7 +51,8 @@ class TaskProvider extends ChangeNotifier {
     );
 
     if (response.success && response.data != null) {
-      _tasks = response.data!;
+      _allTasks = response.data!;
+      filterTasksByDueDate();
     }
 
     _isLoading = false;
@@ -81,5 +86,16 @@ class TaskProvider extends ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  void filterTasksByDueDate() {
+    final today = DateTime.now();
+    final todayString = DateFormat('yyyy-MM-dd').format(today);
+
+    _dueTodayTasks = _allTasks.where((task) {
+      final taskDueDate =
+          DateFormat('yyyy-MM-dd').format(DateTime.parse(task.dueDate));
+      return taskDueDate == todayString;
+    }).toList();
   }
 }

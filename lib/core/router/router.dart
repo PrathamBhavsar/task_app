@@ -41,7 +41,7 @@ abstract class MyRouter {
 
               final task = context
                   .read<TaskProvider>()
-                  .tasks
+                  .allTasks
                   .firstWhere((task) => task.id == taskId);
 
               return DetailScreen(task: task);
