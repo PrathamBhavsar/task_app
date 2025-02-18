@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
 import 'core/router/app_router.dart';
+import 'core/router/router.dart';
 import 'data/repositories/auth_repository.dart';
 import 'data/repositories/client_repository.dart';
 import 'data/repositories/designer_repository.dart';
@@ -58,12 +59,7 @@ void main() async {
             ),
           ),
           ChangeNotifierProvider(
-            create: (_) => AuthenticationProvider(
-              AuthUseCase(
-                AuthRepository(),
-              ),
-            ),
-          ),
+              create: (_) => AuthenticationProvider.instance),
           ChangeNotifierProvider(
             create: (_) => TaskProvider(
               GetTasksUseCase(

@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../data/models/task.dart';
-import '../providers/task_provider.dart';
 
-class Dash extends StatelessWidget {
-  const Dash({super.key});
+import '../../../../data/models/task.dart';
+import '../../../providers/task_provider.dart';
+
+class Page2 extends StatelessWidget {
+  const Page2({super.key});
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Dashboard")),
+      appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: provider.fetchTasks,
+            child: Text('fetch'),
+          ),
+        ],
+      ),
       body: provider.isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -32,16 +40,6 @@ class Dash extends StatelessWidget {
                 ],
               ),
             ),
-      persistentFooterButtons: [
-        TextButton(
-          onPressed: provider.fetchTasks,
-          child: Text('fetch'),
-        ),
-        TextButton(
-          onPressed: () => context.pushNamed('dashboard'),
-          child: Text('next'),
-        ),
-      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import '../../data/models/dashboard_detail.dart';
 import '../constants/local_db.dart';
 
 class DatabaseHelper {
@@ -101,9 +102,9 @@ class DatabaseHelper {
           created_by TEXT, 
           remarks TEXT, 
           status TEXT NOT NULL, 
-          FOREIGN KEY (priority) REFERENCES priority(name), 
-          FOREIGN KEY (created_by) REFERENCES users(id), 
-          FOREIGN KEY (status) REFERENCES status(task_order)
+          FOREIGN KEY (priority) REFERENCES ${LocalDbKeys.priorityTable}(name), 
+          FOREIGN KEY (created_by) REFERENCES ${LocalDbKeys.userTable}(id), 
+          FOREIGN KEY (status) REFERENCES ${LocalDbKeys.statusTable}(name)
         )
         ''');
 
@@ -113,8 +114,8 @@ class DatabaseHelper {
           task_id TEXT NOT NULL, 
           created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
           PRIMARY KEY (user_id, task_id),
-          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-          FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+          FOREIGN KEY (user_id) REFERENCES ${LocalDbKeys.userTable}(id) ON DELETE CASCADE,
+          FOREIGN KEY (task_id) REFERENCES ${LocalDbKeys.taskTable}(id) ON DELETE CASCADE
         )
         ''');
 
@@ -124,8 +125,8 @@ class DatabaseHelper {
           task_id TEXT NOT NULL, 
           created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
           PRIMARY KEY (user_id, task_id),
-          FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-          FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+          FOREIGN KEY (user_id) REFERENCES ${LocalDbKeys.userTable}(id) ON DELETE CASCADE,
+          FOREIGN KEY (task_id) REFERENCES ${LocalDbKeys.taskTable}(id) ON DELETE CASCADE
         )
         ''');
 
@@ -135,12 +136,28 @@ class DatabaseHelper {
           task_id TEXT NOT NULL, 
           created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
           PRIMARY KEY (designer_id, task_id),
-          FOREIGN KEY (designer_id) REFERENCES designers(id) ON DELETE CASCADE,
-          FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+          FOREIGN KEY (designer_id) REFERENCES ${LocalDbKeys.designerTable}(id) ON DELETE CASCADE,
+          FOREIGN KEY (task_id) REFERENCES ${LocalDbKeys.taskTable}(id) ON DELETE CASCADE
         )
         ''');
       },
     );
+  }
+
+  /// Dashboard details
+  Future<List<DashboardStatus>> getTaskCountPerStatus() async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+    SELECT 
+        s.name AS status_name, 
+        COUNT(t.id) AS task_count
+    FROM ${LocalDbKeys.statusTable} s
+    LEFT JOIN ${LocalDbKeys.taskTable} t 
+        ON s.name = t.status
+    GROUP BY s.name;
+        ''');
+
+    return result.map(DashboardStatus.fromJson).toList();
   }
 
   /// Insert or update a single record in the table

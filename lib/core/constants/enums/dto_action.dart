@@ -1,4 +1,5 @@
 enum DtoAction {
+  specific,
   create,
   update,
   delete,

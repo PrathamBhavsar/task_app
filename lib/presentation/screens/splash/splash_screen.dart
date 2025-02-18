@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../data/models/client.dart';
-import '../../data/models/designer.dart';
-import '../../data/models/priority.dart';
-import '../../data/models/status.dart';
-import '../providers/home_provider.dart';
+import '../../../data/models/client.dart';
+import '../../../data/models/designer.dart';
+import '../../../data/models/priority.dart';
+import '../../../data/models/status.dart';
+import '../../providers/home_provider.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -75,7 +75,7 @@ class SplashScreen extends StatelessWidget {
           child: Text('fetch'),
         ),
         TextButton(
-          onPressed: () => context.pushNamed('dashboard'),
+          onPressed: () => context.pushNamed('home'),
           child: Text('next'),
         ),
       ],

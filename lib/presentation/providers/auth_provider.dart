@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
-
 import '../../core/dto/login_dto.dart';
 import '../../core/dto/register_dto.dart';
 import '../../data/models/user.dart';
+import '../../data/repositories/auth_repository.dart';
 import '../../domain/use_cases/auth_use_cases.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
+  static final AuthenticationProvider _instance =
+      AuthenticationProvider._internal(AuthUseCase(AuthRepository()));
+
+  factory AuthenticationProvider() => _instance;
+
+  AuthenticationProvider._internal(this._authUseCase);
+
+  static AuthenticationProvider get instance => _instance;
+
   final AuthUseCase _authUseCase;
   User? _currentUser;
   bool _isLoading = false;
 
   User? get currentUser => _currentUser;
   bool get isLoading => _isLoading;
-
-  AuthenticationProvider(this._authUseCase);
 
   Future<void> fetchCurrentUser() async {
     _isLoading = true;
