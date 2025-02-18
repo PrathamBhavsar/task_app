@@ -15,7 +15,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<String> pageTitles = ['Dashboard', 'Task List'];
-  List<Widget> pages = [const Page1(), const Page2()];
+  List<Widget> pages = [
+    const Page2(),
+    const Page1(),
+  ];
 
   final PageController pageController = PageController(initialPage: 0);
   int _currentPageIndex = 0;

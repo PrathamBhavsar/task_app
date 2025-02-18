@@ -21,6 +21,22 @@ class TaskProvider extends ChangeNotifier {
 
   TaskProvider(this._getTasksUseCase);
 
+  int _currentTaskPage = 0;
+  int get currentTaskPage => _currentTaskPage;
+
+  void updateCurrentTaskPage(int page) {
+    _currentTaskPage = page;
+    notifyListeners();
+  }
+
+  int _currentTodayTaskPage = 0;
+  int get currentTodayTaskPage => _currentTodayTaskPage;
+
+  void updateCurrentTodayTaskPage(int page) {
+    _currentTodayTaskPage = page;
+    notifyListeners();
+  }
+
   Future<void> fetchTasks() async {
     _isLoading = true;
     notifyListeners();
@@ -46,6 +62,7 @@ class TaskProvider extends ChangeNotifier {
 
     if (response.success && response.data != null) {
       _dashboardDetails = response.data!;
+      print(_dashboardDetails);
     }
 
     _isLoading = false;
