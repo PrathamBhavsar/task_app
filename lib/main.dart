@@ -8,11 +8,13 @@ import 'data/repositories/designer_repository.dart';
 import 'data/repositories/priority_repository.dart';
 import 'data/repositories/status_repository.dart';
 import 'data/repositories/task_repository.dart';
+import 'data/repositories/user_repository.dart';
 import 'domain/use_cases/client_use_cases.dart';
 import 'domain/use_cases/designer_use_cases.dart';
 import 'domain/use_cases/priority_use_cases.dart';
 import 'domain/use_cases/status_use_cases.dart';
 import 'domain/use_cases/task_use_cases.dart';
+import 'domain/use_cases/user_use_cases.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';
 import 'presentation/providers/task_provider.dart';
@@ -48,6 +50,9 @@ void main() async {
               ),
               getClientsUseCase: GetClientsUseCase(
                 ClientRepository(),
+              ),
+              getUsersUseCase: GetUsersUseCase(
+                UserRepository(),
               ),
             ),
           ),

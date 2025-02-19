@@ -7,4 +7,6 @@ class ApiEndpoints {
   static String task = "/task";
   static String status = "/status";
   static String priority = "/priority";
+  static String taskSalesperson = "/taskSalesperson";
+  static String taskAgency = "/taskAgency";
 }

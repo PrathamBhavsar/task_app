@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../data/models/status.dart';
+import '../../data/models/user.dart';
 import '../../data/models/priority.dart';
 import '../../data/models/designer.dart';
 import '../../data/models/client.dart';
@@ -8,24 +9,28 @@ import '../../domain/use_cases/status_use_cases.dart';
 import '../../domain/use_cases/priority_use_cases.dart';
 import '../../domain/use_cases/designer_use_cases.dart';
 import '../../domain/use_cases/client_use_cases.dart';
+import '../../domain/use_cases/user_use_cases.dart';
 
 class HomeProvider extends ChangeNotifier {
   final GetStatusesUseCase _getStatusesUseCase;
   final GetPrioritiesUseCase _getPrioritiesUseCase;
   final GetDesignersUseCase _getDesignersUseCase;
   final GetClientsUseCase _getClientsUseCase;
+  final GetUsersUseCase _getUsersUseCase;
 
   // Data lists
   List<Status> _statuses = [];
   List<Priority> _priorities = [];
   List<Designer> _designers = [];
   List<Client> _clients = [];
+  List<User> _users = [];
 
   // Getters for each list
   List<Status> get statuses => _statuses;
   List<Priority> get priorities => _priorities;
   List<Designer> get designers => _designers;
   List<Client> get clients => _clients;
+  List<User> get users => _users;
 
   // Loading state
   bool _isLoading = false;
@@ -36,10 +41,12 @@ class HomeProvider extends ChangeNotifier {
     required GetPrioritiesUseCase getPrioritiesUseCase,
     required GetDesignersUseCase getDesignersUseCase,
     required GetClientsUseCase getClientsUseCase,
+    required GetUsersUseCase getUsersUseCase,
   })  : _getStatusesUseCase = getStatusesUseCase,
         _getPrioritiesUseCase = getPrioritiesUseCase,
         _getDesignersUseCase = getDesignersUseCase,
-        _getClientsUseCase = getClientsUseCase;
+        _getClientsUseCase = getClientsUseCase,
+        _getUsersUseCase = getUsersUseCase;
 
   // Fetch all data
   Future<void> fetchAllData() async {
@@ -69,6 +76,15 @@ class HomeProvider extends ChangeNotifier {
     if (clientResponse.success && clientResponse.data != null) {
       _clients = clientResponse.data!;
     }
+
+    // Fetch users
+    final userResponse = await _getUsersUseCase.execute();
+    if (userResponse.success && userResponse.data != null) {
+      _users = userResponse.data!;
+    }
+
+    // Fetch task salespersons and agencies
+    await _getUsersUseCase.getUsers();
 
     _isLoading = false;
     notifyListeners();

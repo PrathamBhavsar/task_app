@@ -6,6 +6,7 @@ import '../../../data/models/client.dart';
 import '../../../data/models/designer.dart';
 import '../../../data/models/priority.dart';
 import '../../../data/models/status.dart';
+import '../../../data/models/user.dart';
 import '../../providers/home_provider.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -22,6 +23,17 @@ class SplashScreen extends StatelessWidget {
           : SingleChildScrollView(
               child: Column(
                 children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: provider.users.length,
+                    itemBuilder: (context, index) {
+                      final User user = provider.users[index];
+                      return ListTile(
+                        subtitle: Text(user.name),
+                      );
+                    },
+                  ),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),

@@ -3,6 +3,7 @@ import '../../core/network/api_endpoints.dart';
 import '../../core/network/api_manager.dart';
 import '../../utils/constants/local_db.dart';
 import '../models/api_response.dart';
+import '../models/taskUser.dart';
 import '../models/user.dart';
 
 class UserRepository {
@@ -45,6 +46,64 @@ class UserRepository {
         message: "Failed to fetch users: $e",
         data: [],
       );
+    }
+  }
+
+  Future<void> fetchTaskSalespersons() async {
+    try {
+      // Try fetching users from the local database
+      List<Map<String, dynamic>> localData =
+          await _dbHelper.getAll(LocalDbKeys.taskSalesTable);
+      List<TaskUser> localTaskUsers = localData.map(TaskUser.fromJson).toList();
+
+      if (localTaskUsers.isNotEmpty) {
+        return;
+      }
+
+      // Fetch from API if no local data exists
+      final response = await _apiManager.get<List<TaskUser>>(
+        ApiEndpoints.taskSalesperson,
+        fromJsonT: (data) =>
+            (data as List).map((e) => TaskUser.fromJson(e)).toList(),
+      );
+
+      if (response.success && response.data != null) {
+        await _dbHelper.storeAllData(LocalDbKeys.taskSalesTable,
+            response.data!.map((c) => c.toJson()).toList());
+      }
+
+      return;
+    } catch (e) {
+      return;
+    }
+  }
+
+  Future<void> fetchTaskAgencies() async {
+    try {
+      // Try fetching users from the local database
+      List<Map<String, dynamic>> localData =
+          await _dbHelper.getAll(LocalDbKeys.taskAgencyTable);
+      List<TaskUser> localTaskUsers = localData.map(TaskUser.fromJson).toList();
+
+      if (localTaskUsers.isNotEmpty) {
+        return;
+      }
+
+      // Fetch from API if no local data exists
+      final response = await _apiManager.get<List<TaskUser>>(
+        ApiEndpoints.taskAgency,
+        fromJsonT: (data) =>
+            (data as List).map((e) => TaskUser.fromJson(e)).toList(),
+      );
+
+      if (response.success && response.data != null) {
+        await _dbHelper.storeAllData(LocalDbKeys.taskAgencyTable,
+            response.data!.map((c) => c.toJson()).toList());
+      }
+
+      return;
+    } catch (e) {
+      return;
     }
   }
 

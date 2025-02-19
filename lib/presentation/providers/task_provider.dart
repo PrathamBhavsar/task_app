@@ -3,13 +3,11 @@ import 'package:intl/intl.dart';
 import '../../core/dto/get_tasks_dto.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
+import '../../data/models/user.dart';
 import '../../domain/use_cases/task_use_cases.dart';
 
 class TaskProvider extends ChangeNotifier {
   final GetTasksUseCase _getTasksUseCase;
-
-  List<DashboardStatus> _dashboardDetails = [];
-  List<DashboardStatus> get dashboardDetails => _dashboardDetails;
 
   late Task _selectedTask;
   Task get selectedTask => _selectedTask;
@@ -52,17 +50,21 @@ class TaskProvider extends ChangeNotifier {
 
     final response = await _getTasksUseCase.execute(
       // GetTasksDTO(id: AuthenticationProvider.instance.currentUser!.id),
-      GetTasksDTO(id: '31633932636230632D663066312D3437'),
+      GetTasksDTO(id: 'FA14A924AC8106FD9673AF8F99653DD3'),
     );
 
     if (response.success && response.data != null) {
       _allTasks = response.data!;
       filterTasksByDueDate();
+      fetchAllUsersForTasks();
     }
 
     _isLoading = false;
     notifyListeners();
   }
+
+  List<DashboardStatus> _dashboardDetails = [];
+  List<DashboardStatus> get dashboardDetails => _dashboardDetails;
 
   Future<void> fetchDashboardDetails() async {
     _isLoading = true;
@@ -123,5 +125,21 @@ class TaskProvider extends ChangeNotifier {
     }
 
     return groupedTasks;
+  }
+
+  Map<String, List<User>> _taskUsers = {};
+  Map<String, List<User>> get taskUsers => _taskUsers;
+
+  Future<void> fetchAllUsersForTasks() async {
+    if (_allTasks.isEmpty) return;
+
+    List<String> taskIds = _allTasks.map((task) => task.id).toList();
+    final response = await _getTasksUseCase.getUsersForTasks(taskIds);
+
+    if (response.success && response.data != null) {
+      _taskUsers = response.data!;
+    }
+
+    notifyListeners();
   }
 }

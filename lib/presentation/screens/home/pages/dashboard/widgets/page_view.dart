@@ -48,18 +48,14 @@ class _ExpandablePageViewState extends State<ExpandablePageView>
 
   @override
   Widget build(BuildContext context) => widget.children.isEmpty
-      ? Center(
-          child: Text(
-            widget.altTitle ?? "",
-          ),
-        )
+      ? SizedBox.shrink()
       : Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               widget.title ?? "",
               style: AppTexts.headingStyle,
-            ),
+            ).padSymmetric(horizontal: AppPaddings.appPaddingInt),
             TweenAnimationBuilder<double>(
               curve: Curves.easeInOutCubic,
               duration: const Duration(milliseconds: 100),

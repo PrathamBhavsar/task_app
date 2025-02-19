@@ -17,7 +17,7 @@ class LogService {
   }
 
   void logMessage(String message) {
-    _consoleLogger?.d(message, time: DateTime.now());
+    // _consoleLogger?.d(message, time: DateTime.now());
   }
 
   void logError(String message, Object? error, StackTrace? stackTrace) {

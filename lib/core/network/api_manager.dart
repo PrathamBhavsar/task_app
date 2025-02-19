@@ -22,15 +22,15 @@ class ApiManager {
           return handler.next(options);
         },
       ),
-      LogInterceptor(
-        error: true,
-        responseBody: true,
-        request: true,
-        requestBody: true,
-        responseHeader: true,
-        requestHeader: true,
-        logPrint: (object) => debugPrint(object.toString()),
-      ),
+      // LogInterceptor(
+      //   error: true,
+      //   responseBody: true,
+      //   request: true,
+      //   requestBody: true,
+      //   responseHeader: true,
+      //   requestHeader: true,
+      //   logPrint: (object) => debugPrint(object.toString()),
+      // ),
     ]);
   }
 

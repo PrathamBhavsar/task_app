@@ -3,6 +3,7 @@ import 'package:path/path.dart';
 
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
+import '../../data/models/user.dart';
 import '../../utils/constants/local_db.dart';
 
 class DatabaseHelper {
@@ -42,7 +43,6 @@ class DatabaseHelper {
           created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
           name TEXT NOT NULL, 
           email TEXT NOT NULL, 
-          password TEXT NOT NULL, 
           role TEXT CHECK(role IN ('admin', 'salesperson', 'agency')) NOT NULL DEFAULT 'salesperson', 
           profile_bg_color TEXT NOT NULL, 
           api_token TEXT UNIQUE
@@ -143,6 +143,40 @@ class DatabaseHelper {
         ''');
       },
     );
+  }
+
+  Future<Map<String, List<User>>> getUsersForTasks(List<String> taskIds) async {
+    final db = await database;
+
+    if (taskIds.isEmpty) return {};
+
+    // Fetch user IDs from task_salespersons and task_agencies for given task IDs
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+    SELECT ts.task_id, u.id, u.name, u.email, u.role, u.profile_bg_color 
+    FROM ${LocalDbKeys.taskSalesTable} ts
+    JOIN ${LocalDbKeys.userTable} u ON ts.user_id = u.id
+    WHERE ts.task_id IN (${List.filled(taskIds.length, '?').join(', ')})
+    UNION
+    SELECT ta.task_id, u.id, u.name, u.email, u.role, u.profile_bg_color 
+    FROM ${LocalDbKeys.taskAgencyTable} ta
+    JOIN ${LocalDbKeys.userTable} u ON ta.user_id = u.id
+    WHERE ta.task_id IN (${List.filled(taskIds.length, '?').join(', ')})
+  ''', taskIds);
+
+    // Group users by task_id
+    Map<String, List<User>> taskUsers = {};
+
+    for (var row in result) {
+      String taskId = row['task_id'];
+      User user = User.fromJson(row);
+
+      if (!taskUsers.containsKey(taskId)) {
+        taskUsers[taskId] = [];
+      }
+      taskUsers[taskId]!.add(user);
+    }
+
+    return taskUsers;
   }
 
   /// Dashboard details

@@ -6,6 +6,7 @@ import '../../utils/constants/local_db.dart';
 import '../models/api_response.dart';
 import '../models/dashboard_detail.dart';
 import '../models/task.dart';
+import '../models/user.dart';
 
 class TaskRepository {
   final ApiManager _apiManager = ApiManager();
@@ -68,6 +69,26 @@ class TaskRepository {
       statusCode: 500,
       message: "Failed to fetch dashboard details",
       data: [],
+    );
+  }
+
+  /// For Dashboard
+  Future<ApiResponse<Map<String, List<User>>>> fetchUsersForTask(
+      List<String> taskIds) async {
+    Map<String, List<User>> users = await _dbHelper.getUsersForTasks(taskIds);
+    if (users.isNotEmpty) {
+      return ApiResponse(
+        success: true,
+        statusCode: 200,
+        message: "Fetched task users from local DB",
+        data: users,
+      );
+    }
+    return ApiResponse(
+      success: false,
+      statusCode: 500,
+      message: "Failed to fetch task users",
+      data: {},
     );
   }
 
