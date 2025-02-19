@@ -5,15 +5,15 @@ import '../../data/models/user.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../domain/use_cases/auth_use_cases.dart';
 
-class AuthenticationProvider extends ChangeNotifier {
-  static final AuthenticationProvider _instance =
-      AuthenticationProvider._internal(AuthUseCase(AuthRepository()));
+class AuthProvider extends ChangeNotifier {
+  static final AuthProvider _instance =
+      AuthProvider._internal(AuthUseCase(AuthRepository()));
 
-  factory AuthenticationProvider() => _instance;
+  factory AuthProvider() => _instance;
 
-  AuthenticationProvider._internal(this._authUseCase);
+  AuthProvider._internal(this._authUseCase);
 
-  static AuthenticationProvider get instance => _instance;
+  static AuthProvider get instance => _instance;
 
   final AuthUseCase _authUseCase;
   User? _currentUser;

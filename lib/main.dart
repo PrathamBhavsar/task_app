@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constants/app_consts.dart';
+import 'core/constants/secrets/secrets.dart';
 import 'core/router/router.dart';
 import 'data/repositories/client_repository.dart';
 import 'data/repositories/designer_repository.dart';
@@ -15,8 +16,6 @@ import 'domain/use_cases/designer_use_cases.dart';
 import 'domain/use_cases/priority_use_cases.dart';
 import 'domain/use_cases/status_use_cases.dart';
 import 'domain/use_cases/task_use_cases.dart';
-import 'old/secrets/secrets.dart';
-import 'old/services/shared_pref_service.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';
 import 'presentation/providers/task_provider.dart';
@@ -28,9 +27,7 @@ void main() async {
     url: AppSecrets.supabaseUrl,
     anonKey: AppSecrets.supabaseSecureKey,
   );
-  await SharedPrefService().init();
-  var prefs = SharedPrefService();
-  bool isLoggedIn = prefs.isLoggedIn();
+  bool isLoggedIn = true;
 
   runApp(
     ScreenUtilInit(
@@ -55,8 +52,7 @@ void main() async {
               ),
             ),
           ),
-          ChangeNotifierProvider(
-              create: (_) => AuthenticationProvider.instance),
+          ChangeNotifierProvider(create: (_) => AuthProvider.instance),
           ChangeNotifierProvider(
             create: (_) => TaskProvider(
               GetTasksUseCase(

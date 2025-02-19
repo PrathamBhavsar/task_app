@@ -28,6 +28,15 @@ class TaskProvider extends ChangeNotifier {
 
   TaskProvider(this._getTasksUseCase);
 
+  int _selectedListIndex = 0;
+  int get selectedListIndex => _selectedListIndex;
+
+  /// Updates task list index
+  void setSelectedListIndex(int index) {
+    _selectedListIndex = index;
+    notifyListeners();
+  }
+
   int _currentTaskPage = 0;
   int get currentTaskPage => _currentTaskPage;
 

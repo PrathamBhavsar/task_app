@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../old/views/auth/login_screen.dart';
-import '../../old/views/auth/signup_screen.dart';
-import '../../old/views/home/pages/notification/notification_screen.dart';
-import '../../old/views/home/pages/task list/task_list_page.dart';
-import '../../old/views/task/task_detail_screen.dart';
-import '../../old/views/task/widgets/measurement/measurement_screen.dart';
-import '../../old/views/task/widgets/measurement/measurement_screen_2.dart';
-import '../../old/views/task/widgets/quotation/quotation_screen.dart';
 import '../../presentation/providers/task_provider.dart';
 import '../../presentation/screens/splash/splash_screen.dart';
-import '../../presentation/screens/home/dash.dart';
+import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/task/detail.dart';
 
 abstract class MyRouter {
@@ -47,65 +39,65 @@ abstract class MyRouter {
               return DetailScreen(task: task);
             },
           ),
-          GoRoute(
-            path: '/login',
-            name: 'login',
-            builder: (BuildContext context, GoRouterState state) =>
-                const LoginScreen(),
-          ),
-          GoRoute(
-            path: '/signup',
-            name: 'signup',
-            builder: (BuildContext context, GoRouterState state) =>
-                const SignupScreen(),
-          ),
-          GoRoute(
-            path: '/taskDetails',
-            name: 'taskDetails',
-            builder: (BuildContext context, GoRouterState state) {
-              final isSalesperson =
-                  state.uri.queryParameters['isSalesperson'] == 'true';
-              final isNewTask =
-                  state.uri.queryParameters['isNewTask'] == 'true';
-              final dealNo = state.uri.queryParameters['dealNo'] ?? '';
-
-              return TaskDetailScreen(
-                isNewTask: isNewTask,
-                dealNo: dealNo,
-                isSalesperson: isSalesperson,
-              );
-            },
-          ),
-          GoRoute(
-            path: '/taskList',
-            name: 'taskList',
-            builder: (BuildContext context, GoRouterState state) =>
-                const TaskListPage(),
-          ),
-          GoRoute(
-            path: '/notifications',
-            name: 'notifications',
-            builder: (BuildContext context, GoRouterState state) =>
-                const NotificationScreen(),
-          ),
-          GoRoute(
-            path: '/measurement',
-            name: 'measurement',
-            builder: (BuildContext context, GoRouterState state) =>
-                const MeasurementScreen(),
-          ),
-          GoRoute(
-            path: '/measurement2',
-            name: 'measurement2',
-            builder: (BuildContext context, GoRouterState state) =>
-                const MeasurementScreen2(),
-          ),
-          GoRoute(
-            path: '/quotation',
-            name: 'quotation',
-            builder: (BuildContext context, GoRouterState state) =>
-                const QuotationScreen(),
-          ),
+          // GoRoute(
+          //   path: '/login',
+          //   name: 'login',
+          //   builder: (BuildContext context, GoRouterState state) =>
+          //       const LoginScreen(),
+          // ),
+          // GoRoute(
+          //   path: '/signup',
+          //   name: 'signup',
+          //   builder: (BuildContext context, GoRouterState state) =>
+          //       const SignupScreen(),
+          // ),
+          // GoRoute(
+          //   path: '/taskDetails',
+          //   name: 'taskDetails',
+          //   builder: (BuildContext context, GoRouterState state) {
+          //     final isSalesperson =
+          //         state.uri.queryParameters['isSalesperson'] == 'true';
+          //     final isNewTask =
+          //         state.uri.queryParameters['isNewTask'] == 'true';
+          //     final dealNo = state.uri.queryParameters['dealNo'] ?? '';
+          //
+          //     return TaskDetailScreen(
+          //       isNewTask: isNewTask,
+          //       dealNo: dealNo,
+          //       isSalesperson: isSalesperson,
+          //     );
+          //   },
+          // ),
+          // GoRoute(
+          //   path: '/taskList',
+          //   name: 'taskList',
+          //   builder: (BuildContext context, GoRouterState state) =>
+          //       const TaskListPage(),
+          // ),
+          // GoRoute(
+          //   path: '/notifications',
+          //   name: 'notifications',
+          //   builder: (BuildContext context, GoRouterState state) =>
+          //       const NotificationScreen(),
+          // ),
+          // GoRoute(
+          //   path: '/measurement',
+          //   name: 'measurement',
+          //   builder: (BuildContext context, GoRouterState state) =>
+          //       const MeasurementScreen(),
+          // ),
+          // GoRoute(
+          //   path: '/measurement2',
+          //   name: 'measurement2',
+          //   builder: (BuildContext context, GoRouterState state) =>
+          //       const MeasurementScreen2(),
+          // ),
+          // GoRoute(
+          //   path: '/quotation',
+          //   name: 'quotation',
+          //   builder: (BuildContext context, GoRouterState state) =>
+          //       const QuotationScreen(),
+          // ),
         ],
       );
 }
