@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../../core/constants/app_consts.dart';
-import '../../../../../core/extensions/app_paddings.dart';
-import '../../../../../core/extensions/color_extension.dart';
 import '../../../../../data/models/dashboard_detail.dart';
+import '../../../../../utils/constants/app_consts.dart';
+import '../../../../../utils/extensions/app_paddings.dart';
+import '../../../../../utils/extensions/color_extension.dart';
 import '../../../../providers/task_provider.dart';
 import '../task list/widgets/task_tile.dart';
 import 'widgets/page_view.dart';
@@ -73,36 +72,32 @@ class DashboardPage extends StatelessWidget {
 
   Widget _buildCategoryPage(
           String category, List<DashboardStatus> categoryItems) =>
-      Padding(
-        padding: AppPaddings.appPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(category, style: AppTexts.headingStyle),
-            10.hGap,
-            categoryItems.length > 2
-                ? GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisExtent: 70.h,
-                      crossAxisSpacing: 12.h,
-                      mainAxisSpacing: 12.h,
-                    ),
-                    itemCount: categoryItems.length,
-                    itemBuilder: (context, index) =>
-                        _buildTile(categoryItems[index]),
-                  )
-                : Column(
-                    children: categoryItems
-                        .map((item) =>
-                            _buildTile(item).padSymmetric(vertical: 5))
-                        .toList(),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(category, style: AppTexts.headingStyle),
+          10.hGap,
+          categoryItems.length > 2
+              ? GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 70.h,
+                    crossAxisSpacing: 12.h,
+                    mainAxisSpacing: 12.h,
                   ),
-          ],
-        ),
-      );
+                  itemCount: categoryItems.length,
+                  itemBuilder: (context, index) =>
+                      _buildTile(categoryItems[index]),
+                )
+              : Column(
+                  children: categoryItems
+                      .map((item) => _buildTile(item).padSymmetric(vertical: 5))
+                      .toList(),
+                ),
+        ],
+      ).padAll(AppPaddings.appPaddingInt);
 
   Widget _buildTile(DashboardStatus data) => Container(
         height: 70.h,

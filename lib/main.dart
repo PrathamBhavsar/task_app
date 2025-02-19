@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import 'core/constants/app_consts.dart';
-import 'core/constants/secrets/secrets.dart';
 import 'core/router/router.dart';
 import 'data/repositories/client_repository.dart';
 import 'data/repositories/designer_repository.dart';
@@ -19,6 +16,8 @@ import 'domain/use_cases/task_use_cases.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';
 import 'presentation/providers/task_provider.dart';
+import 'utils/constants/app_consts.dart';
+import 'utils/constants/secrets/secrets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

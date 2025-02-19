@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../utils/extensions/app_paddings.dart';
+
 class CustomTag extends StatelessWidget {
   const CustomTag({
     super.key,
@@ -14,7 +16,6 @@ class CustomTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           border: Border.all(width: 2),
           borderRadius: BorderRadius.circular(25),
@@ -42,6 +43,6 @@ class CustomTag extends StatelessWidget {
                 ),
               )
           ],
-        ),
+        ).padSymmetric(horizontal: 10, vertical: 8),
       );
 }

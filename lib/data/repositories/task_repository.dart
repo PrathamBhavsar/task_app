@@ -1,8 +1,8 @@
-import '../../core/constants/local_db.dart';
 import '../../core/database/database_helper.dart';
 import '../../core/dto/get_tasks_dto.dart';
 import '../../core/network/api_endpoints.dart';
 import '../../core/network/api_manager.dart';
+import '../../utils/constants/local_db.dart';
 import '../models/api_response.dart';
 import '../models/dashboard_detail.dart';
 import '../models/task.dart';

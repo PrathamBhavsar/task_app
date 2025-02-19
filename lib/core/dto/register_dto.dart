@@ -1,5 +1,5 @@
-import '../constants/enums/dto_action.dart';
-import '../constants/enums/user_role.dart';
+import '../../utils/constants/enums/dto_action.dart';
+import '../../utils/constants/enums/user_role.dart';
 import 'dto.dart';
 
 class RegisterUserDTO extends ApiDTO {

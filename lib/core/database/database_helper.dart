@@ -3,7 +3,7 @@ import 'package:path/path.dart';
 
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
-import '../constants/local_db.dart';
+import '../../utils/constants/local_db.dart';
 
 class DatabaseHelper {
   static Database? _database;

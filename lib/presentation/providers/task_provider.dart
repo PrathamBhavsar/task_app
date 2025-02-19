@@ -32,24 +32,17 @@ class TaskProvider extends ChangeNotifier {
   int get selectedListIndex => _selectedListIndex;
 
   /// Updates task list index
-  void setSelectedListIndex(int index) {
+  void updateSelectedListIndex(int index) {
     _selectedListIndex = index;
     notifyListeners();
   }
 
-  int _currentTaskPage = 0;
-  int get currentTaskPage => _currentTaskPage;
+  int _todayTaskPageIndex = 0;
+  int get currentTodayTaskPage => _todayTaskPageIndex;
 
-  void updateCurrentTaskPage(int page) {
-    _currentTaskPage = page;
-    notifyListeners();
-  }
-
-  int _currentTodayTaskPage = 0;
-  int get currentTodayTaskPage => _currentTodayTaskPage;
-
-  void updateCurrentTodayTaskPage(int page) {
-    _currentTodayTaskPage = page;
+  /// Updates current task page index
+  void updateTodayTaskPageIndex(int page) {
+    _todayTaskPageIndex = page;
     notifyListeners();
   }
 
@@ -114,5 +107,21 @@ class TaskProvider extends ChangeNotifier {
       final taskDueDate = DateTime.parse(task.dueDate);
       return taskDueDate.isAfter(today);
     }).toList();
+  }
+
+  /// Groups tasks by their category
+  Map<String, List<Task>> get categorizedTasks {
+    Map<String, List<Task>> groupedTasks = {};
+
+    for (var task in _allTasks) {
+      String category = task.status.split(':').first.trim();
+
+      if (!groupedTasks.containsKey(category)) {
+        groupedTasks[category] = [];
+      }
+      groupedTasks[category]!.add(task);
+    }
+
+    return groupedTasks;
   }
 }

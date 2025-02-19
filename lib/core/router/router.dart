@@ -24,7 +24,7 @@ abstract class MyRouter {
             path: '/home',
             name: 'home',
             builder: (BuildContext context, GoRouterState state) =>
-                const Home(),
+                const HomeScreen(),
           ),
           GoRoute(
             path: '/taskDetail/:taskId',

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../../../core/constants/app_consts.dart';
-
 import '../../../../../data/models/task.dart';
-
+import '../../../../../utils/constants/app_consts.dart';
+import '../../../../../utils/extensions/app_paddings.dart';
 import '../../../../providers/task_provider.dart';
 import '../../../task/widgets/chip_label_widget.dart';
 import 'widgets/task_list.dart';
@@ -14,72 +13,60 @@ class TaskListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Consumer<TaskProvider>(
         builder: (BuildContext context, TaskProvider provider, Widget? child) {
-          // final user = snapshot.data!;
-          // final user = UserModel(
-          //   name: 'Bhushan',
-          //   role: UserRole.agency,
-          //   email: 'a@gmail.com',
-          //   profileBgColor: 'ff358845',
-          // );
-
-          // final List<Map<String, dynamic>> _tabs =
-          //     provider.getTabsForRole(user.role, provider.fetchedData);
-
-          // final List<Map<String, dynamic>> tabs = provider.getTabsForRole(
-          //   user.role,
-          //   DummyData.dummyFetchedDataProvider,
-          // );
-
-          final List<Task> taskList = provider.allTasks;
+          final Map<String, List<Task>> categorizedTasks =
+              provider.categorizedTasks;
+          final List<String> categories = categorizedTasks.keys.toList();
+          final List<int> taskCounts = categories
+              .map((category) => categorizedTasks[category]!.length)
+              .toList();
 
           return Column(
             children: [
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: List.generate(
-                      taskList.length,
-                      (index) => Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          showCheckmark: false,
-                          label: ChipLabelWidget(
-                            tasks: taskList,
-                            index: index,
-                            selectedIndex: provider.selectedListIndex,
-                          ),
-                          selectedColor: AppColors.primary,
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            side: BorderSide(
-                              color: provider.selectedListIndex == index
-                                  ? Colors.transparent
-                                  : AppColors.primary,
-                              width: 2,
-                            ),
-                          ),
-                          selected: provider.selectedListIndex == index,
-                          onSelected: (bool selected) {
-                            provider.setSelectedListIndex(index);
-                          },
+                child: Row(
+                  children: List.generate(
+                    categories.length,
+                    (index) => Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        showCheckmark: false,
+                        label: ChipLabelWidget(
+                          categories: categories,
+                          taskCounts: taskCounts,
+                          index: index,
+                          selectedIndex: provider.selectedListIndex,
                         ),
+                        selectedColor: AppColors.primary,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                          side: BorderSide(
+                            color: provider.selectedListIndex == index
+                                ? Colors.transparent
+                                : AppColors.primary,
+                            width: 2,
+                          ),
+                        ),
+                        selected: provider.selectedListIndex == index,
+                        onSelected: (bool selected) {
+                          provider.updateSelectedListIndex(index);
+                        },
                       ),
                     ),
                   ),
-                ),
+                ).padSymmetric(horizontal: 8),
               ),
               Expanded(
                 child: IndexedStack(
                   index: provider.selectedListIndex,
-                  children: taskList
-                      .map((task) => TasksList1(
-                            tasksList: [task],
-                            altText: 'No ${task.id} Tasks',
-                          ))
-                      .toList(),
+                  children: categories.map((category) {
+                    final List<Task> tasks = categorizedTasks[category] ?? [];
+                    return TasksList1(
+                      tasksList: tasks,
+                      altText: 'No tasks in $category',
+                    );
+                  }).toList(),
                 ),
               ),
             ],

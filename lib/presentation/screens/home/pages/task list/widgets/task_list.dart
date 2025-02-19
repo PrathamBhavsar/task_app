@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../../../../core/constants/app_consts.dart';
 import '../../../../../../data/models/task.dart';
+import '../../../../../../utils/constants/app_consts.dart';
+import '../../../../../../utils/extensions/app_paddings.dart';
 import 'task_tile.dart';
 
 class TasksList1 extends StatelessWidget {
@@ -13,26 +14,23 @@ class TasksList1 extends StatelessWidget {
   final String altText;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: AppPaddings.appPadding,
-        child: ListView.builder(
-          itemCount: tasksList.length,
-          itemBuilder: (BuildContext context, int index) {
-            if (tasksList.isEmpty) {
-              return Center(
-                child: Text(
-                  altText,
-                  style: AppTexts.headingStyle,
-                ),
-              );
-            }
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: TaskTile(
-                task: tasksList[index],
+  Widget build(BuildContext context) => ListView.builder(
+        itemCount: tasksList.length,
+        itemBuilder: (BuildContext context, int index) {
+          if (tasksList.isEmpty) {
+            return Center(
+              child: Text(
+                altText,
+                style: AppTexts.headingStyle,
               ),
             );
-          },
-        ),
-      );
+          }
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: TaskTile(
+              task: tasksList[index],
+            ),
+          );
+        },
+      ).padAll(AppPaddings.appPaddingInt);
 }

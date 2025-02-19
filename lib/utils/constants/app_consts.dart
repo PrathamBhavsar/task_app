@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../extensions/app_paddings.dart';
+
 class AppColors {
   static const Color textFieldBg = Color(0xfff7f7f7);
   static const Color green = Color(0xff5cd669);
@@ -40,7 +42,7 @@ class AppColors {
 }
 
 class AppPaddings {
-  static EdgeInsets appPadding = const EdgeInsets.all(10);
+  static double appPaddingInt = 10;
 //
 //   static Widget gapH(double h) => SizedBox(height: h);
 //   static Widget gapW(double w) => SizedBox(width: w);
@@ -113,9 +115,6 @@ class AppConsts {
           {double verticalPadding = 0,
           double horizontalPadding = 0,
           Color color = AppColors.primary}) =>
-      Padding(
-        padding: EdgeInsets.symmetric(
-            vertical: verticalPadding, horizontal: horizontalPadding),
-        child: Divider(color: color),
-      );
+      Divider(color: color).padSymmetric(
+          vertical: verticalPadding, horizontal: horizontalPadding);
 }

@@ -1,4 +1,4 @@
-import '../constants/enums/dto_action.dart';
+import '../../utils/constants/enums/dto_action.dart';
 import 'dto.dart';
 
 class CreateClientDTO extends ApiDTO {

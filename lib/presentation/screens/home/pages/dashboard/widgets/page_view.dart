@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../../../core/constants/app_consts.dart';
+import '../../../../../../utils/constants/app_consts.dart';
+import '../../../../../../utils/extensions/app_paddings.dart';
 import 'size_reporting_widget.dart';
 
 class ExpandablePageView extends StatefulWidget {
@@ -79,25 +80,22 @@ class _ExpandablePageViewState extends State<ExpandablePageView>
           ],
         );
 
-  Widget _buildDotIndicator(int pageCount, int currentPage) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            pageCount,
-            (index) => AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              margin: const EdgeInsets.symmetric(horizontal: 4.0),
-              width: currentPage == index ? 8 : 3,
-              height: currentPage == index ? 8 : 3,
-              decoration: BoxDecoration(
-                color: currentPage == index ? AppColors.primary : Colors.grey,
-                shape: BoxShape.circle,
-              ),
+  Widget _buildDotIndicator(int pageCount, int currentPage) => Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          pageCount,
+          (index) => AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            margin: const EdgeInsets.symmetric(horizontal: 4.0),
+            width: currentPage == index ? 8 : 3,
+            height: currentPage == index ? 8 : 3,
+            decoration: BoxDecoration(
+              color: currentPage == index ? AppColors.primary : Colors.grey,
+              shape: BoxShape.circle,
             ),
           ),
         ),
-      );
+      ).padSymmetric(vertical: 8);
 
   List<Widget> get _sizeReportingChildren => widget.children
       .asMap()

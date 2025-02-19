@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/constants/app_consts.dart';
+import '../../../utils/constants/app_consts.dart';
 import '../../providers/home_provider.dart';
 import '../../providers/task_provider.dart';
 import 'pages/task list/task_list_page.dart';
 import 'pages/dashboard/dashboard_page.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeScreenState extends State<HomeScreen> {
   List<String> pageTitles = ['Dashboard', 'Task List'];
   List<Widget> pages = [
     const DashboardPage(),
