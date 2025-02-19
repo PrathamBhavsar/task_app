@@ -17,6 +17,9 @@ class TaskProvider extends ChangeNotifier {
   List<Task> _dueTodayTasks = [];
   List<Task> get dueTodayTasks => _dueTodayTasks;
 
+  List<Task> _pastDueTasks = [];
+  List<Task> get pastDueTasks => _pastDueTasks;
+
   List<Task> _allTasks = [];
   List<Task> get allTasks => _allTasks;
 
@@ -67,9 +70,9 @@ class TaskProvider extends ChangeNotifier {
 
     if (response.success && response.data != null) {
       _dashboardDetails = response.data!;
-      print(_dashboardDetails);
     }
 
+    await fetchTasks();
     _isLoading = false;
     notifyListeners();
   }
@@ -96,6 +99,11 @@ class TaskProvider extends ChangeNotifier {
       final taskDueDate =
           DateFormat('yyyy-MM-dd').format(DateTime.parse(task.dueDate));
       return taskDueDate == todayString;
+    }).toList();
+
+    _pastDueTasks = _allTasks.where((task) {
+      final taskDueDate = DateTime.parse(task.dueDate);
+      return taskDueDate.isAfter(today);
     }).toList();
   }
 }

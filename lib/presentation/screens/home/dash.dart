@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_consts.dart';
 import '../../providers/home_provider.dart';
+import 'pages/task_list.dart';
 import 'pages/dashpage1.dart';
-import 'pages/listpage2.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,8 +16,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<String> pageTitles = ['Dashboard', 'Task List'];
   List<Widget> pages = [
-    const Page2(),
     const Page1(),
+    const Page2(),
   ];
 
   final PageController pageController = PageController(initialPage: 0);

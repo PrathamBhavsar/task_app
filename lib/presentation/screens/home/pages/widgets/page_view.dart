@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-
 import '../../../../../core/constants/app_consts.dart';
 import 'size_reporting_widget.dart';
 
 class ExpandablePageView extends StatefulWidget {
   final List<Widget> children;
+  final String? title;
+  final String? altTitle;
 
   const ExpandablePageView({
     super.key,
     required this.children,
+    this.title,
+    this.altTitle,
   });
 
   @override
@@ -43,29 +46,38 @@ class _ExpandablePageViewState extends State<ExpandablePageView>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TweenAnimationBuilder<double>(
-          curve: Curves.easeInOutCubic,
-          duration: const Duration(milliseconds: 100),
-          tween: Tween<double>(begin: _heights[0], end: _currentHeight),
-          builder: (context, value, child) =>
-              SizedBox(height: value, child: child),
-          child: PageView(
-            padEnds: true,
-            controller: _pageController,
-            children: _sizeReportingChildren
-                .asMap()
-                .map(MapEntry.new)
-                .values
-                .toList(),
+  Widget build(BuildContext context) => widget.children.isEmpty
+      ? Center(
+          child: Text(
+            widget.altTitle ?? "",
           ),
-        ),
-        _buildDotIndicator(_sizeReportingChildren.length, _currentPage),
-      ],
-    );
-  }
+        )
+      : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.title ?? "",
+              style: AppTexts.headingStyle,
+            ),
+            TweenAnimationBuilder<double>(
+              curve: Curves.easeInOutCubic,
+              duration: const Duration(milliseconds: 100),
+              tween: Tween<double>(begin: _heights[0], end: _currentHeight),
+              builder: (context, value, child) =>
+                  SizedBox(height: value, child: child),
+              child: PageView(
+                padEnds: true,
+                controller: _pageController,
+                children: _sizeReportingChildren
+                    .asMap()
+                    .map(MapEntry.new)
+                    .values
+                    .toList(),
+              ),
+            ),
+            _buildDotIndicator(_sizeReportingChildren.length, _currentPage),
+          ],
+        );
 
   Widget _buildDotIndicator(int pageCount, int currentPage) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),

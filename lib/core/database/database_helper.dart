@@ -151,6 +151,7 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> result = await db.rawQuery('''
     SELECT 
         s.name AS status_name, 
+        s.color AS color,
         COUNT(t.id) AS task_count
     FROM ${LocalDbKeys.statusTable} s
     LEFT JOIN ${LocalDbKeys.taskTable} t 
@@ -161,7 +162,7 @@ class DatabaseHelper {
     return result.map(DashboardStatus.fromJson).toList();
   }
 
-  /// Dashboard details
+  /// Gets single task by id
   Future<Task?> getTaskById(String id) async {
     final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> result = await db.rawQuery('''

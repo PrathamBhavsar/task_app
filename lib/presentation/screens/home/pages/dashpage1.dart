@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/constants/app_consts.dart';
+import '../../../../core/extensions/color_extension.dart';
 import '../../../../data/models/dashboard_detail.dart';
+import '../../../../old/extensions/app_paddings.dart';
 import '../../../providers/task_provider.dart';
+import 'widgets/page_view.dart';
+import 'widgets/task_tileee.dart';
 
 class Page1 extends StatelessWidget {
   const Page1({super.key});
@@ -11,36 +17,124 @@ class Page1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          TextButton(
-            onPressed: provider.fetchDashboardDetails,
-            child: Text('fetch'),
+    return provider.isLoading
+        ? Center(child: CircularProgressIndicator())
+        : _buildBody(provider);
+  }
+
+  Widget _buildBody(TaskProvider provider) {
+    final categorizedDetails = _groupByCategory(provider.dashboardDetails);
+    final sortedCategories = categorizedDetails.keys.toList()..sort();
+    final dueTodayTasksWidgets = provider.dueTodayTasks
+        .map((task) => TaskTile1(task: task).padAll(10))
+        .toList();
+    final pastDueTasksWidgets = provider.pastDueTasks
+        .map((task) => TaskTile1(task: task).padAll(10))
+        .toList();
+
+    if (sortedCategories.isEmpty) {
+      return Center(child: Text("No categories found"));
+    }
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          ExpandablePageView(
+            children: sortedCategories
+                .map((category) =>
+                    _buildCategoryPage(category, categorizedDetails[category]!))
+                .toList(),
+          ),
+          ExpandablePageView(
+            title: 'Due Today',
+            altTitle: 'No Tasks Due Today',
+            children: dueTodayTasksWidgets,
+          ),
+          ExpandablePageView(
+            title: 'Past Due',
+            altTitle: 'Tasks Up-to date',
+            children: pastDueTasksWidgets,
           ),
         ],
       ),
-      body: provider.isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: provider.dashboardDetails.length,
-                    itemBuilder: (context, index) {
-                      final DashboardStatus detail =
-                          provider.dashboardDetails[index];
-                      return ListTile(
-                        title: Text(detail.statusName),
-                        subtitle: Text(detail.taskCount.toString()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
     );
   }
+
+  Map<String, List<DashboardStatus>> _groupByCategory(
+          List<DashboardStatus> dashboardDetails) =>
+      {
+        for (var detail in dashboardDetails)
+          detail.category?.isNotEmpty == true
+              ? detail.category!
+              : 'Uncategorized': [
+            ...(dashboardDetails.where((d) => d.category == detail.category))
+          ]
+      };
+
+  Widget _buildCategoryPage(
+          String category, List<DashboardStatus> categoryItems) =>
+      Padding(
+        padding: AppPaddings.appPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(category, style: AppTexts.headingStyle),
+            10.hGap,
+            categoryItems.length > 2
+                ? GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisExtent: 70.h,
+                      crossAxisSpacing: 12.h,
+                      mainAxisSpacing: 12.h,
+                    ),
+                    itemCount: categoryItems.length,
+                    itemBuilder: (context, index) =>
+                        _buildTile(categoryItems[index]),
+                  )
+                : Column(
+                    children: categoryItems
+                        .map((item) =>
+                            _buildTile(item).padSymmetric(vertical: 5))
+                        .toList(),
+                  ),
+          ],
+        ),
+      );
+
+  Widget _buildTile(DashboardStatus data) => Container(
+        height: 70.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.primary, width: 2),
+          color: data.color.toColor(),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  data.statusName.split(':').last.trim(),
+                  style: AppTexts.headingStyle,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  maxLines: 1,
+                ),
+              ),
+              8.wGap,
+              Text(
+                data.taskCount.toString(),
+                style: AppTexts.headingStyle,
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                maxLines: 1,
+              ),
+            ],
+          ),
+        ),
+      );
 }

@@ -1,11 +1,13 @@
 class DashboardStatus {
   final String statusName;
   final int taskCount;
+  final String color;
   final String? category;
 
   DashboardStatus({
     required this.statusName,
     required this.taskCount,
+    required this.color,
     this.category,
   });
 
@@ -13,12 +15,14 @@ class DashboardStatus {
       DashboardStatus(
         statusName: json['status_name'],
         taskCount: json['task_count'],
+        color: json['color'],
         category: _extractCategory(json['status_name']),
       );
 
   Map<String, dynamic> toJson() => {
         'status_name': statusName,
         'task_count': taskCount,
+        'color': color,
         'category': category,
       };
 
