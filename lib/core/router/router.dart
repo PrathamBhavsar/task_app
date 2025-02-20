@@ -6,11 +6,7 @@ import '../../presentation/screens/task/detail.dart';
 
 abstract class MyRouter {
   static GoRouter router(bool isLoggedIn) => GoRouter(
-        initialLocation: true
-            // ? '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019'
-            ? '/splash'
-            : '/signup',
-        // : '/taskDetails?isSalesperson=false&isNewTask=false&dealNo=25-0019',
+        initialLocation: true ? '/splash' : '/signup',
         routes: [
           GoRoute(
             path: '/splash',
@@ -28,7 +24,6 @@ abstract class MyRouter {
             path: '/taskDetail/:taskId',
             builder: (context, state) {
               final taskId = state.pathParameters['taskId']!;
-
               return DetailScreen(taskId: taskId);
             },
           ),

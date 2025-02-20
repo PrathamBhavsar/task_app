@@ -6,7 +6,4 @@ abstract class LocalDbKeys {
   static const String statusTable = 'status';
   static const String priorityTable = 'priority';
   static const String taskTable = 'tasks';
-  static const String taskAgencyTable = 'task_agencies';
-  static const String taskSalesTable = 'task_salespersons';
-  static const String taskDesignerTable = 'task_designers';
 }

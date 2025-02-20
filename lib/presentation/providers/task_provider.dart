@@ -57,7 +57,6 @@ class TaskProvider extends ChangeNotifier {
     if (response.success && response.data != null) {
       _allTasksOverall = response.data!;
       filterTasksByDueDate();
-      // fetchAllUsersForTasks();
     }
 
     _isLoading = false;

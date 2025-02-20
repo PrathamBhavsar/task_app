@@ -33,7 +33,7 @@ class DatabaseHelper {
           password TEXT NOT NULL, 
           role TEXT CHECK(role IN ('admin', 'salesperson', 'agency')) NOT NULL DEFAULT 'salesperson', 
           profile_bg_color TEXT NOT NULL, 
-          api_token TEXT UNIQUE
+          api_token TEXT UNIQUE          
         )
         ''');
 
@@ -93,53 +93,29 @@ class DatabaseHelper {
 
         await db.execute('''
         CREATE TABLE ${LocalDbKeys.taskTable} (
-          id TEXT PRIMARY KEY, 
-          deal_no TEXT UNIQUE NOT NULL, 
-          name TEXT, 
-          created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-          start_date TEXT DEFAULT CURRENT_TIMESTAMP, 
-          due_date TEXT DEFAULT CURRENT_TIMESTAMP, 
-          priority TEXT NOT NULL, 
-          created_by TEXT, 
-          remarks TEXT, 
-          status TEXT NOT NULL, 
-          FOREIGN KEY (priority) REFERENCES ${LocalDbKeys.priorityTable}(name), 
-          FOREIGN KEY (created_by) REFERENCES ${LocalDbKeys.userTable}(id), 
-          FOREIGN KEY (status) REFERENCES ${LocalDbKeys.statusTable}(name)
-        )
-        ''');
+        id TEXT PRIMARY KEY, 
+        deal_no TEXT UNIQUE NOT NULL, 
+        name TEXT, 
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+        start_date TEXT DEFAULT CURRENT_TIMESTAMP, 
+        due_date TEXT DEFAULT CURRENT_TIMESTAMP, 
+        priority TEXT NOT NULL, 
+        created_by TEXT, 
+        salesperson_id TEXT,  -- Define salesperson_id
+        agency_id TEXT,       -- Define agency_id
+        designer_id TEXT,     -- Define designer_id
+        client_id TEXT,       -- Define client_id
+        remarks TEXT, 
+        status TEXT NOT NULL, 
+        FOREIGN KEY (priority) REFERENCES ${LocalDbKeys.priorityTable}(name), 
+        FOREIGN KEY (created_by) REFERENCES ${LocalDbKeys.userTable}(id), 
+        FOREIGN KEY (status) REFERENCES ${LocalDbKeys.statusTable}(name),
+        FOREIGN KEY (salesperson_id) REFERENCES ${LocalDbKeys.userTable}(id),
+        FOREIGN KEY (agency_id) REFERENCES ${LocalDbKeys.userTable}(id),
+        FOREIGN KEY (designer_id) REFERENCES ${LocalDbKeys.designerTable}(id),
+        FOREIGN KEY (client_id) REFERENCES ${LocalDbKeys.clientTable}(id)
+      )
 
-        await db.execute('''
-        CREATE TABLE ${LocalDbKeys.taskAgencyTable} (
-          user_id TEXT NOT NULL, 
-          task_id TEXT NOT NULL, 
-          created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-          PRIMARY KEY (user_id, task_id),
-          FOREIGN KEY (user_id) REFERENCES ${LocalDbKeys.userTable}(id) ON DELETE CASCADE,
-          FOREIGN KEY (task_id) REFERENCES ${LocalDbKeys.taskTable}(id) ON DELETE CASCADE
-        )
-        ''');
-
-        await db.execute('''
-        CREATE TABLE ${LocalDbKeys.taskSalesTable} (
-          user_id TEXT NOT NULL, 
-          task_id TEXT NOT NULL, 
-          created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-          PRIMARY KEY (user_id, task_id),
-          FOREIGN KEY (user_id) REFERENCES ${LocalDbKeys.userTable}(id) ON DELETE CASCADE,
-          FOREIGN KEY (task_id) REFERENCES ${LocalDbKeys.taskTable}(id) ON DELETE CASCADE
-        )
-        ''');
-
-        await db.execute('''
-        CREATE TABLE ${LocalDbKeys.taskDesignerTable} (
-          designer_id TEXT NOT NULL, 
-          task_id TEXT NOT NULL, 
-          created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-          PRIMARY KEY (designer_id, task_id),
-          FOREIGN KEY (designer_id) REFERENCES ${LocalDbKeys.designerTable}(id) ON DELETE CASCADE,
-          FOREIGN KEY (task_id) REFERENCES ${LocalDbKeys.taskTable}(id) ON DELETE CASCADE
-        )
         ''');
       },
     );
@@ -183,20 +159,18 @@ class DatabaseHelper {
     s.color AS status_color, 
     p.name AS priority_name, 
     p.color AS priority_color, 
-    GROUP_CONCAT(u.name) AS user_names, 
-    GROUP_CONCAT(u.profile_bg_color) AS user_profile_bg_colors
-    FROM tasks t
-    LEFT JOIN (
-        -- Combine unique user_ids from both tables
-        SELECT task_id, user_id FROM task_salespersons
-        UNION 
-        SELECT task_id, user_id FROM task_agencies
-    ) AS task_users ON t.id = task_users.task_id
-    LEFT JOIN users u ON u.id = task_users.user_id
-    LEFT JOIN status s ON t.status = s.name
-    LEFT JOIN priority p ON t.priority = p.name
-    GROUP BY t.id, t.name, t.due_date, s.name, s.color, p.name, p.color
-    ORDER BY t.name;
+        COALESCE(sp.name, '') || ', ' || COALESCE(ag.name, '') AS user_names, 
+        COALESCE(sp.profile_bg_color, '') || ', ' || COALESCE(ag.profile_bg_color, '') AS user_profile_bg_colors
+      FROM ${LocalDbKeys.taskTable} t
+      -- Join users for salesperson
+      LEFT JOIN ${LocalDbKeys.userTable} sp ON t.salesperson_id = sp.id
+      -- Join users for agency
+      LEFT JOIN ${LocalDbKeys.userTable} ag ON t.agency_id = ag.id
+      -- Join status table
+      LEFT JOIN ${LocalDbKeys.statusTable} s ON t.status = s.name
+      -- Join priority table
+      LEFT JOIN ${LocalDbKeys.priorityTable} p ON t.priority = p.name
+      ORDER BY t.name;
   ''');
     return result.map(TaskWithUsers.fromJson).toList();
   }

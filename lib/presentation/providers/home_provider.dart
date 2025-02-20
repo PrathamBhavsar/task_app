@@ -49,7 +49,6 @@ class HomeProvider extends ChangeNotifier {
   Future<void> fetchAllData() async {
     _isLoading = true;
     notifyListeners();
-    await _getUsersUseCase.getUsers();
 
     final List<ApiResponse<dynamic>> responses = await Future.wait([
       _getStatusesUseCase.execute(),
@@ -64,6 +63,12 @@ class HomeProvider extends ChangeNotifier {
     _designers = responses[2].success ? responses[2].data ?? [] : [];
     _clients = responses[3].success ? responses[3].data ?? [] : [];
     _users = responses[4].success ? responses[4].data ?? [] : [];
+
+    print(_statuses);
+    print(_priorities);
+    print(_designers);
+    print(_clients);
+    print(_users);
 
     _isLoading = false;
     notifyListeners();

@@ -25,23 +25,4 @@ class GetUsersUseCase {
       data: [],
     );
   }
-
-  Future<void> getUsers() async {
-    await repository.fetchTaskSalespersons();
-    await repository.fetchTaskAgencies();
-    //
-    // if (salesperson.success && salesperson.data != null) {
-    //   List<TaskUser> users = List<TaskUser>.from(salesperson.data!);
-    //
-    //   return ApiResponse(
-    //       success: true, statusCode: 200, message: "Success", data: users);
-    // }
-    //
-    // return ApiResponse(
-    //   success: false,
-    //   statusCode: salesperson.statusCode,
-    //   message: salesperson.message,
-    //   data: [],
-    // );
-  }
 }

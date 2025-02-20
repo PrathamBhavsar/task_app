@@ -31,7 +31,6 @@ class _DetailScreenState extends State<DetailScreen> {
               (BuildContext context, TaskProvider provider, Widget? child) =>
                   Column(
             children: [
-              Text(provider.selectedTask.dealNo),
               Text(provider.selectedTask.name),
               Text(provider.selectedTask.remarks ?? ""),
               Text(provider.selectedTask.startDate),

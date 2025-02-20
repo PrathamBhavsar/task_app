@@ -9,6 +9,10 @@ class Task {
   final String createdBy;
   final String? remarks;
   final String status;
+  final String salespersonId;
+  final String agencyId;
+  final String designerId;
+  final String clientId;
 
   Task({
     required this.id,
@@ -21,6 +25,10 @@ class Task {
     required this.createdBy,
     this.remarks,
     required this.status,
+    required this.salespersonId,
+    required this.agencyId,
+    required this.designerId,
+    required this.clientId,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
@@ -34,6 +42,10 @@ class Task {
         createdBy: json['created_by'],
         remarks: json['remarks'] ?? "",
         status: json['status'],
+        salespersonId: json['salesperson_id'],
+        agencyId: json['agency_id'],
+        designerId: json['designer_id'],
+        clientId: json['client_id'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -47,5 +59,9 @@ class Task {
         'created_by': createdBy,
         'remarks': remarks,
         'status': status,
+        'salesperson_id': salespersonId,
+        'agency_id': agencyId,
+        'designer_id': designerId,
+        'client_id': clientId,
       };
 }
