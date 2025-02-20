@@ -1,5 +1,6 @@
 import '../../../data/models/api_response.dart';
 import '../../core/dto/get_tasks_dto.dart';
+import '../../core/dto/task_dtos.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
 import '../../data/models/taskWithUser.dart';
@@ -25,6 +26,24 @@ class GetTasksUseCase {
       statusCode: response.statusCode,
       message: response.message,
       data: [],
+    );
+  }
+
+  Future<ApiResponse<String>> createTask(CreateTaskDTO requestDTO) async {
+    final response = await repository.createTask(requestDTO);
+
+    if (response.success && response.data != null) {
+      String taskId = response.data!['task_id'];
+
+      return ApiResponse(
+          success: true, statusCode: 200, message: "Success", data: taskId);
+    }
+
+    return ApiResponse(
+      success: false,
+      statusCode: response.statusCode,
+      message: response.message,
+      data: '',
     );
   }
 

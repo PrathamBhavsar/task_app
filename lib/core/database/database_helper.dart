@@ -4,7 +4,6 @@ import 'package:path/path.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
 import '../../data/models/taskWithUser.dart';
-import '../../data/models/user.dart';
 import '../../utils/constants/local_db.dart';
 
 class DatabaseHelper {
@@ -199,7 +198,6 @@ class DatabaseHelper {
     GROUP BY t.id, t.name, t.due_date, s.name, s.color, p.name, p.color
     ORDER BY t.name;
   ''');
-
     return result.map(TaskWithUsers.fromJson).toList();
   }
 

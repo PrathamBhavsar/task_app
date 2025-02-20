@@ -1,5 +1,6 @@
 import '../../core/database/database_helper.dart';
 import '../../core/dto/get_tasks_dto.dart';
+import '../../core/dto/task_dtos.dart';
 import '../../core/network/api_endpoints.dart';
 import '../../core/network/api_manager.dart';
 import '../../utils/constants/local_db.dart';
@@ -7,7 +8,6 @@ import '../models/api_response.dart';
 import '../models/dashboard_detail.dart';
 import '../models/task.dart';
 import '../models/taskWithUser.dart';
-import '../models/user.dart';
 
 class TaskRepository {
   final ApiManager _apiManager = ApiManager();
@@ -49,6 +49,31 @@ class TaskRepository {
         statusCode: 500,
         message: "Failed to fetch tasks: $e",
         data: [],
+      );
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> createTask(
+      CreateTaskDTO requestDTO) async {
+    try {
+      // Fetch from API
+      final response = await _apiManager.post<Map<String, dynamic>>(
+        data: requestDTO.toJson(),
+        ApiEndpoints.task,
+        fromJsonT: (data) => data,
+      );
+
+      if (response.success && response.data != null) {
+        await _dbHelper.storeAllData(LocalDbKeys.taskTable, [response.data!]);
+      }
+
+      return response;
+    } catch (e) {
+      return ApiResponse<Map<String, dynamic>>(
+        success: false,
+        statusCode: 500,
+        message: "Failed to create task: $e",
+        data: {},
       );
     }
   }

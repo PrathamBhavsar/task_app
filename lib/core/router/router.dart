@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import '../../presentation/providers/task_provider.dart';
 import '../../presentation/screens/splash/splash_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/task/detail.dart';
@@ -30,11 +28,6 @@ abstract class MyRouter {
             path: '/taskDetail/:taskId',
             builder: (context, state) {
               final taskId = state.pathParameters['taskId']!;
-
-              // final task = context
-              //     .read<TaskProvider>()
-              //     .allTasks
-              //     .firstWhere((task) => task.id == taskId);
 
               return DetailScreen(taskId: taskId);
             },

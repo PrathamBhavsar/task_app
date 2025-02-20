@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.microtask(() async {
       await Provider.of<HomeProvider>(context, listen: false).fetchAllData();
-      if (mounted) context.pushNamed('home');
+      if (mounted) context.goNamed('home');
     });
   }
 

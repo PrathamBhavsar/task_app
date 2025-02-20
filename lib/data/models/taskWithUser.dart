@@ -1,4 +1,5 @@
 class TaskWithUsers {
+  final String taskId;
   final String taskName;
   final String dueDate;
   final String statusName;
@@ -9,6 +10,7 @@ class TaskWithUsers {
   final List<String> userProfileBgColors;
 
   TaskWithUsers({
+    required this.taskId,
     required this.taskName,
     required this.dueDate,
     required this.statusName,
@@ -20,6 +22,7 @@ class TaskWithUsers {
   });
 
   factory TaskWithUsers.fromJson(Map<String, dynamic> json) => TaskWithUsers(
+        taskId: json['task_id'],
         taskName: json['task_name'],
         dueDate: json['due_date'],
         statusName: json['status_name'],

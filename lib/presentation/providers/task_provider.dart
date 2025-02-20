@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../core/dto/get_tasks_dto.dart';
+import '../../core/dto/task_dtos.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
 import '../../data/models/taskWithUser.dart';
-import '../../data/models/user.dart';
 import '../../domain/use_cases/task_use_cases.dart';
 
 class TaskProvider extends ChangeNotifier {
@@ -58,6 +58,38 @@ class TaskProvider extends ChangeNotifier {
       _allTasksOverall = response.data!;
       filterTasksByDueDate();
       // fetchAllUsersForTasks();
+    }
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  Future<void> createTask() async {
+    _isLoading = true;
+    notifyListeners();
+
+    final response = await _getTasksUseCase.createTask(
+      CreateTaskDTO(
+        dealNo: 'dealNo', //add method to create dealNo
+        name: 'name',
+        startDate: DateTime.now(),
+        dueDate: DateTime.now(),
+        priority: 'priority',
+        createdBy: 'createdBy',
+        remarks: 'remarks',
+        status: 'status',
+        clients: ['clients'],
+        designers: ['designers'],
+        agencies: ['agencies'],
+        salespersons: ['salespersons'],
+        attachments: [
+          AttachmentDTO(url: 'url', name: 'name'),
+        ],
+      ),
+    );
+
+    if (response.success && response.data != null) {
+      // _allTasksOverall = response.data!;
     }
 
     _isLoading = false;
