@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../data/models/api_response.dart';
 import '../../data/models/status.dart';
 import '../../data/models/user.dart';
 import '../../data/models/priority.dart';
@@ -18,21 +19,18 @@ class HomeProvider extends ChangeNotifier {
   final GetClientsUseCase _getClientsUseCase;
   final GetUsersUseCase _getUsersUseCase;
 
-  // Data lists
   List<Status> _statuses = [];
   List<Priority> _priorities = [];
   List<Designer> _designers = [];
   List<Client> _clients = [];
   List<User> _users = [];
 
-  // Getters for each list
   List<Status> get statuses => _statuses;
   List<Priority> get priorities => _priorities;
   List<Designer> get designers => _designers;
   List<Client> get clients => _clients;
   List<User> get users => _users;
 
-  // Loading state
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -48,43 +46,23 @@ class HomeProvider extends ChangeNotifier {
         _getClientsUseCase = getClientsUseCase,
         _getUsersUseCase = getUsersUseCase;
 
-  // Fetch all data
   Future<void> fetchAllData() async {
     _isLoading = true;
     notifyListeners();
 
-    // Fetch statuses
-    final statusResponse = await _getStatusesUseCase.execute();
-    if (statusResponse.success && statusResponse.data != null) {
-      _statuses = statusResponse.data!;
-    }
+    final List<ApiResponse<dynamic>> responses = await Future.wait([
+      _getStatusesUseCase.execute(),
+      _getPrioritiesUseCase.execute(),
+      _getDesignersUseCase.execute(),
+      _getClientsUseCase.execute(),
+      _getUsersUseCase.execute(),
+    ]);
 
-    // Fetch priorities
-    final priorityResponse = await _getPrioritiesUseCase.execute();
-    if (priorityResponse.success && priorityResponse.data != null) {
-      _priorities = priorityResponse.data!;
-    }
-
-    // Fetch designers
-    final designerResponse = await _getDesignersUseCase.execute();
-    if (designerResponse.success && designerResponse.data != null) {
-      _designers = designerResponse.data!;
-    }
-
-    // Fetch clients
-    final clientResponse = await _getClientsUseCase.execute();
-    if (clientResponse.success && clientResponse.data != null) {
-      _clients = clientResponse.data!;
-    }
-
-    // Fetch users
-    final userResponse = await _getUsersUseCase.execute();
-    if (userResponse.success && userResponse.data != null) {
-      _users = userResponse.data!;
-    }
-
-    // Fetch task salespersons and agencies
-    await _getUsersUseCase.getUsers();
+    _statuses = responses[0].success ? responses[0].data ?? [] : [];
+    _priorities = responses[1].success ? responses[1].data ?? [] : [];
+    _designers = responses[2].success ? responses[2].data ?? [] : [];
+    _clients = responses[3].success ? responses[3].data ?? [] : [];
+    _users = responses[4].success ? responses[4].data ?? [] : [];
 
     _isLoading = false;
     notifyListeners();
