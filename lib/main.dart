@@ -24,10 +24,10 @@ import 'utils/constants/secrets/secrets.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(
-    url: AppSecrets.supabaseUrl,
-    anonKey: AppSecrets.supabaseSecureKey,
-  );
+  // await Supabase.initialize(
+  //   url: AppSecrets.supabaseUrl,
+  //   anonKey: AppSecrets.supabaseSecureKey,
+  // );
   bool isLoggedIn = true;
 
   runApp(

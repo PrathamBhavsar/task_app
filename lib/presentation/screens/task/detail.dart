@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/models/task.dart';
-
 class DetailScreen extends StatelessWidget {
-  final Task task;
+  final String taskId;
 
-  const DetailScreen({super.key, required this.task});
+  const DetailScreen({super.key, required this.taskId});
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(task.name)),
+        appBar: AppBar(title: Text(taskId)),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text(task.id),
-              Text(task.name), // Display other task details
-              // Add more UI to show task details
+              Text(taskId),
             ],
           ),
         ),

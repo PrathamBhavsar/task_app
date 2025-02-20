@@ -31,12 +31,12 @@ abstract class MyRouter {
             builder: (context, state) {
               final taskId = state.pathParameters['taskId']!;
 
-              final task = context
-                  .read<TaskProvider>()
-                  .allTasks
-                  .firstWhere((task) => task.id == taskId);
+              // final task = context
+              //     .read<TaskProvider>()
+              //     .allTasks
+              //     .firstWhere((task) => task.id == taskId);
 
-              return DetailScreen(task: task);
+              return DetailScreen(taskId: taskId);
             },
           ),
           // GoRoute(

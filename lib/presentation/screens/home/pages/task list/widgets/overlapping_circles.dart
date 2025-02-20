@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import '../../../../../../utils/constants/app_consts.dart';
+import '../../../../../../utils/extensions/color_extension.dart';
 
 class OverlappingCircles extends StatelessWidget {
-  final List<Color> bgColors;
+  final List<String> bgColors;
   final List<String> displayNames;
   final double circleSize;
   final double borderWidth;
@@ -101,15 +102,16 @@ class OverlappingCircles extends StatelessWidget {
                     color: borderColor,
                     width: borderWidth,
                   ),
-                  color: bgColors[index],
+                  color: bgColors[index].toColor(),
                 ),
                 child: Center(
                   child: Text(
                     initials,
                     style: TextStyle(
-                        fontSize: fontSize,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary),
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
               ),

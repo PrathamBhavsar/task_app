@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import '../../../../../../data/models/task.dart';
+import '../../../../../../data/models/taskWithUser.dart';
 import '../../../../../../utils/constants/app_consts.dart';
 import '../../../../../../utils/extensions/app_paddings.dart';
 import 'task_tile.dart';
 
-class TasksList1 extends StatelessWidget {
-  const TasksList1({
+class TasksList extends StatelessWidget {
+  const TasksList({
     super.key,
     required this.tasksList,
     required this.altText,
   });
-  final List<Task> tasksList;
+  final List<TaskWithUsers> tasksList;
   final String altText;
 
   @override

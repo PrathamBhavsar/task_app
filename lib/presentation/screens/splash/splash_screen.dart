@@ -9,8 +9,28 @@ import '../../../data/models/status.dart';
 import '../../../data/models/user.dart';
 import '../../providers/home_provider.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      Provider.of<HomeProvider>(context, listen: false)
+          .fetchAllData()
+          .then((value) {
+        if (mounted) {
+          context.pushNamed('home');
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,16 +101,6 @@ class SplashScreen extends StatelessWidget {
                 ],
               ),
             ),
-      persistentFooterButtons: [
-        TextButton(
-          onPressed: provider.fetchAllData,
-          child: Text('fetch'),
-        ),
-        TextButton(
-          onPressed: () => context.pushNamed('home'),
-          child: Text('next'),
-        ),
-      ],
     );
   }
 }

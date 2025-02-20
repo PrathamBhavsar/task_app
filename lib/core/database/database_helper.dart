@@ -3,6 +3,7 @@ import 'package:path/path.dart';
 
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
+import '../../data/models/taskWithUser.dart';
 import '../../data/models/user.dart';
 import '../../utils/constants/local_db.dart';
 
@@ -145,40 +146,6 @@ class DatabaseHelper {
     );
   }
 
-  Future<Map<String, List<User>>> getUsersForTasks(List<String> taskIds) async {
-    final db = await database;
-
-    if (taskIds.isEmpty) return {};
-
-    // Fetch user IDs from task_salespersons and task_agencies for given task IDs
-    final List<Map<String, dynamic>> result = await db.rawQuery('''
-    SELECT ts.task_id, u.id, u.name, u.email, u.role, u.profile_bg_color 
-    FROM ${LocalDbKeys.taskSalesTable} ts
-    JOIN ${LocalDbKeys.userTable} u ON ts.user_id = u.id
-    WHERE ts.task_id IN (${List.filled(taskIds.length, '?').join(', ')})
-    UNION
-    SELECT ta.task_id, u.id, u.name, u.email, u.role, u.profile_bg_color 
-    FROM ${LocalDbKeys.taskAgencyTable} ta
-    JOIN ${LocalDbKeys.userTable} u ON ta.user_id = u.id
-    WHERE ta.task_id IN (${List.filled(taskIds.length, '?').join(', ')})
-  ''', taskIds);
-
-    // Group users by task_id
-    Map<String, List<User>> taskUsers = {};
-
-    for (var row in result) {
-      String taskId = row['task_id'];
-      User user = User.fromJson(row);
-
-      if (!taskUsers.containsKey(taskId)) {
-        taskUsers[taskId] = [];
-      }
-      taskUsers[taskId]!.add(user);
-    }
-
-    return taskUsers;
-  }
-
   /// Dashboard details
   Future<List<DashboardStatus>> getTaskCountPerStatus() async {
     final db = await DatabaseHelper.instance.database;
@@ -203,6 +170,37 @@ class DatabaseHelper {
     SELECT * FROM tasks WHERE id = '$id';
         ''');
     return Task.fromJson(result.first);
+  }
+
+  /// Gets task overall
+  Future<List<TaskWithUsers>> getTaskOverall() async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> result = await db.rawQuery('''
+    SELECT 
+    t.id AS task_id,
+    t.name AS task_name, 
+    t.due_date, 
+    s.name AS status_name, 
+    s.color AS status_color, 
+    p.name AS priority_name, 
+    p.color AS priority_color, 
+    GROUP_CONCAT(u.name) AS user_names, 
+    GROUP_CONCAT(u.profile_bg_color) AS user_profile_bg_colors
+    FROM tasks t
+    LEFT JOIN (
+        -- Combine unique user_ids from both tables
+        SELECT task_id, user_id FROM task_salespersons
+        UNION 
+        SELECT task_id, user_id FROM task_agencies
+    ) AS task_users ON t.id = task_users.task_id
+    LEFT JOIN users u ON u.id = task_users.user_id
+    LEFT JOIN status s ON t.status = s.name
+    LEFT JOIN priority p ON t.priority = p.name
+    GROUP BY t.id, t.name, t.due_date, s.name, s.color, p.name, p.color
+    ORDER BY t.name;
+  ''');
+
+    return result.map(TaskWithUsers.fromJson).toList();
   }
 
   /// Insert or update a single record in the table

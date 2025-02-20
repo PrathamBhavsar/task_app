@@ -2,7 +2,7 @@ import '../../../data/models/api_response.dart';
 import '../../core/dto/get_tasks_dto.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
-import '../../data/models/user.dart';
+import '../../data/models/taskWithUser.dart';
 import '../../data/repositories/task_repository.dart';
 
 class GetTasksUseCase {
@@ -15,6 +15,25 @@ class GetTasksUseCase {
 
     if (response.success && response.data != null) {
       List<Task> users = List<Task>.from(response.data!);
+
+      return ApiResponse(
+          success: true, statusCode: 200, message: "Success", data: users);
+    }
+
+    return ApiResponse(
+      success: false,
+      statusCode: response.statusCode,
+      message: response.message,
+      data: [],
+    );
+  }
+
+  Future<ApiResponse<List<TaskWithUsers>>> fetchTasksOverall(
+      GetTasksDTO requestDTO) async {
+    final response = await repository.fetchTasksOverall(requestDTO);
+
+    if (response.success && response.data != null) {
+      List<TaskWithUsers> users = List<TaskWithUsers>.from(response.data!);
 
       return ApiResponse(
           success: true, statusCode: 200, message: "Success", data: users);
@@ -46,28 +65,6 @@ class GetTasksUseCase {
       statusCode: response.statusCode,
       message: response.message,
       data: [],
-    );
-  }
-
-  Future<ApiResponse<Map<String, List<User>>>> getUsersForTasks(
-      List<String> taskIds) async {
-    final response = await repository.fetchUsersForTask(taskIds);
-
-    if (response.success && response.data != null) {
-      Map<String, List<User>> dashboardDetails = response.data!;
-
-      return ApiResponse(
-          success: true,
-          statusCode: 200,
-          message: "Success",
-          data: dashboardDetails);
-    }
-
-    return ApiResponse(
-      success: false,
-      statusCode: response.statusCode,
-      message: response.message,
-      data: {},
     );
   }
 

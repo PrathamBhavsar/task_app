@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../../data/models/task.dart';
+import '../../../../../data/models/taskWithUser.dart';
 import '../../../../../utils/constants/app_consts.dart';
 import '../../../../../utils/extensions/app_paddings.dart';
 import '../../../../providers/task_provider.dart';
@@ -13,7 +14,7 @@ class TaskListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Consumer<TaskProvider>(
         builder: (BuildContext context, TaskProvider provider, Widget? child) {
-          final Map<String, List<Task>> categorizedTasks =
+          final Map<String, List<TaskWithUsers>> categorizedTasks =
               provider.categorizedTasks;
           final List<String> categories = categorizedTasks.keys.toList();
           final List<int> taskCounts = categories
@@ -61,8 +62,9 @@ class TaskListPage extends StatelessWidget {
                 child: IndexedStack(
                   index: provider.selectedListIndex,
                   children: categories.map((category) {
-                    final List<Task> tasks = categorizedTasks[category] ?? [];
-                    return TasksList1(
+                    final List<TaskWithUsers> tasks =
+                        categorizedTasks[category] ?? [];
+                    return TasksList(
                       tasksList: tasks,
                       altText: 'No tasks in $category',
                     );

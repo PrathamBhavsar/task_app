@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../../../data/models/task.dart';
+import '../../../../../../data/models/taskWithUser.dart';
 import '../../../../../../data/models/user.dart';
 import '../../../../../../utils/constants/app_consts.dart';
 import '../../../../../../utils/extensions/app_paddings.dart';
+import '../../../../../../utils/extensions/color_extension.dart';
 import '../../../../../../utils/extensions/format_date.dart';
 import '../../../../../providers/task_provider.dart';
 import 'circle_icons.dart';
@@ -15,12 +17,12 @@ import 'overlapping_circles.dart';
 class TaskTile extends StatelessWidget {
   const TaskTile({super.key, required this.task});
 
-  final Task task;
+  final TaskWithUsers task;
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
-    final List<User> users = provider.taskUsers[task.id] ?? [];
+    // final List<User> users = provider.taskUsers[task.id] ?? [];
 
     return Material(
       color: Colors.transparent,
@@ -41,15 +43,18 @@ class TaskTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(task.name, style: AppTexts.headingStyle),
+                  Text(task.taskName, style: AppTexts.headingStyle),
                   CircleIcons(icon: Icons.more_horiz_rounded, onTap: () {}),
                 ],
               ),
               Row(
                 children: [
-                  CustomTag(color: AppColors.green, text: task.priority ?? ''),
+                  CustomTag(
+                      color: task.priorityColor.toColor(),
+                      text: task.priorityName),
                   8.wGap,
-                  CustomTag(color: AppColors.pink, text: task.status ?? ''),
+                  CustomTag(
+                      color: task.statusColor.toColor(), text: task.statusName),
                 ],
               ),
               8.hGap,
@@ -68,12 +73,14 @@ class TaskTile extends StatelessWidget {
                     ],
                   ),
                   OverlappingCircles(
-                    bgColors: users
-                        .map((user) =>
-                            Color(int.parse(user.profileBgColor, radix: 16)))
-                        .toList(),
-                    displayNames: users.map((user) => user.name).toList(),
-                  ),
+                      bgColors: task.userProfileBgColors,
+                      // users
+                      //     .map((user) =>
+                      //         Color(int.parse(user.profileBgColor, radix: 16)))
+                      //     .toList(),
+                      displayNames: task.userNames
+                      // users.map((user) => user.name).toList(),
+                      ),
                 ],
               ),
             ],

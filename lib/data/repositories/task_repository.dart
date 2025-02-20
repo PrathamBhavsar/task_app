@@ -6,6 +6,7 @@ import '../../utils/constants/local_db.dart';
 import '../models/api_response.dart';
 import '../models/dashboard_detail.dart';
 import '../models/task.dart';
+import '../models/taskWithUser.dart';
 import '../models/user.dart';
 
 class TaskRepository {
@@ -52,6 +53,51 @@ class TaskRepository {
     }
   }
 
+  Future<ApiResponse<List<TaskWithUsers>>> fetchTasksOverall(
+      GetTasksDTO requestDTO) async {
+    try {
+      // Step 1: Try fetching from local database
+      List<TaskWithUsers> localTasks = await _dbHelper.getTaskOverall();
+
+      if (localTasks.isNotEmpty) {
+        return ApiResponse(
+          success: true,
+          statusCode: 200,
+          message: "Fetched from local DB",
+          data: localTasks,
+        );
+      }
+
+      final remoteResponse = await fetchTasks(requestDTO);
+
+      if (!remoteResponse.success) {
+        return ApiResponse(
+          success: false,
+          statusCode: remoteResponse.statusCode,
+          message: "Failed to fetch from remote",
+          data: [],
+        );
+      }
+
+      // Step 3: Fetch enriched data from local DB after syncing
+      localTasks = await _dbHelper.getTaskOverall();
+
+      return ApiResponse(
+        success: true,
+        statusCode: 200,
+        message: "Fetched from local DB after remote sync",
+        data: localTasks,
+      );
+    } catch (e) {
+      return ApiResponse<List<TaskWithUsers>>(
+        success: false,
+        statusCode: 500,
+        message: "Failed to fetch tasks: $e",
+        data: [],
+      );
+    }
+  }
+
   /// For Dashboard
   Future<ApiResponse<List<DashboardStatus>>> dashBoardDetails() async {
     List<DashboardStatus> dashboardData =
@@ -69,26 +115,6 @@ class TaskRepository {
       statusCode: 500,
       message: "Failed to fetch dashboard details",
       data: [],
-    );
-  }
-
-  /// For Dashboard
-  Future<ApiResponse<Map<String, List<User>>>> fetchUsersForTask(
-      List<String> taskIds) async {
-    Map<String, List<User>> users = await _dbHelper.getUsersForTasks(taskIds);
-    if (users.isNotEmpty) {
-      return ApiResponse(
-        success: true,
-        statusCode: 200,
-        message: "Fetched task users from local DB",
-        data: users,
-      );
-    }
-    return ApiResponse(
-      success: false,
-      statusCode: 500,
-      message: "Failed to fetch task users",
-      data: {},
     );
   }
 
