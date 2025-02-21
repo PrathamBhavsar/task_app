@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../data/models/dashboard_detail.dart';
 import '../../../../../utils/constants/app_consts.dart';
 import '../../../../../utils/extensions/app_paddings.dart';
@@ -16,9 +17,14 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<TaskProvider>(context);
 
-    return provider.isLoading
-        ? Center(child: CircularProgressIndicator())
-        : _buildBody(provider);
+    return Skeletonizer(
+      enabled: provider.isLoading,
+      enableSwitchAnimation: true,
+      effect: ShimmerEffect(),
+      textBoneBorderRadius: TextBoneBorderRadius(BorderRadius.circular(10)),
+      containersColor: Colors.grey,
+      child: _buildBody(provider),
+    );
   }
 
   Widget _buildBody(TaskProvider provider) {
@@ -83,7 +89,7 @@ class DashboardPage extends StatelessWidget {
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
-                    mainAxisExtent: 70.h,
+                    mainAxisExtent: 60.h,
                     crossAxisSpacing: 12.h,
                     mainAxisSpacing: 12.h,
                   ),
@@ -100,7 +106,7 @@ class DashboardPage extends StatelessWidget {
       ).padAll(AppPaddings.appPaddingInt);
 
   Widget _buildTile(DashboardStatus data) => Container(
-        height: 70.h,
+        height: 60.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppColors.primary, width: 2),
@@ -121,12 +127,14 @@ class DashboardPage extends StatelessWidget {
                 ),
               ),
               8.wGap,
-              Text(
-                data.taskCount.toString(),
-                style: AppTexts.headingStyle,
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                maxLines: 1,
+              Skeleton.ignore(
+                child: Text(
+                  data.taskCount.toString(),
+                  style: AppTexts.headingStyle,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  maxLines: 1,
+                ),
               ),
             ],
           ),

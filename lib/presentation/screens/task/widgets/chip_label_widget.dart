@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../utils/constants/app_consts.dart';
 import '../../../../utils/extensions/app_paddings.dart';
 
@@ -8,7 +9,7 @@ class ChipLabelWidget extends StatelessWidget {
     required this.categories,
     required this.index,
     required this.selectedIndex,
-    required this.taskCounts, // Pass task counts
+    required this.taskCounts,
   });
 
   final List<String> categories;
@@ -28,21 +29,23 @@ class ChipLabelWidget extends StatelessWidget {
             ),
           ),
           10.wGap,
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.green,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Text(
-                taskCounts[index].toString(),
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.primary,
-                ),
+          Skeleton.ignore(
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.green,
+                borderRadius: BorderRadius.circular(10),
               ),
-            ).padSymmetric(horizontal: 8, vertical: 3),
+              child: Center(
+                child: Text(
+                  taskCounts[index].toString(),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ).padSymmetric(horizontal: 8, vertical: 3),
+            ),
           ),
         ],
       );

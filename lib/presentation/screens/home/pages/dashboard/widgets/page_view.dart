@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../../utils/constants/app_consts.dart';
 import '../../../../../../utils/extensions/app_paddings.dart';
 import 'size_reporting_widget.dart';
@@ -72,7 +73,9 @@ class _ExpandablePageViewState extends State<ExpandablePageView>
                     .toList(),
               ),
             ),
-            _buildDotIndicator(_sizeReportingChildren.length, _currentPage),
+            Skeleton.ignore(
+                child: _buildDotIndicator(
+                    _sizeReportingChildren.length, _currentPage)),
           ],
         );
 

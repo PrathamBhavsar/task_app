@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../utils/constants/app_consts.dart';
 import '../../providers/home_provider.dart';
 import '../../providers/task_provider.dart';
@@ -24,36 +25,33 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentPageIndex = 0;
 
   @override
+  @override
   void initState() {
     super.initState();
+    Future.microtask(() async {
+      await Provider.of<TaskProvider>(context, listen: false)
+          .fetchDashboardDetails();
+    });
   }
 
   @override
-  Widget build(BuildContext context) => Consumer<HomeProvider>(
-        builder: (BuildContext context, HomeProvider provider, Widget? child) =>
-            Scaffold(
-          floatingActionButton: FloatingActionButton(
-            // onPressed: () => _currentPageIndex == 0
-            onPressed: () => Provider.of<TaskProvider>(context, listen: false)
-                .fetchDashboardDetails(),
-            // : context.push('/taskDetails?isNewTask=true'),
+  Widget build(BuildContext context) => Scaffold(
+        floatingActionButton: FloatingActionButton(onPressed: () {}),
+        appBar: AppBar(
+          title: Text(
+            pageTitles[_currentPageIndex],
+            style: AppTexts.appBarStyle,
           ),
-          appBar: AppBar(
-            title: Text(
-              pageTitles[_currentPageIndex],
-              style: AppTexts.appBarStyle,
-            ),
-          ),
-          body: PageView.builder(
-            controller: pageController,
-            itemCount: pages.length,
-            onPageChanged: (index) {
-              setState(() {
-                _currentPageIndex = index;
-              });
-            },
-            itemBuilder: (context, index) => pages[index],
-          ),
+        ),
+        body: PageView.builder(
+          controller: pageController,
+          itemCount: pages.length,
+          onPageChanged: (index) {
+            setState(() {
+              _currentPageIndex = index;
+            });
+          },
+          itemBuilder: (context, index) => pages[index],
         ),
       );
 }

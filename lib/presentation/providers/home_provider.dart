@@ -64,12 +64,6 @@ class HomeProvider extends ChangeNotifier {
     _clients = responses[3].success ? responses[3].data ?? [] : [];
     _users = responses[4].success ? responses[4].data ?? [] : [];
 
-    print(_statuses);
-    print(_priorities);
-    print(_designers);
-    print(_clients);
-    print(_users);
-
     _isLoading = false;
     notifyListeners();
   }

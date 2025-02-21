@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../../data/models/task.dart';
 import '../../../../../../data/models/taskWithUser.dart';
 import '../../../../../../utils/constants/app_consts.dart';
@@ -35,7 +36,9 @@ class TaskTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(task.taskName, style: AppTexts.headingStyle),
-                    CircleIcons(icon: Icons.more_horiz_rounded, onTap: () {}),
+                    Skeleton.ignore(
+                        child: CircleIcons(
+                            icon: Icons.more_horiz_rounded, onTap: () {})),
                   ],
                 ),
                 Row(

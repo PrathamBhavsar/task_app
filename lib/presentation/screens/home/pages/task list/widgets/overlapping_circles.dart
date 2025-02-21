@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'dart:math';
 
 import '../../../../../../utils/constants/app_consts.dart';
@@ -71,12 +72,14 @@ class OverlappingCircles extends StatelessWidget {
                     color: Colors.grey,
                   ),
                   child: Center(
-                    child: Text(
-                      '+$remainingCircles',
-                      style: TextStyle(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.primary),
+                    child: Skeleton.ignore(
+                      child: Text(
+                        '+$remainingCircles',
+                        style: TextStyle(
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.primary),
+                      ),
                     ),
                   ),
                 ),
@@ -105,12 +108,14 @@ class OverlappingCircles extends StatelessWidget {
                   color: bgColors[index].toColor(),
                 ),
                 child: Center(
-                  child: Text(
-                    initials,
-                    style: TextStyle(
-                      fontSize: fontSize,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
+                  child: Skeleton.ignore(
+                    child: Text(
+                      initials,
+                      style: TextStyle(
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
                     ),
                   ),
                 ),

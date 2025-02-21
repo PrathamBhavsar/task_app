@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../data/models/task.dart';
 import '../../../../../data/models/taskWithUser.dart';
 import '../../../../../utils/constants/app_consts.dart';
@@ -21,57 +22,65 @@ class TaskListPage extends StatelessWidget {
               .map((category) => categorizedTasks[category]!.length)
               .toList();
 
-          return Column(
-            children: [
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(
-                    categories.length,
-                    (index) => Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        showCheckmark: false,
-                        label: ChipLabelWidget(
-                          categories: categories,
-                          taskCounts: taskCounts,
-                          index: index,
-                          selectedIndex: provider.selectedListIndex,
-                        ),
-                        selectedColor: AppColors.primary,
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                          side: BorderSide(
-                            color: provider.selectedListIndex == index
-                                ? Colors.transparent
-                                : AppColors.primary,
-                            width: 2,
+          return Skeletonizer(
+            enabled: provider.isLoading,
+            enableSwitchAnimation: true,
+            effect: ShimmerEffect(),
+            textBoneBorderRadius:
+                TextBoneBorderRadius(BorderRadius.circular(10)),
+            containersColor: Colors.grey,
+            child: Column(
+              children: [
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(
+                      categories.length,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          showCheckmark: false,
+                          label: ChipLabelWidget(
+                            categories: categories,
+                            taskCounts: taskCounts,
+                            index: index,
+                            selectedIndex: provider.selectedListIndex,
                           ),
+                          selectedColor: AppColors.primary,
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            side: BorderSide(
+                              color: provider.selectedListIndex == index
+                                  ? Colors.transparent
+                                  : AppColors.primary,
+                              width: 2,
+                            ),
+                          ),
+                          selected: provider.selectedListIndex == index,
+                          onSelected: (bool selected) {
+                            provider.updateSelectedListIndex(index);
+                          },
                         ),
-                        selected: provider.selectedListIndex == index,
-                        onSelected: (bool selected) {
-                          provider.updateSelectedListIndex(index);
-                        },
                       ),
                     ),
-                  ),
-                ).padSymmetric(horizontal: 8),
-              ),
-              Expanded(
-                child: IndexedStack(
-                  index: provider.selectedListIndex,
-                  children: categories.map((category) {
-                    final List<TaskWithUsers> tasks =
-                        categorizedTasks[category] ?? [];
-                    return TasksList(
-                      tasksList: tasks,
-                      altText: 'No tasks in $category',
-                    );
-                  }).toList(),
+                  ).padSymmetric(horizontal: 8),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: IndexedStack(
+                    index: provider.selectedListIndex,
+                    children: categories.map((category) {
+                      final List<TaskWithUsers> tasks =
+                          categorizedTasks[category] ?? [];
+                      return TasksList(
+                        tasksList: tasks,
+                        altText: 'No tasks in $category',
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       );
