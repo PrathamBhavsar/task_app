@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/router/router.dart';
 import 'data/repositories/client_repository.dart';
 import 'data/repositories/designer_repository.dart';
@@ -17,9 +16,10 @@ import 'domain/use_cases/task_use_cases.dart';
 import 'domain/use_cases/user_use_cases.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';
+import 'presentation/providers/measurement_provider.dart';
+import 'presentation/providers/quotation_provider.dart';
 import 'presentation/providers/task_provider.dart';
 import 'utils/constants/app_consts.dart';
-import 'utils/constants/secrets/secrets.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,33 +39,26 @@ void main() async {
         providers: [
           ChangeNotifierProvider(
             create: (_) => HomeProvider(
-              getStatusesUseCase: GetStatusesUseCase(
-                StatusRepository(),
-              ),
-              getPrioritiesUseCase: GetPrioritiesUseCase(
-                PriorityRepository(),
-              ),
-              getDesignersUseCase: GetDesignersUseCase(
-                DesignerRepository(),
-              ),
-              getClientsUseCase: GetClientsUseCase(
-                ClientRepository(),
-              ),
-              getUsersUseCase: GetUsersUseCase(
-                UserRepository(),
-              ),
+              getStatusesUseCase: GetStatusesUseCase(StatusRepository()),
+              getPrioritiesUseCase: GetPrioritiesUseCase(PriorityRepository()),
+              getDesignersUseCase: GetDesignersUseCase(DesignerRepository()),
+              getClientsUseCase: GetClientsUseCase(ClientRepository()),
+              getUsersUseCase: GetUsersUseCase(UserRepository()),
             ),
           ),
           ChangeNotifierProvider(create: (_) => AuthProvider.instance),
-          ChangeNotifierProvider(
-            create: (_) => TaskProvider(
-              GetTasksUseCase(
-                TaskRepository(),
-              ),
-            ),
-          ),
+          ChangeNotifierProvider(create: (_) => MeasurementProvider.instance),
+          ChangeNotifierProvider(create: (_) => QuotationProvider.instance),
         ],
-        child: MyApp(isLoggedIn: isLoggedIn),
+        child: Consumer<HomeProvider>(
+          builder: (context, homeProvider, _) => ChangeNotifierProvider(
+            create: (_) => TaskProvider(
+              GetTasksUseCase(TaskRepository()),
+              homeProvider,
+            ),
+            child: MyApp(isLoggedIn: isLoggedIn),
+          ),
+        ),
       ),
     ),
   );

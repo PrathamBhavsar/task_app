@@ -43,9 +43,6 @@ class AppColors {
 
 class AppPaddings {
   static double appPaddingInt = 10;
-//
-//   static Widget gapH(double h) => SizedBox(height: h);
-//   static Widget gapW(double w) => SizedBox(width: w);
 }
 
 class AppTexts {

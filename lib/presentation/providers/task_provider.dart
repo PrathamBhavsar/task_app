@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../core/dto/get_tasks_dto.dart';
 import '../../core/dto/task_dtos.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
+import '../../data/models/taskWithDetails.dart';
 import '../../data/models/taskWithUser.dart';
 import '../../domain/use_cases/task_use_cases.dart';
+import '../../utils/constants/app_keys.dart';
+import 'home_provider.dart';
 
 class TaskProvider extends ChangeNotifier {
   final GetTasksUseCase _getTasksUseCase;
+  final HomeProvider _homeProvider;
 
-  late Task _selectedTask;
-  Task get selectedTask => _selectedTask;
+  Task? _selectedTask;
+  Task? get selectedTask => _selectedTask;
 
   List<TaskWithUsers> _dueTodayTasks = [];
   List<TaskWithUsers> get dueTodayTasks => _dueTodayTasks;
@@ -20,17 +23,60 @@ class TaskProvider extends ChangeNotifier {
   List<TaskWithUsers> get pastDueTasks => _pastDueTasks;
 
   List<TaskWithUsers> _allTasksOverall = [];
-  List<TaskWithUsers> get allTasks => _allTasksOverall;
+  List<TaskWithUsers> get allTasksOverall => _allTasksOverall;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  TaskProvider(this._getTasksUseCase);
+  TaskProvider(this._getTasksUseCase, this._homeProvider);
+
+  // Controllers initialized lazily
+  late TextEditingController nameController;
+  late TextEditingController remarkController;
+  late TextEditingController addressController;
+  late TextEditingController contactController;
+
+  void initializeControllers() {
+    nameController = TextEditingController(
+        text: _selectedTaskWithDetails?.client.name ?? "");
+    remarkController =
+        TextEditingController(text: _selectedTaskWithDetails?.remarks ?? "");
+    addressController = TextEditingController(
+        text: _selectedTaskWithDetails?.client.address ?? "");
+    contactController = TextEditingController(
+        text: _selectedTaskWithDetails?.client.contactNo ?? "");
+  }
+
+  /// Set loading state
+  void _setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  /// Set the due date
+  DateTime dueDate = DateTime.now().add(Duration(days: 2));
+  void setDueDate(DateTime newDueDate) {
+    dueDate = newDueDate;
+    notifyListeners();
+  }
+
+  /// Set the start date
+  DateTime startDate = DateTime.now();
+  void setStartDate(DateTime newStartDate) {
+    startDate = newStartDate;
+    notifyListeners();
+  }
+
+  /// Toggle agency requirement
+  bool isAgencyRequired = false;
+  void toggleAgencyRequired() {
+    isAgencyRequired = !isAgencyRequired;
+    notifyListeners();
+  }
 
   int _selectedListIndex = 0;
   int get selectedListIndex => _selectedListIndex;
 
-  /// Updates task list index
   void updateSelectedListIndex(int index) {
     _selectedListIndex = index;
     notifyListeners();
@@ -39,18 +85,22 @@ class TaskProvider extends ChangeNotifier {
   int _todayTaskPageIndex = 0;
   int get currentTodayTaskPage => _todayTaskPageIndex;
 
-  /// Updates current task page index
   void updateTodayTaskPageIndex(int page) {
     _todayTaskPageIndex = page;
     notifyListeners();
   }
 
-  Future<void> fetchTasksOverall() async {
-    _isLoading = true;
+  final Map<String, int> selectedIndices = {};
+
+  void updateSelectedIndex(String field, dynamic index) {
+    selectedIndices[field] = index;
     notifyListeners();
+  }
+
+  Future<void> fetchTasksOverall() async {
+    _setLoading(true);
 
     final response = await _getTasksUseCase.fetchTasksOverall(
-      // GetTasksDTO(id: AuthenticationProvider.instance.currentUser!.id),
       GetTasksDTO(id: 'FA14A924AC8106FD9673AF8F99653DD3'),
     );
 
@@ -59,17 +109,15 @@ class TaskProvider extends ChangeNotifier {
       filterTasksByDueDate();
     }
 
-    _isLoading = false;
-    notifyListeners();
+    _setLoading(false);
   }
 
   Future<void> createTask() async {
-    _isLoading = true;
-    notifyListeners();
+    _setLoading(true);
 
     final response = await _getTasksUseCase.createTask(
       CreateTaskDTO(
-        dealNo: 'dealNo', //add method to create dealNo
+        dealNo: 'dealNo',
         name: 'name',
         startDate: DateTime.now(),
         dueDate: DateTime.now(),
@@ -87,20 +135,14 @@ class TaskProvider extends ChangeNotifier {
       ),
     );
 
-    if (response.success && response.data != null) {
-      // _allTasksOverall = response.data!;
-    }
-
-    _isLoading = false;
-    notifyListeners();
+    _setLoading(false);
   }
 
   List<DashboardStatus> _dashboardDetails = [];
   List<DashboardStatus> get dashboardDetails => _dashboardDetails;
 
   Future<void> fetchDashboardDetails() async {
-    _isLoading = true;
-    notifyListeners();
+    _setLoading(true);
 
     final response = await _getTasksUseCase.getDashboardDetails();
 
@@ -109,38 +151,70 @@ class TaskProvider extends ChangeNotifier {
     }
 
     await fetchTasksOverall();
-    _isLoading = false;
-    notifyListeners();
+    _setLoading(false);
+  }
+
+  TaskWithDetails? _selectedTaskWithDetails;
+  TaskWithDetails? get selectedTaskWithDetails => _selectedTaskWithDetails;
+
+  Future<void> fetchTaskDetailsFromId(String taskId) async {
+    _setLoading(true);
+
+    final response = await _getTasksUseCase.getTaskDetailsFromId(taskId);
+    if (response.success && response.data != null) {
+      _selectedTaskWithDetails = response.data!;
+    }
+
+    _setLoading(false);
   }
 
   Future<void> fetchTask(String id) async {
-    _isLoading = true;
-    notifyListeners();
+    _setLoading(true);
 
     final response = await _getTasksUseCase.getTask(id);
 
     if (response.success && response.data != null) {
       _selectedTask = response.data!;
+      _setSelectedIndices();
     }
 
-    _isLoading = false;
+    _setLoading(false);
+  }
+
+  /// Helper method to update selected indices dynamically
+  void _setSelectedIndices() {
+    final lookupTable = {
+      IndexKeys.salespersonIndex: _homeProvider.users
+          .indexWhere((user) => user.id == _selectedTask?.salespersonId),
+      IndexKeys.designerIndex: _homeProvider.designers
+          .indexWhere((designer) => designer.id == _selectedTask?.designerId),
+      IndexKeys.agencyIndex: _homeProvider.users
+          .indexWhere((user) => user.id == _selectedTask?.agencyId),
+      IndexKeys.clientIndex: _homeProvider.clients
+          .indexWhere((client) => client.id == _selectedTask?.clientId),
+      IndexKeys.statusIndex: _homeProvider.statuses
+          .indexWhere((status) => status.name == _selectedTask?.status),
+      IndexKeys.priorityIndex: _homeProvider.priorities
+          .indexWhere((priority) => priority.name == _selectedTask?.priority),
+    };
+
+    lookupTable.forEach((key, value) {
+      selectedIndices[key] = (value >= 0) ? value : 0;
+    });
+
     notifyListeners();
   }
 
   void filterTasksByDueDate() {
     final today = DateTime.now();
-    final todayString = DateFormat('yyyy-MM-dd').format(today);
 
-    _dueTodayTasks = _allTasksOverall.where((task) {
-      final taskDueDate =
-          DateFormat('yyyy-MM-dd').format(DateTime.parse(task.dueDate));
-      return taskDueDate == todayString;
-    }).toList();
+    _dueTodayTasks = _allTasksOverall
+        .where((task) => DateTime.parse(task.dueDate).isAtSameMomentAs(today))
+        .toList();
 
-    _pastDueTasks = _allTasksOverall.where((task) {
-      final taskDueDate = DateTime.parse(task.dueDate);
-      return taskDueDate.isAfter(today);
-    }).toList();
+    _pastDueTasks = _allTasksOverall
+        .where((task) => DateTime.parse(task.dueDate).isAfter(today))
+        .toList();
   }
 
   /// Groups tasks by their category

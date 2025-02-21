@@ -74,4 +74,13 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  bool _isVisible = false;
+  bool get isVisible => _isVisible;
+
+  /// Toggle visibility
+  void toggleVisibility() {
+    _isVisible = !_isVisible;
+    notifyListeners();
+  }
 }

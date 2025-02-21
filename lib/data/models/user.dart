@@ -5,7 +5,7 @@ class User {
   final String role;
   final String profileBgColor;
   final String? apiToken;
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
   User({
     required this.id,
@@ -14,7 +14,7 @@ class User {
     required this.role,
     required this.profileBgColor,
     this.apiToken,
-    required this.createdAt,
+    this.createdAt,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -33,6 +33,6 @@ class User {
         'email': email,
         'role': role,
         'profile_bg_color': profileBgColor,
-        'created_at': createdAt.toIso8601String(),
+        'created_at': createdAt?.toIso8601String() ?? '',
       };
 }

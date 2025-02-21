@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/extensions/app_paddings.dart';
+import '../../../data/models/taskWithUser.dart';
 import '../../providers/task_provider.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -14,6 +14,8 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  late List<TaskWithUsers> filteredTasks;
+
   @override
   void initState() {
     super.initState();
@@ -24,20 +26,48 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text('Edit Task')),
-        body: Consumer<TaskProvider>(
-          builder:
-              (BuildContext context, TaskProvider provider, Widget? child) =>
-                  Column(
-            children: [
-              Text(provider.selectedTask.name),
-              Text(provider.selectedTask.remarks ?? ""),
-              Text(provider.selectedTask.startDate),
-              Text(provider.selectedTask.dueDate),
-              Text(provider.selectedTask.createdBy),
-            ],
-          ).padAll(16),
+  Widget build(BuildContext context) {
+    final provider = Provider.of<TaskProvider>(context);
+    final selectedTask = provider.selectedTask;
+
+    // Filter tasks where taskId matches selectedTask.id
+    filteredTasks = provider.allTasksOverall
+        .where((task) => task.taskId == selectedTask?.id)
+        .toList();
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Edit Task')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Text(selectedTask?.name ?? ""),
+            Text(selectedTask?.remarks ?? ""),
+            Text(selectedTask?.startDate ?? ""),
+            Text(selectedTask?.dueDate ?? ""),
+            Text(selectedTask?.createdBy ?? ""),
+            const SizedBox(height: 16),
+            const Text(
+              "Related Tasks",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredTasks.length,
+                itemBuilder: (context, index) {
+                  final task = filteredTasks[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(task.salespersonName),
+                      subtitle: Text(task.agencyName),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }

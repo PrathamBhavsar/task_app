@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-extension DateFormatting on dynamic {
+extension DateFormatting on Object {
   String formatDate() {
     DateTime dateTime;
 
@@ -8,12 +8,12 @@ extension DateFormatting on dynamic {
       try {
         dateTime = DateTime.parse(this as String);
       } catch (e) {
-        dateTime = DateTime.now();
+        return ''; // Return empty string or fallback value
       }
     } else if (this is DateTime) {
       dateTime = this as DateTime;
     } else {
-      throw ArgumentError('Invalid argument type');
+      throw ArgumentError('Invalid argument type: Expected String or DateTime');
     }
 
     return DateFormat('d MMM, yyyy').format(dateTime);

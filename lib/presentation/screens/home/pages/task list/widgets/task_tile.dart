@@ -21,7 +21,8 @@ class TaskTile extends StatelessWidget {
   Widget build(BuildContext context) => Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => context.push('/taskDetail/${task.taskId}'),
+          // onTap: () => context.push('/taskDetail/${task.taskId}'),
+          onTap: () => context.push('/taskDetails/${task.taskId}/true/false'),
           splashColor: AppColors.primary.withValues(alpha: 0.1),
           child: Container(
             height: 148.h,
@@ -68,12 +69,18 @@ class TaskTile extends StatelessWidget {
                       ],
                     ),
                     OverlappingCircles(
-                        bgColors: task.userProfileBgColors,
+                        bgColors: [
+                          task.salespersonProfileBgColor,
+                          task.agencyProfileBgColor
+                        ],
                         // users
                         //     .map((user) =>
                         //         Color(int.parse(user.profileBgColor, radix: 16)))
                         //     .toList(),
-                        displayNames: task.userNames
+                        displayNames: [
+                          task.salespersonName,
+                          task.agencyName
+                        ]
                         // users.map((user) => user.name).toList(),
                         ),
                   ],

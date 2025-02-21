@@ -3,6 +3,7 @@ import '../../core/dto/get_tasks_dto.dart';
 import '../../core/dto/task_dtos.dart';
 import '../../data/models/dashboard_detail.dart';
 import '../../data/models/task.dart';
+import '../../data/models/taskWithDetails.dart';
 import '../../data/models/taskWithUser.dart';
 import '../../data/repositories/task_repository.dart';
 
@@ -84,6 +85,28 @@ class GetTasksUseCase {
       statusCode: response.statusCode,
       message: response.message,
       data: [],
+    );
+  }
+
+  Future<ApiResponse<TaskWithDetails>> getTaskDetailsFromId(
+      String taskId) async {
+    final response = await repository.fetchTaskDetailsFromId(taskId);
+
+    if (response.success && response.data != null) {
+      TaskWithDetails taskWithDetails = response.data!;
+
+      return ApiResponse(
+        success: true,
+        statusCode: 200,
+        message: "Success",
+        data: taskWithDetails,
+      );
+    }
+
+    return ApiResponse(
+      success: false,
+      statusCode: response.statusCode,
+      message: response.message,
     );
   }
 

@@ -6,8 +6,10 @@ class TaskWithUsers {
   final String statusColor;
   final String priorityName;
   final String priorityColor;
-  final List<String> userNames;
-  final List<String> userProfileBgColors;
+  final String salespersonName;
+  final String salespersonProfileBgColor;
+  final String agencyName;
+  final String agencyProfileBgColor;
 
   TaskWithUsers({
     required this.taskId,
@@ -17,8 +19,10 @@ class TaskWithUsers {
     required this.statusColor,
     required this.priorityName,
     required this.priorityColor,
-    required this.userNames,
-    required this.userProfileBgColors,
+    required this.salespersonName,
+    required this.salespersonProfileBgColor,
+    required this.agencyName,
+    required this.agencyProfileBgColor,
   });
 
   factory TaskWithUsers.fromJson(Map<String, dynamic> json) => TaskWithUsers(
@@ -29,8 +33,9 @@ class TaskWithUsers {
         statusColor: json['status_color'],
         priorityName: json['priority_name'],
         priorityColor: json['priority_color'],
-        userNames: (json['user_names'] as String?)?.split(',') ?? [],
-        userProfileBgColors:
-            (json['user_profile_bg_colors'] as String?)?.split(',') ?? [],
+        salespersonName: json['salesperson_name'] ?? '',
+        salespersonProfileBgColor: json['salesperson_profile_bg_color'] ?? '',
+        agencyName: json['agency_name'] ?? '',
+        agencyProfileBgColor: json['agency_profile_bg_color'] ?? '',
       );
 }
