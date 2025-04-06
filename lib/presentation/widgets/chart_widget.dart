@@ -1,56 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../utils/constants/app_constants.dart';
+import '../../data/models/chart_data.dart';
 
 class ChartWidget extends StatelessWidget {
-  const ChartWidget({
-    super.key,
-    required this.cashData,
-    required this.cashFocus,
-  });
-
-  final Map<String, List<ChartData>> cashData;
-  final bool cashFocus;
+  const ChartWidget({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      cashData.isEmpty
-          ? Center(child: CircularProgressIndicator(color: Colors.black))
-          : SfCartesianChart(
-            legend: Legend(isVisible: true, alignment: ChartAlignment.far),
-            primaryXAxis: CategoryAxis(),
-            series:
-                cashData.entries
-                    .map(
-                      (entry) => LineSeries<ChartData, String>(
-                        name: entry.key,
-                        isVisibleInLegend: true,
-                        color:
-                            entry.key == (cashFocus ? "cash" : "card")
-                                ? Colors.black
-                                : AppColors.accent,
-                        dataSource: entry.value,
-                        xValueMapper: (ChartData data, _) => data.x,
-                        yValueMapper: (ChartData data, _) => data.y,
-                        markerSettings: const MarkerSettings(isVisible: true),
-                      ),
-                    )
-                    .toList(),
-          );
-}
-
-Color getColor(String key) {
-  Map<String, Color> colorMap = {
-    'cash': Colors.black,
-    'card': AppColors.accent,
-  };
-  return colorMap[key] ?? Colors.black;
-}
-
-class ChartData {
-  ChartData(this.x, this.y);
-  final String x;
-
-  final double y;
+  Widget build(BuildContext context) => SfCartesianChart(
+    primaryXAxis: CategoryAxis(),
+    series: <CartesianSeries>[
+      LineSeries<ChartData, String>(
+        color: Colors.black,
+        initialIsVisible: true,
+        dataSource: [
+          ChartData('Jan', 15),
+          ChartData('Feb', 25),
+          ChartData('Mar', 30),
+          ChartData('Apr', 40),
+          ChartData('May', 32),
+          ChartData('Jun', 40),
+          ChartData('Jul', 45),
+        ],
+        xValueMapper: (ChartData data, _) => data.x,
+        yValueMapper: (ChartData data, _) => data.y,
+      ),
+    ],
+  );
 }

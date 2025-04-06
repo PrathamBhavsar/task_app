@@ -32,14 +32,14 @@ class SelectionDrawer extends StatelessWidget {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: homeProvider.menuPageNames.length,
+                // itemCount: homeProvider.menuPageNames.length,
                 itemBuilder:
                     (context, index) => Material(
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
                           context.pop();
-                          context.pushNamed(homeProvider.menuPageNames[index]);
+                          // context.pushNamed(homeProvider.menuPageNames[index]);
                         },
                         child: Ink(
                           padding: const EdgeInsets.symmetric(

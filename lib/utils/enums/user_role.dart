@@ -1,28 +1,28 @@
 enum UserRole {
-  owner,
-  supervisor,
-  manager;
+  admin,
+  salesperson,
+  agency;
 
   String get role {
     switch (this) {
-      case UserRole.owner:
-        return 'Qwner';
-      case UserRole.supervisor:
-        return 'Supervisor';
-      case UserRole.manager:
-        return 'Manager';
+      case UserRole.admin:
+        return 'Admin';
+      case UserRole.salesperson:
+        return 'Salesperson';
+      case UserRole.agency:
+        return 'Agency';
     }
   }
 
   // Convert string to UserRole
   static UserRole fromString(String role) {
     switch (role) {
-      case 'Owner':
-        return UserRole.owner;
-      case 'Supervisor':
-        return UserRole.supervisor;
-      case 'Manager':
-        return UserRole.manager;
+      case 'Admin':
+        return UserRole.admin;
+      case 'Salesperson':
+        return UserRole.salesperson;
+      case 'Agency':
+        return UserRole.agency;
       default:
         throw ArgumentError('Invalid user role: $role');
     }

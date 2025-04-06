@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/chart_widget.dart';
+import '../../data/models/chart_data.dart';
 
 class TransactionProvider extends ChangeNotifier {
   Map<String, List<ChartData>> chartData = {};

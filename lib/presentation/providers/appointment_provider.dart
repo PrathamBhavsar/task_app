@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/employee.dart';
 import '../../utils/extensions/date_formatter.dart';
-import '../widgets/chart_widget.dart';
 
 class AppointmentProvider extends ChangeNotifier {
   List<String> get summaryValues => [
@@ -40,12 +38,4 @@ class AppointmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _selectedGender = 'Male';
-
-  String get selectedGender => _selectedGender;
-
-  void setGender(String gender) {
-    _selectedGender = gender;
-    notifyListeners();
-  }
 }

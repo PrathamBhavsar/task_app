@@ -1,2 +1,0 @@
-E:/task_app/android/app/.cxx/Debug/r1o5j2r1/armeabi-v7a/CMakeFiles/edit_cache.dir
-E:/task_app/android/app/.cxx/Debug/r1o5j2r1/armeabi-v7a/CMakeFiles/rebuild_cache.dir

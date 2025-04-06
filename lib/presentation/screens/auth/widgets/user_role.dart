@@ -19,20 +19,20 @@ class UserRoleWidget extends StatelessWidget {
             children: [
               UserRoleTile(
                 text: 'Owner',
-                onTap: () => provider.setUserRole(UserRole.owner),
-                isSelected: provider.currentUserRole == UserRole.owner,
+                onTap: () => provider.setUserRole(UserRole.admin),
+                isSelected: provider.currentUserRole == UserRole.admin,
               ),
               10.wGap,
               UserRoleTile(
                 text: 'Supervisor',
-                onTap: () => provider.setUserRole(UserRole.supervisor),
-                isSelected: provider.currentUserRole == UserRole.supervisor,
+                onTap: () => provider.setUserRole(UserRole.salesperson),
+                isSelected: provider.currentUserRole == UserRole.salesperson,
               ),
               10.wGap,
               UserRoleTile(
                 text: 'Manager',
-                onTap: () => provider.setUserRole(UserRole.manager),
-                isSelected: provider.currentUserRole == UserRole.manager,
+                onTap: () => provider.setUserRole(UserRole.agency),
+                isSelected: provider.currentUserRole == UserRole.agency,
               ),
             ],
           ),

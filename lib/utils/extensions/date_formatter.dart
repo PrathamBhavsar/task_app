@@ -6,7 +6,7 @@ extension PrettyDate on DateTime {
     final suffix = _getDaySuffix(day);
     final dayName = DateFormat('E').format(this);
     final month = DateFormat('MMM').format(this);
-    return '$dayName, ${day}$suffix $month';
+    return '$dayName, $day$suffix $month';
   }
 
   String _getDaySuffix(int day) {

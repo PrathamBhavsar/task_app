@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 import '../../data/models/employee.dart';
 import '../../data/models/product.dart';
@@ -54,26 +53,26 @@ abstract class DummyData {
     {'title': "Product Sales", 'data': "28", 'subtitle': "+8 from yesterday"},
   ];
 
-  static const List<Map<String, dynamic>> ownerDashboard = [
+  static const List<Map<String, dynamic>> adminDashboard = [
     {
-      'title': "Total Revenue",
-      'data': "\$45,231.89",
-      'subtitle': "+20.1% from last month",
+      'title': "Total Tasks",
+      'data': "127",
+      'subtitle': "+14% from last month",
     },
     {
-      'title': "Appointments",
-      'data': "+2250",
-      'subtitle': "+10.6% from last month",
+      'title': "Active Orders",
+      'data': "42",
+      'subtitle': "+10% from last month",
     },
     {
-      'title': "Product Sales",
-      'data': "+250",
-      'subtitle': "+19.9% from last month",
+      'title': "Pending Quotes",
+      'data': "23",
+      'subtitle': "+5% from last month",
     },
     {
-      'title': "Active Employees",
-      'data': "+15",
-      'subtitle': "-8 since last month",
+      'title': "Completed Sales",
+      'data': "₹45k",
+      'subtitle': "+18% from last month",
     },
   ];
 

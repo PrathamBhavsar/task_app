@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/router/app_router.dart';
 import 'presentation/providers/appointment_provider.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';
 import 'presentation/providers/transaction_provider.dart';
+import 'utils/constants/app_constants.dart';
 // import 'utils/constants/secrets/secrets.dart';
 
 Future<void> main() async {
@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp.router(
     routerConfig: AppRouter.router(),
     theme: ThemeData(
+      iconTheme: IconThemeData(color: AppColors.accent),
       fontFamily: 'Inter',
       splashColor: Colors.black.withAlpha(2),
       inputDecorationTheme: InputDecorationTheme(focusColor: Colors.black),
