@@ -63,7 +63,7 @@ class HomeProvider extends ChangeNotifier {
   Widget get currentPage => pages[_currentBarIndex];
   String get title => titles[_currentBarIndex];
 
-  int _currentBarIndex = 0;
+  int _currentBarIndex = 1;
   int get currentBarIndex => _currentBarIndex;
 
   setBarIndex(int value) {

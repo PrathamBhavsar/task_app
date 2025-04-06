@@ -1,23 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/chart_data.dart';
-
-class TransactionProvider extends ChangeNotifier {
-  Map<String, List<ChartData>> chartData = {};
-
-  Future<void> fetchSalesOverviewData() async {}
-
-  List<dynamic> employeeSales = [];
-
-  Future<void> fetchEmployeeSalesList() async {}
-
-  List<dynamic> productSales = [];
-
-  Future<void> fetchProductSalesList() async {}
-
-  Map<String, dynamic> totalMetrics = {};
-
-  Future<void> fetchTotalMetricsList() async {}
+class TaskProvider extends ChangeNotifier {
 
   bool _isCashFocus = true;
   bool get isCashFocus => _isCashFocus;

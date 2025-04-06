@@ -5,7 +5,7 @@ import 'core/router/app_router.dart';
 import 'presentation/providers/appointment_provider.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';
-import 'presentation/providers/transaction_provider.dart';
+import 'presentation/providers/task_provider.dart';
 import 'utils/constants/app_constants.dart';
 // import 'utils/constants/secrets/secrets.dart';
 
@@ -25,7 +25,7 @@ Future<void> main() async {
         providers: [
           ChangeNotifierProvider(create: (_) => AuthProvider()),
           ChangeNotifierProvider(create: (_) => HomeProvider()),
-          ChangeNotifierProvider(create: (_) => TransactionProvider()),
+          ChangeNotifierProvider(create: (_) => TaskProvider()),
           ChangeNotifierProvider(create: (_) => AppointmentProvider()),
         ],
         child: MyApp(),

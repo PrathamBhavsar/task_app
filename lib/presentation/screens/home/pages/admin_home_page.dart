@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
-import '../../../providers/transaction_provider.dart';
+import '../../../providers/task_provider.dart';
 import '../../../widgets/bordered_container.dart';
 import '../../../widgets/chart_widget.dart';
 import '../../../widgets/pie_chart.dart';
@@ -13,9 +13,9 @@ class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) => Consumer<TransactionProvider>(
+  Widget build(BuildContext context) => Consumer<TaskProvider>(
     builder:
-        (BuildContext context, TransactionProvider provider, Widget? child) =>
+        (BuildContext context, TaskProvider provider, Widget? child) =>
             Column(
               children: [
                 DashboardContainers(),
@@ -81,7 +81,7 @@ class AdminHomePage extends StatelessWidget {
     ),
   );
 
-  Widget _buildTaskStatistics(TransactionProvider provider) =>
+  Widget _buildTaskStatistics(TaskProvider provider) =>
       BorderedContainer(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +95,7 @@ class AdminHomePage extends StatelessWidget {
         ),
       );
 
-  Widget _buildSalesOverview(TransactionProvider provider) => BorderedContainer(
+  Widget _buildSalesOverview(TaskProvider provider) => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
