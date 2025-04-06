@@ -1,70 +1,80 @@
 import 'package:flutter/material.dart';
-
-import '../../data/models/api_response.dart';
-import '../../data/models/status.dart';
-import '../../data/models/user.dart';
-import '../../data/models/priority.dart';
-import '../../data/models/designer.dart';
-import '../../data/models/client.dart';
-import '../../domain/use_cases/status_use_cases.dart';
-import '../../domain/use_cases/priority_use_cases.dart';
-import '../../domain/use_cases/designer_use_cases.dart';
-import '../../domain/use_cases/client_use_cases.dart';
-import '../../domain/use_cases/user_use_cases.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../utils/enums/user_role.dart';
+import '../screens/appointment/appointment_screen.dart';
+import '../screens/employee/employee_screen.dart';
+import '../screens/home/home_screen.dart';
+import '../screens/home/manager/manager_home_page.dart';
+import '../screens/home/owner/owner_home_page.dart';
+import '../screens/managers/manager_screen.dart';
+import '../screens/products/product_screen.dart';
+import '../screens/reports/report_page.dart';
+import '../screens/salons/salon_screen.dart';
+import '../screens/services/service_screen.dart';
+import '../screens/supervisors/supervisor_screen.dart';
+import '../screens/transactions/transactions_screen.dart';
 
 class HomeProvider extends ChangeNotifier {
-  final GetStatusesUseCase _getStatusesUseCase;
-  final GetPrioritiesUseCase _getPrioritiesUseCase;
-  final GetDesignersUseCase _getDesignersUseCase;
-  final GetClientsUseCase _getClientsUseCase;
-  final GetUsersUseCase _getUsersUseCase;
+  UserRole _currentUserRole = UserRole.owner;
 
-  List<Status> _statuses = [];
-  List<Priority> _priorities = [];
-  List<Designer> _designers = [];
-  List<Client> _clients = [];
-  List<User> _users = [];
+  HomeProvider() {
+    _loadUserRole();
+  }
 
-  List<Status> get statuses => _statuses;
-  List<Priority> get priorities => _priorities;
-  List<Designer> get designers => _designers;
-  List<Client> get clients => _clients;
-  List<User> get users => _users;
+  UserRole get currentUserRole => _currentUserRole;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
-  HomeProvider({
-    required GetStatusesUseCase getStatusesUseCase,
-    required GetPrioritiesUseCase getPrioritiesUseCase,
-    required GetDesignersUseCase getDesignersUseCase,
-    required GetClientsUseCase getClientsUseCase,
-    required GetUsersUseCase getUsersUseCase,
-  })  : _getStatusesUseCase = getStatusesUseCase,
-        _getPrioritiesUseCase = getPrioritiesUseCase,
-        _getDesignersUseCase = getDesignersUseCase,
-        _getClientsUseCase = getClientsUseCase,
-        _getUsersUseCase = getUsersUseCase;
-
-  Future<void> fetchAllData() async {
-    _isLoading = true;
+  Future<void> setUserRole(UserRole role) async {
+    _currentUserRole = role;
     notifyListeners();
 
-    final List<ApiResponse<dynamic>> responses = await Future.wait([
-      _getStatusesUseCase.execute(),
-      _getPrioritiesUseCase.execute(),
-      _getDesignersUseCase.execute(),
-      _getClientsUseCase.execute(),
-      _getUsersUseCase.execute(),
-    ]);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userRole', role.toString());
+  }
 
-    _statuses = responses[0].success ? responses[0].data ?? [] : [];
-    _priorities = responses[1].success ? responses[1].data ?? [] : [];
-    _designers = responses[2].success ? responses[2].data ?? [] : [];
-    _clients = responses[3].success ? responses[3].data ?? [] : [];
-    _users = responses[4].success ? responses[4].data ?? [] : [];
+  Future<void> _loadUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final roleString = prefs.getString('userRole');
 
-    _isLoading = false;
+    if (roleString != null) {
+      _currentUserRole = UserRole.values.firstWhere(
+        (e) => e.toString() == roleString,
+        orElse: () => UserRole.owner,
+      );
+    } else {
+      _currentUserRole = UserRole.owner;
+    }
+
     notifyListeners();
   }
+
+  /// The first page depends on the user role
+  Widget get firstPage =>
+      _currentUserRole == UserRole.owner ? OwnerHomePage() : ManagerHomePage();
+
+  List<String> get menuPageNames => [
+    'home',
+    'appointment',
+    'transaction',
+    'employee',
+    'service',
+    'product',
+    'report',
+    'salon',
+    'supervisor',
+    'manager',
+  ];
+
+  /// Titles for AppBar
+  List<String> get titles => [
+    "Dashboard",
+    "Appointments",
+    "Transactions",
+    "Employees",
+    "Services",
+    "Products",
+    "Reports",
+    "Salon Management",
+    "Supervisors",
+    "Managers",
+  ];
 }
