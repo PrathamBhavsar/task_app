@@ -8,6 +8,7 @@ import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/home_provider.dart';
 import '../../providers/task_provider.dart';
+import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
@@ -45,6 +46,7 @@ class AgencyPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
@@ -72,8 +74,8 @@ class AgencyPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Phone', style: AppTexts.inputHintTextStyle),
-                        Text('Orders', style: AppTexts.inputHintTextStyle),
-                        Text('Total Spent', style: AppTexts.inputHintTextStyle),
+                        Text('Rating', style: AppTexts.inputHintTextStyle),
+                        Text('Pending Tasks', style: AppTexts.inputHintTextStyle),
                       ],
                     ),
 
@@ -85,7 +87,7 @@ class AgencyPage extends StatelessWidget {
                           style: AppTexts.inputTextStyle,
                         ),
                         Text(
-                          agencies[index].rating.toString(),
+                          '${agencies[index].rating.toString()}/5',
                           style: AppTexts.inputTextStyle,
                         ),
                         Text(
@@ -93,6 +95,24 @@ class AgencyPage extends StatelessWidget {
                           style: AppTexts.inputTextStyle,
                         ),
                       ],
+                    ),
+                  ],
+                ),
+                10.hGap,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IntrinsicWidth(
+                      stepWidth: 20,
+                      child: ActionButton(label: 'View Details', onPress: () {}),
+                    ),
+                    10.wGap,
+                    IntrinsicWidth(
+                      stepWidth: 20,
+                      child: ActionButton(
+                        label: 'Call',
+                        onPress: () {},
+                      ),
                     ),
                   ],
                 ),
