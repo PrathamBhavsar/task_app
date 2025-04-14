@@ -15,18 +15,17 @@ class AdminHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Consumer<TaskProvider>(
     builder:
-        (BuildContext context, TaskProvider provider, Widget? child) =>
-            Column(
-              children: [
-                DashboardContainers(),
-                10.hGap,
-                _buildSalesOverview(provider),
-                10.hGap,
-                _buildTaskStatistics(provider),
-                10.hGap,
-                _buildRecentTasks(),
-              ],
-            ),
+        (BuildContext context, TaskProvider provider, Widget? child) => Column(
+          children: [
+            DashboardContainers(),
+            10.hGap,
+            _buildSalesOverview(provider),
+            10.hGap,
+            _buildTaskStatistics(provider),
+            10.hGap,
+            _buildRecentTasks(),
+          ],
+        ),
   );
 
   Widget _buildRecentTasks() => BorderedContainer(
@@ -36,10 +35,8 @@ class AdminHomePage extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "Recent Tasks",
-              style: AppTexts.titleTextStyle,
-            ).padSymmetric(vertical: 20.h, horizontal: 10.w),
+            Text("Recent Tasks", style: AppTexts.titleTextStyle),
+
             Row(
               children: [
                 Text('View All', style: AppTexts.inputLabelTextStyle),
@@ -53,6 +50,7 @@ class AdminHomePage extends StatelessWidget {
             ),
           ],
         ),
+        10.hGap,
         ...List.generate(
           3,
           (index) => Padding(
@@ -66,7 +64,7 @@ class AdminHomePage extends StatelessWidget {
                     children: [
                       Text(
                         "Task #00${index + 1}",
-                        style: AppTexts.titleTextStyle,
+                        style: AppTexts.headingTextStyle,
                       ),
                       Text("Customer Name", style: AppTexts.inputHintTextStyle),
                     ],
@@ -81,28 +79,23 @@ class AdminHomePage extends StatelessWidget {
     ),
   );
 
-  Widget _buildTaskStatistics(TaskProvider provider) =>
-      BorderedContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Task Statistics",
-              style: AppTexts.titleTextStyle,
-            ).padSymmetric(vertical: 20.h, horizontal: 10.w),
-            PieChart(),
-          ],
-        ),
-      );
+  Widget _buildTaskStatistics(TaskProvider provider) => BorderedContainer(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Task Statistics", style: AppTexts.titleTextStyle),
+        10.hGap,
+        PieChart(),
+      ],
+    ),
+  );
 
   Widget _buildSalesOverview(TaskProvider provider) => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Overview",
-          style: AppTexts.titleTextStyle,
-        ).padSymmetric(vertical: 20.h, horizontal: 10.w),
+        Text("Overview", style: AppTexts.titleTextStyle),
+        10.hGap,
         ChartWidget(),
       ],
     ),

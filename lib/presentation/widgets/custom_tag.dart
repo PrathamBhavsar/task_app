@@ -21,7 +21,7 @@ class CustomTag extends StatelessWidget {
       color: color,
       borderRadius: BorderRadius.circular(15),
     ),
-    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
+    padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
     child: Center(
       child: Text(
         text,

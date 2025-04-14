@@ -51,7 +51,10 @@ class CustomerPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(customers[index].name, style: AppTexts.titleTextStyle),
+                        Text(
+                          customers[index].name,
+                          style: AppTexts.headingTextStyle,
+                        ),
                         Text(
                           customers[index].email,
                           style: AppTexts.inputHintTextStyle,

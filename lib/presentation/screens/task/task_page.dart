@@ -41,24 +41,31 @@ class TaskPage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(tasks[index].name, style: AppTexts.titleTextStyle),
-                    5.hGap,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tasks[index].name,
+                        style: AppTexts.headingTextStyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
 
-                    Text(
-                      tasks[index].customer,
-                      style: AppTexts.inputHintTextStyle,
-                    ),
+                      5.hGap,
 
-                    tasks[index].agency != null
-                        ? Text(
-                          "Agency: ${tasks[index].customer}",
-                          style: AppTexts.inputHintTextStyle,
-                        )
-                        : SizedBox.shrink(),
-                  ],
+                      Text(
+                        tasks[index].customer,
+                        style: AppTexts.inputHintTextStyle,
+                      ),
+
+                      tasks[index].agency != null
+                          ? Text(
+                            "Agency: ${tasks[index].customer}",
+                            style: AppTexts.inputHintTextStyle,
+                          )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,

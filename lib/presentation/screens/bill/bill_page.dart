@@ -27,6 +27,7 @@ class BillPage extends StatelessWidget {
         (context, provider, child) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Bills', style: AppTexts.titleTextStyle),
             TabHeader(
               tabs: [
                 Tab(text: 'Pending'),
@@ -56,26 +57,29 @@ class BillPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          customers[index].name,
-                          style: AppTexts.titleTextStyle,
-                        ),
-                        Text(
-                          customers[index].agency,
-                          style: AppTexts.inputHintTextStyle,
-                        ),
-                        Text(
-                          customers[index].task,
-                          style: AppTexts.inputHintTextStyle,
-                        ),
-                        Text(
-                          customers[index].place,
-                          style: AppTexts.inputHintTextStyle,
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            customers[index].name,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTexts.headingTextStyle,
+                          ),
+                          Text(
+                            customers[index].agency,
+                            style: AppTexts.inputHintTextStyle,
+                          ),
+                          Text(
+                            customers[index].task,
+                            style: AppTexts.inputHintTextStyle,
+                          ),
+                          Text(
+                            customers[index].place,
+                            style: AppTexts.inputHintTextStyle,
+                          ),
+                        ],
+                      ),
                     ),
                     CustomTag(
                       text: customers[index].status,
@@ -93,7 +97,7 @@ class BillPage extends StatelessWidget {
                 ),
                 10.hGap,
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween ,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IntrinsicWidth(
                       stepWidth: 20,

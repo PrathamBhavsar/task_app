@@ -13,10 +13,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) => Consumer<HomeProvider>(
     builder:
         (context, provider, child) => Scaffold(
-          appBar: AppBar(
-            title: Text(provider.title, style: AppTexts.titleTextStyle),
-            forceMaterialTransparency: true,
-          ),
           bottomNavigationBar: SizedBox(
             height: 60.h,
             child: BottomNavigationBar(
@@ -57,9 +53,11 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: SingleChildScrollView(
-            child: provider.currentPage,
-          ).padAll(AppPaddings.appPaddingInt),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: provider.currentPage,
+            ).padAll(AppPaddings.appPaddingInt),
+          ),
         ),
   );
 }

@@ -93,7 +93,7 @@ class CustomTextField extends StatelessWidget {
           const BorderSide(width: 2, color: Colors.red),
         ),
         focusedBorder: AppBorders.outlineTFBorder(
-          const BorderSide(width: 2, color: Colors.black),
+          const BorderSide(width: 2, color: AppColors.accent),
         ),
       );
 }

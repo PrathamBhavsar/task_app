@@ -23,22 +23,22 @@ class AgencyPage extends StatelessWidget {
   Widget build(BuildContext context) => Consumer<TaskProvider>(
     builder:
         (context, provider, child) => Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Agencies', style: AppTexts.titleTextStyle),
-        10.hGap,
-        CustomTextField(hintTxt: 'Search Agencies...'),
-        10.hGap,
-        _buildAgencies(),
-      ],
-    ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Agencies', style: AppTexts.titleTextStyle),
+            10.hGap,
+            CustomTextField(hintTxt: 'Search Agencies...'),
+            10.hGap,
+            _buildAgencies(),
+          ],
+        ),
   );
   Widget _buildAgencies() => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       ...List.generate(
         agencies.length,
-            (index) => Padding(
+        (index) => Padding(
           padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
           child: BorderedContainer(
             child: Column(
@@ -52,7 +52,10 @@ class AgencyPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(agencies[index].name, style: AppTexts.titleTextStyle),
+                        Text(
+                          agencies[index].name,
+                          style: AppTexts.headingTextStyle,
+                        ),
                         Text(
                           agencies[index].email,
                           style: AppTexts.inputHintTextStyle,
@@ -75,7 +78,10 @@ class AgencyPage extends StatelessWidget {
                       children: [
                         Text('Phone', style: AppTexts.inputHintTextStyle),
                         Text('Rating', style: AppTexts.inputHintTextStyle),
-                        Text('Pending Tasks', style: AppTexts.inputHintTextStyle),
+                        Text(
+                          'Pending Tasks',
+                          style: AppTexts.inputHintTextStyle,
+                        ),
                       ],
                     ),
 
@@ -104,15 +110,15 @@ class AgencyPage extends StatelessWidget {
                   children: [
                     IntrinsicWidth(
                       stepWidth: 20,
-                      child: ActionButton(label: 'View Details', onPress: () {}),
+                      child: ActionButton(
+                        label: 'View Details',
+                        onPress: () {},
+                      ),
                     ),
                     10.wGap,
                     IntrinsicWidth(
                       stepWidth: 20,
-                      child: ActionButton(
-                        label: 'Call',
-                        onPress: () {},
-                      ),
+                      child: ActionButton(label: 'Call', onPress: () {}),
                     ),
                   ],
                 ),

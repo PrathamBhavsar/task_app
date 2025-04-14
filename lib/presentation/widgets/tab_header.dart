@@ -40,6 +40,7 @@ class _TabHeaderState extends State<TabHeader> with TickerProviderStateMixin {
               ),
               padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 5.w),
               child: TabBar(
+                textScaler: TextScaler.linear(0.9),
                 tabAlignment: TabAlignment.fill,
                 controller: _tabController,
                 onTap: provider.updateSubTabIndex,
