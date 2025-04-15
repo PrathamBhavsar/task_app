@@ -64,7 +64,7 @@ class Agency {
   };
 
   // Sample list of Agencies
-  static List<Agency> get sampleAgencys => [
+  static List<Agency> get sampleAgencies => [
     Agency(
       name: "MeasurePro Services",
       contactPerson: "Raj Mehta",

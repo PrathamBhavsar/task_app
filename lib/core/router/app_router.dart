@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/models/Agency.dart';
+import '../../data/models/agency.dart';
+import '../../data/models/task.dart';
 import '../../presentation/screens/agency/agency_detail_page.dart';
 import '../../presentation/screens/auth/auth_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
+import '../../presentation/screens/task/task_detail_page.dart';
 
 abstract class AppRouter {
   static GoRouter router() => GoRouter(
-    initialLocation: '/agencyDetails',
+    initialLocation: '/taskDetails',
     routes: [
       GoRoute(
         path: '/auth',
@@ -25,9 +27,17 @@ abstract class AppRouter {
         path: '/agencyDetails',
         name: 'agencyDetails',
         pageBuilder: (context, state) {
-          // final agency = state.extra as Agency;
-          final agency = Agency.sampleAgencys.first;
+          final agency = state.extra as Agency;
           return _slideTransition(AgencyDetailPage(agency: agency), state);
+        },
+      ),
+      GoRoute(
+        path: '/taskDetails',
+        name: 'taskDetails',
+        pageBuilder: (context, state) {
+          // final task = state.extra as Task;
+          final task = Task.sampleTasks.first;
+          return _slideTransition(TaskDetailPage(task: task), state);
         },
       ),
     ],

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/models/Agency.dart';
+import '../../../data/models/agency.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/custom_text_field.dart';
 import 'widgets/agency_tile.dart';
 
-List<Agency> agencies = Agency.sampleAgencys;
+List<Agency> agencies = Agency.sampleAgencies;
 
 class AgencyPage extends StatelessWidget {
   const AgencyPage({super.key});

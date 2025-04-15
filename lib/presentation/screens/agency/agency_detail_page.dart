@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/models/Agency.dart';
+import '../../../data/models/agency.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/dummy_data.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
+import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/tab_header.dart';
@@ -139,10 +140,86 @@ class AgencyDetailPage extends StatelessWidget {
                       }
                     },
                   ),
+                  10.hGap,
+                  _buildQuickActions(),
+                  10.hGap,
+                  _buildPerformanceMetrics(),
                 ],
               ).padAll(AppPaddings.appPaddingInt),
             ),
       ),
+    ),
+  );
+
+  Widget _buildQuickActions() => BorderedContainer(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Quick Actions',
+          style: AppTexts.titleTextStyle.copyWith(
+            fontVariations: [FontVariation.weight(500)],
+          ),
+        ),
+        20.hGap,
+        ActionButton(
+          label: 'Assign New Task',
+          onPress: () {},
+          backgroundColor: Colors.black,
+          fontColor: Colors.white,
+        ),
+        10.hGap,
+        ActionButton(label: 'Call Agency', onPress: () {}),
+        10.hGap,
+        ActionButton(label: 'Email Agency', onPress: () {}),
+      ],
+    ),
+  );
+
+  Widget _buildPerformanceMetrics() => BorderedContainer(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Performance Metrics',
+          style: AppTexts.titleTextStyle.copyWith(
+            fontVariations: [FontVariation.weight(500)],
+          ),
+        ),
+        ...List.generate(
+          4,
+          (index) => Column(
+            children: [
+              20.hGap,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    DummyData.agencyDetailPerformanceMetrics[index]['title'],
+                    style: AppTexts.labelTextStyle,
+                  ),
+                  Text(
+                    '${DummyData.agencyDetailPerformanceMetrics[index]['data']}%'
+                        .toString(),
+                    style: AppTexts.labelTextStyle,
+                  ),
+                ],
+              ),
+              5.hGap,
+              LinearProgressIndicator(
+                value:
+                    (DummyData.agencyDetailPerformanceMetrics[index]['data'])
+                        .toDouble() /
+                    100,
+                minHeight: 5.h,
+                borderRadius: BorderRadius.circular(10),
+                backgroundColor: AppColors.accent,
+                color: AppColors.green,
+              ),
+            ],
+          ),
+        ),
+      ],
     ),
   );
 
@@ -161,35 +238,6 @@ class AgencyDetailPage extends StatelessWidget {
       ),
     ],
   );
-
-  // Widget _buildCompleted(BuildContext context) => Column(
-  //   crossAxisAlignment: CrossAxisAlignment.start,
-  //   children: [
-  //     ...List.generate(
-  //       agencies.length,
-  //       (index) => Padding(
-  //         padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-  //         child: DetailedTaskTile(
-  //           task: tasks[index],
-  //           isCompleted: tasks[index].status == 'Completed',
-  //         ),
-  //       ),
-  //     ),
-  //   ],
-  // );
-  //
-  // Widget _buildAll(BuildContext context) => Column(
-  //   crossAxisAlignment: CrossAxisAlignment.start,
-  //   children: [
-  //     ...List.generate(
-  //       agencies.length,
-  //       (index) => Padding(
-  //         padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-  //         child: DetailedTaskTile(task: tasks[index]),
-  //       ),
-  //     ),
-  //   ],
-  // );
 
   Widget _buildInfoColumn(String title, String subtitle) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,

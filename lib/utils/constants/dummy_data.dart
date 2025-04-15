@@ -24,4 +24,11 @@ abstract class DummyData {
     {'title': "Pending", 'data': "3"},
     {'title': "Rating", 'data': "4.8"},
   ];
+
+  static const List<Map<String, dynamic>> agencyDetailPerformanceMetrics = [
+    {'title': "On-time Completion", 'data': 95},
+    {'title': "Measurement Accuracy", 'data': 98},
+    {'title': "Customer Satisfaction", 'data': 92},
+    {'title': "Response Time", 'data': 89},
+  ];
 }
