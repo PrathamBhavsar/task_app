@@ -22,15 +22,15 @@ class CustomTag extends StatelessWidget {
       borderRadius: BorderRadius.circular(15),
     ),
     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-    child: Center(
-      child: Text(
-        text,
-        style: AppTexts.inputLabelTextStyle.copyWith(
-          color: textColor,
-          fontSize: 12.sp,
-          fontVariations: [FontVariation.weight(700)],
-        ),
+    child: Text(
+      text,
+      style: AppTexts.inputLabelTextStyle.copyWith(
+        color: textColor,
+        fontSize: 12.sp,
+        fontVariations: [FontVariation.weight(700)],
       ),
+      softWrap: true,
+      overflow: TextOverflow.visible,
     ),
   );
 }

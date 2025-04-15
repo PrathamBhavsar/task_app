@@ -5,11 +5,9 @@ import 'package:provider/provider.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../providers/home_provider.dart';
 import '../../providers/task_provider.dart';
-import '../../widgets/bordered_container.dart';
-import '../../widgets/custom_tag.dart';
 import '../../widgets/tab_header.dart';
+import 'widgets/task_tile.dart';
 
 List<Task> tasks = Task.sampleTasks;
 
@@ -37,54 +35,7 @@ class TaskPage extends StatelessWidget {
         tasks.length,
         (index) => Padding(
           padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-          child: BorderedContainer(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        tasks[index].name,
-                        style: AppTexts.headingTextStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-
-                      5.hGap,
-
-                      Text(
-                        tasks[index].customer,
-                        style: AppTexts.inputHintTextStyle,
-                      ),
-
-                      tasks[index].agency != null
-                          ? Text(
-                            "Agency: ${tasks[index].customer}",
-                            style: AppTexts.inputHintTextStyle,
-                          )
-                          : SizedBox.shrink(),
-                    ],
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    CustomTag(
-                      text: tasks[index].status,
-                      color: AppColors.accent,
-                      textColor: Colors.black,
-                    ),
-                    5.hGap,
-                    Text(
-                      tasks[index].dueDate,
-                      style: AppTexts.inputHintTextStyle,
-                    ).padSymmetric(horizontal: 10.w),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          child: TaskTile(task: tasks[index]),
         ),
       ),
     ],

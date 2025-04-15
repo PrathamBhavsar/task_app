@@ -57,7 +57,7 @@ class Task {
       name: "Custom Blind Selection",
       phone: "+91 789564231",
       product: "Custom Blinds",
-      status: "Product Selection",
+      status: "Pending",
       priority: "High",
       customer: "Sarah Johnson",
       note:
@@ -70,7 +70,7 @@ class Task {
       customer: "Sarah Johnson",
       phone: "+91 789564231",
       product: "Custom Blinds",
-      status: "Measurement",
+      status: "Completed",
       priority: "High",
       agency: "MeasurePro Services",
       note:
@@ -83,7 +83,7 @@ class Task {
       customer: "List Thompson",
       phone: "+91 789564231",
       product: "Custom Blinds",
-      status: "Quote",
+      status: "Completed",
       priority: "High",
       note:
           "Customer is interested in custom blinds for their living room and bedroom. They prefer neutral colors and are concerned about light filtering capabilities.",
@@ -91,4 +91,10 @@ class Task {
       createdAt: "25th Mar 2025",
     ),
   ];
+
+  static List<Task> get completedTasks =>
+      sampleTasks.where((t) => t.status == 'Completed').toList();
+
+  static List<Task> get pendingTasks =>
+      sampleTasks.where((t) => t.status == 'Pending').toList();
 }

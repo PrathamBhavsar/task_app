@@ -3,15 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/models/customer.dart';
-import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../providers/home_provider.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
-import '../../widgets/tab_header.dart';
 
 List<Customer> customers = Customer.sampleCustomers;
 

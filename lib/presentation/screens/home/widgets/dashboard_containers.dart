@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../../utils/constants/dummy_data.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/data_container.dart';
 
 class DashboardContainers extends StatelessWidget {
-  const DashboardContainers({super.key});
+  const DashboardContainers({super.key, required this.list});
+
+  final List<Map<String, dynamic>> list;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -14,19 +15,17 @@ class DashboardContainers extends StatelessWidget {
         children: [
           Expanded(
             child: DataContainer(
-              title: DummyData.adminDashboard[0]['title'],
-              subtitle: DummyData.adminDashboard[0]['subtitle'],
-              data: DummyData.adminDashboard[0]['data'],
-              padding: EdgeInsets.zero,
+              title: list[0]['title'],
+              subtitle: list[0]['subtitle'],
+              data: list[0]['data'],
             ),
           ),
           10.wGap,
           Expanded(
             child: DataContainer(
-              title: DummyData.adminDashboard[1]['title'],
-              subtitle: DummyData.adminDashboard[1]['subtitle'],
-              data: DummyData.adminDashboard[1]['data'],
-              padding: EdgeInsets.zero,
+              title: list[1]['title'],
+              subtitle: list[1]['subtitle'],
+              data: list[1]['data'],
             ),
           ),
         ],
@@ -36,19 +35,17 @@ class DashboardContainers extends StatelessWidget {
         children: [
           Expanded(
             child: DataContainer(
-              title: DummyData.adminDashboard[2]['title'],
-              subtitle: DummyData.adminDashboard[2]['subtitle'],
-              data: DummyData.adminDashboard[2]['data'],
-              padding: EdgeInsets.zero,
+              title: list[2]['title'],
+              subtitle: list[2]['subtitle'],
+              data: list[2]['data'],
             ),
           ),
           10.wGap,
           Expanded(
             child: DataContainer(
-              title: DummyData.adminDashboard[3]['title'],
-              subtitle: DummyData.adminDashboard[3]['subtitle'],
-              data: DummyData.adminDashboard[3]['data'],
-              padding: EdgeInsets.zero,
+              title: list[3]['title'],
+              subtitle: list[3]['subtitle'],
+              data: list[3]['data'],
             ),
           ),
         ],

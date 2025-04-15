@@ -3,16 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/models/Agency.dart';
-import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../providers/home_provider.dart';
 import '../../providers/task_provider.dart';
-import '../../widgets/action_button.dart';
-import '../../widgets/bordered_container.dart';
-import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
-import '../../widgets/tab_header.dart';
+import 'widgets/agency_tile.dart';
 
 List<Agency> agencies = Agency.sampleAgencys;
 
@@ -29,102 +24,18 @@ class AgencyPage extends StatelessWidget {
             10.hGap,
             CustomTextField(hintTxt: 'Search Agencies...'),
             10.hGap,
-            _buildAgencies(),
+            _buildAgencies(context),
           ],
         ),
   );
-  Widget _buildAgencies() => Column(
+  Widget _buildAgencies(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       ...List.generate(
         agencies.length,
         (index) => Padding(
           padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-          child: BorderedContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          agencies[index].name,
-                          style: AppTexts.headingTextStyle,
-                        ),
-                        Text(
-                          agencies[index].email,
-                          style: AppTexts.inputHintTextStyle,
-                        ),
-                      ],
-                    ),
-                    CustomTag(
-                      text: agencies[index].status,
-                      color: Colors.black,
-                      textColor: Colors.white,
-                    ),
-                  ],
-                ),
-                20.hGap,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Phone', style: AppTexts.inputHintTextStyle),
-                        Text('Rating', style: AppTexts.inputHintTextStyle),
-                        Text(
-                          'Pending Tasks',
-                          style: AppTexts.inputHintTextStyle,
-                        ),
-                      ],
-                    ),
-
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          agencies[index].phone,
-                          style: AppTexts.inputTextStyle,
-                        ),
-                        Text(
-                          '${agencies[index].rating.toString()}/5',
-                          style: AppTexts.inputTextStyle,
-                        ),
-                        Text(
-                          agencies[index].totalSpent,
-                          style: AppTexts.inputTextStyle,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                10.hGap,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IntrinsicWidth(
-                      stepWidth: 20,
-                      child: ActionButton(
-                        label: 'View Details',
-                        onPress: () {},
-                      ),
-                    ),
-                    10.wGap,
-                    IntrinsicWidth(
-                      stepWidth: 20,
-                      child: ActionButton(label: 'Call', onPress: () {}),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          child: AgencyTile(agency: agencies[index]),
         ),
       ),
     ],

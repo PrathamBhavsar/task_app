@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../../utils/constants/app_constants.dart';
+import '../../../../utils/constants/dummy_data.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../providers/task_provider.dart';
 import '../../../widgets/bordered_container.dart';
@@ -17,7 +18,7 @@ class AdminHomePage extends StatelessWidget {
     builder:
         (BuildContext context, TaskProvider provider, Widget? child) => Column(
           children: [
-            DashboardContainers(),
+            DashboardContainers(list: DummyData.adminDashboard),
             10.hGap,
             _buildSalesOverview(provider),
             10.hGap,
@@ -36,7 +37,6 @@ class AdminHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("Recent Tasks", style: AppTexts.titleTextStyle),
-
             Row(
               children: [
                 Text('View All', style: AppTexts.inputLabelTextStyle),

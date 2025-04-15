@@ -1,12 +1,6 @@
-
 abstract class DummyData {
-
   static const List<Map<String, dynamic>> adminDashboard = [
-    {
-      'title': "Total Tasks",
-      'data': "127",
-      'subtitle': "+14% from last month",
-    },
+    {'title': "Total Tasks", 'data': "127", 'subtitle': "+14% from last month"},
     {
       'title': "Active Orders",
       'data': "42",
@@ -22,5 +16,12 @@ abstract class DummyData {
       'data': "₹45k",
       'subtitle': "+18% from last month",
     },
+  ];
+
+  static const List<Map<String, dynamic>> agencyDetailDashboard = [
+    {'title': "Total Tasks", 'data': "45"},
+    {'title': "Completed", 'data': "23"},
+    {'title': "Pending", 'data': "3"},
+    {'title': "Rating", 'data': "4.8"},
   ];
 }
