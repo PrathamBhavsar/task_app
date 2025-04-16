@@ -1,4 +1,42 @@
 abstract class DummyData {
+  static const List<Map<String, dynamic>> taskDetailMessages = [
+    {
+      'time': "Nov 30, 2023 at 9:15 AM",
+      'title': "John Doe",
+      'subtitle':
+          "Hi Sarah, I've sent you some blind samples as requested. Let me know if you have any questions!",
+    },
+    {
+      'time': "Nov 30, 2023 at 10:30 AM",
+      'title': "Sarah Johnson",
+      'subtitle':
+          "Thanks for the samples! I really like the beige option for the living room. Can we schedule a time to discuss the bedroom options?",
+    },
+  ];
+
+  static const List<Map<String, dynamic>> taskDetailTimeline = [
+    {
+      'time': "Nov 30, 2023 at 9:15 AM",
+      'title': "Task Created",
+      'subtitle': "Task was created by John Doe",
+    },
+    {
+      'time': "Nov 30, 2023 at 10:30 AM",
+      'title': "Note Added",
+      'subtitle': "Customer prefers neutral colors for the blinds",
+    },
+    {
+      'time': "Dec 1, 2023 at 9:00 AM",
+      'title': "Samples Sent",
+      'subtitle': "Sent fabric samples to customer via mail",
+    },
+    {
+      'time': "Dec 1, 2023 at 2:15 PM",
+      'title': "Customer Response",
+      'subtitle': "Customer confirmed interest in beige option for living room",
+    },
+  ];
+
   static const List<Map<String, dynamic>> adminDashboard = [
     {'title': "Total Tasks", 'data': "127", 'subtitle': "+14% from last month"},
     {

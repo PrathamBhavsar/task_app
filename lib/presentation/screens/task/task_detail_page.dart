@@ -12,6 +12,10 @@ import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
+import '../agency/agency_page.dart';
+
+final timeline = DummyData.taskDetailTimeline;
+final messages = DummyData.taskDetailMessages;
 
 class TaskDetailPage extends StatelessWidget {
   const TaskDetailPage({super.key, required this.task});
@@ -150,7 +154,7 @@ class TaskDetailPage extends StatelessWidget {
                     builder: (context) {
                       switch (provider.tabIndex) {
                         case 0:
-                          return _buildTimeline();
+                          return _buildTaskOverFlow();
                         case 1:
                           return _buildTimeline();
                         default:
@@ -170,10 +174,50 @@ class TaskDetailPage extends StatelessWidget {
       children: [
         Text('Task Workflow', style: AppTexts.titleTextStyle),
         10.hGap,
+
+        // Text(
+        //   "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
+        //   style: AppTexts.inputTextStyle,
+        // ),
         Text(
-          "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
+          "Assign a measurement task to one of our partner agencies.",
           style: AppTexts.inputTextStyle,
         ),
+        10.hGap,
+        Text("Select Agency", style: AppTexts.inputTextStyle),
+        10.hGap,
+        ...List.generate(
+          agencies.length,
+          (index) => Padding(
+            padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+            child: BorderedContainer(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        agencies[index].name,
+                        style: AppTexts.labelTextStyle,
+                      ),
+                      Text(
+                        '${agencies[index].rating}/5',
+                        style: AppTexts.inputHintTextStyle,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'Availability: Next Week',
+                    style: AppTexts.inputHintTextStyle,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        10.hGap,
+        Text('Schedule Date', style: AppTexts.inputHintTextStyle),
         10.hGap,
         ActionButton(
           label: 'Complete Product Selection',
@@ -184,6 +228,7 @@ class TaskDetailPage extends StatelessWidget {
       ],
     ),
   );
+
   Widget _buildTimeline() => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,49 +240,77 @@ class TaskDetailPage extends StatelessWidget {
         ),
         20.hGap,
         ...List.generate(
-          3,
-          (index) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CustomTag(
-                text: 'Nov 30, 2023 at 9:15 AM',
-                color: AppColors.blue,
-                textColor: Colors.white,
-              ),
-              5.hGap,
-              Padding(
-                padding: EdgeInsets.only(left: 10.w),
-                child: Text('Task Created', style: AppTexts.labelTextStyle),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10.w),
-                child: Text(
-                  'Customer prefers neutral colors for the blinds',
-                  style: AppTexts.inputHintTextStyle,
+          timeline.length,
+          (index) => Padding(
+            padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomTag(
+                  text: timeline[index]['time'],
+                  color: index == 0 ? AppColors.blue : AppColors.green,
+                  textColor: Colors.white,
                 ),
-              ),
-            ],
+                5.hGap,
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: Text(
+                    timeline[index]['title'],
+                    style: AppTexts.labelTextStyle,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: Text(
+                    timeline[index]['subtitle'],
+                    style: AppTexts.inputHintTextStyle,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
     ),
   );
+
   Widget _buildMessages() => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Task Workflow', style: AppTexts.titleTextStyle),
-        10.hGap,
-        Text(
-          "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
-          style: AppTexts.inputTextStyle,
-        ),
-        10.hGap,
-        ActionButton(
-          label: 'Complete Product Selection',
-          onPress: () {},
-          backgroundColor: Colors.black,
-          fontColor: Colors.white,
+        Text('Task Messages', style: AppTexts.titleTextStyle),
+        20.hGap,
+        ...List.generate(
+          messages.length,
+          (index) => Padding(
+            padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      messages[index]['title'],
+                      style: AppTexts.labelTextStyle,
+                    ),
+                    10.wGap,
+                    Text(
+                      messages[index]['time'],
+                      style: AppTexts.inputHintTextStyle,
+                    ),
+                  ],
+                ),
+                5.hGap,
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: Text(
+                    messages[index]['subtitle'],
+                    style: AppTexts.inputLabelTextStyle,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ],
     ),
