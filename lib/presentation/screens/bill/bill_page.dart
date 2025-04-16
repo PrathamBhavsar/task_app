@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../data/models/bill.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
@@ -97,7 +98,11 @@ class BillPage extends StatelessWidget {
                   children: [
                     IntrinsicWidth(
                       stepWidth: 20,
-                      child: ActionButton(label: 'View Task', onPress: () {}),
+                      child: ActionButton(
+                        label: 'View Task',
+                        onPress: () {},
+                        prefixIcon: CustomIcon.eye,
+                      ),
                     ),
                     10.wGap,
                     IntrinsicWidth(

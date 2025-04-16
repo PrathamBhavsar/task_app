@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../utils/constants/app_constants.dart';
+import '../../utils/constants/custom_icons.dart';
 import '../providers/auth_provider.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
     this.hintTxt,
     this.keyboardType,
     this.isPassword = false,
+    this.isSearch = false,
     this.isPhone = false,
     this.isEnabled = true,
     this.isMultiline = false,
@@ -29,6 +31,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool isPassword;
   final bool isPhone;
+  final bool isSearch;
   final bool isEnabled;
   final bool isMultiline;
   final Icon? prefixIcon;
@@ -64,7 +67,14 @@ class CustomTextField extends StatelessWidget {
   InputDecoration _buildInputDecoration(AuthProvider provider) =>
       InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
-        prefixIcon: prefixIcon,
+        prefixIcon:
+            isSearch
+                ? Icon(
+                  CustomIcon.search,
+                  color: AppColors.lighterBlackBg,
+                  size: 20.sp,
+                )
+                : null,
         prefixIconColor: AppColors.primary,
         suffixIcon:
             isPassword

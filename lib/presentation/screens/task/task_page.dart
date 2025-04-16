@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
+import '../../widgets/action_button.dart';
 import '../../widgets/tab_header.dart';
 import 'widgets/task_tile.dart';
 
@@ -20,8 +22,21 @@ class TaskPage extends StatelessWidget {
         (context, provider, child) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('My Tasks', style: AppTexts.titleTextStyle),
-            10.hGap,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('My Tasks', style: AppTexts.titleTextStyle),
+                IntrinsicWidth(
+                  child: ActionButton(
+                    label: 'New Task',
+                    onPress: () {},
+                    prefixIcon: CustomIcon.badgePlus,
+                    fontColor: Colors.white,
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+              ],
+            ),
             TabHeader(tabs: [Tab(text: 'Active'), Tab(text: 'Completed')]),
             10.hGap,
             _buildActiveTasks(),

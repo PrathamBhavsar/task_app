@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../../utils/constants/app_constants.dart';
+import '../../../../utils/constants/custom_icons.dart';
 import '../../../../utils/constants/dummy_data.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../providers/task_provider.dart';
@@ -69,7 +70,7 @@ class AdminHomePage extends StatelessWidget {
                       Text("Customer Name", style: AppTexts.inputHintTextStyle),
                     ],
                   ),
-                  Text('View', style: AppTexts.inputLabelTextStyle),
+                  Icon(CustomIcon.chevronRight, color: Colors.black),
                 ],
               ),
             ),

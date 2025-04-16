@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 
 import '../../../data/models/agency.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
+import '../../widgets/action_button.dart';
 import '../../widgets/custom_text_field.dart';
 import 'widgets/agency_tile.dart';
 
@@ -20,9 +22,23 @@ class AgencyPage extends StatelessWidget {
         (context, provider, child) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Agencies', style: AppTexts.titleTextStyle),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Agencies', style: AppTexts.titleTextStyle),
+                IntrinsicWidth(
+                  child: ActionButton(
+                    label: 'New Agency',
+                    onPress: () {},
+                    prefixIcon: CustomIcon.badgePlus,
+                    fontColor: Colors.white,
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+              ],
+            ),
             10.hGap,
-            CustomTextField(hintTxt: 'Search Agencies...'),
+            CustomTextField(hintTxt: 'Search Agencies...', isSearch: true),
             10.hGap,
             _buildAgencies(context),
           ],

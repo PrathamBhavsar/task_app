@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/home_provider.dart';
 
@@ -26,27 +27,27 @@ class HomeScreen extends StatelessWidget {
               onTap: (i) => provider.setBarIndex(i),
               items: [
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.home_filled),
+                  icon: Icon(CustomIcon.layout),
                   label: 'Home',
                   backgroundColor: Colors.white,
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.task_alt_rounded),
+                  icon: Icon(CustomIcon.clipboardList),
                   label: 'Task',
                   backgroundColor: Colors.white,
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
+                  icon: Icon(CustomIcon.users),
                   label: 'Customers',
                   backgroundColor: Colors.white,
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.collections_bookmark_rounded),
+                  icon: Icon(CustomIcon.package),
                   label: 'Agencies',
                   backgroundColor: Colors.white,
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.monetization_on),
+                  icon: Icon(CustomIcon.receiptIndianRupee),
                   label: 'Bills',
                   backgroundColor: Colors.white,
                 ),

@@ -4,12 +4,14 @@ import 'package:provider/provider.dart';
 
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/constants/dummy_data.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
+import '../../widgets/custom_text_field.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
 import '../agency/agency_page.dart';
@@ -39,34 +41,22 @@ class TaskDetailPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              task.customer,
+                              style: AppTexts.titleTextStyle.copyWith(
+                                fontVariations: [FontVariation.weight(500)],
+                              ),
+                            ),
+                            Icon(CustomIcon.squarePen, color: Colors.black),
+                          ],
+                        ),
                         CustomTag(
                           text: task.status,
                           color: Colors.black,
                           textColor: Colors.white,
-                        ),
-                        5.hGap,
-                        Text(
-                          task.customer,
-                          style: AppTexts.titleTextStyle.copyWith(
-                            fontVariations: [FontVariation.weight(500)],
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            IntrinsicWidth(
-                              child: ActionButton(
-                                label: 'Call',
-                                onPress: () {},
-                              ),
-                            ),
-                            10.wGap,
-                            IntrinsicWidth(
-                              child: ActionButton(
-                                label: 'Text',
-                                onPress: () {},
-                              ),
-                            ),
-                          ],
                         ),
                         10.hGap,
                         Row(
@@ -154,7 +144,10 @@ class TaskDetailPage extends StatelessWidget {
                     builder: (context) {
                       switch (provider.tabIndex) {
                         case 0:
-                          return _buildTaskOverFlow();
+                          return _buildTaskOverFlow(
+                            provider.isProductSelected,
+                            provider.toggleProductSelected,
+                          );
                         case 1:
                           return _buildTimeline();
                         default:
@@ -168,65 +161,93 @@ class TaskDetailPage extends StatelessWidget {
       ),
     ),
   );
-  Widget _buildTaskOverFlow() => BorderedContainer(
+  Widget _buildTaskOverFlow(
+    bool isMeasured,
+    VoidCallback toggle,
+  ) => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Task Workflow', style: AppTexts.titleTextStyle),
         10.hGap,
-
-        // Text(
-        //   "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
-        //   style: AppTexts.inputTextStyle,
-        // ),
         Text(
-          "Assign a measurement task to one of our partner agencies.",
+          isMeasured
+              ? "Assign a measurement task to one of our partner agencies."
+              : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
+
           style: AppTexts.inputTextStyle,
         ),
-        10.hGap,
-        Text("Select Agency", style: AppTexts.inputTextStyle),
-        10.hGap,
-        ...List.generate(
-          agencies.length,
-          (index) => Padding(
-            padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-            child: BorderedContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        agencies[index].name,
-                        style: AppTexts.labelTextStyle,
-                      ),
-                      Text(
-                        '${agencies[index].rating}/5',
-                        style: AppTexts.inputHintTextStyle,
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'Availability: Next Week',
-                    style: AppTexts.inputHintTextStyle,
-                  ),
-                ],
+        if (isMeasured) ...[
+          10.hGap,
+          Text("Select Agency", style: AppTexts.labelTextStyle),
+          10.hGap,
+          ...List.generate(
+            agencies.length,
+            (index) => Padding(
+              padding:
+                  index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+              child: BorderedContainer(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          agencies[index].name,
+                          style: AppTexts.labelTextStyle,
+                        ),
+                        Text(
+                          '${agencies[index].rating}/5',
+                          style: AppTexts.inputHintTextStyle,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Availability: Next Week',
+                      style: AppTexts.inputHintTextStyle,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        10.hGap,
-        Text('Schedule Date', style: AppTexts.inputHintTextStyle),
+          10.hGap,
+          _buildTextInput('Schedule Date', 'Select Date'),
+          _buildTextInput('Customer Phone', 'Enter Phone'),
+          _buildTextInput(
+            'Instructions for Agency',
+            'Provide any specific instructions',
+            isMultiline: true,
+          ),
+        ],
         10.hGap,
         ActionButton(
-          label: 'Complete Product Selection',
-          onPress: () {},
+          label:
+              isMeasured
+                  ? 'Assign Measurement Task'
+                  : 'Complete Product Selection',
+          onPress: () => isMeasured ? null : toggle(),
+          prefixIcon: isMeasured ? null : CustomIcon.circleCheckBig,
           backgroundColor: Colors.black,
           fontColor: Colors.white,
         ),
       ],
     ),
+  );
+
+  Widget _buildTextInput(
+    String title,
+    String hint, {
+    bool isMultiline = false,
+  }) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(title, style: AppTexts.labelTextStyle),
+      10.hGap,
+      CustomTextField(hintTxt: hint, isMultiline: isMultiline),
+      10.hGap,
+    ],
   );
 
   Widget _buildTimeline() => BorderedContainer(

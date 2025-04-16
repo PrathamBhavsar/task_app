@@ -10,7 +10,7 @@ import '../../presentation/screens/task/task_detail_page.dart';
 
 abstract class AppRouter {
   static GoRouter router() => GoRouter(
-    initialLocation: '/taskDetails',
+    initialLocation: '/home',
     routes: [
       GoRoute(
         path: '/auth',
@@ -35,8 +35,7 @@ abstract class AppRouter {
         path: '/taskDetails',
         name: 'taskDetails',
         pageBuilder: (context, state) {
-          // final task = state.extra as Task;
-          final task = Task.sampleTasks.first;
+          final task = state.extra as Task;
           return _slideTransition(TaskDetailPage(task: task), state);
         },
       ),

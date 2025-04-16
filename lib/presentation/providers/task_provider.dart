@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 
 class TaskProvider extends ChangeNotifier {
+  bool _isProductSelected = false;
+  bool get isProductSelected => _isProductSelected;
+
+  void toggleProductSelected() {
+    print('HI');
+    _isProductSelected = !_isProductSelected;
+    notifyListeners();
+  }
 
   bool _isCashFocus = true;
   bool get isCashFocus => _isCashFocus;

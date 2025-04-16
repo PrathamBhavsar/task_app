@@ -41,6 +41,7 @@ dependencies:
   syncfusion_flutter_charts: ^29.1.33
   go_router: ^14.8.1
   intl: ^0.20.2
+  rename: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -83,5 +84,8 @@ flutter:
     - family: Inter
       fonts:
         - asset: assets/fonts/InterVariable.ttf
+    - family: CustomIcons
+      fonts:
+        - asset: assets/fonts/CustomIcon.ttf
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

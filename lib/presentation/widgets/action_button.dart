@@ -51,7 +51,12 @@ class ActionButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (prefixIcon != null) ...[
-            Icon(prefixIcon, color: fontColor, size: 24.sp),
+            Icon(
+              prefixIcon,
+              color: fontColor,
+              size: 20.sp,
+              applyTextScaling: true,
+            ),
             8.wGap,
           ],
           Flexible(

@@ -4,8 +4,10 @@ import 'package:provider/provider.dart';
 
 import '../../../data/models/customer.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
+import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
@@ -21,9 +23,23 @@ class CustomerPage extends StatelessWidget {
         (context, provider, child) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Customers', style: AppTexts.titleTextStyle),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Customers', style: AppTexts.titleTextStyle),
+                IntrinsicWidth(
+                  child: ActionButton(
+                    label: 'New Customer',
+                    onPress: () {},
+                    prefixIcon: CustomIcon.badgePlus,
+                    fontColor: Colors.white,
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+              ],
+            ),
             10.hGap,
-            CustomTextField(hintTxt: 'Search customers...'),
+            CustomTextField(hintTxt: 'Search customers...', isSearch: true),
             10.hGap,
             _buildCustomers(),
           ],
