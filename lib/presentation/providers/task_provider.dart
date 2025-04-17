@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 
 class TaskProvider extends ChangeNotifier {
-  bool _isProductSelected = false;
-  bool get isProductSelected => _isProductSelected;
+  int _taskDetailIndex = 0;
+  bool get isProductSelected => _taskDetailIndex == 1;
+  bool get isMeasurementSent => _taskDetailIndex == 2;
 
-  void toggleProductSelected() {
-    print('HI');
-    _isProductSelected = !_isProductSelected;
+  void increaseTaskDetailIndex() {
+    _taskDetailIndex++;
+    print(_taskDetailIndex);
+    notifyListeners();
+  }
+
+  int _selectedAgencyIndex = -1;
+  int get selectedAgencyIndex => _selectedAgencyIndex;
+
+  void setAgencyIndex(int index) {
+    _selectedAgencyIndex = index;
     notifyListeners();
   }
 

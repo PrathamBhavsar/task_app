@@ -53,6 +53,7 @@ class TaskDetailPage extends StatelessWidget {
                             Icon(CustomIcon.squarePen, color: Colors.black),
                           ],
                         ),
+                        5.hGap,
                         CustomTag(
                           text: task.status,
                           color: Colors.black,
@@ -98,12 +99,11 @@ class TaskDetailPage extends StatelessWidget {
                           key2: 'Created',
                           value2: task.createdAt,
                         ),
-                        10.hGap,
-                        Text('Notes', style: AppTexts.inputHintTextStyle),
-                        Text(
-                          'Customer is interested in custom blinds for their living room and bedroom. They prefer neutral colors and are concerned about light filtering capabilities.',
-                          style: AppTexts.inputTextStyle,
-                        ),
+                        if (task.note != null) ...[
+                          10.hGap,
+                          Text('Notes', style: AppTexts.inputHintTextStyle),
+                          Text(task.note ?? '', style: AppTexts.inputTextStyle),
+                        ],
                         10.hGap,
                         BorderedContainer(
                           color: AppColors.bgYellow,
@@ -116,7 +116,7 @@ class TaskDetailPage extends StatelessWidget {
                               ),
                               10.hGap,
                               Text(
-                                'Bill #BILL-123456 from MeasurePro Services requires your approval',
+                                'Bill #BILL-123456 from ${task.agency} requires your approval',
                                 style: AppTexts.inputTextStyle,
                               ),
                               10.hGap,
@@ -145,8 +145,11 @@ class TaskDetailPage extends StatelessWidget {
                       switch (provider.tabIndex) {
                         case 0:
                           return _buildTaskOverFlow(
+                            provider.selectedAgencyIndex,
                             provider.isProductSelected,
-                            provider.toggleProductSelected,
+                            provider.isMeasurementSent,
+                            provider.increaseTaskDetailIndex,
+                            provider.setAgencyIndex,
                           );
                         case 1:
                           return _buildTimeline();
@@ -162,52 +165,96 @@ class TaskDetailPage extends StatelessWidget {
     ),
   );
   Widget _buildTaskOverFlow(
-    bool isMeasured,
-    VoidCallback toggle,
+    int selectedAgencyIndex,
+    bool isProductSelected,
+    bool isMeasurementSent,
+    VoidCallback increment,
+    Function(int) selection,
   ) => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Task Workflow', style: AppTexts.titleTextStyle),
         10.hGap,
-        Text(
-          isMeasured
-              ? "Assign a measurement task to one of our partner agencies."
-              : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
+        isMeasurementSent
+            ? Container(
+              padding: EdgeInsets.all(AppPaddings.appPaddingInt),
+              decoration: BoxDecoration(
+                borderRadius: AppBorders.radius,
+                color: AppColors.blueBg,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Measurement Scheduled",
+                    style: AppTexts.inputTextStyle.copyWith(
+                      color: AppColors.blue,
+                    ),
+                  ),
+                  10.hGap,
+                  Text(
+                    "The measurement task has been assigned to ${task.agency} for ${task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
+                    style: AppTexts.inputTextStyle.copyWith(
+                      color: AppColors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            )
+            : SizedBox.shrink(),
+        isMeasurementSent
+            ? SizedBox.shrink()
+            : Text(
+              isProductSelected
+                  ? "Assign a measurement task to one of our partner agencies."
+                  : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
 
-          style: AppTexts.inputTextStyle,
-        ),
-        if (isMeasured) ...[
+              style: AppTexts.inputTextStyle,
+            ),
+        if (isProductSelected) ...[
           10.hGap,
           Text("Select Agency", style: AppTexts.labelTextStyle),
           10.hGap,
           ...List.generate(
             agencies.length,
-            (index) => Padding(
-              padding:
-                  index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-              child: BorderedContainer(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          agencies[index].name,
-                          style: AppTexts.labelTextStyle,
-                        ),
-                        Text(
-                          '${agencies[index].rating}/5',
-                          style: AppTexts.inputHintTextStyle,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Availability: Next Week',
-                      style: AppTexts.inputHintTextStyle,
-                    ),
-                  ],
+            (index) => GestureDetector(
+              onTap: () => selection(index),
+              child: Padding(
+                padding:
+                    index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+                child: Container(
+                  padding: EdgeInsets.all(AppPaddings.appPaddingInt),
+                  decoration: BoxDecoration(
+                    borderRadius: AppBorders.radius,
+                    border:
+                        selectedAgencyIndex == index
+                            ? Border.all(color: Colors.black, width: 2)
+                            : Border.all(color: AppColors.accent, width: 1),
+                  ),
+
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            agencies[index].name,
+                            style: AppTexts.labelTextStyle,
+                          ),
+                          Text(
+                            '${agencies[index].rating}/5',
+                            style: AppTexts.inputHintTextStyle,
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'Availability: Next Week',
+                        style: AppTexts.inputHintTextStyle,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -224,11 +271,13 @@ class TaskDetailPage extends StatelessWidget {
         10.hGap,
         ActionButton(
           label:
-              isMeasured
+              isMeasurementSent
+                  ? 'Mark Measurement as Complete'
+                  : isProductSelected
                   ? 'Assign Measurement Task'
                   : 'Complete Product Selection',
-          onPress: () => isMeasured ? null : toggle(),
-          prefixIcon: isMeasured ? null : CustomIcon.circleCheckBig,
+          onPress: () => isMeasurementSent ? null : increment(),
+          prefixIcon: CustomIcon.circleCheckBig,
           backgroundColor: Colors.black,
           fontColor: Colors.white,
         ),

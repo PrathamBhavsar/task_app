@@ -11,8 +11,6 @@ import '../../widgets/action_button.dart';
 import '../../widgets/tab_header.dart';
 import 'widgets/task_tile.dart';
 
-List<Task> tasks = Task.sampleTasks;
-
 class TaskPage extends StatelessWidget {
   const TaskPage({super.key});
 
@@ -39,11 +37,13 @@ class TaskPage extends StatelessWidget {
             ),
             TabHeader(tabs: [Tab(text: 'Active'), Tab(text: 'Completed')]),
             10.hGap,
-            _buildActiveTasks(),
+            _buildActiveTasks(
+              provider.tabIndex == 0 ? Task.pendingTasks : Task.completedTasks,
+            ),
           ],
         ),
   );
-  Widget _buildActiveTasks() => Column(
+  Widget _buildActiveTasks(List<Task> tasks) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       ...List.generate(

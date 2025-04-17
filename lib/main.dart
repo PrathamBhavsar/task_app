@@ -41,6 +41,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp.router(
     routerConfig: AppRouter.router(),
     theme: ThemeData(
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: Colors.black,
+        selectionColor: Colors.black,
+        selectionHandleColor: Colors.black,
+      ),
       iconTheme: IconThemeData(color: AppColors.accent),
       fontFamily: 'Inter',
       splashColor: Colors.black.withAlpha(2),

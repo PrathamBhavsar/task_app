@@ -7,6 +7,7 @@ import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/action_button.dart';
 import '../../../widgets/bordered_container.dart';
 import '../../../widgets/custom_tag.dart';
+import '../../../widgets/tile_row.dart';
 
 class AgencyTile extends StatelessWidget {
   const AgencyTile({super.key, required this.agency});
@@ -37,33 +38,12 @@ class AgencyTile extends StatelessWidget {
             ),
           ],
         ),
-        20.hGap,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Phone', style: AppTexts.inputHintTextStyle),
-                Text('Rating', style: AppTexts.inputHintTextStyle),
-                Text('Pending Tasks', style: AppTexts.inputHintTextStyle),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(agency.phone, style: AppTexts.inputTextStyle),
-                Text(
-                  '${agency.rating.toString()}/5',
-                  style: AppTexts.inputTextStyle,
-                ),
-                Text(
-                  agency.pendingTasks.toString(),
-                  style: AppTexts.inputTextStyle,
-                ),
-              ],
-            ),
-          ],
+        10.hGap,
+        TileRow(
+          key1: 'Rating',
+          value1: '${agency.rating.toString()}/5',
+          key2: 'Pending Tasks',
+          value2: agency.pendingTasks.toString(),
         ),
         10.hGap,
         Row(

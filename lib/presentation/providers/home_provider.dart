@@ -11,7 +11,7 @@ class HomeProvider extends ChangeNotifier {
   UserRole _currentUserRole = UserRole.admin;
 
   HomeProvider() {
-    _loadUserRole();
+    // _loadUserRole();
   }
 
   UserRole get currentUserRole => _currentUserRole;
@@ -44,10 +44,10 @@ class HomeProvider extends ChangeNotifier {
       _currentUserRole == UserRole.admin ? AdminHomePage() : AdminHomePage();
 
   List<Widget> get pages => [
-    firstPage,
+    if (currentUserRole == UserRole.admin) firstPage,
     TaskPage(),
     CustomerPage(),
-    AgencyPage(),
+    if (currentUserRole == UserRole.admin) AgencyPage(),
     BillPage(),
   ];
 
@@ -63,7 +63,7 @@ class HomeProvider extends ChangeNotifier {
   Widget get currentPage => pages[_currentBarIndex];
   String get title => titles[_currentBarIndex];
 
-  int _currentBarIndex = 2;
+  int _currentBarIndex = 0;
   int get currentBarIndex => _currentBarIndex;
 
   setBarIndex(int value) {

@@ -69,11 +69,21 @@ class Bill {
       name: "Motorized Track - Living Room",
       amount: 7800.0,
       agency: "MeasurePro Services",
-      status: "Overdue",
+      status: "Pending",
       task: "Motorized Curtain Install",
       place: "Living Room",
       createdAt: "2024-01-15",
       dueDate: "2024-01-20",
     ),
   ];
+
+  static List<Bill> get pendingBills =>
+      sampleBills.where((b) => b.status == 'Pending').toList();
+
+  static List<Bill> get approvedBills =>
+      sampleBills.where((b) => b.status == 'Approved').toList();
+  static List<Bill> get paidBills =>
+      sampleBills.where((b) => b.status == 'Paid').toList();
+  static List<Bill> get rejectedBills =>
+      sampleBills.where((b) => b.status == 'Rejected').toList();
 }

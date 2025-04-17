@@ -23,39 +23,44 @@ class TaskTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  task.name,
-                  style: AppTexts.headingTextStyle,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      task.name,
+                      style: AppTexts.headingTextStyle,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    CustomTag(
+                      text: task.status,
+                      color: AppColors.accent,
+                      textColor: Colors.black,
+                    ),
+                  ],
                 ),
-
                 5.hGap,
-
-                Text(task.customer, style: AppTexts.inputHintTextStyle),
-
-                task.agency != null
-                    ? Text(
-                      "Agency: ${task.customer}",
-                      style: AppTexts.inputHintTextStyle,
-                    )
-                    : SizedBox.shrink(),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(task.customer, style: AppTexts.inputHintTextStyle),
+                        task.agency != null
+                            ? Text(
+                              "Agency: ${task.agency}",
+                              style: AppTexts.inputHintTextStyle,
+                            )
+                            : SizedBox.shrink(),
+                      ],
+                    ),
+                    Text(task.dueDate, style: AppTexts.inputHintTextStyle),
+                  ],
+                ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              CustomTag(
-                text: task.status,
-                color: AppColors.accent,
-                textColor: Colors.black,
-              ),
-              5.hGap,
-              Text(
-                task.dueDate,
-                style: AppTexts.inputHintTextStyle,
-              ).padSymmetric(horizontal: 10.w),
-            ],
           ),
         ],
       ),

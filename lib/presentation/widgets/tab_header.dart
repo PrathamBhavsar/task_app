@@ -18,7 +18,11 @@ class _TabHeaderState extends State<TabHeader> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: widget.tabs.length, vsync: this);
+    _tabController = TabController(
+      length: widget.tabs.length,
+      vsync: this,
+      initialIndex: context.read<TaskProvider>().tabIndex,
+    );
   }
 
   @override

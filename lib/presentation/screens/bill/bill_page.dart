@@ -12,8 +12,7 @@ import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
-
-List<Bill> customers = Bill.sampleBills;
+import 'widgets/bill_tile.dart';
 
 class BillPage extends StatelessWidget {
   const BillPage({super.key});
@@ -34,91 +33,31 @@ class BillPage extends StatelessWidget {
               ],
             ),
             10.hGap,
-            _buildBills(),
+            Builder(
+              builder: (context) {
+                switch (provider.tabIndex) {
+                  case 0:
+                    return _buildBills(Bill.pendingBills);
+                  case 1:
+                    return _buildBills(Bill.approvedBills);
+                  case 2:
+                    return _buildBills(Bill.paidBills);
+                  default:
+                    return _buildBills(Bill.rejectedBills);
+                }
+              },
+            ),
           ],
         ),
   );
-  Widget _buildBills() => Column(
+  Widget _buildBills(List<Bill> list) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       ...List.generate(
-        customers.length,
+        list.length,
         (index) => Padding(
           padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-          child: BorderedContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            customers[index].name,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTexts.headingTextStyle,
-                          ),
-                          Text(
-                            customers[index].agency,
-                            style: AppTexts.inputHintTextStyle,
-                          ),
-                          Text(
-                            customers[index].task,
-                            style: AppTexts.inputHintTextStyle,
-                          ),
-                          Text(
-                            customers[index].place,
-                            style: AppTexts.inputHintTextStyle,
-                          ),
-                        ],
-                      ),
-                    ),
-                    CustomTag(
-                      text: customers[index].status,
-                      color: Colors.black,
-                      textColor: Colors.white,
-                    ),
-                  ],
-                ),
-                10.hGap,
-                TileRow(
-                  key1: 'Bill Date',
-                  value1: customers[index].createdAt,
-                  key2: 'Due Date',
-                  value2: customers[index].createdAt,
-                ),
-                10.hGap,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IntrinsicWidth(
-                      stepWidth: 20,
-                      child: ActionButton(
-                        label: 'View Task',
-                        onPress: () {},
-                        prefixIcon: CustomIcon.eye,
-                      ),
-                    ),
-                    10.wGap,
-                    IntrinsicWidth(
-                      stepWidth: 20,
-                      child: ActionButton(
-                        label: 'Review Bill',
-                        backgroundColor: Colors.black,
-                        fontColor: Colors.white,
-                        onPress: () {},
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          child: BillTile(bill: list[index]),
         ),
       ),
     ],
