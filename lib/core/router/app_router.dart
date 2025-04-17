@@ -6,11 +6,12 @@ import '../../data/models/task.dart';
 import '../../presentation/screens/agency/agency_detail_page.dart';
 import '../../presentation/screens/auth/auth_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
+import '../../presentation/screens/task/edit_task_page.dart';
 import '../../presentation/screens/task/task_detail_page.dart';
 
 abstract class AppRouter {
   static GoRouter router() => GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/editTask',
     routes: [
       GoRoute(
         path: '/auth',
@@ -35,9 +36,18 @@ abstract class AppRouter {
         path: '/taskDetails',
         name: 'taskDetails',
         pageBuilder: (context, state) {
-          final task = state.extra as Task;
-          return _slideTransition(TaskDetailPage(task: task), state);
+          final Task? task = state.extra as Task?;
+          return _slideTransition(
+            TaskDetailPage(task: task ?? Task.empty()),
+            state,
+          );
         },
+      ),
+      GoRoute(
+        path: '/editTask',
+        name: 'editTask',
+        pageBuilder:
+            (context, state) => _slideTransition(EditTaskPage(), state),
       ),
     ],
   );

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/constants/custom_icons.dart';
-import '../../widgets/bordered_container.dart';
 
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';

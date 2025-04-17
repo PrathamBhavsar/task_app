@@ -1,3 +1,5 @@
+import '../../utils/extensions/date_formatter.dart';
+
 class Task {
   final String name;
   final String phone;
@@ -91,6 +93,19 @@ class Task {
       createdAt: "25th Mar 2025",
     ),
   ];
+
+  factory Task.empty() => Task(
+    name: 'Task Name',
+    customer: 'Customer Name',
+    product: 'Product Name',
+    status: 'Pending',
+    priority: 'Low',
+    dueDate: "Task's Due Date",
+    createdAt: DateTime.now().toFormattedWithSuffix(),
+    note: 'Add a note',
+    agency: 'Agency',
+    phone: 'Phone No.',
+  );
 
   static List<Task> get completedTasks =>
       sampleTasks.where((t) => t.status == 'Completed').toList();

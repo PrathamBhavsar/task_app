@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../data/models/customer.dart';
 import '../../../../utils/constants/app_constants.dart';

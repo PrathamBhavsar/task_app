@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../../utils/constants/app_constants.dart';
 import '../../utils/constants/custom_icons.dart';
-import '../../utils/extensions/padding.dart';
-import '../providers/home_provider.dart';
 import 'action_button.dart';
 
 class SelectionDrawer extends StatelessWidget {

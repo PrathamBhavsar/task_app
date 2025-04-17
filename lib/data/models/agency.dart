@@ -111,4 +111,6 @@ class Agency {
       createdAt: "2024-03-03",
     ),
   ];
+
+  static List<String> get names => sampleAgencies.map((a) => a.name).toList();
 }

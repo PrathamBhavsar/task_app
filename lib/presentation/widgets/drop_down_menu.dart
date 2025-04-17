@@ -68,7 +68,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu> {
             horizontal: 10.w,
           ),
           hintStyle: AppTexts.inputHintTextStyle,
-          border: OutlineInputBorder(
+          enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(width: 1, color: AppColors.accent),
             borderRadius: AppBorders.radius,
           ),

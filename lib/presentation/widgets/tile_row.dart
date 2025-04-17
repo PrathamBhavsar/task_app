@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../utils/constants/app_constants.dart';
-import '../../utils/extensions/padding.dart';
 
 class TileRow extends StatelessWidget {
   const TileRow({

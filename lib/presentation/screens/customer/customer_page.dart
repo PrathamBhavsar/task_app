@@ -8,8 +8,6 @@ import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
-import '../../widgets/bordered_container.dart';
-import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
 import 'widgets/customer_tile.dart';
 
