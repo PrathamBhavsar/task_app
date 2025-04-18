@@ -82,8 +82,10 @@ class Bill {
 
   static List<Bill> get approvedBills =>
       sampleBills.where((b) => b.status == 'Approved').toList();
+
   static List<Bill> get paidBills =>
       sampleBills.where((b) => b.status == 'Paid').toList();
+
   static List<Bill> get rejectedBills =>
       sampleBills.where((b) => b.status == 'Rejected').toList();
 }

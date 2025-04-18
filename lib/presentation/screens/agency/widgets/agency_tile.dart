@@ -10,12 +10,14 @@ import '../../../widgets/custom_tag.dart';
 import '../../../widgets/tile_row.dart';
 
 class AgencyTile extends StatelessWidget {
-  const AgencyTile({super.key, required this.agency});
+  const AgencyTile({super.key, required this.agency, this.isSelected = false});
 
   final Agency agency;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) => BorderedContainer(
+    isSelected: isSelected,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

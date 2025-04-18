@@ -8,12 +8,18 @@ import '../../../widgets/custom_tag.dart';
 import '../../../widgets/tile_row.dart';
 
 class CustomerTile extends StatelessWidget {
-  const CustomerTile({super.key, required this.customer});
+  const CustomerTile({
+    super.key,
+    required this.customer,
+    this.isSelected = false,
+  });
 
   final Customer customer;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) => BorderedContainer(
+    isSelected: isSelected,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

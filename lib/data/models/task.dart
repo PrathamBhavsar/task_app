@@ -61,6 +61,7 @@ class Task {
       product: "Custom Blinds",
       status: "Pending",
       priority: "High",
+      agency: "InstallMate Co.",
       customer: "Sarah Johnson",
       note:
           "Customer is interested in custom blinds for their living room and bedroom. They prefer neutral colors and are concerned about light filtering capabilities.",
@@ -69,7 +70,7 @@ class Task {
     ),
     Task(
       name: "Window Measurement",
-      customer: "Sarah Johnson",
+      customer: "Liam Smith",
       phone: "+91 789564231",
       product: "Custom Blinds",
       status: "Completed",
@@ -82,11 +83,12 @@ class Task {
     ),
     Task(
       name: "Roller Shades Quote",
-      customer: "List Thompson",
+      customer: "Emily Davis",
       phone: "+91 789564231",
       product: "Custom Blinds",
-      status: "Completed",
+      status: "Product Selection",
       priority: "High",
+      agency: "BlindExperts",
       note:
           "Customer is interested in custom blinds for their living room and bedroom. They prefer neutral colors and are concerned about light filtering capabilities.",
       dueDate: "20th Apr 2025",
@@ -111,5 +113,7 @@ class Task {
       sampleTasks.where((t) => t.status == 'Completed').toList();
 
   static List<Task> get pendingTasks =>
-      sampleTasks.where((t) => t.status == 'Pending').toList();
+      sampleTasks.where((t) => t.status != 'Completed').toList();
+
+  static List<String> get statuses => sampleTasks.map((a) => a.status).toList();
 }

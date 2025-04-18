@@ -35,6 +35,21 @@ class TaskProvider extends ChangeNotifier {
   void setAgencyIndex(int index) {
     _selectedAgencyIndex = index;
     notifyListeners();
+    // _selectedAgencyIndex = -1;
+  }
+
+  void resetIndexes() {
+    _selectedAgencyIndex = -1;
+    _selectedCustomerIndex = -1;
+  }
+
+  int _selectedCustomerIndex = -1;
+  int get selectedCustomerIndex => _selectedCustomerIndex;
+
+  void setCustomerIndex(int index) {
+    _selectedCustomerIndex = index;
+    notifyListeners();
+    // _selectedCustomerIndex = -1;
   }
 
   bool _isCashFocus = true;

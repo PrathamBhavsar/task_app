@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/models/agency.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/date_formatter.dart';
@@ -11,6 +11,10 @@ import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
+import '../agency/agency_page.dart';
+import '../agency/widgets/agency_tile.dart';
+import '../customer/customer_page.dart';
+import '../customer/widgets/customer_tile.dart';
 
 class EditTaskPage extends StatefulWidget {
   const EditTaskPage({super.key, required this.task, required this.isNew});
@@ -24,33 +28,62 @@ class EditTaskPage extends StatefulWidget {
 
 class _EditTaskPageState extends State<EditTaskPage> {
   late final _taskNameController = TextEditingController();
-  late final _customerNameController = TextEditingController();
   late final _noteController = TextEditingController();
   late final _phoneController = TextEditingController();
   late final _productController = TextEditingController();
   late final _dueDateController = TextEditingController();
 
+  late PageController _customerPageController;
+  late PageController _agencyPageController;
+
   @override
   void initState() {
-    if (!widget.isNew) {
-      _taskNameController.text = widget.task.name;
-      _customerNameController.text = widget.task.customer;
-      _noteController.text = widget.task.note ?? '';
-      _phoneController.text = widget.task.phone;
-      _productController.text = widget.task.product;
-      _dueDateController.text = widget.task.dueDate;
-    }
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!widget.isNew) {
+        _taskNameController.text = widget.task.name;
+        _noteController.text = widget.task.note ?? '';
+        _phoneController.text = widget.task.phone;
+        _productController.text = widget.task.product;
+        _dueDateController.text = widget.task.dueDate;
+
+        final provider = context.read<TaskProvider>();
+
+        provider.setCustomerIndex(
+          customers.indexWhere(
+            (customer) => customer.name == widget.task.customer,
+          ),
+        );
+        provider.setAgencyIndex(
+          agencies.indexWhere((agency) => agency.name == widget.task.agency),
+        );
+      }
+
+      final provider = context.read<TaskProvider>();
+      _customerPageController = PageController(
+        viewportFraction: 1,
+        initialPage: provider.selectedCustomerIndex,
+      );
+      _agencyPageController = PageController(
+        viewportFraction: 1,
+        initialPage: provider.selectedAgencyIndex,
+      );
+    });
   }
 
   @override
   void dispose() {
     _taskNameController.dispose();
-    _customerNameController.dispose();
     _noteController.dispose();
     _phoneController.dispose();
     _productController.dispose();
     _dueDateController.dispose();
+    _customerPageController.dispose();
+    _agencyPageController.dispose();
+
+    final provider = context.read<TaskProvider>();
+    provider.resetIndexes();
     super.dispose();
   }
 
@@ -65,7 +98,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
             final provider = context.read<TaskProvider>();
             final updatedTask = Task(
               name: _taskNameController.text,
-              customer: _customerNameController.text,
+              customer: customers[provider.selectedCustomerIndex].name,
+              agency: agencies[provider.selectedAgencyIndex].name,
               phone: _phoneController.text,
               product: _productController.text,
               status: provider.currentStatus,
@@ -108,16 +142,11 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           'Enter task title',
                           _taskNameController,
                         ),
-                        Text('Stage', style: AppTexts.labelTextStyle),
+                        Text('Status', style: AppTexts.labelTextStyle),
                         10.hGap,
                         CustomDropdownMenu(
-                          items: [
-                            'Product Selection',
-                            'Measurement',
-                            'Quote',
-                            'Sales Order',
-                            'Delivery & Payment',
-                          ],
+                          items: Task.statuses,
+                          initialValue: widget.task.status,
                           onChanged: (value) => provider.setStatus(value),
                         ),
                         10.hGap,
@@ -125,6 +154,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                         10.hGap,
                         CustomDropdownMenu(
                           items: ['Low', 'Medium', 'High'],
+                          initialValue: widget.task.priority,
                           onChanged: (value) => provider.setPriority(value),
                         ),
                         10.hGap,
@@ -149,58 +179,61 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   ),
                   20.hGap,
                   Text(
-                    'Customer Information',
+                    'Select Customer',
                     style: AppTexts.titleTextStyle.copyWith(
                       fontVariations: [FontVariation.weight(600)],
                     ),
                   ),
                   20.hGap,
-                  BorderedContainer(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTextInput(
-                          'Customer Name',
-                          'Enter customer name',
-                          _customerNameController,
-                        ),
-                        _buildTextInput(
-                          'Email',
-                          'Enter customer email',
-                          _phoneController,
-                        ),
-                        _buildTextInput(
-                          'Phone',
-                          'Enter customer phone',
-                          _phoneController,
-                        ),
-                      ],
+                  SizedBox(
+                    height: 200.h,
+                    child: PageView.builder(
+                      itemCount: customers.length,
+                      controller: _customerPageController,
+                      itemBuilder:
+                          (context, index) => Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            child: GestureDetector(
+                              onTap: () => provider.setCustomerIndex(index),
+                              child: CustomerTile(
+                                customer: customers[index],
+                                isSelected:
+                                    provider.selectedCustomerIndex == index,
+                              ),
+                            ),
+                          ),
                     ),
                   ),
                   20.hGap,
-                  Text(
-                    'Agency Information',
-                    style: AppTexts.titleTextStyle.copyWith(
-                      fontVariations: [FontVariation.weight(600)],
+                  if (widget.task.agency != null) ...[
+                    Text(
+                      'Agency Information',
+                      style: AppTexts.titleTextStyle.copyWith(
+                        fontVariations: [FontVariation.weight(600)],
+                      ),
                     ),
-                  ),
+                    20.hGap,
+                    SizedBox(
+                      height: 200.h,
+                      child: PageView.builder(
+                        itemCount: agencies.length,
+                        controller: _agencyPageController,
+                        itemBuilder:
+                            (context, index) => Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: GestureDetector(
+                                onTap: () => provider.setAgencyIndex(index),
+                                child: AgencyTile(
+                                  agency: agencies[index],
+                                  isSelected:
+                                      provider.selectedAgencyIndex == index,
+                                ),
+                              ),
+                            ),
+                      ),
+                    ),
+                  ],
                   20.hGap,
-                  BorderedContainer(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Agency', style: AppTexts.labelTextStyle),
-                        10.hGap,
-                        CustomDropdownMenu(items: Agency.names),
-                        10.hGap,
-                        _buildTextInput(
-                          'Agency Phone',
-                          'Enter agency phone',
-                          _phoneController,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ).padAll(AppPaddings.appPaddingInt),
             ),

@@ -237,16 +237,8 @@ class TaskDetailPage extends StatelessWidget {
               child: Padding(
                 padding:
                     index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-                child: Container(
-                  padding: EdgeInsets.all(AppPaddings.appPaddingInt),
-                  decoration: BoxDecoration(
-                    borderRadius: AppBorders.radius,
-                    border:
-                        selectedAgencyIndex == index
-                            ? Border.all(color: Colors.black, width: 2)
-                            : Border.all(color: AppColors.accent, width: 1),
-                  ),
-
+                child: BorderedContainer(
+                  isSelected: selectedAgencyIndex == index,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
