@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/models/message.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/date_formatter.dart';
@@ -107,6 +108,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
               note: _noteController.text,
               dueDate: _dueDateController.text,
               createdAt: DateTime.now().toFormattedWithSuffix(),
+              messages: Message.randomMessages,
             );
             context.pushNamed('taskDetails', extra: updatedTask);
           },

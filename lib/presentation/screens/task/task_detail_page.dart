@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/models/message.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
@@ -16,9 +17,9 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
 import '../agency/agency_page.dart';
+import '../bill/review_bill_screen.dart';
 
 final timeline = DummyData.taskDetailTimeline;
-final messages = DummyData.taskDetailMessages;
 
 class TaskDetailPage extends StatelessWidget {
   const TaskDetailPage({super.key, required this.task});
@@ -136,7 +137,7 @@ class TaskDetailPage extends StatelessWidget {
                               10.hGap,
                               ActionButton(
                                 label: 'Review Bill',
-                                onPress: () {},
+                                onPress: () => context.pushNamed('reviewBill'),
                                 backgroundColor: Colors.black,
                                 fontColor: Colors.white,
                               ),
@@ -168,7 +169,7 @@ class TaskDetailPage extends StatelessWidget {
                         case 1:
                           return _buildTimeline();
                         default:
-                          return _buildMessages();
+                          return _buildMessages(task.messages);
                       }
                     },
                   ),
@@ -350,7 +351,7 @@ class TaskDetailPage extends StatelessWidget {
     ),
   );
 
-  Widget _buildMessages() => BorderedContainer(
+  Widget _buildMessages(List<Message> messages) => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -364,14 +365,12 @@ class TaskDetailPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      messages[index]['title'],
-                      style: AppTexts.labelTextStyle,
-                    ),
+                    Text(messages[index].name, style: AppTexts.labelTextStyle),
                     10.wGap,
                     Text(
-                      messages[index]['time'],
+                      messages[index].createdAt,
                       style: AppTexts.inputHintTextStyle,
                     ),
                   ],
@@ -380,7 +379,7 @@ class TaskDetailPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 10.w),
                   child: Text(
-                    messages[index]['subtitle'],
+                    messages[index].message,
                     style: AppTexts.inputLabelTextStyle,
                   ),
                 ),

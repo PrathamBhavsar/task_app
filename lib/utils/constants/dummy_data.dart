@@ -1,19 +1,4 @@
 abstract class DummyData {
-  static const List<Map<String, dynamic>> taskDetailMessages = [
-    {
-      'time': "Nov 30, 2023 at 9:15 AM",
-      'title': "John Doe",
-      'subtitle':
-          "Hi Sarah, I've sent you some blind samples as requested. Let me know if you have any questions!",
-    },
-    {
-      'time': "Nov 30, 2023 at 10:30 AM",
-      'title': "Sarah Johnson",
-      'subtitle':
-          "Thanks for the samples! I really like the beige option for the living room. Can we schedule a time to discuss the bedroom options?",
-    },
-  ];
-
   static const List<Map<String, dynamic>> taskDetailTimeline = [
     {
       'time': "Nov 30, 2023 at 9:15 AM",

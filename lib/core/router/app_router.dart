@@ -13,7 +13,7 @@ import '../../presentation/screens/task/task_detail_page.dart';
 
 abstract class AppRouter {
   static GoRouter router() => GoRouter(
-    initialLocation: '/reviewBill',
+    initialLocation: '/home',
     routes: [
       GoRoute(
         path: '/auth',

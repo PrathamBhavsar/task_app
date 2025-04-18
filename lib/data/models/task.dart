@@ -1,4 +1,5 @@
 import '../../utils/extensions/date_formatter.dart';
+import 'message.dart';
 
 class Task {
   final String name;
@@ -11,6 +12,7 @@ class Task {
   final String customer;
   final String dueDate;
   final String createdAt;
+  final List<Message> messages;
 
   Task({
     required this.name,
@@ -23,6 +25,7 @@ class Task {
     required this.customer,
     required this.dueDate,
     required this.createdAt,
+    required this.messages,
   });
 
   // Factory constructor to create a Task from a Map
@@ -37,6 +40,7 @@ class Task {
     customer: map['customer'],
     dueDate: map['due_date'],
     createdAt: map['created_at'],
+    messages: map['messages'],
   );
 
   // Convert Task to Map
@@ -67,6 +71,7 @@ class Task {
           "Customer is interested in custom blinds for their living room and bedroom. They prefer neutral colors and are concerned about light filtering capabilities.",
       dueDate: "20th Apr 2025",
       createdAt: "25th Mar 2025",
+      messages: Message.randomMessages,
     ),
     Task(
       name: "Window Measurement",
@@ -80,6 +85,7 @@ class Task {
           "Customer is interested in custom blinds for their living room and bedroom. They prefer neutral colors and are concerned about light filtering capabilities.",
       dueDate: "20th Apr 2025",
       createdAt: "25th Mar 2025",
+      messages: Message.randomMessages,
     ),
     Task(
       name: "Roller Shades Quote",
@@ -93,6 +99,7 @@ class Task {
           "Customer is interested in custom blinds for their living room and bedroom. They prefer neutral colors and are concerned about light filtering capabilities.",
       dueDate: "20th Apr 2025",
       createdAt: "25th Mar 2025",
+      messages: Message.randomMessages,
     ),
   ];
 
@@ -107,6 +114,7 @@ class Task {
     note: 'Add a note',
     agency: 'Agency',
     phone: 'Phone No.',
+    messages: Message.randomMessages,
   );
 
   static List<Task> get completedTasks =>
