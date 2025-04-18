@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../../data/models/agency.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/constants/dummy_data.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
@@ -163,14 +164,17 @@ class AgencyDetailPage extends StatelessWidget {
         20.hGap,
         ActionButton(
           label: 'Assign New Task',
+          prefixIcon: CustomIcon.clipboardList,
           onPress: () => context.pushNamed('taskDetails'),
           backgroundColor: Colors.black,
           fontColor: Colors.white,
         ),
         10.hGap,
-        ActionButton(label: 'Call Agency', onPress: () {}),
-        10.hGap,
-        ActionButton(label: 'Email Agency', onPress: () {}),
+        ActionButton(
+          label: 'Call Agency',
+          prefixIcon: CustomIcon.phone,
+          onPress: () {},
+        ),
       ],
     ),
   );

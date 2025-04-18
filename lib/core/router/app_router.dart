@@ -6,12 +6,13 @@ import '../../data/models/task.dart';
 import '../../presentation/screens/agency/agency_detail_page.dart';
 import '../../presentation/screens/auth/auth_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
+import '../../presentation/screens/measurement/measurement_screen.dart';
 import '../../presentation/screens/task/edit_task_page.dart';
 import '../../presentation/screens/task/task_detail_page.dart';
 
 abstract class AppRouter {
   static GoRouter router() => GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/measurement',
     routes: [
       GoRoute(
         path: '/auth',
@@ -52,6 +53,12 @@ abstract class AppRouter {
             state,
           );
         },
+      ),
+      GoRoute(
+        path: '/measurement',
+        name: 'measurement',
+        pageBuilder:
+            (context, state) => _slideTransition(MeasurementScreen(), state),
       ),
     ],
   );

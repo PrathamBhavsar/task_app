@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../data/models/agency.dart';
 import '../../../../utils/constants/app_constants.dart';
+import '../../../../utils/constants/custom_icons.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/action_button.dart';
 import '../../../widgets/bordered_container.dart';
@@ -55,6 +56,7 @@ class AgencyTile extends StatelessWidget {
               stepWidth: 20,
               child: ActionButton(
                 label: 'View Details',
+                prefixIcon: CustomIcon.eye,
                 onPress:
                     () => context.pushNamed('agencyDetails', extra: agency),
               ),
@@ -62,7 +64,11 @@ class AgencyTile extends StatelessWidget {
             10.wGap,
             IntrinsicWidth(
               stepWidth: 20,
-              child: ActionButton(label: 'Call', onPress: () {}),
+              child: ActionButton(
+                label: 'Call',
+                prefixIcon: CustomIcon.phone,
+                onPress: () {},
+              ),
             ),
           ],
         ),

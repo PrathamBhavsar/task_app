@@ -54,7 +54,7 @@ class ActionButton extends StatelessWidget {
             Icon(
               prefixIcon,
               color: fontColor,
-              size: 20.sp,
+              size: 18.sp,
               applyTextScaling: true,
             ),
             8.wGap,
