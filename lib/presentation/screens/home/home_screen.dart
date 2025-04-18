@@ -25,48 +25,45 @@ class HomeScreen extends StatelessWidget {
                   forceMaterialTransparency: true,
                 )
                 : null,
-        bottomNavigationBar: SizedBox(
-          height: 60.h,
-          child: BottomNavigationBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            showUnselectedLabels: true,
-            selectedItemColor: Colors.black,
-            unselectedItemColor: AppColors.accent,
-            selectedLabelStyle: TextStyle(color: Colors.black),
-            unselectedLabelStyle: TextStyle(color: AppColors.secondary),
-            currentIndex: provider.currentBarIndex,
-            onTap: (i) => provider.setBarIndex(i),
-            items: [
-              if (isAdmin)
-                BottomNavigationBarItem(
-                  icon: Icon(CustomIcon.layout),
-                  label: 'Dashboard',
-                  backgroundColor: Colors.white,
-                ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          showUnselectedLabels: true,
+          selectedItemColor: Colors.black,
+          unselectedItemColor: AppColors.accent,
+          selectedLabelStyle: TextStyle(color: Colors.black),
+          unselectedLabelStyle: TextStyle(color: AppColors.secondary),
+          currentIndex: provider.currentBarIndex,
+          onTap: (i) => provider.setBarIndex(i),
+          items: [
+            if (isAdmin)
               BottomNavigationBarItem(
-                icon: Icon(CustomIcon.clipboardList),
-                label: isAdmin ? 'Tasks' : 'My Tasks',
+                icon: Icon(CustomIcon.layout),
+                label: 'Dashboard',
                 backgroundColor: Colors.white,
               ),
+            BottomNavigationBarItem(
+              icon: Icon(CustomIcon.clipboardList),
+              label: isAdmin ? 'Tasks' : 'My Tasks',
+              backgroundColor: Colors.white,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CustomIcon.users),
+              label: 'Customers',
+              backgroundColor: Colors.white,
+            ),
+            if (isAdmin)
               BottomNavigationBarItem(
-                icon: Icon(CustomIcon.users),
-                label: 'Customers',
+                icon: Icon(CustomIcon.package),
+                label: 'Agencies',
                 backgroundColor: Colors.white,
               ),
-              if (isAdmin)
-                BottomNavigationBarItem(
-                  icon: Icon(CustomIcon.package),
-                  label: 'Agencies',
-                  backgroundColor: Colors.white,
-                ),
-              BottomNavigationBarItem(
-                icon: Icon(CustomIcon.receiptIndianRupee),
-                label: isAdmin ? 'Bills' : 'My Bills',
-                backgroundColor: Colors.white,
-              ),
-            ],
-          ),
+            BottomNavigationBarItem(
+              icon: Icon(CustomIcon.receiptIndianRupee),
+              label: isAdmin ? 'Bills' : 'My Bills',
+              backgroundColor: Colors.white,
+            ),
+          ],
         ),
         body: SafeArea(
           child: SingleChildScrollView(

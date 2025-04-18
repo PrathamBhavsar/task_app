@@ -1,4 +1,5 @@
 import '../../utils/extensions/date_formatter.dart';
+import 'bill.dart';
 import 'message.dart';
 
 class Task {
@@ -13,6 +14,7 @@ class Task {
   final String dueDate;
   final String createdAt;
   final List<Message> messages;
+  final Bill bill;
 
   Task({
     required this.name,
@@ -26,6 +28,7 @@ class Task {
     required this.dueDate,
     required this.createdAt,
     required this.messages,
+    required this.bill,
   });
 
   // Factory constructor to create a Task from a Map
@@ -41,6 +44,7 @@ class Task {
     dueDate: map['due_date'],
     createdAt: map['created_at'],
     messages: map['messages'],
+    bill: map['bill'],
   );
 
   // Convert Task to Map
@@ -72,6 +76,7 @@ class Task {
       dueDate: "20th Apr 2025",
       createdAt: "25th Mar 2025",
       messages: Message.randomMessages,
+      bill: Bill.sampleBills[0],
     ),
     Task(
       name: "Window Measurement",
@@ -86,6 +91,7 @@ class Task {
       dueDate: "20th Apr 2025",
       createdAt: "25th Mar 2025",
       messages: Message.randomMessages,
+      bill: Bill.sampleBills[1],
     ),
     Task(
       name: "Roller Shades Quote",
@@ -100,6 +106,7 @@ class Task {
       dueDate: "20th Apr 2025",
       createdAt: "25th Mar 2025",
       messages: Message.randomMessages,
+      bill: Bill.sampleBills[2],
     ),
   ];
 
@@ -115,6 +122,7 @@ class Task {
     agency: 'Agency',
     phone: 'Phone No.',
     messages: Message.randomMessages,
+    bill: Bill.sampleBills.first,
   );
 
   static List<Task> get completedTasks =>

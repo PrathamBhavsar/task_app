@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/models/bill.dart';
 import '../../../data/models/message.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
@@ -41,40 +42,38 @@ class _EditTaskPageState extends State<EditTaskPage> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!widget.isNew) {
-        _taskNameController.text = widget.task.name;
-        _noteController.text = widget.task.note ?? '';
-        _phoneController.text = widget.task.phone;
-        _productController.text = widget.task.product;
-        _dueDateController.text = widget.task.dueDate;
-
-        final provider = context.read<TaskProvider>();
-
-        provider.setCustomerIndex(
-          customers.indexWhere(
-            (customer) => customer.name == widget.task.customer,
-          ),
-        );
-        provider.setAgencyIndex(
-          agencies.indexWhere((agency) => agency.name == widget.task.agency),
-        );
-      }
-
-      final provider = context.read<TaskProvider>();
-      _customerPageController = PageController(
-        viewportFraction: 1,
-        initialPage: provider.selectedCustomerIndex,
+    if (!widget.isNew) {
+      final customerIndex = customers.indexWhere(
+        (customer) => customer.name == widget.task.customer,
       );
-      _agencyPageController = PageController(
-        viewportFraction: 1,
-        initialPage: provider.selectedAgencyIndex,
+      final agencyIndex = agencies.indexWhere(
+        (agency) => agency.name == widget.task.agency,
       );
-    });
+
+      context.read<TaskProvider>().setCustomerIndex(customerIndex);
+      context.read<TaskProvider>().setAgencyIndex(agencyIndex);
+
+      _taskNameController.text = widget.task.name;
+      _noteController.text = widget.task.note ?? '';
+      _phoneController.text = widget.task.phone;
+      _productController.text = widget.task.product;
+      _dueDateController.text = widget.task.dueDate;
+    }
+
+    _customerPageController = PageController(
+      viewportFraction: 1,
+      initialPage: context.read<TaskProvider>().selectedCustomerIndex,
+    );
+
+    _agencyPageController = PageController(
+      viewportFraction: 1,
+      initialPage: context.read<TaskProvider>().selectedAgencyIndex,
+    );
   }
 
   @override
   void dispose() {
+    context.read<TaskProvider>().resetIndexes();
     _taskNameController.dispose();
     _noteController.dispose();
     _phoneController.dispose();
@@ -82,9 +81,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
     _dueDateController.dispose();
     _customerPageController.dispose();
     _agencyPageController.dispose();
-
-    final provider = context.read<TaskProvider>();
-    provider.resetIndexes();
     super.dispose();
   }
 
@@ -109,6 +105,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
               dueDate: _dueDateController.text,
               createdAt: DateTime.now().toFormattedWithSuffix(),
               messages: Message.randomMessages,
+              bill: Bill.sampleBills.first,
             );
             context.pushNamed('taskDetails', extra: updatedTask);
           },
@@ -188,7 +185,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   ),
                   20.hGap,
                   SizedBox(
-                    height: 200.h,
+                    height: 210.h,
                     child: PageView.builder(
                       itemCount: customers.length,
                       controller: _customerPageController,

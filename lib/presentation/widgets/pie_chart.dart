@@ -16,9 +16,21 @@ class PieChart extends StatelessWidget {
       ChartData('Delivery', 12),
     ];
     return SfCircularChart(
+      legend: Legend(
+        isVisible: true,
+        alignment: ChartAlignment.near,
+        isResponsive: true,
+        shouldAlwaysShowScrollbar: false,
+        orientation: LegendItemOrientation.horizontal,
+        position: LegendPosition.bottom,
+      ),
+
+      tooltipBehavior: TooltipBehavior(),
+      margin: EdgeInsets.zero,
+      selectionGesture: ActivationMode.singleTap,
       series: <CircularSeries>[
         DoughnutSeries<ChartData, String>(
-          animationDuration: 0,
+          legendIconType: LegendIconType.circle,
           dataSource: chartData,
           pointColorMapper: (ChartData data, _) => data.color,
           xValueMapper: (ChartData data, _) => data.x,
@@ -28,5 +40,3 @@ class PieChart extends StatelessWidget {
     );
   }
 }
-
-

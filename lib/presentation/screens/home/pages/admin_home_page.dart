@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../../../../data/models/task.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/constants/custom_icons.dart';
 import '../../../../utils/constants/dummy_data.dart';
@@ -10,6 +12,8 @@ import '../../../widgets/bordered_container.dart';
 import '../../../widgets/chart_widget.dart';
 import '../../../widgets/pie_chart.dart';
 import '../widgets/dashboard_containers.dart';
+
+final List<Task> tasks = Task.pendingTasks;
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -25,12 +29,12 @@ class AdminHomePage extends StatelessWidget {
             10.hGap,
             _buildTaskStatistics(provider),
             10.hGap,
-            _buildRecentTasks(),
+            _buildRecentTasks(context),
           ],
         ),
   );
 
-  Widget _buildRecentTasks() => BorderedContainer(
+  Widget _buildRecentTasks(BuildContext context) => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,25 +57,32 @@ class AdminHomePage extends StatelessWidget {
         ),
         10.hGap,
         ...List.generate(
-          3,
+          2,
           (index) => Padding(
             padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-            child: BorderedContainer(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Task #00${index + 1}",
-                        style: AppTexts.headingTextStyle,
-                      ),
-                      Text("Customer Name", style: AppTexts.inputHintTextStyle),
-                    ],
-                  ),
-                  Icon(CustomIcon.chevronRight, color: Colors.black),
-                ],
+            child: GestureDetector(
+              onTap:
+                  () => context.pushNamed('taskDetails', extra: tasks[index]),
+              child: BorderedContainer(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tasks[index].name,
+                          style: AppTexts.headingTextStyle,
+                        ),
+                        Text(
+                          tasks[index].customer,
+                          style: AppTexts.inputHintTextStyle,
+                        ),
+                      ],
+                    ),
+                    Icon(CustomIcon.chevronRight, color: Colors.black),
+                  ],
+                ),
               ),
             ),
           ),
