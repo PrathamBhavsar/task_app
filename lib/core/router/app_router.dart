@@ -5,6 +5,7 @@ import '../../data/models/agency.dart';
 import '../../data/models/task.dart';
 import '../../presentation/screens/agency/agency_detail_page.dart';
 import '../../presentation/screens/auth/auth_screen.dart';
+import '../../presentation/screens/bill/review_bill_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/measurement/measurement_screen.dart';
 import '../../presentation/screens/task/edit_task_page.dart';
@@ -12,7 +13,7 @@ import '../../presentation/screens/task/task_detail_page.dart';
 
 abstract class AppRouter {
   static GoRouter router() => GoRouter(
-    initialLocation: '/measurement',
+    initialLocation: '/reviewBill',
     routes: [
       GoRoute(
         path: '/auth',
@@ -59,6 +60,12 @@ abstract class AppRouter {
         name: 'measurement',
         pageBuilder:
             (context, state) => _slideTransition(MeasurementScreen(), state),
+      ),
+      GoRoute(
+        path: '/reviewBill',
+        name: 'reviewBill',
+        pageBuilder:
+            (context, state) => _slideTransition(ReviewBillScreen(), state),
       ),
     ],
   );
