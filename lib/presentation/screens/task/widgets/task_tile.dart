@@ -14,7 +14,11 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BorderedContainer(
     child: InkWell(
-      onTap: () => context.pushNamed('taskDetails', extra: task),
+      onTap:
+          () => context.pushNamed(
+            'editTask',
+            extra: {'task': task, 'isNew': false},
+          ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

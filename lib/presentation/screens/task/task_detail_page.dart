@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/models/task.dart';
@@ -50,7 +51,20 @@ class TaskDetailPage extends StatelessWidget {
                                 fontVariations: [FontVariation.weight(500)],
                               ),
                             ),
-                            Icon(CustomIcon.squarePen, color: Colors.black),
+                            IconButton(
+                              onPressed:
+                                  () => context.replaceNamed(
+                                    'editTask',
+                                    extra: {
+                                      'task': task,
+                                      'isNew': task.name == 'Task Name',
+                                    },
+                                  ),
+                              icon: Icon(
+                                CustomIcon.squarePen,
+                                color: Colors.black,
+                              ),
+                            ),
                           ],
                         ),
                         5.hGap,
@@ -78,7 +92,7 @@ class TaskDetailPage extends StatelessWidget {
                               ],
                             ),
                             Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
                                   'Product',
@@ -92,7 +106,7 @@ class TaskDetailPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        5.hGap,
+                        10.hGap,
                         TileRow(
                           key1: 'Due Date',
                           value1: task.dueDate,

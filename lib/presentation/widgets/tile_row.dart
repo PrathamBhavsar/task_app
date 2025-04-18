@@ -24,7 +24,7 @@ class TileRow extends StatelessWidget {
         ],
       ),
       Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(key2, style: AppTexts.inputHintTextStyle),
           Text(value2, style: AppTexts.inputTextStyle),

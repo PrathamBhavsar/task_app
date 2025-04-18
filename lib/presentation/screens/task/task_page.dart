@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/models/task.dart';
@@ -27,7 +28,7 @@ class TaskPage extends StatelessWidget {
                 IntrinsicWidth(
                   child: ActionButton(
                     label: 'New Task',
-                    onPress: () {},
+                    onPress: () => context.pushNamed('taskDetails'),
                     prefixIcon: CustomIcon.badgePlus,
                     fontColor: Colors.white,
                     backgroundColor: Colors.black,

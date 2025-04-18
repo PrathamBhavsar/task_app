@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/models/agency.dart';
@@ -139,7 +140,7 @@ class AgencyDetailPage extends StatelessWidget {
                     },
                   ),
                   10.hGap,
-                  _buildQuickActions(),
+                  _buildQuickActions(context),
                   10.hGap,
                   _buildPerformanceMetrics(),
                 ],
@@ -149,7 +150,7 @@ class AgencyDetailPage extends StatelessWidget {
     ),
   );
 
-  Widget _buildQuickActions() => BorderedContainer(
+  Widget _buildQuickActions(BuildContext context) => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -162,7 +163,7 @@ class AgencyDetailPage extends StatelessWidget {
         20.hGap,
         ActionButton(
           label: 'Assign New Task',
-          onPress: () {},
+          onPress: () => context.pushNamed('taskDetails'),
           backgroundColor: Colors.black,
           fontColor: Colors.white,
         ),

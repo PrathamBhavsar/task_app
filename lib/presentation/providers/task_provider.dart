@@ -1,6 +1,24 @@
 import 'package:flutter/material.dart';
 
 class TaskProvider extends ChangeNotifier {
+  String _currentPriority = 'Low';
+  String get currentPriority => _currentPriority;
+
+  void setPriority(String value) {
+    _currentPriority = value;
+    notifyListeners();
+    _currentPriority = 'Low';
+  }
+
+  String _currentStatus = 'Pending';
+  String get currentStatus => _currentStatus;
+
+  void setStatus(String value) {
+    _currentStatus = value;
+    notifyListeners();
+    _currentStatus = 'Pending';
+  }
+
   int _taskDetailIndex = 0;
   bool get isProductSelected => _taskDetailIndex == 1;
   bool get isMeasurementSent => _taskDetailIndex == 2;
