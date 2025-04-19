@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../data/models/bill.dart';
 import '../../../../utils/constants/app_constants.dart';
@@ -81,7 +82,7 @@ class BillTile extends StatelessWidget {
                   label: 'Review Bill',
                   backgroundColor: Colors.black,
                   fontColor: Colors.white,
-                  onPress: () {},
+                  onPress: () => context.pushNamed('reviewBill'),
                 ),
               ),
             ],

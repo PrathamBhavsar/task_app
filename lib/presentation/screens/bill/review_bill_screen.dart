@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/constants/app_constants.dart';
-import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/measurement_provider.dart';
 import '../../widgets/action_button.dart';

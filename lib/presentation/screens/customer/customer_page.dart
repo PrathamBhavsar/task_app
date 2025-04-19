@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/models/customer.dart';
@@ -29,7 +30,7 @@ class CustomerPage extends StatelessWidget {
                 IntrinsicWidth(
                   child: ActionButton(
                     label: 'New Customer',
-                    onPress: () {},
+                    onPress: () => context.pushNamed('newCustomer'),
                     prefixIcon: CustomIcon.badgePlus,
                     fontColor: Colors.white,
                     backgroundColor: Colors.black,
@@ -44,6 +45,7 @@ class CustomerPage extends StatelessWidget {
           ],
         ),
   );
+
   Widget _buildCustomers() => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

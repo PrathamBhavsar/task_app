@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/models/agency.dart';
 import '../../../data/models/bill.dart';
+import '../../../data/models/customer.dart';
 import '../../../data/models/message.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
@@ -14,9 +15,7 @@ import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
 import '../agency/agency_page.dart';
-import '../agency/widgets/agency_tile.dart';
 import '../customer/customer_page.dart';
-import '../customer/widgets/customer_tile.dart';
 
 class EditTaskPage extends StatefulWidget {
   const EditTaskPage({super.key, required this.task, required this.isNew});
@@ -49,10 +48,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
       final agencyIndex = agencies.indexWhere(
         (agency) => agency.name == widget.task.agency,
       );
-
-      context.read<TaskProvider>().setCustomerIndex(customerIndex);
-      context.read<TaskProvider>().setAgencyIndex(agencyIndex);
-
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<TaskProvider>().setCustomerIndex(customerIndex);
+        context.read<TaskProvider>().setAgencyIndex(agencyIndex);
+      });
       _taskNameController.text = widget.task.name;
       _noteController.text = widget.task.note ?? '';
       _phoneController.text = widget.task.phone;
@@ -73,7 +72,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
 
   @override
   void dispose() {
-    context.read<TaskProvider>().resetIndexes();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TaskProvider>().resetIndexes();
+    });
     _taskNameController.dispose();
     _noteController.dispose();
     _phoneController.dispose();
@@ -141,22 +142,18 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           'Enter task title',
                           _taskNameController,
                         ),
-                        Text('Status', style: AppTexts.labelTextStyle),
-                        10.hGap,
-                        CustomDropdownMenu(
-                          items: Task.statuses,
-                          initialValue: widget.task.status,
-                          onChanged: (value) => provider.setStatus(value),
+                        _buildDropdown(
+                          'Status',
+                          Task.statuses,
+                          widget.task.status,
+                          (value) => provider.setStatus(value),
                         ),
-                        10.hGap,
-                        Text('Priority', style: AppTexts.labelTextStyle),
-                        10.hGap,
-                        CustomDropdownMenu(
-                          items: ['Low', 'Medium', 'High'],
-                          initialValue: widget.task.priority,
-                          onChanged: (value) => provider.setPriority(value),
+                        _buildDropdown(
+                          'Priority',
+                          ['Low', 'Medium', 'High'],
+                          widget.task.priority,
+                          (value) => provider.setPriority(value),
                         ),
-                        10.hGap,
                         _buildTextInput(
                           'Product',
                           'Enter product name',
@@ -173,71 +170,49 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           _noteController,
                           isMultiline: true,
                         ),
+                        _buildDropdown(
+                          'Select Customer',
+                          Customer.names,
+                          widget.task.customer,
+                          (value) => provider.setCustomer(value),
+                        ),
+
+                        if (widget.task.agency != null) ...[
+                          _buildDropdown(
+                            'Select Agency',
+                            Agency.names,
+                            widget.task.agency!,
+                            (value) => provider.setAgency(value),
+                          ),
+                        ],
                       ],
                     ),
                   ),
-                  20.hGap,
-                  Text(
-                    'Select Customer',
-                    style: AppTexts.titleTextStyle.copyWith(
-                      fontVariations: [FontVariation.weight(600)],
-                    ),
-                  ),
-                  20.hGap,
-                  SizedBox(
-                    height: 210.h,
-                    child: PageView.builder(
-                      itemCount: customers.length,
-                      controller: _customerPageController,
-                      itemBuilder:
-                          (context, index) => Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
-                            child: GestureDetector(
-                              onTap: () => provider.setCustomerIndex(index),
-                              child: CustomerTile(
-                                customer: customers[index],
-                                isSelected:
-                                    provider.selectedCustomerIndex == index,
-                              ),
-                            ),
-                          ),
-                    ),
-                  ),
-                  20.hGap,
-                  if (widget.task.agency != null) ...[
-                    Text(
-                      'Agency Information',
-                      style: AppTexts.titleTextStyle.copyWith(
-                        fontVariations: [FontVariation.weight(600)],
-                      ),
-                    ),
-                    20.hGap,
-                    SizedBox(
-                      height: 200.h,
-                      child: PageView.builder(
-                        itemCount: agencies.length,
-                        controller: _agencyPageController,
-                        itemBuilder:
-                            (context, index) => Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: GestureDetector(
-                                onTap: () => provider.setAgencyIndex(index),
-                                child: AgencyTile(
-                                  agency: agencies[index],
-                                  isSelected:
-                                      provider.selectedAgencyIndex == index,
-                                ),
-                              ),
-                            ),
-                      ),
-                    ),
-                  ],
-                  20.hGap,
                 ],
               ).padAll(AppPaddings.appPaddingInt),
             ),
       ),
     ),
+  );
+
+  Column _buildDropdown(
+    String title,
+    List<String> list,
+    String initialValue,
+    Function(String) onChanged,
+  ) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      10.hGap,
+      Text(title, style: AppTexts.labelTextStyle),
+      10.hGap,
+      CustomDropdownMenu(
+        items: list,
+        initialValue: initialValue,
+        onChanged: onChanged,
+      ),
+      10.hGap,
+    ],
   );
 
   Widget _buildTextInput(

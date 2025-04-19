@@ -69,4 +69,6 @@ class Customer {
       createdAt: "2024-01-15",
     ),
   ];
+  static List<String> get names => sampleCustomers.map((a) => a.name).toList();
+
 }

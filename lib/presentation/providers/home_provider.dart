@@ -14,6 +14,20 @@ class HomeProvider extends ChangeNotifier {
     // _loadUserRole();
   }
 
+  bool _isActive = true;
+
+  bool get isActive => _isActive;
+
+  void toggleActive() {
+    _isActive = !_isActive;
+    notifyListeners();
+  }
+
+  void setActive(value) {
+    _isActive = value;
+    notifyListeners();
+  }
+
   UserRole get currentUserRole => _currentUserRole;
 
   Future<void> setUserRole(UserRole role) async {
@@ -61,9 +75,11 @@ class HomeProvider extends ChangeNotifier {
   ];
 
   Widget get currentPage => pages[_currentBarIndex];
+
   String get title => titles[_currentBarIndex];
 
   int _currentBarIndex = 0;
+
   int get currentBarIndex => _currentBarIndex;
 
   setBarIndex(int value) {

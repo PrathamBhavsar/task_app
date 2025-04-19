@@ -17,13 +17,14 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
 import '../agency/agency_page.dart';
-import '../bill/review_bill_screen.dart';
 
 final timeline = DummyData.taskDetailTimeline;
 
 class TaskDetailPage extends StatelessWidget {
   const TaskDetailPage({super.key, required this.task});
+
   final Task task;
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
@@ -179,6 +180,7 @@ class TaskDetailPage extends StatelessWidget {
       ),
     ),
   );
+
   Widget _buildTaskOverFlow(
     int selectedAgencyIndex,
     bool isProductSelected,

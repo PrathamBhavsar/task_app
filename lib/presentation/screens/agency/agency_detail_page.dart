@@ -19,7 +19,9 @@ import '../task/widgets/detailed_task_tile.dart';
 
 class AgencyDetailPage extends StatelessWidget {
   const AgencyDetailPage({super.key, required this.agency});
+
   final Agency agency;
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
@@ -42,11 +44,27 @@ class AgencyDetailPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Agency Overview',
-                          style: AppTexts.titleTextStyle.copyWith(
-                            fontVariations: [FontVariation.weight(500)],
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Agency Overview',
+                              style: AppTexts.titleTextStyle.copyWith(
+                                fontVariations: [FontVariation.weight(500)],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed:
+                                  () => context.replaceNamed(
+                                    'editAgency',
+                                    extra: agency,
+                                  ),
+                              icon: Icon(
+                                CustomIcon.squarePen,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                         Text(
                           'Performance metrics and details',

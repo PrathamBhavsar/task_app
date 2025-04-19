@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../data/models/agency.dart';
 import '../../data/models/task.dart';
 import '../../presentation/screens/agency/agency_detail_page.dart';
+import '../../presentation/screens/agency/new_agency_screen.dart';
 import '../../presentation/screens/auth/auth_screen.dart';
 import '../../presentation/screens/bill/review_bill_screen.dart';
+import '../../presentation/screens/customer/new_customer_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/measurement/measurement_screen.dart';
 import '../../presentation/screens/task/edit_task_page.dart';
@@ -60,6 +62,20 @@ abstract class AppRouter {
         name: 'measurement',
         pageBuilder:
             (context, state) => _slideTransition(MeasurementScreen(), state),
+      ),
+      GoRoute(
+        path: '/newCustomer',
+        name: 'newCustomer',
+        pageBuilder:
+            (context, state) => _slideTransition(NewCustomerScreen(), state),
+      ),
+      GoRoute(
+        path: '/editAgency',
+        name: 'editAgency',
+        pageBuilder: (context, state) {
+          final Agency? agency = state.extra as Agency?;
+          return _slideTransition(NewAgencyScreen(agency: agency), state);
+        },
       ),
       GoRoute(
         path: '/reviewBill',

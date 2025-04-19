@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
 
 class TaskProvider extends ChangeNotifier {
+  String _currentCustomer = 'Select Customer';
+
+  String get currentCustomer => _currentCustomer;
+
+  void setCustomer(String value) {
+    _currentCustomer = value;
+    notifyListeners();
+    _currentCustomer = 'Select Customer';
+  }
+
+  String _currentAgency = 'Select Agency';
+
+  String get currentAgency => _currentAgency;
+
+  void setAgency(String value) {
+    _currentAgency = value;
+    notifyListeners();
+    _currentAgency = 'Select Agency';
+  }
+
   String _currentPriority = 'Low';
+
   String get currentPriority => _currentPriority;
 
   void setPriority(String value) {
@@ -11,6 +32,7 @@ class TaskProvider extends ChangeNotifier {
   }
 
   String _currentStatus = 'Pending';
+
   String get currentStatus => _currentStatus;
 
   void setStatus(String value) {
@@ -20,7 +42,9 @@ class TaskProvider extends ChangeNotifier {
   }
 
   int _taskDetailIndex = 0;
+
   bool get isProductSelected => _taskDetailIndex == 1;
+
   bool get isMeasurementSent => _taskDetailIndex == 2;
 
   void increaseTaskDetailIndex() {
@@ -30,6 +54,7 @@ class TaskProvider extends ChangeNotifier {
   }
 
   int _selectedAgencyIndex = -1;
+
   int get selectedAgencyIndex => _selectedAgencyIndex;
 
   void setAgencyIndex(int index) {
@@ -44,6 +69,7 @@ class TaskProvider extends ChangeNotifier {
   }
 
   int _selectedCustomerIndex = -1;
+
   int get selectedCustomerIndex => _selectedCustomerIndex;
 
   void setCustomerIndex(int index) {
@@ -53,6 +79,7 @@ class TaskProvider extends ChangeNotifier {
   }
 
   bool _isCashFocus = true;
+
   bool get isCashFocus => _isCashFocus;
 
   void toggleCashFocus() {
@@ -61,9 +88,11 @@ class TaskProvider extends ChangeNotifier {
   }
 
   int _tabIndex = 0;
+
   int get tabIndex => _tabIndex;
 
   bool get isFirst => _tabIndex == 0;
+
   bool get isThird => _tabIndex == 2;
 
   void updateSubTabIndex(int index) {
@@ -72,6 +101,7 @@ class TaskProvider extends ChangeNotifier {
   }
 
   int _services = 1;
+
   int get services => _services;
 
   void addService() {
@@ -86,6 +116,7 @@ class TaskProvider extends ChangeNotifier {
   }
 
   int _products = 1;
+
   int get products => _products;
 
   void addProduct() {
