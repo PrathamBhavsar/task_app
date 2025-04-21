@@ -28,7 +28,11 @@ class TaskPage extends StatelessWidget {
                 IntrinsicWidth(
                   child: ActionButton(
                     label: 'New Task',
-                    onPress: () => context.pushNamed('taskDetails'),
+                    onPress:
+                        () => context.pushNamed(
+                          'editTask',
+                          extra: {'task': Task.empty(), 'isNew': true},
+                        ),
                     prefixIcon: CustomIcon.badgePlus,
                     fontColor: Colors.white,
                     backgroundColor: Colors.black,

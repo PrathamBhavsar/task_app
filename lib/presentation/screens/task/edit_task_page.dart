@@ -34,54 +34,32 @@ class _EditTaskPageState extends State<EditTaskPage> {
   late final _productController = TextEditingController();
   late final _dueDateController = TextEditingController();
 
-  late PageController _customerPageController;
-  late PageController _agencyPageController;
-
   @override
   void initState() {
     super.initState();
+    final taskProvider = context.read<TaskProvider>();
 
     if (!widget.isNew) {
-      final customerIndex = customers.indexWhere(
-        (customer) => customer.name == widget.task.customer,
-      );
-      final agencyIndex = agencies.indexWhere(
-        (agency) => agency.name == widget.task.agency,
-      );
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<TaskProvider>().setCustomerIndex(customerIndex);
-        context.read<TaskProvider>().setAgencyIndex(agencyIndex);
-      });
       _taskNameController.text = widget.task.name;
       _noteController.text = widget.task.note ?? '';
       _phoneController.text = widget.task.phone;
       _productController.text = widget.task.product;
       _dueDateController.text = widget.task.dueDate;
+    } else {
+      taskProvider.resetFields();
+
+      _dueDateController.text =
+          DateTime.now().add(const Duration(days: 2)).toFormattedWithSuffix();
     }
-
-    _customerPageController = PageController(
-      viewportFraction: 1,
-      initialPage: context.read<TaskProvider>().selectedCustomerIndex,
-    );
-
-    _agencyPageController = PageController(
-      viewportFraction: 1,
-      initialPage: context.read<TaskProvider>().selectedAgencyIndex,
-    );
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<TaskProvider>().resetIndexes();
-    });
     _taskNameController.dispose();
     _noteController.dispose();
     _phoneController.dispose();
     _productController.dispose();
     _dueDateController.dispose();
-    _customerPageController.dispose();
-    _agencyPageController.dispose();
     super.dispose();
   }
 
@@ -96,8 +74,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
             final provider = context.read<TaskProvider>();
             final updatedTask = Task(
               name: _taskNameController.text,
-              customer: customers[provider.selectedCustomerIndex].name,
-              agency: agencies[provider.selectedAgencyIndex].name,
+              customer: provider.currentCustomer,
               phone: _phoneController.text,
               product: _productController.text,
               status: provider.currentStatus,
@@ -108,7 +85,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
               messages: Message.randomMessages,
               bill: Bill.sampleBills.first,
             );
-            context.pushNamed('taskDetails', extra: updatedTask);
+            context.pushReplacementNamed('taskDetails', extra: updatedTask);
           },
           child: Text(
             'Done',
@@ -147,12 +124,14 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           Task.statuses,
                           widget.task.status,
                           (value) => provider.setStatus(value),
+                          widget.isNew,
                         ),
                         _buildDropdown(
                           'Priority',
                           ['Low', 'Medium', 'High'],
                           widget.task.priority,
                           (value) => provider.setPriority(value),
+                          widget.isNew,
                         ),
                         _buildTextInput(
                           'Product',
@@ -175,14 +154,15 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           Customer.names,
                           widget.task.customer,
                           (value) => provider.setCustomer(value),
+                          widget.isNew,
                         ),
-
-                        if (widget.task.agency != null) ...[
+                        if (widget.task.agency != null && !widget.isNew) ...[
                           _buildDropdown(
                             'Select Agency',
                             Agency.names,
                             widget.task.agency!,
                             (value) => provider.setAgency(value),
+                            widget.isNew,
                           ),
                         ],
                       ],
@@ -200,6 +180,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     List<String> list,
     String initialValue,
     Function(String) onChanged,
+    bool isNew,
   ) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -208,7 +189,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
       10.hGap,
       CustomDropdownMenu(
         items: list,
-        initialValue: initialValue,
+        initialValue: isNew ? null : initialValue,
         onChanged: onChanged,
       ),
       10.hGap,

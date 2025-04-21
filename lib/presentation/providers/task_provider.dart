@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
 
+import '../screens/agency/agency_page.dart';
+import '../screens/customer/customer_page.dart';
+
 class TaskProvider extends ChangeNotifier {
-  String _currentCustomer = 'Select Customer';
+  String _currentCustomer = customers.first.name;
 
   String get currentCustomer => _currentCustomer;
 
   void setCustomer(String value) {
     _currentCustomer = value;
     notifyListeners();
-    _currentCustomer = 'Select Customer';
   }
 
-  String _currentAgency = 'Select Agency';
+  void resetFields() {
+    _currentCustomer = customers.first.name;
+    _currentAgency = agencies.first.name;
+    _currentPriority = 'Low';
+    _currentStatus = 'Pending';
+    _taskDetailIndex = 0;
+  }
+
+  String _currentAgency = agencies.first.name;
 
   String get currentAgency => _currentAgency;
 
   void setAgency(String value) {
+    print(value);
     _currentAgency = value;
     notifyListeners();
-    _currentAgency = 'Select Agency';
   }
 
   String _currentPriority = 'Low';
@@ -49,33 +59,7 @@ class TaskProvider extends ChangeNotifier {
 
   void increaseTaskDetailIndex() {
     _taskDetailIndex++;
-    print(_taskDetailIndex);
     notifyListeners();
-  }
-
-  int _selectedAgencyIndex = -1;
-
-  int get selectedAgencyIndex => _selectedAgencyIndex;
-
-  void setAgencyIndex(int index) {
-    _selectedAgencyIndex = index;
-    notifyListeners();
-    // _selectedAgencyIndex = -1;
-  }
-
-  void resetIndexes() {
-    _selectedAgencyIndex = -1;
-    _selectedCustomerIndex = -1;
-  }
-
-  int _selectedCustomerIndex = -1;
-
-  int get selectedCustomerIndex => _selectedCustomerIndex;
-
-  void setCustomerIndex(int index) {
-    _selectedCustomerIndex = index;
-    notifyListeners();
-    // _selectedCustomerIndex = -1;
   }
 
   bool _isCashFocus = true;

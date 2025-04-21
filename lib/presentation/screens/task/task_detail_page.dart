@@ -57,10 +57,7 @@ class TaskDetailPage extends StatelessWidget {
                               onPressed:
                                   () => context.replaceNamed(
                                     'editTask',
-                                    extra: {
-                                      'task': task,
-                                      'isNew': task.name == 'Task Name',
-                                    },
+                                    extra: {'task': task, 'isNew': false},
                                   ),
                               icon: Icon(
                                 CustomIcon.squarePen,
@@ -115,36 +112,39 @@ class TaskDetailPage extends StatelessWidget {
                           key2: 'Created',
                           value2: task.createdAt,
                         ),
-                        if (task.note != null) ...[
+                        if (task.note != null && task.note!.isNotEmpty) ...[
                           10.hGap,
                           Text('Notes', style: AppTexts.inputHintTextStyle),
                           Text(task.note ?? '', style: AppTexts.inputTextStyle),
                         ],
                         10.hGap,
-                        BorderedContainer(
-                          color: AppColors.bgYellow,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Agency Bill Pending Approval',
-                                style: AppTexts.headingTextStyle,
+                        provider.isProductSelected
+                            ? BorderedContainer(
+                              color: AppColors.bgYellow,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Agency Bill Pending Approval',
+                                    style: AppTexts.headingTextStyle,
+                                  ),
+                                  10.hGap,
+                                  Text(
+                                    'Bill #BILL-123456 from ${task.agency} requires your approval',
+                                    style: AppTexts.inputTextStyle,
+                                  ),
+                                  10.hGap,
+                                  ActionButton(
+                                    label: 'Review Bill',
+                                    onPress:
+                                        () => context.pushNamed('reviewBill'),
+                                    backgroundColor: Colors.black,
+                                    fontColor: Colors.white,
+                                  ),
+                                ],
                               ),
-                              10.hGap,
-                              Text(
-                                'Bill #BILL-123456 from ${task.agency} requires your approval',
-                                style: AppTexts.inputTextStyle,
-                              ),
-                              10.hGap,
-                              ActionButton(
-                                label: 'Review Bill',
-                                onPress: () => context.pushNamed('reviewBill'),
-                                backgroundColor: Colors.black,
-                                fontColor: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
+                            )
+                            : SizedBox.shrink(),
                       ],
                     ),
                   ),
@@ -161,11 +161,11 @@ class TaskDetailPage extends StatelessWidget {
                       switch (provider.tabIndex) {
                         case 0:
                           return _buildTaskOverFlow(
-                            provider.selectedAgencyIndex,
+                            provider.currentAgency,
                             provider.isProductSelected,
                             provider.isMeasurementSent,
                             provider.increaseTaskDetailIndex,
-                            provider.setAgencyIndex,
+                            provider.setAgency,
                           );
                         case 1:
                           return _buildTimeline();
@@ -182,11 +182,11 @@ class TaskDetailPage extends StatelessWidget {
   );
 
   Widget _buildTaskOverFlow(
-    int selectedAgencyIndex,
+    String selectedAgency,
     bool isProductSelected,
     bool isMeasurementSent,
     VoidCallback increment,
-    Function(int) selection,
+    Function(String) selection,
   ) => BorderedContainer(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,7 +211,7 @@ class TaskDetailPage extends StatelessWidget {
                   ),
                   10.hGap,
                   Text(
-                    "The measurement task has been assigned to ${task.agency} for ${task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
+                    "The measurement task has been assigned to $selectedAgency for ${task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
                     style: AppTexts.inputTextStyle.copyWith(
                       color: AppColors.blue,
                     ),
@@ -236,12 +236,12 @@ class TaskDetailPage extends StatelessWidget {
           ...List.generate(
             agencies.length,
             (index) => GestureDetector(
-              onTap: () => selection(index),
+              onTap: () => selection(agencies[index].name),
               child: Padding(
                 padding:
                     index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
                 child: BorderedContainer(
-                  isSelected: selectedAgencyIndex == index,
+                  isSelected: selectedAgency == agencies[index].name,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
