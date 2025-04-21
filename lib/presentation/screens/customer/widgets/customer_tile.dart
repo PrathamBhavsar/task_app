@@ -42,7 +42,7 @@ class CustomerTile extends StatelessWidget {
             ),
           ],
         ),
-        20.hGap,
+        10.hGap,
         TileRow(
           key1: 'Phone',
           value1: customer.phone,

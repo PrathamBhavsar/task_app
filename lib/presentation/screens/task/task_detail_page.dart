@@ -66,7 +66,6 @@ class TaskDetailPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        5.hGap,
                         CustomTag(
                           text: task.status,
                           color: Colors.black,
@@ -155,7 +154,6 @@ class TaskDetailPage extends StatelessWidget {
                       Tab(text: 'Messages'),
                     ],
                   ),
-                  10.hGap,
                   Builder(
                     builder: (context) {
                       switch (provider.tabIndex) {
@@ -187,111 +185,118 @@ class TaskDetailPage extends StatelessWidget {
     bool isMeasurementSent,
     VoidCallback increment,
     Function(String) selection,
-  ) => BorderedContainer(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Task Workflow', style: AppTexts.titleTextStyle),
-        10.hGap,
-        isMeasurementSent
-            ? Container(
-              padding: EdgeInsets.all(AppPaddings.appPaddingInt),
-              decoration: BoxDecoration(
-                borderRadius: AppBorders.radius,
-                color: AppColors.blueBg,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Measurement Scheduled",
-                    style: AppTexts.inputTextStyle.copyWith(
-                      color: AppColors.blue,
-                    ),
+  ) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Task Workflow', style: AppTexts.titleTextStyle),
+      10.hGap,
+      BorderedContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            isMeasurementSent
+                ? Container(
+                  padding: EdgeInsets.all(AppPaddings.appPaddingInt),
+                  decoration: BoxDecoration(
+                    borderRadius: AppBorders.radius,
+                    color: AppColors.blueBg,
                   ),
-                  10.hGap,
-                  Text(
-                    "The measurement task has been assigned to $selectedAgency for ${task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
-                    style: AppTexts.inputTextStyle.copyWith(
-                      color: AppColors.blue,
-                    ),
-                  ),
-                ],
-              ),
-            )
-            : SizedBox.shrink(),
-        isMeasurementSent
-            ? SizedBox.shrink()
-            : Text(
-              isProductSelected
-                  ? "Assign a measurement task to one of our partner agencies."
-                  : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
-
-              style: AppTexts.inputTextStyle,
-            ),
-        if (isProductSelected) ...[
-          10.hGap,
-          Text("Select Agency", style: AppTexts.labelTextStyle),
-          10.hGap,
-          ...List.generate(
-            agencies.length,
-            (index) => GestureDetector(
-              onTap: () => selection(agencies[index].name),
-              child: Padding(
-                padding:
-                    index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-                child: BorderedContainer(
-                  isSelected: selectedAgency == agencies[index].name,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Text(
+                        "Measurement Scheduled",
+                        style: AppTexts.inputTextStyle.copyWith(
+                          color: AppColors.blue,
+                        ),
+                      ),
+                      10.hGap,
+                      Text(
+                        "The measurement task has been assigned to $selectedAgency for ${task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
+                        style: AppTexts.inputTextStyle.copyWith(
+                          color: AppColors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+                : SizedBox.shrink(),
+            isMeasurementSent
+                ? SizedBox.shrink()
+                : Text(
+                  isProductSelected
+                      ? "Assign a measurement task to one of our partner agencies."
+                      : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
+
+                  style: AppTexts.inputTextStyle,
+                ),
+            if (isProductSelected) ...[
+              10.hGap,
+              Text("Select Agency", style: AppTexts.labelTextStyle),
+              10.hGap,
+              ...List.generate(
+                agencies.length,
+                (index) => GestureDetector(
+                  onTap: () => selection(agencies[index].name),
+                  child: Padding(
+                    padding:
+                        index == 0
+                            ? EdgeInsets.zero
+                            : EdgeInsets.only(top: 10.h),
+                    child: BorderedContainer(
+                      isSelected: selectedAgency == agencies[index].name,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            agencies[index].name,
-                            style: AppTexts.labelTextStyle,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                agencies[index].name,
+                                style: AppTexts.labelTextStyle,
+                              ),
+                              Text(
+                                '${agencies[index].rating}/5',
+                                style: AppTexts.inputHintTextStyle,
+                              ),
+                            ],
                           ),
                           Text(
-                            '${agencies[index].rating}/5',
+                            'Availability: Next Week',
                             style: AppTexts.inputHintTextStyle,
                           ),
                         ],
                       ),
-                      Text(
-                        'Availability: Next Week',
-                        style: AppTexts.inputHintTextStyle,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
+              10.hGap,
+              _buildTextInput('Schedule Date', 'Select Date'),
+              _buildTextInput('Customer Phone', 'Enter Phone'),
+              _buildTextInput(
+                'Instructions for Agency',
+                'Provide any specific instructions',
+                isMultiline: true,
+              ),
+            ],
+            10.hGap,
+            ActionButton(
+              label:
+                  isMeasurementSent
+                      ? 'Mark Measurement as Complete'
+                      : isProductSelected
+                      ? 'Assign Measurement Task'
+                      : 'Complete Product Selection',
+              onPress: () => isMeasurementSent ? null : increment(),
+              prefixIcon: CustomIcon.circleCheckBig,
+              backgroundColor: Colors.black,
+              fontColor: Colors.white,
             ),
-          ),
-          10.hGap,
-          _buildTextInput('Schedule Date', 'Select Date'),
-          _buildTextInput('Customer Phone', 'Enter Phone'),
-          _buildTextInput(
-            'Instructions for Agency',
-            'Provide any specific instructions',
-            isMultiline: true,
-          ),
-        ],
-        10.hGap,
-        ActionButton(
-          label:
-              isMeasurementSent
-                  ? 'Mark Measurement as Complete'
-                  : isProductSelected
-                  ? 'Assign Measurement Task'
-                  : 'Complete Product Selection',
-          onPress: () => isMeasurementSent ? null : increment(),
-          prefixIcon: CustomIcon.circleCheckBig,
-          backgroundColor: Colors.black,
-          fontColor: Colors.white,
+          ],
         ),
-      ],
-    ),
+      ),
+    ],
   );
 
   Widget _buildTextInput(
@@ -308,88 +313,104 @@ class TaskDetailPage extends StatelessWidget {
     ],
   );
 
-  Widget _buildTimeline() => BorderedContainer(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Task Timeline', style: AppTexts.titleTextStyle),
-        Text(
-          'History of events for this task',
-          style: AppTexts.inputHintTextStyle,
-        ),
-        20.hGap,
-        ...List.generate(
-          timeline.length,
-          (index) => Padding(
-            padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTag(
-                  text: timeline[index]['time'],
-                  color: index == 0 ? AppColors.blue : AppColors.green,
-                  textColor: Colors.white,
-                ),
-                5.hGap,
-                Padding(
-                  padding: EdgeInsets.only(left: 10.w),
-                  child: Text(
-                    timeline[index]['title'],
-                    style: AppTexts.labelTextStyle,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10.w),
-                  child: Text(
-                    timeline[index]['subtitle'],
-                    style: AppTexts.inputHintTextStyle,
-                  ),
-                ),
-              ],
+  Widget _buildTimeline() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Task Timeline', style: AppTexts.titleTextStyle),
+      10.hGap,
+      BorderedContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'History of events for this task',
+              style: AppTexts.inputHintTextStyle,
             ),
-          ),
-        ),
-      ],
-    ),
-  );
-
-  Widget _buildMessages(List<Message> messages) => BorderedContainer(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Task Messages', style: AppTexts.titleTextStyle),
-        20.hGap,
-        ...List.generate(
-          messages.length,
-          (index) => Padding(
-            padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            20.hGap,
+            ...List.generate(
+              timeline.length,
+              (index) => Padding(
+                padding:
+                    index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(messages[index].name, style: AppTexts.labelTextStyle),
-                    10.wGap,
-                    Text(
-                      messages[index].createdAt,
-                      style: AppTexts.inputHintTextStyle,
+                    CustomTag(
+                      text: timeline[index]['time'],
+                      color: index == 0 ? AppColors.blue : AppColors.green,
+                      textColor: Colors.white,
+                    ),
+                    5.hGap,
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.w),
+                      child: Text(
+                        timeline[index]['title'],
+                        style: AppTexts.labelTextStyle,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.w),
+                      child: Text(
+                        timeline[index]['subtitle'],
+                        style: AppTexts.inputHintTextStyle,
+                      ),
                     ),
                   ],
                 ),
-                5.hGap,
-                Padding(
-                  padding: EdgeInsets.only(left: 10.w),
-                  child: Text(
-                    messages[index].message,
-                    style: AppTexts.inputLabelTextStyle,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
-      ],
-    ),
+      ),
+    ],
+  );
+
+  Widget _buildMessages(List<Message> messages) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Task Messages', style: AppTexts.titleTextStyle),
+      10.hGap,
+      BorderedContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ...List.generate(
+              messages.length,
+              (index) => Padding(
+                padding:
+                    index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          messages[index].name,
+                          style: AppTexts.labelTextStyle,
+                        ),
+                        10.wGap,
+                        Text(
+                          messages[index].createdAt,
+                          style: AppTexts.inputHintTextStyle,
+                        ),
+                      ],
+                    ),
+                    5.hGap,
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.w),
+                      child: Text(
+                        messages[index].message,
+                        style: AppTexts.inputLabelTextStyle,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
   );
 }

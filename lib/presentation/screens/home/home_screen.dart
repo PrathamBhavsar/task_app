@@ -15,6 +15,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) => Consumer<HomeProvider>(
     builder: (context, provider, child) {
       final bool isAdmin = provider.currentUserRole == UserRole.admin;
+      final bool isSales = provider.currentUserRole == UserRole.salesperson;
       return Scaffold(
         drawer: const SelectionDrawer(),
         appBar:
@@ -46,6 +47,12 @@ class HomeScreen extends StatelessWidget {
               label: isAdmin ? 'Tasks' : 'My Tasks',
               backgroundColor: Colors.white,
             ),
+            if (isSales)
+              BottomNavigationBarItem(
+                icon: Icon(Icons.qr_code),
+                label: 'Quotes',
+                backgroundColor: Colors.white,
+              ),
             BottomNavigationBarItem(
               icon: Icon(CustomIcon.users),
               label: 'Customers',

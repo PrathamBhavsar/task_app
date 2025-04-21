@@ -12,6 +12,8 @@ abstract class AppColors {
   static const Color blue = Color(0xff3b82f6);
   static const Color blueBg = Color(0xffeff6ff);
   static const Color green = Color(0xff66bb6a);
+  static const Color lighterGreenBg = Color(0xfff0fdf4);
+  static const Color darkGreenText = Color(0xff166533);
 }
 
 abstract class AppPaddings {

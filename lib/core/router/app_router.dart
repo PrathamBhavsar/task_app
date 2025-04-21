@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../data/models/agency.dart';
+import '../../data/models/quote.dart';
 import '../../data/models/task.dart';
 import '../../presentation/screens/agency/agency_detail_page.dart';
 import '../../presentation/screens/agency/new_agency_screen.dart';
@@ -10,6 +11,7 @@ import '../../presentation/screens/bill/review_bill_screen.dart';
 import '../../presentation/screens/customer/new_customer_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/measurement/measurement_screen.dart';
+import '../../presentation/screens/quote/quote_details_screen.dart';
 import '../../presentation/screens/task/edit_task_page.dart';
 import '../../presentation/screens/task/task_detail_page.dart';
 
@@ -82,6 +84,14 @@ abstract class AppRouter {
         name: 'reviewBill',
         pageBuilder:
             (context, state) => _slideTransition(ReviewBillScreen(), state),
+      ),
+      GoRoute(
+        path: '/quoteDetails',
+        name: 'quoteDetails',
+        pageBuilder: (context, state) {
+          final quote = state.extra as Quote;
+          return _slideTransition(QuoteDetailsScreen(quote: quote), state);
+        },
       ),
     ],
   );

@@ -21,14 +21,14 @@ class _TabHeaderState extends State<TabHeader> with TickerProviderStateMixin {
     _tabController = TabController(
       length: widget.tabs.length,
       vsync: this,
-      initialIndex: context.read<TaskProvider>().tabIndex,
+      initialIndex: 0,
     );
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
+    _tabController.dispose();
   }
 
   @override

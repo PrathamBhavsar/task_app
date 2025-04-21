@@ -74,8 +74,8 @@ class ReviewBillScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        buildBillRow('Curtain Stitching', 6, 45, 270),
-                        buildBillRow('Track Fitting', 4, 50, 200),
+                        _buildBillRow('Curtain Stitching', 6, 45, 270),
+                        _buildBillRow('Track Fitting', 4, 50, 200),
                         Divider(
                           color: AppColors.accent,
                         ).padSymmetric(vertical: 5.h),
@@ -156,7 +156,7 @@ class ReviewBillScreen extends StatelessWidget {
     ),
   );
 
-  Row buildBillRow(title, int amount, int rate, int total) => Row(
+  Row _buildBillRow(title, int amount, int rate, int total) => Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Expanded(flex: 2, child: Text(title, style: textStyle)),

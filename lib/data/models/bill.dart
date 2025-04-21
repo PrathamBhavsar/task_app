@@ -47,7 +47,7 @@ class Bill {
   static List<Bill> get sampleBills => [
     Bill(
       name: "Window Curtains - Hall",
-      amount: 5400.0,
+      amount: 5400.00,
       agency: "InstallMate Co.",
       status: "Paid",
       task: "Curtain Installation",
@@ -57,7 +57,7 @@ class Bill {
     ),
     Bill(
       name: "Blind Fittings - Bedroom",
-      amount: 3200.0,
+      amount: 3200.00,
       agency: "BlindExperts",
       status: "Pending",
       task: "Blind Fixing",
@@ -67,7 +67,7 @@ class Bill {
     ),
     Bill(
       name: "Motorized Track - Living Room",
-      amount: 7800.0,
+      amount: 7800.00,
       agency: "MeasurePro Services",
       status: "Pending",
       task: "Motorized Curtain Install",
