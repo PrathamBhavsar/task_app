@@ -14,8 +14,6 @@ import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
-import '../agency/agency_page.dart';
-import '../customer/customer_page.dart';
 
 class EditTaskPage extends StatefulWidget {
   const EditTaskPage({super.key, required this.task, required this.isNew});

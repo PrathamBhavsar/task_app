@@ -42,9 +42,9 @@ abstract class AppRouter {
         path: '/taskDetails',
         name: 'taskDetails',
         pageBuilder: (context, state) {
-          // final Task? task = state.extra as Task?;
+          final Task? task = state.extra as Task?;
           return _slideTransition(
-            TaskDetailPage(task: Task.sampleTasks.first),
+            TaskDetailPage(task: task ?? Task.empty()),
             state,
           );
         },

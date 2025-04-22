@@ -299,14 +299,14 @@ class TaskDetailPage extends StatelessWidget {
                       Text(
                         "Measurement Scheduled",
                         style: AppTexts.inputTextStyle.copyWith(
-                          color: AppColors.blue,
+                          color: AppColors.darkBlueText,
                         ),
                       ),
                       10.hGap,
                       Text(
                         "The measurement task has been assigned to $selectedAgency for ${task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
                         style: AppTexts.inputTextStyle.copyWith(
-                          color: AppColors.blue,
+                          color: AppColors.darkBlueText,
                         ),
                       ),
                     ],
@@ -429,7 +429,8 @@ class TaskDetailPage extends StatelessWidget {
                   children: [
                     CustomTag(
                       text: timeline[index]['time'],
-                      color: index == 0 ? AppColors.blue : AppColors.green,
+                      color:
+                          index == 0 ? AppColors.darkBlueText : AppColors.green,
                       textColor: Colors.white,
                     ),
                     5.hGap,

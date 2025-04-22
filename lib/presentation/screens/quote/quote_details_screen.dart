@@ -11,9 +11,7 @@ import '../../providers/measurement_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
-import '../../widgets/custom_text_field.dart';
 import '../../widgets/tile_row.dart';
-import '../customer/widgets/customer_tile.dart';
 
 TextStyle textStyle = AppTexts.labelTextStyle.copyWith(fontSize: 14.sp);
 
@@ -173,8 +171,8 @@ class QuoteDetailsScreen extends StatelessWidget {
                       spacing: 10.h,
                       children: [
                         ActionButton(
-                          label: 'Edit Quote',
-                          onPress: () {},
+                          label: 'Modify Quote Details',
+                          onPress: () => context.pushNamed('editQuote'),
                           backgroundColor: Colors.black,
                           fontColor: Colors.white,
                         ),

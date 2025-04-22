@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../utils/enums/user_role.dart';
 import '../screens/agency/agency_page.dart';
 import '../screens/bill/bill_page.dart';

@@ -3,9 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../data/models/quote.dart';
 import '../../../../utils/constants/app_constants.dart';
-import '../../../../utils/constants/custom_icons.dart';
 import '../../../../utils/extensions/padding.dart';
-import '../../../widgets/action_button.dart';
 import '../../../widgets/bordered_container.dart';
 import '../../../widgets/custom_tag.dart';
 import '../../../widgets/tile_row.dart';
