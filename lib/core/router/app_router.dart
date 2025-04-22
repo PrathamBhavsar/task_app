@@ -18,7 +18,7 @@ import '../../presentation/screens/task/task_detail_page.dart';
 
 abstract class AppRouter {
   static GoRouter router() => GoRouter(
-    initialLocation: '/editQuote',
+    initialLocation: '/taskDetails',
     routes: [
       GoRoute(
         path: '/auth',
@@ -42,11 +42,9 @@ abstract class AppRouter {
         path: '/taskDetails',
         name: 'taskDetails',
         pageBuilder: (context, state) {
+          // final Task? task = state.extra as Task?;
           final Task? task = state.extra as Task?;
-          return _slideTransition(
-            TaskDetailPage(task: task ?? Task.empty()),
-            state,
-          );
+          return _slideTransition(TaskDetailPage(task: Task.empty()), state);
         },
       ),
       GoRoute(

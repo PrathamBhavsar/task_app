@@ -55,7 +55,7 @@ class TaskTile extends StatelessWidget {
                             : SizedBox.shrink(),
                       ],
                     ),
-                    Text(task.dueDate, style: AppTexts.inputHintTextStyle),
+                    Text(task.dueDate, style: AppTexts.inputTextStyle),
                   ],
                 ),
               ],

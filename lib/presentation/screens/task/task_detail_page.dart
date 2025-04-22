@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/models/agency.dart';
 import '../../../data/models/message.dart';
 import '../../../data/models/task.dart';
 import '../../../utils/constants/app_constants.dart';
@@ -15,6 +16,7 @@ import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/drop_down_menu.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
 import '../agency/agency_page.dart';
@@ -67,43 +69,27 @@ class TaskDetailPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        CustomTag(
-                          text: task.status,
-                          color: Colors.black,
-                          textColor: Colors.white,
-                        ),
-                        10.hGap,
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Priority',
-                                  style: AppTexts.inputHintTextStyle,
-                                ),
-                                CustomTag(
-                                  text: task.priority,
-                                  color: Colors.redAccent,
-                                  textColor: Colors.white,
-                                ),
-                              ],
+                            CustomTag(
+                              text: task.priority,
+                              color: Colors.redAccent,
+                              textColor: Colors.white,
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'Product',
-                                  style: AppTexts.inputHintTextStyle,
-                                ),
-                                Text(
-                                  task.product,
-                                  style: AppTexts.inputTextStyle,
-                                ),
-                              ],
+                            10.wGap,
+                            CustomTag(
+                              text: task.status,
+                              color: Colors.black,
+                              textColor: Colors.white,
                             ),
                           ],
+                        ),
+                        10.hGap,
+                        TileRow(
+                          key1: 'Due Date',
+                          value1: task.dueDate,
+                          key2: 'Created',
+                          value2: task.createdAt,
                         ),
                         10.hGap,
                         if (!home.isAgency) ...[
@@ -115,26 +101,18 @@ class TaskDetailPage extends StatelessWidget {
                           ),
                           10.hGap,
                         ],
-                        if (home.isAgency) ...[
-                          Text('Address', style: AppTexts.inputHintTextStyle),
-                          Text(
-                            '123 Main St, Anytown, CA 12345',
-                            style: AppTexts.inputTextStyle,
-                          ),
-                          10.hGap,
-                          Text(
-                            'Contact Person (Sales)',
-                            style: AppTexts.inputHintTextStyle,
-                          ),
-                          Text('John Doe', style: AppTexts.inputTextStyle),
-                        ],
+                        Text('Address', style: AppTexts.inputHintTextStyle),
+                        Text(
+                          '123 Main St, Anytown, CA 12345',
+                          style: AppTexts.inputTextStyle,
+                        ),
                         if (task.note != null && task.note!.isNotEmpty) ...[
                           10.hGap,
                           Text('Notes', style: AppTexts.inputHintTextStyle),
                           Text(task.note ?? '', style: AppTexts.inputTextStyle),
                         ],
                         10.hGap,
-                        if (provider.isProductSelected) ...[
+                        if (provider.isMeasurementSent) ...[
                           BorderedContainer(
                             color: AppColors.bgYellow,
                             child: Column(
@@ -323,49 +301,8 @@ class TaskDetailPage extends StatelessWidget {
                   style: AppTexts.inputTextStyle,
                 ),
             if (isProductSelected) ...[
-              10.hGap,
-              Text("Select Agency", style: AppTexts.labelTextStyle),
-              10.hGap,
-              ...List.generate(
-                agencies.length,
-                (index) => GestureDetector(
-                  onTap: () => selection(agencies[index].name),
-                  child: Padding(
-                    padding:
-                        index == 0
-                            ? EdgeInsets.zero
-                            : EdgeInsets.only(top: 10.h),
-                    child: BorderedContainer(
-                      isSelected: selectedAgency == agencies[index].name,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                agencies[index].name,
-                                style: AppTexts.labelTextStyle,
-                              ),
-                              Text(
-                                '${agencies[index].rating}/5',
-                                style: AppTexts.inputHintTextStyle,
-                              ),
-                            ],
-                          ),
-                          Text(
-                            'Availability: Next Week',
-                            style: AppTexts.inputHintTextStyle,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              10.hGap,
+              _buildDropDown('Select Agency', Agency.names),
               _buildTextInput('Schedule Date', 'Select Date'),
-              _buildTextInput('Customer Phone', 'Enter Phone'),
               _buildTextInput(
                 'Instructions for Agency',
                 'Provide any specific instructions',
@@ -401,6 +338,16 @@ class TaskDetailPage extends StatelessWidget {
       Text(title, style: AppTexts.labelTextStyle),
       10.hGap,
       CustomTextField(hintTxt: hint, isMultiline: isMultiline),
+      10.hGap,
+    ],
+  );
+
+  Widget _buildDropDown(String title, List<String> items) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(title, style: AppTexts.labelTextStyle),
+      10.hGap,
+      CustomDropdownMenu(items: items),
       10.hGap,
     ],
   );

@@ -116,7 +116,6 @@ class EditQuoteScreen extends StatelessWidget {
                     'Enter notes here',
                     isMultiline: true,
                   ),
-                  10.hGap,
                   ActionButton(
                     label: 'Save Quote',
                     onPress: () {},
@@ -189,6 +188,7 @@ class EditQuoteScreen extends StatelessWidget {
                 isProduct ? 'Measurement-Based Products' : 'Agency Services',
                 style: AppTexts.inputTextStyle.copyWith(
                   fontVariations: [FontVariation.weight(700)],
+                  overflow: TextOverflow.ellipsis,
                   color:
                       isProduct
                           ? AppColors.darkBlueText
