@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../utils/enums/user_role.dart';
 import '../screens/agency/agency_page.dart';
 import '../screens/bill/bill_page.dart';
@@ -30,6 +31,8 @@ class HomeProvider extends ChangeNotifier {
   }
 
   UserRole get currentUserRole => _currentUserRole;
+
+  bool get isAgency => _currentUserRole == UserRole.agency;
 
   Future<void> setUserRole(UserRole role) async {
     _currentUserRole = role;

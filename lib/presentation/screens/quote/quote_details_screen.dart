@@ -296,41 +296,42 @@ class QuoteDetailsScreen extends StatelessWidget {
         ],
       ),
       Divider(color: AppColors.accent).padSymmetric(vertical: 5.h),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Subtotal', style: AppTexts.inputHintTextStyle),
-          Text(
-            '\$320.00',
-            style: AppTexts.inputTextStyle.copyWith(
-              fontVariations: [FontVariation.weight(700)],
-            ),
-          ),
-        ],
+      _buildTotalRow(
+        'Subtotal',
+        320,
+        labelTextStyle: AppTexts.inputHintTextStyle.copyWith(
+          fontVariations: [FontVariation.weight(700)],
+        ),
+        valueTextStyle: AppTexts.inputTextStyle.copyWith(
+          fontVariations: [FontVariation.weight(700)],
+        ),
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Tax(5%)', style: AppTexts.inputHintTextStyle),
-          Text(
-            '\$16.00',
-            style: AppTexts.inputTextStyle.copyWith(
-              fontVariations: [FontVariation.weight(700)],
-            ),
-          ),
-        ],
+      _buildTotalRow('Tax(5%)', 16),
+      _buildTotalRow(
+        'Total',
+        336,
+        labelTextStyle: AppTexts.inputTextStyle.copyWith(
+          fontVariations: [FontVariation.weight(700)],
+        ),
+        valueTextStyle: AppTexts.inputTextStyle.copyWith(
+          fontVariations: [FontVariation.weight(700)],
+        ),
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('Total', style: AppTexts.inputTextStyle),
-          Text(
-            '\$336.00',
-            style: AppTexts.inputTextStyle.copyWith(
-              fontVariations: [FontVariation.weight(700)],
-            ),
-          ),
-        ],
+    ],
+  );
+
+  Row _buildTotalRow(
+    String title,
+    double amount, {
+    TextStyle? labelTextStyle,
+    TextStyle? valueTextStyle,
+  }) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(title, style: labelTextStyle ?? AppTexts.inputHintTextStyle),
+      Text(
+        '\$${amount.toStringAsFixed(2)}',
+        style: valueTextStyle ?? AppTexts.inputTextStyle,
       ),
     ],
   );

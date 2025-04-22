@@ -7,6 +7,7 @@ class Task {
   final String phone;
   final String product;
   final String status;
+  final String address;
   final String priority;
   final String? note;
   final String? agency;
@@ -21,6 +22,7 @@ class Task {
     required this.phone,
     required this.product,
     required this.status,
+    required this.address,
     required this.priority,
     this.note,
     this.agency,
@@ -37,6 +39,7 @@ class Task {
     phone: map['phone'],
     product: map['product'],
     status: map['status'],
+    address: map['address'],
     priority: map['priority'],
     note: map['note'],
     agency: map['agency'],
@@ -53,6 +56,7 @@ class Task {
     'phone': phone,
     'product': product,
     'status': status,
+    'address': address,
     'priority': priority,
     'note': note,
     'agency': agency,
@@ -69,6 +73,7 @@ class Task {
       product: "Custom Blinds",
       status: "Pending",
       priority: "High",
+      address: "123 Main St, Anytown, CA 12345",
       agency: "InstallMate Co.",
       customer: "Sarah Johnson",
       note:
@@ -84,6 +89,7 @@ class Task {
       phone: "+91 789564231",
       product: "Custom Blinds",
       status: "Completed",
+      address: "123 Main St, Anytown, CA 12345",
       priority: "High",
       agency: "MeasurePro Services",
       note:
@@ -98,6 +104,7 @@ class Task {
       customer: "Emily Davis",
       phone: "+91 789564231",
       product: "Custom Blinds",
+      address: "123 Main St, Anytown, CA 12345",
       status: "Product Selection",
       priority: "High",
       agency: "BlindExperts",
@@ -115,6 +122,7 @@ class Task {
     customer: 'Customer Name',
     product: 'Product Name',
     status: 'Pending',
+    address: '',
     priority: 'Low',
     dueDate: "Task's Due Date",
     createdAt: DateTime.now().toFormattedWithSuffix(),

@@ -11,13 +11,14 @@ import '../../presentation/screens/bill/review_bill_screen.dart';
 import '../../presentation/screens/customer/new_customer_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/measurement/measurement_screen.dart';
+import '../../presentation/screens/quote/edit_quote_screen.dart';
 import '../../presentation/screens/quote/quote_details_screen.dart';
 import '../../presentation/screens/task/edit_task_page.dart';
 import '../../presentation/screens/task/task_detail_page.dart';
 
 abstract class AppRouter {
   static GoRouter router() => GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/editQuote',
     routes: [
       GoRoute(
         path: '/auth',
@@ -41,9 +42,9 @@ abstract class AppRouter {
         path: '/taskDetails',
         name: 'taskDetails',
         pageBuilder: (context, state) {
-          final Task? task = state.extra as Task?;
+          // final Task? task = state.extra as Task?;
           return _slideTransition(
-            TaskDetailPage(task: task ?? Task.empty()),
+            TaskDetailPage(task: Task.sampleTasks.first),
             state,
           );
         },
@@ -89,9 +90,16 @@ abstract class AppRouter {
         path: '/quoteDetails',
         name: 'quoteDetails',
         pageBuilder: (context, state) {
-          final quote = state.extra as Quote;
+          // final quote = state.extra as Quote;
+          final quote = Quote.sampleQuotes.first;
           return _slideTransition(QuoteDetailsScreen(quote: quote), state);
         },
+      ),
+      GoRoute(
+        path: '/editQuote',
+        name: 'editQuote',
+        pageBuilder:
+            (context, state) => _slideTransition(EditQuoteScreen(), state),
       ),
     ],
   );

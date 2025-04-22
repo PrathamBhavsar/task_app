@@ -4,8 +4,7 @@ import '../../data/models/measurement.dart';
 import '../../data/models/service.dart';
 
 class MeasurementProvider extends ChangeNotifier {
-  final List<Service> services = [Service.empty];
-  final List<Measurement> measurements = [Measurement.empty];
+  ///attachments
   final List<String> attachments = [];
 
   void addAttachment() {
@@ -18,6 +17,9 @@ class MeasurementProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///services
+  final List<Service> services = [Service.empty];
+
   void addService() {
     services.add(Service.empty);
     notifyListeners();
@@ -28,6 +30,23 @@ class MeasurementProvider extends ChangeNotifier {
     services.removeAt(index);
     notifyListeners();
   }
+
+  ///measurements
+  final List<Measurement> additionalItems = [Measurement.empty];
+
+  void addAdditionalItems() {
+    additionalItems.add(Measurement.empty);
+    notifyListeners();
+  }
+
+  void removeAdditionalItems(int index) {
+    if (additionalItems.length == 1) return;
+    additionalItems.removeAt(index);
+    notifyListeners();
+  }
+
+  ///measurements
+  final List<Measurement> measurements = [Measurement.empty];
 
   void addMeasurement() {
     measurements.add(Measurement.empty);

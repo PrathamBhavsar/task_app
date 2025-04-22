@@ -84,6 +84,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
               createdAt: DateTime.now().toFormattedWithSuffix(),
               messages: Message.randomMessages,
               bill: Bill.sampleBills.first,
+              address: widget.task.address,
             );
             context.pushReplacementNamed('taskDetails', extra: updatedTask);
           },
