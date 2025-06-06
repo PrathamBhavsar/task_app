@@ -37,7 +37,7 @@ class SelectionDrawer extends StatelessWidget {
               fontColor: AppColors.errorRed,
               onPress: () {
                 Navigator.pop(context);
-                context.goNamed('auth');
+                context.go(AppRoutes.auth);
               },
             ),
           ),

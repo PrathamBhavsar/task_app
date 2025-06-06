@@ -16,7 +16,7 @@ import '../../widgets/tile_row.dart';
 TextStyle textStyle = AppTexts.labelTextStyle.copyWith(fontSize: 14.sp);
 
 class QuoteDetailsScreen extends StatelessWidget {
-  const QuoteDetailsScreen({super.key, required this.quote});
+  const QuoteDetailsScreen({required this.quote, super.key});
 
   final Quote quote;
 
@@ -172,7 +172,7 @@ class QuoteDetailsScreen extends StatelessWidget {
                       children: [
                         ActionButton(
                           label: 'Modify Quote Details',
-                          onPress: () => context.pushNamed('editQuote'),
+                          onPress: () => context.push(AppRoutes.editQuote),
                           backgroundColor: Colors.black,
                           fontColor: Colors.white,
                         ),

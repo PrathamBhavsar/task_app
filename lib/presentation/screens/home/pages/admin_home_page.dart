@@ -62,7 +62,8 @@ class AdminHomePage extends StatelessWidget {
             padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
             child: GestureDetector(
               onTap:
-                  () => context.pushNamed('taskDetails', extra: tasks[index]),
+                  () =>
+                      context.push(AppRoutes.taskDetails, extra: tasks[index]),
               child: BorderedContainer(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

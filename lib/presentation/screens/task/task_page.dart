@@ -29,8 +29,8 @@ class TaskPage extends StatelessWidget {
                   child: ActionButton(
                     label: 'New Task',
                     onPress:
-                        () => context.pushNamed(
-                          'editTask',
+                        () => context.push(
+                          AppRoutes.editTask,
                           extra: {'task': Task.empty(), 'isNew': true},
                         ),
                     prefixIcon: CustomIcon.badgePlus,

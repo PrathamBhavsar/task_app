@@ -11,7 +11,7 @@ import '../../../widgets/custom_tag.dart';
 import '../../../widgets/tile_row.dart';
 
 class AgencyTile extends StatelessWidget {
-  const AgencyTile({super.key, required this.agency, this.isSelected = false});
+  const AgencyTile({required this.agency, super.key, this.isSelected = false});
 
   final Agency agency;
   final bool isSelected;
@@ -58,7 +58,7 @@ class AgencyTile extends StatelessWidget {
                 label: 'View Details',
                 prefixIcon: CustomIcon.eye,
                 onPress:
-                    () => context.pushNamed('agencyDetails', extra: agency),
+                    () => context.push(AppRoutes.agencyDetails, extra: agency),
               ),
             ),
             10.wGap,

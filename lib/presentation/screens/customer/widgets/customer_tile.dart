@@ -9,8 +9,7 @@ import '../../../widgets/tile_row.dart';
 
 class CustomerTile extends StatelessWidget {
   const CustomerTile({
-    super.key,
-    required this.customer,
+    required this.customer, super.key,
     this.isSelected = false,
   });
 

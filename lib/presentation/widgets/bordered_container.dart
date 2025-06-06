@@ -4,8 +4,7 @@ import '../../utils/constants/app_constants.dart';
 
 class BorderedContainer extends StatelessWidget {
   const BorderedContainer({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.padding,
     this.color = Colors.white,
     this.isSelected = false,

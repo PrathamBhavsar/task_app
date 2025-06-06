@@ -4,7 +4,7 @@ import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/data_container.dart';
 
 class DashboardContainers extends StatelessWidget {
-  const DashboardContainers({super.key, required this.list});
+  const DashboardContainers({required this.list, super.key});
 
   final List<Map<String, dynamic>> list;
 

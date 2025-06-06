@@ -24,13 +24,8 @@ class Task {
     required this.status,
     required this.address,
     required this.priority,
-    this.note,
+    required this.customer, required this.dueDate, required this.createdAt, required this.messages, required this.bill, this.note,
     this.agency,
-    required this.customer,
-    required this.dueDate,
-    required this.createdAt,
-    required this.messages,
-    required this.bill,
   });
 
   // Factory constructor to create a Task from a Map

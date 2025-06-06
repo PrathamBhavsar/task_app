@@ -7,8 +7,7 @@ import 'bordered_container.dart';
 
 class DataContainer extends StatelessWidget {
   const DataContainer({
-    super.key,
-    required this.title,
+    required this.title, super.key,
     this.subtitle,
     this.data,
   });

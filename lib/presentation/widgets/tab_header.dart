@@ -6,7 +6,7 @@ import '../../utils/constants/app_constants.dart';
 import '../providers/task_provider.dart';
 
 class TabHeader extends StatefulWidget {
-  const TabHeader({super.key, required this.tabs});
+  const TabHeader({required this.tabs, super.key});
   final List<Tab> tabs;
   @override
   State<TabHeader> createState() => _TabHeaderState();

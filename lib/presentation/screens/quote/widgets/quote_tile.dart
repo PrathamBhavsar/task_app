@@ -9,13 +9,13 @@ import '../../../widgets/custom_tag.dart';
 import '../../../widgets/tile_row.dart';
 
 class QuoteTile extends StatelessWidget {
-  const QuoteTile({super.key, required this.quote});
+  const QuoteTile({required this.quote, super.key});
 
   final Quote quote;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-    onTap: () => context.pushNamed('quoteDetails', extra: quote),
+    onTap: () => context.push(AppRoutes.quoteDetails, extra: quote),
     child: BorderedContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

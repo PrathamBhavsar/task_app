@@ -16,7 +16,7 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
 
 class EditTaskPage extends StatefulWidget {
-  const EditTaskPage({super.key, required this.task, required this.isNew});
+  const EditTaskPage({required this.task, required this.isNew, super.key});
 
   final Task task;
   final bool isNew;
@@ -84,7 +84,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
               bill: Bill.sampleBills.first,
               address: widget.task.address,
             );
-            context.pushReplacementNamed('taskDetails', extra: updatedTask);
+            context.pushReplacement(AppRoutes.taskDetails, extra: updatedTask);
           },
           child: Text(
             'Done',

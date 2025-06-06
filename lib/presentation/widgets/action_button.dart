@@ -5,9 +5,7 @@ import '../../utils/extensions/padding.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
-    super.key,
-    required this.label,
-    required this.onPress,
+    required this.label, required this.onPress, super.key,
     this.fontColor = Colors.black,
     this.backgroundColor = Colors.white,
     this.backgroundColorDisabled = Colors.transparent,

@@ -11,7 +11,7 @@ import '../../../widgets/custom_tag.dart';
 import '../../../widgets/tile_row.dart';
 
 class BillTile extends StatelessWidget {
-  const BillTile({super.key, required this.bill});
+  const BillTile({required this.bill, super.key});
 
   final Bill bill;
 
@@ -80,7 +80,7 @@ class BillTile extends StatelessWidget {
                 label: 'Review Bill',
                 backgroundColor: Colors.black,
                 fontColor: Colors.white,
-                onPress: () => context.pushNamed('reviewBill'),
+                onPress: () => context.push(AppRoutes.reviewBill),
               ),
             ),
           ],

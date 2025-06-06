@@ -5,10 +5,7 @@ import '../../utils/constants/app_constants.dart';
 
 class CustomTag extends StatelessWidget {
   const CustomTag({
-    super.key,
-    required this.text,
-    required this.color,
-    required this.textColor,
+    required this.text, required this.color, required this.textColor, super.key,
   });
 
   final String text;

@@ -19,12 +19,11 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
-import '../agency/agency_page.dart';
 
 final timeline = DummyData.taskDetailTimeline;
 
 class TaskDetailPage extends StatelessWidget {
-  const TaskDetailPage({super.key, required this.task});
+  const TaskDetailPage({required this.task, super.key});
 
   final Task task;
 
@@ -58,8 +57,8 @@ class TaskDetailPage extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed:
-                                  () => context.replaceNamed(
-                                    'editTask',
+                                  () => context.replace(
+                                    AppRoutes.editTask,
                                     extra: {'task': task, 'isNew': false},
                                   ),
                               icon: Icon(
@@ -131,7 +130,7 @@ class TaskDetailPage extends StatelessWidget {
                                 ActionButton(
                                   label: 'Review Bill',
                                   onPress:
-                                      () => context.pushNamed('reviewBill'),
+                                      () => context.push(AppRoutes.reviewBill),
                                   backgroundColor: Colors.black,
                                   fontColor: Colors.white,
                                 ),
@@ -195,7 +194,7 @@ class TaskDetailPage extends StatelessWidget {
                     10.hGap,
                     ActionButton(
                       label: 'Edit Bill',
-                      onPress: () => context.pushNamed('measurement'),
+                      onPress: () => context.push(AppRoutes.measurement),
                       prefixIcon: CustomIcon.receiptIndianRupee,
                     ),
                   ] else ...[

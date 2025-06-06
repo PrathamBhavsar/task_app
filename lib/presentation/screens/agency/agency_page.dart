@@ -30,7 +30,7 @@ class AgencyPage extends StatelessWidget {
                 IntrinsicWidth(
                   child: ActionButton(
                     label: 'New Agency',
-                    onPress: () => context.pushNamed('editAgency'),
+                    onPress: () => context.push(AppRoutes.editAgency),
                     prefixIcon: CustomIcon.badgePlus,
                     fontColor: Colors.white,
                     backgroundColor: Colors.black,

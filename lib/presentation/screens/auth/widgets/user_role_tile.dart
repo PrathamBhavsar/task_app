@@ -4,10 +4,7 @@ import '../../../../utils/constants/app_constants.dart';
 
 class UserRoleTile extends StatelessWidget {
   const UserRoleTile({
-    super.key,
-    required this.text,
-    required this.onTap,
-    required this.isSelected,
+    required this.text, required this.onTap, required this.isSelected, super.key,
   });
 
   final String text;

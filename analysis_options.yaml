@@ -17,9 +17,15 @@ linter:
     - prefer_collection_literals
     - avoid_function_literals_in_foreach_calls
     - unnecessary_lambdas
-    - prefer_expression_function_bodies
     - unnecessary_this
     - unnecessary_const
+    - always_declare_return_types
+    - always_put_required_named_parameters_first
+    - always_put_control_body_on_new_line
+    - avoid_null_checks_in_equality_operators
+    - avoid_unnecessary_containers
+    - curly_braces_in_flow_control_structures
+    - file_names
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

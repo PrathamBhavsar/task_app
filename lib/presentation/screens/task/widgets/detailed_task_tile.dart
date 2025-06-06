@@ -9,8 +9,7 @@ import '../../../widgets/tile_row.dart';
 
 class DetailedTaskTile extends StatelessWidget {
   const DetailedTaskTile({
-    super.key,
-    required this.task,
+    required this.task, super.key,
     this.isCompleted = false,
   });
 

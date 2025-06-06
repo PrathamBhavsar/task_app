@@ -18,7 +18,7 @@ import '../home/widgets/dashboard_containers.dart';
 import '../task/widgets/detailed_task_tile.dart';
 
 class AgencyDetailPage extends StatelessWidget {
-  const AgencyDetailPage({super.key, required this.agency});
+  const AgencyDetailPage({required this.agency, super.key});
 
   final Agency agency;
 
@@ -55,8 +55,8 @@ class AgencyDetailPage extends StatelessWidget {
                             ),
                             IconButton(
                               onPressed:
-                                  () => context.replaceNamed(
-                                    'editAgency',
+                                  () => context.replace(
+                                    AppRoutes.editAgency,
                                     extra: agency,
                                   ),
                               icon: Icon(
@@ -183,7 +183,7 @@ class AgencyDetailPage extends StatelessWidget {
         ActionButton(
           label: 'Assign New Task',
           prefixIcon: CustomIcon.clipboardList,
-          onPress: () => context.pushNamed('taskDetails'),
+          onPress: () => context.push(AppRoutes.taskDetails),
           backgroundColor: Colors.black,
           fontColor: Colors.white,
         ),

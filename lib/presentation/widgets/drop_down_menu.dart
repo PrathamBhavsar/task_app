@@ -9,8 +9,7 @@ class CustomDropdownMenu extends StatefulWidget {
   final ValueChanged<String>? onChanged;
 
   const CustomDropdownMenu({
-    super.key,
-    required this.items,
+    required this.items, super.key,
     this.initialValue,
     this.onChanged,
   });

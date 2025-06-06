@@ -30,7 +30,7 @@ class CustomerPage extends StatelessWidget {
                 IntrinsicWidth(
                   child: ActionButton(
                     label: 'New Customer',
-                    onPress: () => context.pushNamed('newCustomer'),
+                    onPress: () => context.push(AppRoutes.newCustomer),
                     prefixIcon: CustomIcon.badgePlus,
                     fontColor: Colors.white,
                     backgroundColor: Colors.black,

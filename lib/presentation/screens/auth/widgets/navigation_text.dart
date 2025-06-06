@@ -7,7 +7,7 @@ import '../../../../utils/constants/app_constants.dart';
 class NavigationText extends StatelessWidget {
   final bool isLogin;
 
-  const NavigationText({super.key, required this.isLogin});
+  const NavigationText({required this.isLogin, super.key});
 
   @override
   Widget build(BuildContext context) => Padding(

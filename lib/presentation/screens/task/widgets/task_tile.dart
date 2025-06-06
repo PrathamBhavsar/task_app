@@ -7,14 +7,14 @@ import '../../../widgets/bordered_container.dart';
 import '../../../widgets/custom_tag.dart';
 
 class TaskTile extends StatelessWidget {
-  const TaskTile({super.key, required this.task});
+  const TaskTile({required this.task, super.key});
 
   final Task task;
 
   @override
   Widget build(BuildContext context) => BorderedContainer(
     child: InkWell(
-      onTap: () => context.pushNamed('taskDetails', extra: task),
+      onTap: () => context.push(AppRoutes.taskDetails, extra: task),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

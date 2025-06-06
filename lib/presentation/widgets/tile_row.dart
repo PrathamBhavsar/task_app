@@ -4,11 +4,7 @@ import '../../utils/constants/app_constants.dart';
 
 class TileRow extends StatelessWidget {
   const TileRow({
-    super.key,
-    required this.key1,
-    required this.value1,
-    required this.key2,
-    required this.value2,
+    required this.key1, required this.value1, required this.key2, required this.value2, super.key,
   });
 
   final String key1, value1, key2, value2;

@@ -86,7 +86,7 @@ class HomeProvider extends ChangeNotifier {
 
   int get currentBarIndex => _currentBarIndex;
 
-  setBarIndex(int value) {
+  void setBarIndex(int value) {
     _currentBarIndex = value;
     notifyListeners();
   }

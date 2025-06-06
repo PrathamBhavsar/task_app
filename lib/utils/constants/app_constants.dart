@@ -71,3 +71,35 @@ abstract class AppTexts {
     fontSize: 14.sp,
   );
 }
+
+abstract class AppThemes {
+  static ThemeData themeData = ThemeData(
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Colors.black,
+      selectionColor: AppColors.accent,
+      selectionHandleColor: Colors.black,
+    ),
+    iconTheme: IconThemeData(color: AppColors.accent),
+    fontFamily: 'Inter',
+    splashColor: Colors.black.withAlpha(2),
+    inputDecorationTheme: InputDecorationTheme(focusColor: Colors.black),
+    appBarTheme: AppBarTheme(backgroundColor: Colors.white),
+    scaffoldBackgroundColor: Colors.white,
+    dividerTheme: DividerThemeData(color: Colors.transparent),
+  );
+}
+
+abstract class AppRoutes {
+  static const String auth = '/auth';
+  static const String splash = '/splash';
+  static const String home = '/home';
+  static const String agencyDetails = '/agencyDetails';
+  static const String taskDetails = '/taskDetails';
+  static const String editTask = '/editTask';
+  static const String measurement = '/measurement';
+  static const String newCustomer = '/newCustomer';
+  static const String editAgency = '/editAgency';
+  static const String reviewBill = '/reviewBill';
+  static const String quoteDetails = '/quoteDetails';
+  static const String editQuote = '/editQuote';
+}

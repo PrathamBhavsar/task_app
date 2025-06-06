@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'app.dart';
 import 'core/router/app_router.dart';
 import 'presentation/providers/appointment_provider.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';
 import 'presentation/providers/measurement_provider.dart';
 import 'presentation/providers/task_provider.dart';
-import 'utils/constants/app_constants.dart';
 // import 'utils/constants/secrets/secrets.dart';
 
 Future<void> main() async {
@@ -17,6 +17,7 @@ Future<void> main() async {
   //   url: AppSecrets.apiUrl,
   //   anonKey: AppSecrets.serviceKey,
   // );
+  AppRouter.init(true);
   runApp(
     ScreenUtilInit(
       designSize: const Size(375, 812),
@@ -32,29 +33,6 @@ Future<void> main() async {
         ],
         child: MyApp(),
       ),
-    ),
-  );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) => MaterialApp.router(
-    routerConfig: AppRouter.router(),
-    theme: ThemeData(
-      textSelectionTheme: TextSelectionThemeData(
-        cursorColor: Colors.black,
-        selectionColor: AppColors.accent,
-        selectionHandleColor: Colors.black,
-      ),
-      iconTheme: IconThemeData(color: AppColors.accent),
-      fontFamily: 'Inter',
-      splashColor: Colors.black.withAlpha(2),
-      inputDecorationTheme: InputDecorationTheme(focusColor: Colors.black),
-      appBarTheme: AppBarTheme(backgroundColor: Colors.white),
-      scaffoldBackgroundColor: Colors.white,
-      dividerTheme: DividerThemeData(color: Colors.transparent),
     ),
   );
 }
