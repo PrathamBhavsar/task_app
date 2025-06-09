@@ -9,38 +9,31 @@ class LogService {
 
   factory LogService() => _instance;
 
-  Logger? _consoleLogger;
+  late final Logger _consoleLogger;
 
   void _initConsoleLogger() {
     _consoleLogger = Logger(
-      output: ConsoleOutput(),
-      printer: PrettyPrinter(colors: false, printEmojis: false, methodCount: 1),
+      level: Logger.level,
+      printer: PrettyPrinter(
+        colors: true,
+        methodCount: 2,
+        noBoxingByDefault: false,
+        printEmojis: true,
+      ),
     );
   }
 
   void logMessage(String message) => d(message);
 
-  void logError(String message, Object? error, StackTrace? stackTrace) =>
-      e(message, error: error, stackTrace: stackTrace);
+  void logError(String message, Object? error, StackTrace? s) =>
+      e(message, error: error, s: s);
 
-  void d(String message) {
-    _consoleLogger?.d(message, time: DateTime.now());
-  }
+  void d(String message) => _consoleLogger.d(message);
 
-  void i(String message) {
-    _consoleLogger?.i(message, time: DateTime.now());
-  }
+  void i(String message) => _consoleLogger.i(message);
 
-  void w(String message) {
-    _consoleLogger?.w(message, time: DateTime.now());
-  }
+  void w(String message) => _consoleLogger.w(message);
 
-  void e(String message, {Object? error, StackTrace? stackTrace}) {
-    _consoleLogger?.e(
-      message,
-      error: error,
-      stackTrace: stackTrace,
-      time: DateTime.now(),
-    );
-  }
+  void e(String message, {Object? error, StackTrace? s}) =>
+      _consoleLogger.e(message, error: error, stackTrace: s);
 }

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import 'core/di/di.dart';
 import 'core/router/app_router.dart';
+import 'domain/entities/user.dart';
 import 'presentation/providers/appointment_provider.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';
 import 'presentation/providers/measurement_provider.dart';
 import 'presentation/providers/task_provider.dart';
+import 'presentation/providers/user_provider.dart';
 import 'utils/constants/app_constants.dart';
 
 class MyApp extends StatelessWidget {
@@ -22,6 +25,7 @@ class MyApp extends StatelessWidget {
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),
           ChangeNotifierProvider(create: (_) => HomeProvider()),
           ChangeNotifierProvider(create: (_) => TaskProvider()),
           ChangeNotifierProvider(create: (_) => AppointmentProvider()),

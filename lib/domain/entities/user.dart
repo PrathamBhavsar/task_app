@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'user.g.dart';
 
 @JsonSerializable()
-class AppUser extends Equatable {
+class User extends Equatable {
   @JsonKey(name: 'user_id')
   final int userId;
 
@@ -26,7 +26,7 @@ class AppUser extends Equatable {
   @JsonKey(name: 'profile_bg_color')
   final String profileBgColor;
 
-  const AppUser({
+  const User({
     required this.userId,
     required this.createdAt,
     required this.name,
@@ -38,10 +38,9 @@ class AppUser extends Equatable {
     required this.profileBgColor,
   });
 
-  factory AppUser.fromJson(Map<String, dynamic> json) =>
-      _$AppUserFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  Map<String, dynamic> toJson() => _$AppUserToJson(this);
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 
   @override
   List<Object?> get props => [
