@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import 'core/router/app_router.dart';
+import 'presentation/providers/appointment_provider.dart';
+import 'presentation/providers/auth_provider.dart';
+import 'presentation/providers/home_provider.dart';
+import 'presentation/providers/measurement_provider.dart';
+import 'presentation/providers/task_provider.dart';
 import 'utils/constants/app_constants.dart';
 
 class MyApp extends StatelessWidget {
@@ -8,9 +15,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: AppRouter.router,
-      theme: AppThemes.themeData,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProvider(create: (_) => HomeProvider()),
+          ChangeNotifierProvider(create: (_) => TaskProvider()),
+          ChangeNotifierProvider(create: (_) => AppointmentProvider()),
+          ChangeNotifierProvider(create: (_) => MeasurementProvider()),
+        ],
+        child: MaterialApp.router(
+          routerConfig: AppRouter.router,
+          theme: AppThemes.themeData,
+        ),
+      ),
     );
   }
 }
