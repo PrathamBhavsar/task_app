@@ -33,4 +33,18 @@ class ApiHelper {
       return Left(result.error ?? ApiError.unknownError());
     }
   }
+
+  Future<Either<ApiError, List<User>>> getAllTasks() async {
+    final ApiResponse<GetUsersResponse> result = await handler
+        .execute<GetUsersResponse>(
+          () => service.get(ApiConstants.user.base),
+          (json) => GetUsersResponse.fromJson(json as Map<String, dynamic>),
+        );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.users);
+    } else {
+      return Left(result.error ?? ApiError.unknownError());
+    }
+  }
 }
