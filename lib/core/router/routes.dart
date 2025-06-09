@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../data/models/agency.dart';
-import '../../data/models/quote.dart';
-import '../../data/models/task.dart';
+import '../../domain/entities/agency.dart';
+import '../../domain/entities/quote.dart';
+import '../../domain/entities/task.dart';
 import '../../presentation/screens/agency/agency_detail_page.dart';
 import '../../presentation/screens/agency/new_agency_screen.dart';
 import '../../presentation/screens/auth/auth_screen.dart';

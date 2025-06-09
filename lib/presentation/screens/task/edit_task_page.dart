@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/models/agency.dart';
-import '../../../data/models/bill.dart';
-import '../../../data/models/customer.dart';
-import '../../../data/models/message.dart';
-import '../../../data/models/task.dart';
+import '../../../domain/entities/agency.dart';
+import '../../../domain/entities/bill.dart';
+import '../../../domain/entities/customer.dart';
+import '../../../domain/entities/message.dart';
+import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';

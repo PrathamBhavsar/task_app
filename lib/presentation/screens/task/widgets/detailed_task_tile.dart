@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../data/models/task.dart';
+import '../../../../domain/entities/task.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/action_button.dart';
@@ -9,7 +9,8 @@ import '../../../widgets/tile_row.dart';
 
 class DetailedTaskTile extends StatelessWidget {
   const DetailedTaskTile({
-    required this.task, super.key,
+    required this.task,
+    super.key,
     this.isCompleted = false,
   });
 

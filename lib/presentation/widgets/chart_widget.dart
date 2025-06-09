@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../data/models/chart_data.dart';
+import '../../domain/entities/chart_data.dart';
 
 class ChartWidget extends StatelessWidget {
   const ChartWidget({super.key});

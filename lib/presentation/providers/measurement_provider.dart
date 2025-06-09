@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/measurement.dart';
-import '../../data/models/service.dart';
+import '../../domain/entities/measurement.dart';
+import '../../domain/entities/service.dart';
 
 class MeasurementProvider extends ChangeNotifier {
   ///attachments

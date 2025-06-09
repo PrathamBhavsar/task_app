@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../data/models/bill.dart';
+import '../../../../domain/entities/bill.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/constants/custom_icons.dart';
 import '../../../../utils/extensions/padding.dart';

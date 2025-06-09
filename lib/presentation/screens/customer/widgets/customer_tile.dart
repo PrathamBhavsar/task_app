@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../data/models/customer.dart';
+import '../../../../domain/entities/customer.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/bordered_container.dart';
@@ -9,7 +9,8 @@ import '../../../widgets/tile_row.dart';
 
 class CustomerTile extends StatelessWidget {
   const CustomerTile({
-    required this.customer, super.key,
+    required this.customer,
+    super.key,
     this.isSelected = false,
   });
 
