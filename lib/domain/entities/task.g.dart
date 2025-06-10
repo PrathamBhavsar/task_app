@@ -10,13 +10,12 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
   taskId: (json['task_id'] as num?)?.toInt(),
   dealNo: json['deal_no'] as String,
   client: Client.fromJson(json['client'] as Map<String, dynamic>),
-  designer: User.fromJson(json['designer'] as Map<String, dynamic>),
+  designer: Designer.fromJson(json['designer'] as Map<String, dynamic>),
   assignedUsers:
       (json['assigned_users'] as List<dynamic>)
           .map((e) => User.fromJson(e as Map<String, dynamic>))
           .toList(),
   name: json['name'] as String,
-  phone: json['phone'] as String,
   status: Status.fromJson(json['status'] as Map<String, dynamic>),
   priority: Priority.fromJson(json['priority'] as Map<String, dynamic>),
   dueDate: json['due_date'] as String,
@@ -39,5 +38,4 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
   'agency': instance.agency?.toJson(),
   'designer': instance.designer.toJson(),
   'assigned_users': instance.assignedUsers.map((e) => e.toJson()).toList(),
-  'phone': instance.phone,
 };

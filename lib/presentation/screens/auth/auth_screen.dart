@@ -163,7 +163,8 @@ class _AuthScreenState extends State<AuthScreen> {
                         backgroundColor: Colors.black,
                         label: 'Sign In',
                         fontColor: Colors.white,
-                        onPress: () => context.pushReplacement(AppRoutes.home),
+                        onPress:
+                            () => context.pushReplacement(AppRoutes.splash),
                       ),
                     ],
                   ).padAll(AppPaddings.appPaddingInt),

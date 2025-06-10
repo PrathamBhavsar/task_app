@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../data/models/api/api_error.dart';
 import '../../data/repositories/user_repository.dart';
+import '../../data/states/get_users_states.dart';
 import '../../domain/entities/user.dart';
 
 class UserProvider extends ChangeNotifier {
@@ -10,32 +10,37 @@ class UserProvider extends ChangeNotifier {
   UserProvider(this._repository);
 
   List<User> _users = [];
+
   List<User> get users => _users;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  GetUsersState _getUsersState = None();
 
-  ApiError? _error;
-  ApiError? get error => _error;
+  GetUsersState get getUsersState => _getUsersState;
+
+  void _setGetUsersState(GetUsersState state) {
+    _getUsersState = state;
+    notifyListeners();
+  }
 
   Future<void> fetchAllUsers() async {
-    _isLoading = true;
-    _error = null;
+    _setGetUsersState(Fetching());
+
     notifyListeners();
 
     final result = await _repository.getAll();
 
     result.fold(
       (err) {
-        _error = err;
+        _setGetUsersState(Failed(err));
         _users = [];
       },
       (userList) {
+        _setGetUsersState(Fetched(userList));
+
         _users = userList;
       },
     );
 
-    _isLoading = false;
     notifyListeners();
   }
 }

@@ -9,12 +9,11 @@ class User extends Equatable {
   final int? userId;
 
   @JsonKey(name: 'created_at')
-  final String createdAt;
+  final DateTime? createdAt;
 
   final String name;
   final String email;
-  final String password;
-
+  final String? password;
   @JsonKey(name: 'contact_no')
   final String contactNo;
 
@@ -28,14 +27,16 @@ class User extends Equatable {
 
   const User({
     required this.userId,
-    required this.createdAt,
+
     required this.name,
     required this.email,
-    required this.password,
+
     required this.contactNo,
     required this.address,
     required this.userType,
     required this.profileBgColor,
+    this.password,
+    this.createdAt,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

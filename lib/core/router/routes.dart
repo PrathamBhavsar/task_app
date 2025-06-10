@@ -11,11 +11,16 @@ import '../../presentation/screens/customer/new_customer_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/measurement/measurement_screen.dart';
 import '../../presentation/screens/quote/edit_quote_screen.dart';
+import '../../presentation/screens/splash/splash_screen.dart';
 import '../../presentation/screens/task/edit_task_page.dart';
 import '../../presentation/screens/task/task_detail_page.dart';
 import '../../utils/constants/app_constants.dart';
 
 final List<GoRoute> appRoutes = [
+  GoRoute(
+    path: AppRoutes.splash,
+    pageBuilder: (context, state) => _slideTransition(SplashScreen(), state),
+  ),
   GoRoute(
     path: AppRoutes.auth,
     pageBuilder: (context, state) => _slideTransition(AuthScreen(), state),

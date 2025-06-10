@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/date_formatter.dart';
@@ -36,7 +35,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     if (!widget.isNew) {
       _taskNameController.text = widget.task.name;
       _noteController.text = '';
-      _phoneController.text = widget.task.phone;
+      _phoneController.text = widget.task.client.contactNo;
 
       _dueDateController.text = widget.task.dueDate;
     } else {

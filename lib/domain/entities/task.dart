@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'client.dart';
+import 'designer.dart';
 import 'priority.dart';
 import 'status.dart';
 import 'user.dart';
@@ -28,12 +29,10 @@ class Task {
 
   final Client client;
   final User? agency;
-  final User designer;
+  final Designer designer;
 
   @JsonKey(name: 'assigned_users')
   final List<User> assignedUsers;
-
-  final String phone;
 
   Task({
     required this.taskId,
@@ -42,7 +41,6 @@ class Task {
     required this.designer,
     required this.assignedUsers,
     required this.name,
-    required this.phone,
     required this.status,
     required this.priority,
     required this.dueDate,

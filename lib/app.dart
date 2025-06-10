@@ -23,12 +23,12 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
           ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),
-          ChangeNotifierProvider(create: (_) => HomeProvider()),
-          ChangeNotifierProvider(create: (_) => TaskProvider()),
-          ChangeNotifierProvider(create: (_) => AppointmentProvider()),
-          ChangeNotifierProvider(create: (_) => MeasurementProvider()),
+          ChangeNotifierProvider(create: (_) => getIt<HomeProvider>()),
+          ChangeNotifierProvider(create: (_) => getIt<TaskProvider>()),
+          ChangeNotifierProvider(create: (_) => getIt<AppointmentProvider>()),
+          ChangeNotifierProvider(create: (_) => getIt<MeasurementProvider>()),
         ],
         child: MaterialApp.router(
           routerConfig: AppRouter.router,

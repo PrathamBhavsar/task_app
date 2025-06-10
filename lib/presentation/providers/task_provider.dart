@@ -1,8 +1,40 @@
 import 'package:flutter/material.dart';
 
+import '../../data/repositories/task_repository.dart';
+import '../../data/states/get_tasks_states.dart';
+import '../../domain/entities/task.dart';
 
 class TaskProvider extends ChangeNotifier {
+  final TaskRepository _repository;
+
   // String _currentCustomer = customers.first.name;
+  TaskProvider(this._repository);
+
+  List<Task> _tasks = [];
+  GetTasksState _getTasksState = None();
+
+  GetTasksState get getTasksState => _getTasksState;
+
+  void _setGetTasksState(GetTasksState state) {
+    _getTasksState = state;
+    notifyListeners();
+  }
+
+  Future<void> fetchAllTasks() async {
+    _setGetTasksState(Fetching());
+    final result = await _repository.getAll();
+
+    result.fold(
+      (err) {
+        _setGetTasksState(Failed(err));
+        _tasks = [];
+      },
+      (taskList) {
+        _setGetTasksState(Fetched(taskList));
+        _tasks = taskList;
+      },
+    );
+  }
 
   String get currentCustomer => '_currentCustomer';
 

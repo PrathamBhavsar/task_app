@@ -8,19 +8,22 @@ part of 'user.dart';
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
   userId: (json['user_id'] as num?)?.toInt(),
-  createdAt: json['created_at'] as String,
   name: json['name'] as String,
   email: json['email'] as String,
-  password: json['password'] as String,
   contactNo: json['contact_no'] as String,
   address: json['address'] as String,
   userType: json['user_type'] as String,
   profileBgColor: json['profile_bg_color'] as String,
+  password: json['password'] as String?,
+  createdAt:
+      json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
 );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'user_id': instance.userId,
-  'created_at': instance.createdAt,
+  'created_at': instance.createdAt?.toIso8601String(),
   'name': instance.name,
   'email': instance.email,
   'password': instance.password,

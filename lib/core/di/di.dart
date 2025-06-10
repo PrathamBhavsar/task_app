@@ -7,7 +7,13 @@ import '../../data/api/api_constants.dart';
 import '../../data/api/api_handler.dart';
 import '../../data/api/api_helper.dart';
 import '../../data/api/api_service.dart';
+import '../../data/repositories/task_repository.dart';
 import '../../data/repositories/user_repository.dart';
+import '../../presentation/providers/appointment_provider.dart';
+import '../../presentation/providers/auth_provider.dart';
+import '../../presentation/providers/home_provider.dart';
+import '../../presentation/providers/measurement_provider.dart';
+import '../../presentation/providers/task_provider.dart';
 import '../../presentation/providers/user_provider.dart';
 import '../services/log_service.dart';
 
@@ -50,6 +56,10 @@ void setupRepositories() {
   getIt.registerLazySingleton<UserRepository>(
     () => UserRepository(getIt<ApiHelper>()),
   );
+
+  getIt.registerLazySingleton<TaskRepository>(
+    () => TaskRepository(getIt<ApiHelper>()),
+  );
 }
 
 void setupHelpers() {
@@ -66,7 +76,19 @@ void setupHelpers() {
 }
 
 void setupProviders() {
+  getIt.registerLazySingleton<AuthProvider>(AuthProvider.new);
+
   getIt.registerLazySingleton<UserProvider>(
     () => UserProvider(getIt<UserRepository>()),
   );
+
+  getIt.registerLazySingleton<HomeProvider>(HomeProvider.new);
+
+  getIt.registerLazySingleton<TaskProvider>(
+    () => TaskProvider(getIt<TaskRepository>()),
+  );
+
+  getIt.registerLazySingleton<AppointmentProvider>(AppointmentProvider.new);
+
+  getIt.registerLazySingleton<MeasurementProvider>(MeasurementProvider.new);
 }
