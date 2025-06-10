@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/entities/agency.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_text_field.dart';
-import 'widgets/agency_tile.dart';
 
-List<Agency> agencies = Agency.sampleAgencies;
+// List<Agency> agencies = Agency.sampleAgencies;
 
 class AgencyPage extends StatelessWidget {
   const AgencyPage({super.key});
@@ -48,13 +45,13 @@ class AgencyPage extends StatelessWidget {
   Widget _buildAgencies(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      ...List.generate(
-        agencies.length,
-        (index) => Padding(
-          padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-          child: AgencyTile(agency: agencies[index]),
-        ),
-      ),
+      // ...List.generate(
+      //   agencies.length,
+      //   (index) => Padding(
+      //     padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+      //     child: AgencyTile(agency: agencies[index]),
+      //   ),
+      // ),
     ],
   );
 }

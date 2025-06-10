@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/entities/agency.dart';
-import '../../../domain/entities/bill.dart';
-import '../../../domain/entities/customer.dart';
-import '../../../domain/entities/message.dart';
+
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/date_formatter.dart';
@@ -29,7 +25,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   late final _taskNameController = TextEditingController();
   late final _noteController = TextEditingController();
   late final _phoneController = TextEditingController();
-  late final _productController = TextEditingController();
+
   late final _dueDateController = TextEditingController();
 
   @override
@@ -39,9 +35,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
 
     if (!widget.isNew) {
       _taskNameController.text = widget.task.name;
-      _noteController.text = widget.task.note ?? '';
+      _noteController.text = '';
       _phoneController.text = widget.task.phone;
-      _productController.text = widget.task.product;
+
       _dueDateController.text = widget.task.dueDate;
     } else {
       taskProvider.resetFields();
@@ -56,7 +52,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     _taskNameController.dispose();
     _noteController.dispose();
     _phoneController.dispose();
-    _productController.dispose();
+
     _dueDateController.dispose();
     super.dispose();
   }
@@ -70,21 +66,21 @@ class _EditTaskPageState extends State<EditTaskPage> {
         TextButton(
           onPressed: () {
             final provider = context.read<TaskProvider>();
-            final updatedTask = Task(
-              name: _taskNameController.text,
-              customer: provider.currentCustomer,
-              phone: _phoneController.text,
-              product: _productController.text,
-              status: provider.currentStatus,
-              priority: provider.currentPriority,
-              note: _noteController.text,
-              dueDate: _dueDateController.text,
-              createdAt: DateTime.now().toFormattedWithSuffix(),
-              messages: Message.randomMessages,
-              bill: Bill.sampleBills.first,
-              address: widget.task.address,
-            );
-            context.pushReplacement(AppRoutes.taskDetails, extra: updatedTask);
+            // final updatedTask = Task(
+            //   name: _taskNameController.text,
+            //   client: provider.currentCustomer,
+            //   phone: _phoneController.text,
+            //   product: _productController.text,
+            //   status: provider.currentStatus,
+            //   priority: provider.currentPriority,
+            //   notes: _noteController.text,
+            //   dueDate: _dueDateController.text,
+            //   createdAt: DateTime.now().toFormattedWithSuffix(),
+            //   messages: Message.randomMessages,
+            //   bill: Bill.sampleBills.first,
+            //   address: widget.task.address,
+            // );
+            // context.pushReplacement(AppRoutes.taskDetails, extra: updatedTask);
           },
           child: Text(
             'Done',
@@ -118,25 +114,25 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           'Enter task title',
                           _taskNameController,
                         ),
-                        _buildDropdown(
-                          'Status',
-                          Task.statuses,
-                          widget.task.status,
-                          (value) => provider.setStatus(value),
-                          widget.isNew,
-                        ),
-                        _buildDropdown(
-                          'Priority',
-                          ['Low', 'Medium', 'High'],
-                          widget.task.priority,
-                          (value) => provider.setPriority(value),
-                          widget.isNew,
-                        ),
-                        _buildTextInput(
-                          'Product',
-                          'Enter product name',
-                          _productController,
-                        ),
+                        // _buildDropdown(
+                        //   'Status',
+                        //   Task.statuses,
+                        //   widget.task.status,
+                        //   (value) => provider.setStatus(value),
+                        //   widget.isNew,
+                        // ),
+                        // _buildDropdown(
+                        //   'Priority',
+                        //   ['Low', 'Medium', 'High'],
+                        //   widget.task.priority,
+                        //   (value) => provider.setPriority(value),
+                        //   widget.isNew,
+                        // ),
+                        // _buildTextInput(
+                        //   'Product',
+                        //   'Enter product name',
+                        //   _productController,
+                        // ),
                         _buildTextInput(
                           'Due Date',
                           'Enter due date',
@@ -148,21 +144,21 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           _noteController,
                           isMultiline: true,
                         ),
-                        _buildDropdown(
-                          'Select Customer',
-                          Customer.names,
-                          widget.task.customer,
-                          (value) => provider.setCustomer(value),
-                          widget.isNew,
-                        ),
+                        // _buildDropdown(
+                        //   'Select Customer',
+                        //   Customer.names,
+                        //   widget.task.customer,
+                        //   (value) => provider.setCustomer(value),
+                        //   widget.isNew,
+                        // ),
                         if (widget.task.agency != null && !widget.isNew) ...[
-                          _buildDropdown(
-                            'Select Agency',
-                            Agency.names,
-                            widget.task.agency!,
-                            (value) => provider.setAgency(value),
-                            widget.isNew,
-                          ),
+                          // _buildDropdown(
+                          //   'Select Agency',
+                          //   Agency.names,
+                          //   widget.task.agency!,
+                          //   (value) => provider.setAgency(value),
+                          //   widget.isNew,
+                          // ),
                         ],
                       ],
                     ),

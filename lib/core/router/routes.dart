@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../domain/entities/agency.dart';
-import '../../domain/entities/quote.dart';
 import '../../domain/entities/task.dart';
+import '../../domain/entities/user.dart';
 import '../../presentation/screens/agency/agency_detail_page.dart';
 import '../../presentation/screens/agency/new_agency_screen.dart';
 import '../../presentation/screens/auth/auth_screen.dart';
@@ -12,7 +11,6 @@ import '../../presentation/screens/customer/new_customer_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/measurement/measurement_screen.dart';
 import '../../presentation/screens/quote/edit_quote_screen.dart';
-import '../../presentation/screens/quote/quote_details_screen.dart';
 import '../../presentation/screens/task/edit_task_page.dart';
 import '../../presentation/screens/task/task_detail_page.dart';
 import '../../utils/constants/app_constants.dart';
@@ -29,7 +27,7 @@ final List<GoRoute> appRoutes = [
   GoRoute(
     path: AppRoutes.agencyDetails,
     pageBuilder: (context, state) {
-      final agency = state.extra as Agency;
+      final agency = state.extra as User;
       return _slideTransition(AgencyDetailPage(agency: agency), state);
     },
   ),
@@ -37,8 +35,8 @@ final List<GoRoute> appRoutes = [
     path: AppRoutes.taskDetails,
     pageBuilder: (context, state) {
       // final Task? task = state.extra as Task?;
-      final Task? task = state.extra as Task?;
-      return _slideTransition(TaskDetailPage(task: Task.empty()), state);
+      final Task task = state.extra as Task;
+      return _slideTransition(TaskDetailPage(task: task), state);
     },
   ),
   GoRoute(
@@ -64,8 +62,8 @@ final List<GoRoute> appRoutes = [
   GoRoute(
     path: AppRoutes.editAgency,
     pageBuilder: (context, state) {
-      final Agency? agency = state.extra as Agency?;
-      return _slideTransition(NewAgencyScreen(agency: agency), state);
+      final User? agent = state.extra as User?;
+      return _slideTransition(NewAgencyScreen(agent: agent), state);
     },
   ),
   GoRoute(
@@ -73,14 +71,14 @@ final List<GoRoute> appRoutes = [
     pageBuilder:
         (context, state) => _slideTransition(ReviewBillScreen(), state),
   ),
-  GoRoute(
-    path: AppRoutes.quoteDetails,
-    pageBuilder: (context, state) {
-      // final quote = state.extra as Quote;
-      final quote = Quote.sampleQuotes.first;
-      return _slideTransition(QuoteDetailsScreen(quote: quote), state);
-    },
-  ),
+  // GoRoute(
+  //   path: AppRoutes.quoteDetails,
+  //   pageBuilder: (context, state) {
+  //     // final quote = state.extra as Quote;
+  //     final quote = Quote.sampleQuotes.first;
+  //     return _slideTransition(QuoteDetailsScreen(quote: quote), state);
+  //   },
+  // ),
   GoRoute(
     path: AppRoutes.editQuote,
     pageBuilder: (context, state) => _slideTransition(EditQuoteScreen(), state),

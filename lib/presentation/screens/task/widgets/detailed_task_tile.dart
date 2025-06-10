@@ -5,7 +5,6 @@ import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/action_button.dart';
 import '../../../widgets/bordered_container.dart';
 import '../../../widgets/custom_tag.dart';
-import '../../../widgets/tile_row.dart';
 
 class DetailedTaskTile extends StatelessWidget {
   const DetailedTaskTile({
@@ -37,7 +36,7 @@ class DetailedTaskTile extends StatelessWidget {
                   ),
                   5.hGap,
                   Text(
-                    task.customer,
+                    task.client.name,
                     style: AppTexts.inputTextStyle.copyWith(
                       fontVariations: [FontVariation.weight(700)],
                     ),
@@ -52,19 +51,19 @@ class DetailedTaskTile extends StatelessWidget {
               ),
             ),
             CustomTag(
-              text: task.status,
+              text: task.status.name,
               color: AppColors.accent,
               textColor: Colors.black,
             ),
           ],
         ),
         10.hGap,
-        TileRow(
-          key1: 'Product Type',
-          value1: task.product,
-          key2: 'Scheduled Date',
-          value2: task.createdAt,
-        ),
+        // TileRow(
+        //   key1: 'Product Type',
+        //   value1: task.product.name,
+        //   key2: 'Scheduled Date',
+        //   value2: task.createdAt.toString(),
+        // ),
         5.hGap,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

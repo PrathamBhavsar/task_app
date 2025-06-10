@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../../../domain/entities/task.dart';
 import '../../../../utils/constants/app_constants.dart';
-import '../../../../utils/constants/custom_icons.dart';
 import '../../../../utils/constants/dummy_data.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../providers/task_provider.dart';
@@ -12,8 +9,6 @@ import '../../../widgets/bordered_container.dart';
 import '../../../widgets/chart_widget.dart';
 import '../../../widgets/pie_chart.dart';
 import '../widgets/dashboard_containers.dart';
-
-final List<Task> tasks = Task.pendingTasks;
 
 class AdminHomePage extends StatelessWidget {
   const AdminHomePage({super.key});
@@ -56,38 +51,38 @@ class AdminHomePage extends StatelessWidget {
           ],
         ),
         10.hGap,
-        ...List.generate(
-          2,
-          (index) => Padding(
-            padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-            child: GestureDetector(
-              onTap:
-                  () =>
-                      context.push(AppRoutes.taskDetails, extra: tasks[index]),
-              child: BorderedContainer(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tasks[index].name,
-                          style: AppTexts.headingTextStyle,
-                        ),
-                        Text(
-                          tasks[index].customer,
-                          style: AppTexts.inputHintTextStyle,
-                        ),
-                      ],
-                    ),
-                    Icon(CustomIcon.chevronRight, color: Colors.black),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
+        // ...List.generate(
+        //   2,
+        //   (index) => Padding(
+        //     padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+        //     child: GestureDetector(
+        //       onTap:
+        //           () =>
+        //               context.push(AppRoutes.taskDetails, extra: tasks[index]),
+        //       child: BorderedContainer(
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //           children: [
+        //             Column(
+        //               crossAxisAlignment: CrossAxisAlignment.start,
+        //               children: [
+        //                 Text(
+        //                   tasks[index].name,
+        //                   style: AppTexts.headingTextStyle,
+        //                 ),
+        //                 Text(
+        //                   tasks[index].customer,
+        //                   style: AppTexts.inputHintTextStyle,
+        //                 ),
+        //               ],
+        //             ),
+        //             Icon(CustomIcon.chevronRight, color: Colors.black),
+        //           ],
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     ),
   );

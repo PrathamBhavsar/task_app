@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/entities/agency.dart';
+import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/home_provider.dart';
@@ -12,9 +12,9 @@ import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
 
 class NewAgencyScreen extends StatefulWidget {
-  const NewAgencyScreen({super.key, this.agency});
+  const NewAgencyScreen({super.key, this.agent});
 
-  final Agency? agency;
+  final User? agent;
 
   @override
   State<NewAgencyScreen> createState() => _NewAgencyScreenState();
@@ -22,26 +22,19 @@ class NewAgencyScreen extends StatefulWidget {
 
 class _NewAgencyScreenState extends State<NewAgencyScreen> {
   final _nameController = TextEditingController();
-  final _contactPersonController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _addressController = TextEditingController();
-  late final bool isNew = widget.agency == null;
+  late final bool isNew = widget.agent == null;
 
   @override
   void initState() {
     super.initState();
     if (!isNew) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<HomeProvider>().setActive(
-          widget.agency!.status == 'Active',
-        );
-      });
-      _nameController.text = widget.agency!.name;
-      _contactPersonController.text = widget.agency!.contactPerson;
-      _phoneController.text = widget.agency!.phone;
-      _emailController.text = widget.agency!.email;
-      _addressController.text = widget.agency!.address;
+      _nameController.text = widget.agent!.name;
+      _phoneController.text = widget.agent!.contactNo;
+      _emailController.text = widget.agent!.email;
+      _addressController.text = widget.agent!.address;
     }
   }
 
@@ -49,7 +42,6 @@ class _NewAgencyScreenState extends State<NewAgencyScreen> {
   void dispose() {
     super.dispose();
     _nameController.dispose();
-    _contactPersonController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
@@ -115,27 +107,22 @@ class _NewAgencyScreenState extends State<NewAgencyScreen> {
                       children: [
                         _buildTextInput(
                           'Name',
-                          'Enter agency name',
+                          'Enter agent name',
                           _nameController,
                         ),
                         _buildTextInput(
-                          'Contact Person',
-                          'Enter contact person name',
-                          _contactPersonController,
-                        ),
-                        _buildTextInput(
                           'Phone',
-                          'Enter agency phone',
+                          'Enter agent phone',
                           _phoneController,
                         ),
                         _buildTextInput(
                           'Email',
-                          'Enter agency email',
+                          'Enter agent email',
                           _emailController,
                         ),
                         _buildTextInput(
                           'Address',
-                          'Enter agency address',
+                          'Enter agent address',
                           _addressController,
                           isMultiline: true,
                         ),

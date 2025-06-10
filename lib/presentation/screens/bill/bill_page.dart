@@ -28,20 +28,20 @@ class BillPage extends StatelessWidget {
               ],
             ),
             10.hGap,
-            Builder(
-              builder: (context) {
-                switch (provider.tabIndex) {
-                  case 0:
-                    return _buildBills(Bill.pendingBills);
-                  case 1:
-                    return _buildBills(Bill.approvedBills);
-                  case 2:
-                    return _buildBills(Bill.paidBills);
-                  default:
-                    return _buildBills(Bill.rejectedBills);
-                }
-              },
-            ),
+            // Builder(
+            //   builder: (context) {
+            //     switch (provider.tabIndex) {
+            //       case 0:
+            //         return _buildBills(Bill.pendingBills);
+            //       case 1:
+            //         return _buildBills(Bill.approvedBills);
+            //       case 2:
+            //         return _buildBills(Bill.paidBills);
+            //       default:
+            //         return _buildBills(Bill.rejectedBills);
+            //     }
+            //   },
+            // ),
           ],
         ),
   );

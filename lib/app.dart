@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'core/di/di.dart';
 import 'core/router/app_router.dart';
-import 'domain/entities/user.dart';
 import 'presentation/providers/appointment_provider.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/home_provider.dart';

@@ -29,14 +29,14 @@ class BillTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    bill.name,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTexts.headingTextStyle,
-                  ),
-                  Text(bill.agency, style: AppTexts.inputHintTextStyle),
-                  Text(bill.task, style: AppTexts.inputHintTextStyle),
-                  Text(bill.place, style: AppTexts.inputHintTextStyle),
+                  // Text(
+                  //   bill.name,
+                  //   overflow: TextOverflow.ellipsis,
+                  //   style: AppTexts.headingTextStyle,
+                  // ),
+                  // Text(bill.agency, style: AppTexts.inputHintTextStyle),
+                  // Text(bill.task, style: AppTexts.inputHintTextStyle),
+                  // Text(bill.place, style: AppTexts.inputHintTextStyle),
                 ],
               ),
             ),
@@ -49,7 +49,7 @@ class BillTile extends StatelessWidget {
                   textColor: Colors.white,
                 ),
                 5.hGap,
-                Text('\$${bill.amount}', style: AppTexts.inputTextStyle),
+                Text('\$${bill.total}', style: AppTexts.inputTextStyle),
               ],
             ),
           ],
@@ -57,9 +57,9 @@ class BillTile extends StatelessWidget {
         10.hGap,
         TileRow(
           key1: 'Bill Date',
-          value1: bill.createdAt,
+          value1: bill.createdAt.toString(),
           key2: 'Due Date',
-          value2: bill.dueDate,
+          value2: bill.dueDate.toString(),
         ),
         10.hGap,
         Row(

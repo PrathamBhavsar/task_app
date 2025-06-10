@@ -31,7 +31,7 @@ class TaskTile extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     CustomTag(
-                      text: task.status,
+                      text: task.status.name,
                       color: AppColors.accent,
                       textColor: Colors.black,
                     ),
@@ -46,7 +46,10 @@ class TaskTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(task.customer, style: AppTexts.inputHintTextStyle),
+                        Text(
+                          task.client.name,
+                          style: AppTexts.inputHintTextStyle,
+                        ),
                         task.agency != null
                             ? Text(
                               "Agency: ${task.agency}",

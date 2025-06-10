@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
 
-import '../screens/agency/agency_page.dart';
-import '../screens/customer/customer_page.dart';
 
 class TaskProvider extends ChangeNotifier {
-  String _currentCustomer = customers.first.name;
+  // String _currentCustomer = customers.first.name;
 
-  String get currentCustomer => _currentCustomer;
+  String get currentCustomer => '_currentCustomer';
 
   void setCustomer(String value) {
-    _currentCustomer = value;
-    notifyListeners();
+    // _currentCustomer = value;
+    // notifyListeners();
   }
 
   void resetFields() {
-    _currentCustomer = customers.first.name;
-    _currentAgency = agencies.first.name;
+    // _currentCustomer = customers.first.name;
+    // _currentAgency = agencies.first.name;
     _currentPriority = 'Low';
     _currentStatus = 'Pending';
     _taskDetailIndex = 0;
   }
 
-  String _currentAgency = agencies.first.name;
+  // String _currentAgency = agencies.first.name;
 
-  String get currentAgency => _currentAgency;
+  String get currentAgency => '_currentAgency';
 
   void setAgency(String value) {
-    print(value);
-    _currentAgency = value;
-    notifyListeners();
+    // print(value);
+    // _currentAgency = value;
+    // notifyListeners();
   }
 
   String _currentPriority = 'Low';

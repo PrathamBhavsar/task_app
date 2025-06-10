@@ -31,8 +31,8 @@ class UserRoleWidget extends StatelessWidget {
               10.wGap,
               UserRoleTile(
                 text: 'Manager',
-                onTap: () => provider.setUserRole(UserRole.agency),
-                isSelected: provider.currentUserRole == UserRole.agency,
+                onTap: () => provider.setUserRole(UserRole.agent),
+                isSelected: provider.currentUserRole == UserRole.agent,
               ),
             ],
           ),

@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../domain/entities/agency.dart';
+import '../../../../domain/entities/user.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/constants/custom_icons.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/action_button.dart';
 import '../../../widgets/bordered_container.dart';
-import '../../../widgets/custom_tag.dart';
-import '../../../widgets/tile_row.dart';
 
 class AgencyTile extends StatelessWidget {
   const AgencyTile({required this.agency, super.key, this.isSelected = false});
 
-  final Agency agency;
+  final User agency;
   final bool isSelected;
 
   @override
@@ -34,20 +32,20 @@ class AgencyTile extends StatelessWidget {
                 Text(agency.email, style: AppTexts.inputHintTextStyle),
               ],
             ),
-            CustomTag(
-              text: agency.status,
-              color: Colors.black,
-              textColor: Colors.white,
-            ),
+            // CustomTag(
+            //   text: agency.status,
+            //   color: Colors.black,
+            //   textColor: Colors.white,
+            // ),
           ],
         ),
         10.hGap,
-        TileRow(
-          key1: 'Rating',
-          value1: '${agency.rating.toString()}/5',
-          key2: 'Pending Tasks',
-          value2: agency.pendingTasks.toString(),
-        ),
+        // TileRow(
+        //   key1: 'Rating',
+        //   value1: '${agency.rating.toString()}/5',
+        //   key2: 'Pending Tasks',
+        //   value2: agency.pendingTasks.toString(),
+        // ),
         10.hGap,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

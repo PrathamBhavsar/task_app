@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/di/di.dart';
@@ -46,9 +45,9 @@ class TaskPage extends StatelessWidget {
             ),
             TabHeader(tabs: [Tab(text: 'Active'), Tab(text: 'Completed')]),
             10.hGap,
-            _buildActiveTasks(
-              provider.tabIndex == 0 ? Task.pendingTasks : Task.completedTasks,
-            ),
+            // _buildActiveTasks(
+            //   provider.tabIndex == 0 ? Task.pendingTasks : Task.completedTasks,
+            // ),
           ],
         ),
   );

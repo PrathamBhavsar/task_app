@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/entities/agency.dart';
 import '../../../domain/entities/message.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
@@ -50,7 +49,7 @@ class TaskDetailPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              task.customer,
+                              task.client.name,
                               style: AppTexts.titleTextStyle.copyWith(
                                 fontVariations: [FontVariation.weight(500)],
                               ),
@@ -71,13 +70,13 @@ class TaskDetailPage extends StatelessWidget {
                         Row(
                           children: [
                             CustomTag(
-                              text: task.priority,
+                              text: task.priority.name,
                               color: Colors.redAccent,
                               textColor: Colors.white,
                             ),
                             10.wGap,
                             CustomTag(
-                              text: task.status,
+                              text: task.status.name,
                               color: Colors.black,
                               textColor: Colors.white,
                             ),
@@ -88,7 +87,7 @@ class TaskDetailPage extends StatelessWidget {
                           key1: 'Due Date',
                           value1: task.dueDate,
                           key2: 'Created',
-                          value2: task.createdAt,
+                          value2: task.createdAt.toString(),
                         ),
                         10.hGap,
                         if (!home.isAgency) ...[
@@ -96,7 +95,7 @@ class TaskDetailPage extends StatelessWidget {
                             key1: 'Due Date',
                             value1: task.dueDate,
                             key2: 'Created',
-                            value2: task.createdAt,
+                            value2: task.createdAt.toString(),
                           ),
                           10.hGap,
                         ],
@@ -105,11 +104,14 @@ class TaskDetailPage extends StatelessWidget {
                           '123 Main St, Anytown, CA 12345',
                           style: AppTexts.inputTextStyle,
                         ),
-                        if (task.note != null && task.note!.isNotEmpty) ...[
-                          10.hGap,
-                          Text('Notes', style: AppTexts.inputHintTextStyle),
-                          Text(task.note ?? '', style: AppTexts.inputTextStyle),
-                        ],
+                        // if (task.notes != null && task.notes!.isNotEmpty) ...[
+                        //   10.hGap,
+                        //   Text('Notes', style: AppTexts.inputHintTextStyle),
+                        //   Text(
+                        //     task.notes ?? '',
+                        //     style: AppTexts.inputTextStyle,
+                        //   ),
+                        // ],
                         10.hGap,
                         if (provider.isMeasurementSent) ...[
                           BorderedContainer(
@@ -219,7 +221,8 @@ class TaskDetailPage extends StatelessWidget {
                           case 1:
                             return _buildTimeline();
                           default:
-                            return _buildMessages(task.messages);
+                            // return _buildMessages(task.messages);
+                            return SizedBox.shrink();
                         }
                       },
                     ),
@@ -300,7 +303,7 @@ class TaskDetailPage extends StatelessWidget {
                   style: AppTexts.inputTextStyle,
                 ),
             if (isProductSelected) ...[
-              _buildDropDown('Select Agency', Agency.names),
+              // _buildDropDown('Select Agency', Agency.names),
               _buildTextInput('Schedule Date', 'Select Date'),
               _buildTextInput(
                 'Instructions for Agency',

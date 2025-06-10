@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/entities/agency.dart';
 import '../../../domain/entities/task.dart';
+import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/constants/dummy_data.dart';
@@ -12,7 +12,6 @@ import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
-import '../../widgets/custom_tag.dart';
 import '../../widgets/tab_header.dart';
 import '../home/widgets/dashboard_containers.dart';
 import '../task/widgets/detailed_task_tile.dart';
@@ -20,7 +19,7 @@ import '../task/widgets/detailed_task_tile.dart';
 class AgencyDetailPage extends StatelessWidget {
   const AgencyDetailPage({required this.agency, super.key});
 
-  final Agency agency;
+  final User agency;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -76,66 +75,61 @@ class AgencyDetailPage extends StatelessWidget {
                         ),
                         10.hGap,
                         _buildInfoColumn(
-                          'Contact Person',
-                          agency.contactPerson,
+                          'Contact Information',
+                          agency.contactNo,
                         ),
-                        _buildInfoColumn('Contact Information', agency.phone),
                         _buildInfoColumn('Address', agency.address),
-                        _buildInfoColumn(
-                          'Contract Start Date',
-                          agency.contractDate,
-                        ),
-                        Text(
-                          'Service Areas',
-                          style: AppTexts.inputHintTextStyle.copyWith(
-                            fontVariations: [FontVariation.weight(600)],
-                          ),
-                        ),
-                        5.hGap,
-                        Wrap(
-                          runSpacing: 10.h,
-                          spacing: 5.w,
-                          runAlignment: WrapAlignment.start,
-                          alignment: WrapAlignment.start,
-                          crossAxisAlignment: WrapCrossAlignment.start,
-                          direction: Axis.horizontal,
-                          children: [
-                            ...List.generate(
-                              agency.serviceAreas.length,
-                              (index) => CustomTag(
-                                text: agency.serviceAreas[index],
-                                color: Colors.black,
-                                textColor: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        5.hGap,
-                        Text(
-                          'Specialities',
-                          style: AppTexts.inputHintTextStyle.copyWith(
-                            fontVariations: [FontVariation.weight(600)],
-                          ),
-                        ),
-                        5.hGap,
-                        Wrap(
-                          runSpacing: 10.h,
-                          spacing: 5.w,
-                          runAlignment: WrapAlignment.start,
-                          alignment: WrapAlignment.start,
-                          crossAxisAlignment: WrapCrossAlignment.start,
-                          direction: Axis.horizontal,
-                          children: [
-                            ...List.generate(
-                              agency.specialities.length,
-                              (index) => CustomTag(
-                                text: agency.specialities[index],
-                                color: Colors.black,
-                                textColor: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Text(
+                        //   'Service Areas',
+                        //   style: AppTexts.inputHintTextStyle.copyWith(
+                        //     fontVariations: [FontVariation.weight(600)],
+                        //   ),
+                        // ),
+                        // 5.hGap,
+                        // Wrap(
+                        //   runSpacing: 10.h,
+                        //   spacing: 5.w,
+                        //   runAlignment: WrapAlignment.start,
+                        //   alignment: WrapAlignment.start,
+                        //   crossAxisAlignment: WrapCrossAlignment.start,
+                        //   direction: Axis.horizontal,
+                        //   children: [
+                        //     ...List.generate(
+                        //       agency.serviceAreas.length,
+                        //       (index) => CustomTag(
+                        //         text: agency.serviceAreas[index],
+                        //         color: Colors.black,
+                        //         textColor: Colors.white,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // 5.hGap,
+                        // Text(
+                        //   'Specialities',
+                        //   style: AppTexts.inputHintTextStyle.copyWith(
+                        //     fontVariations: [FontVariation.weight(600)],
+                        //   ),
+                        // ),
+                        // 5.hGap,
+                        // Wrap(
+                        //   runSpacing: 10.h,
+                        //   spacing: 5.w,
+                        //   runAlignment: WrapAlignment.start,
+                        //   alignment: WrapAlignment.start,
+                        //   crossAxisAlignment: WrapCrossAlignment.start,
+                        //   direction: Axis.horizontal,
+                        //   children: [
+                        //     ...List.generate(
+                        //       agency.specialities.length,
+                        //       (index) => CustomTag(
+                        //         text: agency.specialities[index],
+                        //         color: Colors.black,
+                        //         textColor: Colors.white,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),
@@ -146,18 +140,18 @@ class AgencyDetailPage extends StatelessWidget {
                       Tab(text: 'All'),
                     ],
                   ),
-                  Builder(
-                    builder: (context) {
-                      switch (provider.tabIndex) {
-                        case 0:
-                          return _buildList(context, Task.pendingTasks);
-                        case 1:
-                          return _buildList(context, Task.completedTasks);
-                        default:
-                          return _buildList(context, Task.sampleTasks);
-                      }
-                    },
-                  ),
+                  // Builder(
+                  //   builder: (context) {
+                  //     switch (provider.tabIndex) {
+                  //       case 0:
+                  //         return _buildList(context, Task.pendingTasks);
+                  //       case 1:
+                  //         return _buildList(context, Task.completedTasks);
+                  //       default:
+                  //         return _buildList(context, Task.sampleTasks);
+                  //     }
+                  //   },
+                  // ),
                   10.hGap,
                   _buildQuickActions(context),
                   10.hGap,

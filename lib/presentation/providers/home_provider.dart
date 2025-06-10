@@ -5,7 +5,6 @@ import '../screens/agency/agency_page.dart';
 import '../screens/bill/bill_page.dart';
 import '../screens/customer/customer_page.dart';
 import '../screens/home/pages/admin_home_page.dart';
-import '../screens/quote/quote_page.dart';
 import '../screens/task/task_page.dart';
 
 class HomeProvider extends ChangeNotifier {
@@ -31,7 +30,7 @@ class HomeProvider extends ChangeNotifier {
 
   UserRole get currentUserRole => _currentUserRole;
 
-  bool get isAgency => _currentUserRole == UserRole.agency;
+  bool get isAgency => _currentUserRole == UserRole.agent;
 
   Future<void> setUserRole(UserRole role) async {
     _currentUserRole = role;
@@ -63,7 +62,8 @@ class HomeProvider extends ChangeNotifier {
   List<Widget> get pages => [
     if (currentUserRole == UserRole.admin) firstPage,
     TaskPage(),
-    if (currentUserRole == UserRole.salesperson) QuotePage(),
+    TaskPage(),
+    // if (currentUserRole == UserRole.salesperson) QuotePage(),
     CustomerPage(),
     if (currentUserRole == UserRole.admin) AgencyPage(),
     BillPage(),

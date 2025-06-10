@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../domain/entities/customer.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_text_field.dart';
-import 'widgets/customer_tile.dart';
 
-List<Customer> customers = Customer.sampleCustomers;
+// List<Customer> customers = Customer.sampleCustomers;
 
 class CustomerPage extends StatelessWidget {
   const CustomerPage({super.key});
@@ -49,13 +46,13 @@ class CustomerPage extends StatelessWidget {
   Widget _buildCustomers() => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      ...List.generate(
-        customers.length,
-        (index) => Padding(
-          padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-          child: CustomerTile(customer: customers[index]),
-        ),
-      ),
+      // ...List.generate(
+      //   customers.length,
+      //   (index) => Padding(
+      //     padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+      //     child: CustomerTile(customer: customers[index]),
+      //   ),
+      // ),
     ],
   );
 }

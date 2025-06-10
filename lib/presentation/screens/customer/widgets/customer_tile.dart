@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/entities/customer.dart';
+import '../../../../domain/entities/client.dart';
+
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/bordered_container.dart';
-import '../../../widgets/custom_tag.dart';
-import '../../../widgets/tile_row.dart';
 
 class CustomerTile extends StatelessWidget {
   const CustomerTile({
@@ -14,7 +13,7 @@ class CustomerTile extends StatelessWidget {
     this.isSelected = false,
   });
 
-  final Customer customer;
+  final Client customer;
   final bool isSelected;
 
   @override
@@ -35,28 +34,28 @@ class CustomerTile extends StatelessWidget {
                 Text(customer.email, style: AppTexts.inputHintTextStyle),
               ],
             ),
-            CustomTag(
-              text: customer.status,
-              color: Colors.black,
-              textColor: Colors.white,
-            ),
+            // CustomTag(
+            //   text: customer.status,
+            //   color: Colors.black,
+            //   textColor: Colors.white,
+            // ),
           ],
         ),
         10.hGap,
-        TileRow(
-          key1: 'Phone',
-          value1: customer.phone,
-          key2: 'Total Spent',
-          value2: customer.totalSpent,
-        ),
+        // TileRow(
+        //   key1: 'Phone',
+        //   value1: customer.contactNo,
+        //   key2: 'Total Spent',
+        //   value2: customer.totalSpent,
+        // ),
         10.hGap,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Orders', style: AppTexts.inputHintTextStyle),
-            Text(customer.orders.toString(), style: AppTexts.inputTextStyle),
-          ],
-        ),
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     Text('Orders', style: AppTexts.inputHintTextStyle),
+        //     Text(customer.orders.toString(), style: AppTexts.inputTextStyle),
+        //   ],
+        // ),
       ],
     ),
   );
