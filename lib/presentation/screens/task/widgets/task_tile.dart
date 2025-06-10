@@ -52,7 +52,7 @@ class TaskTile extends StatelessWidget {
                         ),
                         task.agency != null
                             ? Text(
-                              "Agency: ${task.agency}",
+                              "Agency: ${task.agency!.name}",
                               style: AppTexts.inputHintTextStyle,
                             )
                             : SizedBox.shrink(),

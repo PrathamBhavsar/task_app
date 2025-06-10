@@ -17,9 +17,18 @@ class TaskPage extends StatelessWidget {
   const TaskPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Consumer<TaskProvider>(
-    builder:
-        (context, provider, child) => Column(
+  Widget build(BuildContext context) {
+    return Consumer<TaskProvider>(
+      builder: (context, provider, child) {
+        final List<Task> activeTasks =
+            provider.tasks
+                .where((task) => task.status.name == 'Payment Done')
+                .toList();
+        final List<Task> pendingTasks =
+            provider.tasks
+                .where((task) => task.status.name == 'Payment Pending')
+                .toList();
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -45,12 +54,15 @@ class TaskPage extends StatelessWidget {
             ),
             TabHeader(tabs: [Tab(text: 'Active'), Tab(text: 'Completed')]),
             10.hGap,
-            // _buildActiveTasks(
-            //   provider.tabIndex == 0 ? Task.pendingTasks : Task.completedTasks,
-            // ),
+            _buildActiveTasks(
+              provider.tabIndex == 0 ? activeTasks : pendingTasks,
+            ),
           ],
-        ),
-  );
+        );
+      },
+    );
+  }
+
   Widget _buildActiveTasks(List<Task> tasks) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

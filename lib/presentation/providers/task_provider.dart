@@ -11,6 +11,8 @@ class TaskProvider extends ChangeNotifier {
   TaskProvider(this._repository);
 
   List<Task> _tasks = [];
+  List<Task> get tasks => _tasks;
+
   GetTasksState _getTasksState = None();
 
   GetTasksState get getTasksState => _getTasksState;
