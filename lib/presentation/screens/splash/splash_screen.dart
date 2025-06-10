@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/di/di.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../providers/client_provider.dart';
 import '../../providers/task_provider.dart';
 import '../../providers/user_provider.dart';
 
@@ -24,11 +25,13 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       final userProvider = getIt<UserProvider>();
       final taskProvider = getIt<TaskProvider>();
+      final clientProvider = getIt<ClientProvider>();
 
       // Fetch the rest in parallel
       final futures = [
         // userProvider.fetchAllUsers(),
-        taskProvider.fetchAllTasks(),
+        // taskProvider.fetchAllTasks(),
+        clientProvider.fetchAllClients(),
       ];
 
       await Future.wait(futures);

@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../domain/entities/client.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../providers/task_provider.dart';
+import '../../providers/client_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_text_field.dart';
-
-// List<Customer> customers = Customer.sampleCustomers;
+import 'widgets/customer_tile.dart';
 
 class CustomerPage extends StatelessWidget {
   const CustomerPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Consumer<TaskProvider>(
+  Widget build(BuildContext context) => Consumer<ClientProvider>(
     builder:
         (context, provider, child) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,21 +39,21 @@ class CustomerPage extends StatelessWidget {
             10.hGap,
             CustomTextField(hintTxt: 'Search customers...', isSearch: true),
             10.hGap,
-            _buildCustomers(),
+            _buildCustomers(provider.clients),
           ],
         ),
   );
 
-  Widget _buildCustomers() => Column(
+  Widget _buildCustomers(List<Client> clients) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      // ...List.generate(
-      //   customers.length,
-      //   (index) => Padding(
-      //     padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-      //     child: CustomerTile(customer: customers[index]),
-      //   ),
-      // ),
+      ...List.generate(
+        clients.length,
+        (index) => Padding(
+          padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+          child: CustomerTile(customer: clients[index]),
+        ),
+      ),
     ],
   );
 }

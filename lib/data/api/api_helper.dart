@@ -2,9 +2,11 @@ import 'package:either_dart/either.dart';
 
 import '../../core/error/failure.dart';
 import '../../core/services/log_service.dart';
+import '../../domain/entities/client.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/user.dart';
 import '../models/api/api_response.dart';
+import '../responses/get_clients_response.dart';
 import '../responses/get_tasks_response.dart';
 import '../responses/get_users_response.dart';
 import 'api_constants.dart';
@@ -45,6 +47,20 @@ class ApiHelper {
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.tasks);
+    } else {
+      return Left(Failure('Failed to fetch tasks'));
+    }
+  }
+
+  Future<Either<Failure, List<Client>>> getAllClients() async {
+    final ApiResponse<GetClientsResponse> result = await handler
+        .execute<GetClientsResponse>(
+          () => service.get(ApiConstants.client.base),
+          (json) => GetClientsResponse.fromJson(json as Map<String, dynamic>),
+        );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.clients);
     } else {
       return Left(Failure('Failed to fetch tasks'));
     }

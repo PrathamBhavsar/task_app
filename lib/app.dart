@@ -6,6 +6,7 @@ import 'core/di/di.dart';
 import 'core/router/app_router.dart';
 import 'presentation/providers/appointment_provider.dart';
 import 'presentation/providers/auth_provider.dart';
+import 'presentation/providers/client_provider.dart';
 import 'presentation/providers/home_provider.dart';
 import 'presentation/providers/measurement_provider.dart';
 import 'presentation/providers/task_provider.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
           ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),
+          ChangeNotifierProvider(create: (_) => getIt<ClientProvider>()),
           ChangeNotifierProvider(create: (_) => getIt<HomeProvider>()),
           ChangeNotifierProvider(create: (_) => getIt<TaskProvider>()),
           ChangeNotifierProvider(create: (_) => getIt<AppointmentProvider>()),
