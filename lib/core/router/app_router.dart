@@ -10,7 +10,7 @@ class AppRouter {
     _router = GoRouter(
       debugLogDiagnostics: true,
       requestFocus: true,
-      initialLocation: isLoggedIn ? AppRoutes.splash : AppRoutes.auth,
+      initialLocation: isLoggedIn ? AppRoutes.auth : AppRoutes.auth,
       routes: appRoutes,
     );
   }

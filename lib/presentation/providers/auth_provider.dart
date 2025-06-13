@@ -10,15 +10,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _otpIndex = 0;
-  int get otpIndex => _otpIndex;
-
-  void setOtpIndex(int value) {
-    _otpIndex = value;
-    notifyListeners();
-  }
-
-
   String _selectedRole = 'Admin';
 
   String get selectedRole => _selectedRole;
