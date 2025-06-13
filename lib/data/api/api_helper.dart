@@ -1,7 +1,7 @@
 import 'package:either_dart/either.dart';
 
 import '../../core/error/failure.dart';
-import '../../core/services/log_service.dart';
+import '../../core/helpers/log_helper.dart';
 import '../../domain/entities/client.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/user.dart';
@@ -16,7 +16,7 @@ import 'api_service.dart';
 class ApiHelper {
   final ApiService service;
   final ApiHandler handler;
-  final LogService logger;
+  final LogHelper logger;
 
   ApiHelper({
     required this.service,

@@ -1,24 +1,19 @@
 import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/helpers/cache_helper.dart';
 import '../../../utils/enums/user_role.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc()
-    : super(
-        const HomeState(
-          userRole: UserRole.salesperson,
-          barIndex: 0,
-          isActive: true,
-        ),
-      ) {
+  final CacheHelper _cache;
+
+  HomeBloc(this._cache)
+    : super(const HomeState(userRole: UserRole.salesperson, barIndex: 0)) {
     on<LoadUserRoleEvent>(_onLoadUserRole);
     on<SetUserRoleEvent>(_onSetUserRole);
     on<SetBarIndexEvent>(_onSetBarIndex);
-    on<ToggleActiveEvent>(_onToggleActive);
-    on<SetActiveEvent>(_onSetActive);
   }
 
   Future<void> _onLoadUserRole(
@@ -45,13 +40,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _onSetBarIndex(SetBarIndexEvent event, Emitter<HomeState> emit) {
     emit(state.copyWith(barIndex: event.index));
-  }
-
-  void _onToggleActive(ToggleActiveEvent event, Emitter<HomeState> emit) {
-    emit(state.copyWith(isActive: !state.isActive));
-  }
-
-  void _onSetActive(SetActiveEvent event, Emitter<HomeState> emit) {
-    emit(state.copyWith(isActive: event.isActive));
   }
 }

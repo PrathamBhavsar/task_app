@@ -20,8 +20,10 @@ import '../../presentation/providers/home_provider.dart';
 import '../../presentation/providers/measurement_provider.dart';
 import '../../presentation/providers/task_provider.dart';
 import '../../presentation/providers/user_provider.dart';
+import '../helpers/cache_helper.dart';
+import '../helpers/shared_prefs_helper.dart';
 import '../helpers/snack_bar_helper.dart';
-import '../services/log_service.dart';
+import '../helpers/log_helper.dart';
 
 final getIt = GetIt.instance;
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -48,15 +50,13 @@ void setupApiModule() {
 
   getIt.registerLazySingleton<ApiService>(() => ApiService(getIt<Dio>()));
 
-  getIt.registerLazySingleton<ApiHandler>(
-    () => ApiHandler(getIt<LogService>()),
-  );
+  getIt.registerLazySingleton<ApiHandler>(() => ApiHandler(getIt<LogHelper>()));
 
   getIt.registerLazySingleton<ApiHelper>(
     () => ApiHelper(
       service: getIt<ApiService>(),
       handler: getIt<ApiHandler>(),
-      logger: getIt<LogService>(),
+      logger: getIt<LogHelper>(),
     ),
   );
 }
@@ -83,7 +83,7 @@ void setupUseCases() {
 }
 
 void setupHelpers() {
-  getIt.registerLazySingleton<LogService>(LogService.new);
+  getIt.registerLazySingleton<LogHelper>(LogHelper.new);
 
   getIt.registerLazySingleton<AwesomeDioInterceptor>(
     () => AwesomeDioInterceptor(
@@ -97,12 +97,18 @@ void setupHelpers() {
   getIt.registerLazySingleton<SnackBarHelper>(
     () => SnackBarHelper(scaffoldMessengerKey),
   );
+
+  getIt.registerLazySingleton<SharedPrefHelper>(SharedPrefHelper.new);
+
+  getIt.registerLazySingleton<CacheHelper>(
+    () => CacheHelper(getIt<SharedPrefHelper>()),
+  );
 }
 
 void setupBlocs() {
   getIt.registerFactory(() => ClientBloc(getIt<GetAllClientsUseCase>()));
 
-  getIt.registerFactory(HomeBloc.new);
+  getIt.registerFactory(() => HomeBloc(getIt<CacheHelper>()));
 }
 
 void setupProviders() {

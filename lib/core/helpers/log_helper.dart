@@ -1,13 +1,13 @@
 import 'package:logger/logger.dart';
 
-class LogService {
-  static final LogService _instance = LogService._();
+class LogHelper {
+  static final LogHelper _instance = LogHelper._();
 
-  LogService._() {
+  LogHelper._() {
     _initConsoleLogger();
   }
 
-  factory LogService() => _instance;
+  factory LogHelper() => _instance;
 
   late final Logger _consoleLogger;
 

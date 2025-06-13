@@ -14,52 +14,49 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeBloc, HomeState>(
-      listener: (BuildContext context, HomeState state) {},
-      child: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          return Scaffold(
-            drawer: const SelectionDrawer(),
-            appBar: AppBar(title: Text(state.currentTitle)),
-            bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colors.white,
-              elevation: 0,
-              showUnselectedLabels: true,
-              selectedItemColor: Colors.black,
-              unselectedItemColor: AppColors.accent,
-              selectedLabelStyle: TextStyle(color: Colors.black),
-              unselectedLabelStyle: TextStyle(color: AppColors.secondary),
-              currentIndex: state.barIndex,
-              onTap: (i) => context.read<HomeBloc>().add(SetBarIndexEvent(i)),
-              items: [
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return Scaffold(
+          drawer: const SelectionDrawer(),
+          appBar: AppBar(title: Text(state.currentTitle)),
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            showUnselectedLabels: true,
+            selectedItemColor: Colors.black,
+            unselectedItemColor: AppColors.accent,
+            selectedLabelStyle: TextStyle(color: Colors.black),
+            unselectedLabelStyle: TextStyle(color: AppColors.secondary),
+            currentIndex: state.barIndex,
+            onTap: (i) => context.read<HomeBloc>().add(SetBarIndexEvent(i)),
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.dashboard),
+                label: "Dashboard",
+              ),
+              BottomNavigationBarItem(icon: Icon(Icons.task), label: "Tasks"),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: "Customers",
+              ),
+              if (state.userRole == UserRole.admin)
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.dashboard),
-                  label: "Dashboard",
+                  icon: Icon(Icons.business),
+                  label: "Agencies",
                 ),
-                BottomNavigationBarItem(icon: Icon(Icons.task), label: "Tasks"),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: "Customers",
-                ),
-                if (state.userRole == UserRole.admin)
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.business),
-                    label: "Agencies",
-                  ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.receipt),
-                  label: "Bills",
-                ),
-              ],
-            ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: state.currentPage,
-              ).padAll(AppPaddings.appPaddingInt),
-            ),
-          );
-        },
-      ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.receipt),
+                label: "Bills",
+              ),
+            ],
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: state.currentPage,
+            ).padAll(AppPaddings.appPaddingInt),
+          ),
+        );
+      },
     );
   }
 }

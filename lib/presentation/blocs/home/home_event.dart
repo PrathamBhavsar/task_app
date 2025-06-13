@@ -18,11 +18,3 @@ class SetBarIndexEvent extends HomeEvent {
 
   SetBarIndexEvent(this.index);
 }
-
-class ToggleActiveEvent extends HomeEvent {}
-
-class SetActiveEvent extends HomeEvent {
-  final bool isActive;
-
-  SetActiveEvent(this.isActive);
-}

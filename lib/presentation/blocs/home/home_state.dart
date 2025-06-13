@@ -11,46 +11,34 @@ import '../../screens/task/task_page.dart';
 class HomeState {
   final UserRole userRole;
   final int barIndex;
-  final bool isActive;
 
-  const HomeState({
-    required this.userRole,
-    required this.barIndex,
-    required this.isActive,
-  });
+  const HomeState({required this.userRole, required this.barIndex});
 
-  List<String> get titles =>
-      [
-        "Dashboard",
-        "Tasks",
-        "Customers",
-        "Agencies",
-        "Bills",
-      ];
+  List<String> get titles => [
+    "Dashboard",
+    "Tasks",
+    "Customers",
+    "Agencies",
+    "Bills",
+  ];
 
-  List<Widget> get pages =>
-      [
-        if (userRole == UserRole.admin) const AdminHomePage(),
-        const TaskPage(),
-        const TaskPage(),
-        const ClientPage(),
-        if (userRole == UserRole.admin) const AgencyPage(),
-        const BillPage(),
-      ];
+  List<Widget> get pages => [
+    if (userRole == UserRole.admin) const AdminHomePage(),
+    const TaskPage(),
+    const TaskPage(),
+    const ClientPage(),
+    if (userRole == UserRole.admin) const AgencyPage(),
+    const BillPage(),
+  ];
 
   Widget get currentPage => pages[barIndex];
 
   String get currentTitle => titles[barIndex];
 
-  HomeState copyWith({
-    UserRole? userRole,
-    int? barIndex,
-    bool? isActive,
-  }) {
+  HomeState copyWith({UserRole? userRole, int? barIndex}) {
     return HomeState(
       userRole: userRole ?? this.userRole,
       barIndex: barIndex ?? this.barIndex,
-      isActive: isActive ?? this.isActive,
     );
   }
 }

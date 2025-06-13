@@ -4,12 +4,12 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import '../../core/helpers/parse_helper.dart';
-import '../../core/services/log_service.dart';
+import '../../core/helpers/log_helper.dart';
 import '../models/api/api_error.dart';
 import '../models/api/api_response.dart';
 
 class ApiHandler {
-  final LogService logger;
+  final LogHelper logger;
 
   ApiHandler(this.logger);
 
