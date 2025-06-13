@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 import 'core/di/di.dart';
 import 'core/router/app_router.dart';
-import 'presentation/providers/appointment_provider.dart';
-import 'presentation/providers/auth_provider.dart';
-import 'presentation/providers/client_provider.dart';
-import 'presentation/providers/home_provider.dart';
-import 'presentation/providers/measurement_provider.dart';
-import 'presentation/providers/task_provider.dart';
-import 'presentation/providers/user_provider.dart';
+import 'presentation/blocs/client/client_bloc.dart';
+import 'presentation/blocs/home/home_bloc.dart';
 import 'utils/constants/app_constants.dart';
 
 class MyApp extends StatelessWidget {
@@ -22,15 +17,18 @@ class MyApp extends StatelessWidget {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: MultiProvider(
+      child: MultiBlocProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
-          ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),
-          ChangeNotifierProvider(create: (_) => getIt<ClientProvider>()),
-          ChangeNotifierProvider(create: (_) => getIt<HomeProvider>()),
-          ChangeNotifierProvider(create: (_) => getIt<TaskProvider>()),
-          ChangeNotifierProvider(create: (_) => getIt<AppointmentProvider>()),
-          ChangeNotifierProvider(create: (_) => getIt<MeasurementProvider>()),
+          BlocProvider(create: (_) => getIt<ClientBloc>()),
+          BlocProvider(create: (_) => getIt<HomeBloc>()),
+
+          // ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
+          // ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),
+          // ChangeNotifierProvider(create: (_) => getIt<ClientProvider>()),
+          // ChangeNotifierProvider(create: (_) => getIt<HomeProvider>()),
+          // ChangeNotifierProvider(create: (_) => getIt<TaskProvider>()),
+          // ChangeNotifierProvider(create: (_) => getIt<AppointmentProvider>()),
+          // ChangeNotifierProvider(create: (_) => getIt<MeasurementProvider>()),
         ],
         child: MaterialApp.router(
           routerConfig: AppRouter.router,

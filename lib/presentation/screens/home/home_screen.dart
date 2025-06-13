@@ -1,82 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/constants/app_constants.dart';
-import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/enums/user_role.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../providers/home_provider.dart';
+import '../../blocs/home/home_bloc.dart';
+import '../../blocs/home/home_event.dart';
+import '../../blocs/home/home_state.dart';
 import '../../widgets/selection_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => Consumer<HomeProvider>(
-    builder: (context, provider, child) {
-      final bool isAdmin = provider.currentUserRole == UserRole.admin;
-      final bool isSales = provider.currentUserRole == UserRole.salesperson;
-      return Scaffold(
-        drawer: const SelectionDrawer(),
-        appBar:
-            provider.currentBarIndex == 0
-                ? AppBar(
-                  title: Text("Dashboard", style: AppTexts.titleTextStyle),
-                  forceMaterialTransparency: true,
-                )
-                : null,
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          showUnselectedLabels: true,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: AppColors.accent,
-          selectedLabelStyle: TextStyle(color: Colors.black),
-          unselectedLabelStyle: TextStyle(color: AppColors.secondary),
-          currentIndex: provider.currentBarIndex,
-          onTap: (i) => provider.setBarIndex(i),
-          items: [
-            if (isAdmin)
-              BottomNavigationBarItem(
-                icon: Icon(CustomIcon.layout),
-                label: 'Dashboard',
-                backgroundColor: Colors.white,
-              ),
-            BottomNavigationBarItem(
-              icon: Icon(CustomIcon.clipboardList),
-              label: isAdmin ? 'Tasks' : 'My Tasks',
+  Widget build(BuildContext context) {
+    return BlocListener<HomeBloc, HomeState>(
+      listener: (BuildContext context, HomeState state) {},
+      child: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          return Scaffold(
+            drawer: const SelectionDrawer(),
+            appBar: AppBar(title: Text(state.currentTitle)),
+            bottomNavigationBar: BottomNavigationBar(
               backgroundColor: Colors.white,
+              elevation: 0,
+              showUnselectedLabels: true,
+              selectedItemColor: Colors.black,
+              unselectedItemColor: AppColors.accent,
+              selectedLabelStyle: TextStyle(color: Colors.black),
+              unselectedLabelStyle: TextStyle(color: AppColors.secondary),
+              currentIndex: state.barIndex,
+              onTap: (i) => context.read<HomeBloc>().add(SetBarIndexEvent(i)),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.dashboard),
+                  label: "Dashboard",
+                ),
+                BottomNavigationBarItem(icon: Icon(Icons.task), label: "Tasks"),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: "Customers",
+                ),
+                if (state.userRole == UserRole.admin)
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.business),
+                    label: "Agencies",
+                  ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.receipt),
+                  label: "Bills",
+                ),
+              ],
             ),
-            if (isSales)
-              BottomNavigationBarItem(
-                icon: Icon(Icons.qr_code),
-                label: 'Quotes',
-                backgroundColor: Colors.white,
-              ),
-            BottomNavigationBarItem(
-              icon: Icon(CustomIcon.users),
-              label: 'Customers',
-              backgroundColor: Colors.white,
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: state.currentPage,
+              ).padAll(AppPaddings.appPaddingInt),
             ),
-            if (isAdmin)
-              BottomNavigationBarItem(
-                icon: Icon(CustomIcon.package),
-                label: 'Agencies',
-                backgroundColor: Colors.white,
-              ),
-            BottomNavigationBarItem(
-              icon: Icon(CustomIcon.receiptIndianRupee),
-              label: isAdmin ? 'Bills' : 'My Bills',
-              backgroundColor: Colors.white,
-            ),
-          ],
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: provider.currentPage,
-          ).padAll(AppPaddings.appPaddingInt),
-        ),
-      );
-    },
-  );
+          );
+        },
+      ),
+    );
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:awesome_dio_interceptor/awesome_dio_interceptor.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../data/api/api_constants.dart';
@@ -10,21 +10,28 @@ import '../../data/api/api_service.dart';
 import '../../data/repositories/client_repository.dart';
 import '../../data/repositories/task_repository.dart';
 import '../../data/repositories/user_repository.dart';
+import '../../domain/repositories/client_repo.dart';
+import '../../domain/usecases/client_usecase.dart';
+import '../../presentation/blocs/client/client_bloc.dart';
+import '../../presentation/blocs/home/home_bloc.dart';
 import '../../presentation/providers/appointment_provider.dart';
 import '../../presentation/providers/auth_provider.dart';
-import '../../presentation/providers/client_provider.dart';
 import '../../presentation/providers/home_provider.dart';
 import '../../presentation/providers/measurement_provider.dart';
 import '../../presentation/providers/task_provider.dart';
 import '../../presentation/providers/user_provider.dart';
+import '../helpers/snack_bar_helper.dart';
 import '../services/log_service.dart';
 
 final getIt = GetIt.instance;
+final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void setupLocator() {
   setupApiModule();
   setupHelpers();
   setupRepositories();
+  setupUseCases();
+  setupBlocs();
   setupProviders();
 }
 
@@ -63,8 +70,15 @@ void setupRepositories() {
     () => TaskRepository(getIt<ApiHelper>()),
   );
 
+  // Data layer
   getIt.registerLazySingleton<ClientRepository>(
-    () => ClientRepository(getIt<ApiHelper>()),
+    () => ClientRepositoryImpl(getIt<ApiHelper>()),
+  );
+}
+
+void setupUseCases() {
+  getIt.registerLazySingleton(
+    () => GetAllClientsUseCase(getIt<ClientRepository>()),
   );
 }
 
@@ -79,6 +93,16 @@ void setupHelpers() {
       logger: debugPrint,
     ),
   );
+
+  getIt.registerLazySingleton<SnackBarHelper>(
+    () => SnackBarHelper(scaffoldMessengerKey),
+  );
+}
+
+void setupBlocs() {
+  getIt.registerFactory(() => ClientBloc(getIt<GetAllClientsUseCase>()));
+
+  getIt.registerFactory(HomeBloc.new);
 }
 
 void setupProviders() {
@@ -86,10 +110,6 @@ void setupProviders() {
 
   getIt.registerLazySingleton<UserProvider>(
     () => UserProvider(getIt<UserRepository>()),
-  );
-
-  getIt.registerLazySingleton<ClientProvider>(
-        () => ClientProvider(getIt<ClientRepository>()),
   );
 
   getIt.registerLazySingleton<HomeProvider>(HomeProvider.new);

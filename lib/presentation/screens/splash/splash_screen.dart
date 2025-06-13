@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/di/di.dart';
 import '../../../utils/constants/app_constants.dart';
-import '../../providers/client_provider.dart';
-import '../../providers/task_provider.dart';
-import '../../providers/user_provider.dart';
+import '../../blocs/client/client_bloc.dart';
+import '../../blocs/client/client_event.dart';
+import '../../blocs/client/client_state.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,36 +18,33 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeApp();
-  }
-
-  Future<void> _initializeApp() async {
-    try {
-      final userProvider = getIt<UserProvider>();
-      final taskProvider = getIt<TaskProvider>();
-      final clientProvider = getIt<ClientProvider>();
-
-      // Fetch the rest in parallel
-      final futures = [
-        // userProvider.fetchAllUsers(),
-        // taskProvider.fetchAllTasks(),
-        clientProvider.fetchAllClients(),
-      ];
-
-      await Future.wait(futures);
-
-      if (!mounted) {
-        return;
-      }
-
-      context.go(AppRoutes.home);
-    } catch (e) {
-      debugPrint("Initialization failed: $e");
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ClientBloc>().add(FetchClientsRequested());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: CircularProgressIndicator()));
+    return Scaffold(
+      body: BlocListener<ClientBloc, ClientState>(
+        listener: (context, state) {
+          if (state is ClientLoadSuccess) {
+            context.go(AppRoutes.home);
+          } else if (state is ClientLoadFailure) {
+            Center(child: Text('There was an issue loading!'));
+          }
+        },
+        child: Center(
+          child: BlocBuilder<ClientBloc, ClientState>(
+            builder: (context, state) {
+              if (state is ClientLoadInProgress) {
+                return CircularProgressIndicator();
+              }
+              return SizedBox.shrink();
+            },
+          ),
+        ),
+      ),
+    );
   }
 }

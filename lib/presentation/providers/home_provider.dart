@@ -64,7 +64,7 @@ class HomeProvider extends ChangeNotifier {
     TaskPage(),
     TaskPage(),
     // if (currentUserRole == UserRole.salesperson) QuotePage(),
-    CustomerPage(),
+    ClientPage(),
     if (currentUserRole == UserRole.admin) AgencyPage(),
     BillPage(),
   ];
