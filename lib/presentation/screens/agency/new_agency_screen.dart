@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../providers/home_provider.dart';
+import '../../blocs/auth/auth_bloc.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
@@ -83,20 +84,20 @@ class _NewAgencyScreenState extends State<NewAgencyScreen> {
                           fontVariations: [FontVariation.weight(600)],
                         ),
                       ),
-                      Consumer<HomeProvider>(
-                        builder:
-                            (
-                              BuildContext context,
-                              HomeProvider provider,
-                              Widget? child,
-                            ) => GestureDetector(
-                              onTap: () => provider.toggleActive(),
-                              child: CustomTag(
-                                text: provider.isActive ? 'Active' : 'Inactive',
-                                color: Colors.black,
-                                textColor: Colors.white,
-                              ),
+                      BlocBuilder<AuthBloc, AuthState>(
+                        builder: (context, state) {
+                          return GestureDetector(
+                            onTap:
+                                () =>
+                                    context.read<AuthBloc>()
+                                      ..add(ToggleVisibilityEvent()),
+                            child: CustomTag(
+                              text: state.isVisible ? 'Active' : 'Inactive',
+                              color: Colors.black,
+                              textColor: Colors.white,
                             ),
+                          );
+                        },
                       ),
                     ],
                   ),

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'core/di/di.dart';
 import 'core/router/app_router.dart';
+import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/client/client_bloc.dart';
 import 'presentation/blocs/home/home_bloc.dart';
 import 'utils/constants/app_constants.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(create: (_) => getIt<ClientBloc>()),
           BlocProvider(create: (_) => getIt<HomeBloc>()),
+          BlocProvider(create: (_) => getIt<AuthBloc>()),
 
           // ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
           // ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),

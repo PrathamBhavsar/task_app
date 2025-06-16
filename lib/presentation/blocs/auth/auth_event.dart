@@ -4,9 +4,7 @@ part of 'auth_bloc.dart';
 abstract class AuthEvent {}
 
 class ToggleVisibilityEvent extends AuthEvent {
-  final bool isVisible;
-
-  ToggleVisibilityEvent(this.isVisible);
+  ToggleVisibilityEvent();
 }
 
 class SetUserRoleEvent extends AuthEvent {

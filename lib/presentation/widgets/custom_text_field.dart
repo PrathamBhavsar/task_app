@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import '../../utils/constants/app_constants.dart';
 import '../../utils/constants/custom_icons.dart';
-import '../providers/auth_provider.dart';
+import '../blocs/auth/auth_bloc.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -39,16 +39,17 @@ class CustomTextField extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) => Consumer<AuthProvider>(
-    builder:
-        (context, provider, child) => TextField(
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        return TextField(
           autofocus: false,
           controller: controller,
           focusNode: focusNode,
           enabled: isEnabled,
           maxLines: isMultiline ? null : 1,
           minLines: isMultiline ? 3 : 1,
-          obscureText: isPassword ? !provider.isVisible : false,
+          obscureText: isPassword ? !state.isVisible : false,
           onChanged: onChangedFunc,
           onTap: onTap,
           keyboardType: keyboardType ?? TextInputType.text,
@@ -61,11 +62,16 @@ class CustomTextField extends StatelessWidget {
                   : null,
           style: AppTexts.inputTextStyle,
           textAlignVertical: TextAlignVertical.center,
-          decoration: _buildInputDecoration(provider),
-        ),
-  );
+          decoration: _buildInputDecoration(
+            state.isVisible,
+            () => context.read<AuthBloc>().add(ToggleVisibilityEvent()),
+          ),
+        );
+      },
+    );
+  }
 
-  InputDecoration _buildInputDecoration(AuthProvider provider) =>
+  InputDecoration _buildInputDecoration(bool isVisible, Function() onTap) =>
       InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
         prefixIcon:
@@ -82,12 +88,12 @@ class CustomTextField extends StatelessWidget {
                 ? IconButton(
                   icon: Icon(
                     weight: 20,
-                    provider.isVisible
+                    isVisible
                         ? Icons.visibility_outlined
                         : Icons.visibility_off_outlined,
                     color: AppColors.accent,
                   ),
-                  onPressed: provider.toggleVisibility,
+                  onPressed: onTap,
                 )
                 : null,
         prefixText: isPhone ? "+91 " : null,

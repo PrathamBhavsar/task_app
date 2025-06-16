@@ -12,11 +12,10 @@ import '../../data/repositories/task_repository.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../domain/repositories/client_repo.dart';
 import '../../domain/usecases/client_usecase.dart';
+import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
 import '../../presentation/providers/appointment_provider.dart';
-import '../../presentation/providers/auth_provider.dart';
-import '../../presentation/providers/home_provider.dart';
 import '../../presentation/providers/measurement_provider.dart';
 import '../../presentation/providers/task_provider.dart';
 import '../../presentation/providers/user_provider.dart';
@@ -109,16 +108,15 @@ void setupBlocs() {
   getIt.registerFactory(() => ClientBloc(getIt<GetAllClientsUseCase>()));
 
   getIt.registerFactory(() => HomeBloc(getIt<CacheHelper>()));
+
+  getIt.registerFactory(AuthBloc.new);
 }
 
 void setupProviders() {
-  getIt.registerLazySingleton<AuthProvider>(AuthProvider.new);
 
   getIt.registerLazySingleton<UserProvider>(
     () => UserProvider(getIt<UserRepository>()),
   );
-
-  getIt.registerLazySingleton<HomeProvider>(HomeProvider.new);
 
   getIt.registerLazySingleton<TaskProvider>(
     () => TaskProvider(getIt<TaskRepository>()),
