@@ -6,6 +6,7 @@ import '../../domain/entities/client.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/user.dart';
 import '../models/api/api_response.dart';
+import '../models/payloads/auth_payload.dart';
 import '../responses/get_clients_response.dart';
 import '../responses/get_tasks_response.dart';
 import '../responses/get_users_response.dart';
@@ -63,6 +64,20 @@ class ApiHelper {
       return Right(result.data!.clients);
     } else {
       return Left(Failure('Failed to fetch tasks'));
+    }
+  }
+
+  Future<Either<Failure, User>> login(AuthPayload data) async {
+    final ApiResponse<User> result = await handler
+        .execute<User>(
+          () => service.post(ApiConstants.user.login, data: data.toJson()),
+          (json) => User.fromJson(json as Map<String, dynamic>),
+        );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!);
+    } else {
+      return Left(Failure('Failed to login'));
     }
   }
 }

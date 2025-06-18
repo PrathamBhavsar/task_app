@@ -1,7 +1,7 @@
 class ApiConstants {
   /// Base URLs
-  static const String _localDomainUrl = "http://192.168.1.6:8000";
-  static const String _developmentDomainUrl = "https://node-dev.everlink.co";
+  static const String _localDomainUrl = "http://192.168.1.4:8000";
+  static const String _developmentDomainUrl = "";
 
   static String currentDomainBaseUrl = _localDomainUrl;
 
@@ -38,7 +38,6 @@ class _GenericRoutes {
   _GenericRoutes(this.path);
 
   String get base => ApiConstants._build(path);
-  String get fetchAll => ApiConstants._build("$path/fetchall");
   String get update => ApiConstants._build("$path/update");
   String get delete => ApiConstants._build("$path/delete");
 

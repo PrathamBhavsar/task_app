@@ -2,7 +2,7 @@ import 'package:either_dart/either.dart';
 
 import '../../core/error/failure.dart';
 import '../../domain/entities/client.dart';
-import '../../domain/repositories/client_repo.dart';
+import '../../domain/repositories/client_repository.dart';
 import '../api/api_helper.dart';
 
 class ClientRepositoryImpl implements ClientRepository {

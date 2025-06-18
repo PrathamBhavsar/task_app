@@ -2,7 +2,7 @@ import 'package:either_dart/either.dart';
 
 import '../../core/error/failure.dart';
 import '../entities/client.dart';
-import '../repositories/client_repo.dart';
+import '../repositories/client_repository.dart';
 
 class GetAllClientsUseCase {
   final ClientRepository repository;

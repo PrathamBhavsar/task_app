@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
           // ChangeNotifierProvider(create: (_) => getIt<MeasurementProvider>()),
         ],
         child: MaterialApp.router(
+          scaffoldMessengerKey: scaffoldMessengerKey,
           routerConfig: AppRouter.router,
           theme: AppThemes.themeData,
         ),

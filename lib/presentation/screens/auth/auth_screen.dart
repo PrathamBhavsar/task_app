@@ -30,75 +30,88 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    resizeToAvoidBottomInset: true,
-    body: GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: SafeArea(
-        child: LayoutBuilder(
-          builder:
-              (context, constraints) => SingleChildScrollView(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        CustomIcon.package,
-                        color: Colors.black,
-                        size: 60.sp,
-                      ),
-                      Text(
-                        'Floww.',
-                        style: AppTexts.titleTextStyle.copyWith(
-                          fontSize: 30.sp,
-                          fontVariations: [FontVariation.weight(900)],
-                        ),
-                        softWrap: true,
-                      ),
-                      40.hGap,
-                      Text(
-                        'Sign in to your account to continue',
-                        style: AppTexts.inputHintTextStyle.copyWith(
-                          fontSize: 16.sp,
-                        ),
-                      ),
-                      10.hGap,
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Email', style: AppTexts.labelTextStyle),
-                      ),
-                      10.hGap,
-                      CustomTextField(
-                        controller: emailController,
-                        hintTxt: 'name@example.com',
-                        keyboardType: TextInputType.emailAddress,
-                      ),
-                      10.hGap,
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text('Password', style: AppTexts.labelTextStyle),
-                      ),
-                      10.hGap,
-                      CustomTextField(
-                        controller: passController,
-                        keyboardType: TextInputType.visiblePassword,
-                        isPassword: true,
-                      ),
-                      10.hGap,
-                      Align(
-                        alignment: Alignment.centerLeft,
-
-                        child: Text(
-                          'Select your role',
-                          style: AppTexts.labelTextStyle,
-                        ),
-                      ),
-                      10.hGap,
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          return Column(
+                  child: BlocConsumer<AuthBloc, AuthState>(
+                    listener: (context, state) {
+                      if (state.status == AuthStatus.success) {
+                        context.go(AppRoutes.home);
+                      }
+                    },
+                    builder: (context, state) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            CustomIcon.package,
+                            color: Colors.black,
+                            size: 60.sp,
+                          ),
+                          Text(
+                            'Floww.',
+                            style: AppTexts.titleTextStyle.copyWith(
+                              fontSize: 30.sp,
+                              fontVariations: [FontVariation.weight(900)],
+                            ),
+                            softWrap: true,
+                          ),
+                          40.hGap,
+                          Text(
+                            'Sign in to your account to continue',
+                            style: AppTexts.inputHintTextStyle.copyWith(
+                              fontSize: 16.sp,
+                            ),
+                          ),
+                          10.hGap,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Email',
+                              style: AppTexts.labelTextStyle,
+                            ),
+                          ),
+                          10.hGap,
+                          CustomTextField(
+                            controller: emailController,
+                            hintTxt: 'name@example.com',
+                            keyboardType: TextInputType.emailAddress,
+                            isEnabled: state.status != AuthStatus.loading,
+                          ),
+                          10.hGap,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Password',
+                              style: AppTexts.labelTextStyle,
+                            ),
+                          ),
+                          10.hGap,
+                          CustomTextField(
+                            controller: passController,
+                            keyboardType: TextInputType.visiblePassword,
+                            isPassword: true,
+                            isEnabled: state.status != AuthStatus.loading,
+                          ),
+                          10.hGap,
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Select your role',
+                              style: AppTexts.labelTextStyle,
+                            ),
+                          ),
+                          10.hGap,
+                          Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -121,25 +134,33 @@ class _AuthScreenState extends State<AuthScreen> {
                                 role: UserRole.agent,
                               ),
                             ],
-                          );
-                        },
-                      ),
-                      10.hGap,
-                      ActionButton(
-                        backgroundColor: Colors.black,
-                        label: 'Sign In',
-                        fontColor: Colors.white,
-                        onPress:
-                            () => context.pushReplacement(AppRoutes.splash),
-                      ),
-                    ],
+                          ),
+                          10.hGap,
+                          ActionButton(
+                            backgroundColor: Colors.black,
+                            label: 'Log In',
+                            fontColor: Colors.white,
+                            isDisabled: state.status == AuthStatus.loading,
+                            onPress:
+                                () => context.read<AuthBloc>().add(
+                                  LoginEvent(
+                                    email: emailController.text,
+                                    password: passController.text,
+                                  ),
+                                ),
+                          ),
+                        ],
+                      );
+                    },
                   ).padAll(AppPaddings.appPaddingInt),
                 ),
-              ),
+              );
+            },
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 
   Widget _buildUserRoleRadio({
     required BuildContext context,

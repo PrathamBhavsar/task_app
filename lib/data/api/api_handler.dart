@@ -10,8 +10,9 @@ import '../models/api/api_response.dart';
 
 class ApiHandler {
   final LogHelper logger;
+  final void Function(ApiError error)? onError;
 
-  ApiHandler(this.logger);
+  ApiHandler(this.logger, {this.onError});
 
   Future<ApiResponse<T>> execute<T>(
     Future<Response<String>> Function() apiCall,
@@ -58,7 +59,7 @@ class ApiHandler {
       }
 
       if (data is Map<String, dynamic>) {
-        return parseApiError<T>(statusCode, data);
+        return parseApiError<T>(statusCode, data, onError: onError);
       } else {
         if (dioError.type == DioExceptionType.connectionTimeout ||
             dioError.type == DioExceptionType.sendTimeout ||
@@ -70,12 +71,12 @@ class ApiHandler {
             ),
           );
         } else if (dioError.type == DioExceptionType.badResponse) {
-          return ApiResponse.failure(
-            ApiError.build(
-              statusCode: statusCode,
-              message: "Bad response from server.",
-            ),
+          final error = ApiError.build(
+            statusCode: statusCode,
+            message: "Bad response from server.",
           );
+          onError?.call(error);
+          return ApiResponse.failure(error);
         } else if (dioError.type == DioExceptionType.cancel) {
           return ApiResponse.failure(
             ApiError.build(statusCode: 499, message: "Request was cancelled."),
@@ -102,15 +103,15 @@ class ApiHandler {
   }
 
   ApiResponse<T> _handleException<T>(Exception exception) {
-    if (exception is TimeoutException) {
-      return ApiResponse.failure(
-        ApiError.build(
-          statusCode: 408,
-          message: "Request timed out. Please try again.",
-        ),
-      );
-    } else {
-      return ApiResponse.failure(ApiError.unknownError());
-    }
+    final error =
+        (exception is TimeoutException)
+            ? ApiError.build(
+              statusCode: 408,
+              message: "Request timed out. Please try again.",
+            )
+            : ApiError.unknownError();
+
+    onError?.call(error);
+    return ApiResponse.failure(error);
   }
 }

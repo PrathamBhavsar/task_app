@@ -22,7 +22,9 @@ class SharedPrefHelper {
 
   Future<User?> getUser() async {
     final jsonString = _prefs.getString('user');
-    if (jsonString == null) return null;
+    if (jsonString == null) {
+      return null;
+    }
     final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
     return User.fromJson(jsonMap);
   }

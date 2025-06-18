@@ -7,10 +7,13 @@ import '../../data/api/api_constants.dart';
 import '../../data/api/api_handler.dart';
 import '../../data/api/api_helper.dart';
 import '../../data/api/api_service.dart';
-import '../../data/repositories/client_repository.dart';
+import '../../data/repositories/auth_repository_impl.dart';
+import '../../data/repositories/client_repository_impl.dart';
 import '../../data/repositories/task_repository.dart';
 import '../../data/repositories/user_repository.dart';
-import '../../domain/repositories/client_repo.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../../domain/repositories/client_repository.dart';
+import '../../domain/usecases/auth_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
@@ -49,7 +52,12 @@ void setupApiModule() {
 
   getIt.registerLazySingleton<ApiService>(() => ApiService(getIt<Dio>()));
 
-  getIt.registerLazySingleton<ApiHandler>(() => ApiHandler(getIt<LogHelper>()));
+  getIt.registerLazySingleton<ApiHandler>(
+    () => ApiHandler(
+      getIt<LogHelper>(),
+      onError: (error) => getIt<SnackBarHelper>().showError(error.message),
+    ),
+  );
 
   getIt.registerLazySingleton<ApiHelper>(
     () => ApiHelper(
@@ -73,12 +81,18 @@ void setupRepositories() {
   getIt.registerLazySingleton<ClientRepository>(
     () => ClientRepositoryImpl(getIt<ApiHelper>()),
   );
+
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(getIt<ApiHelper>()),
+  );
 }
 
 void setupUseCases() {
   getIt.registerLazySingleton(
     () => GetAllClientsUseCase(getIt<ClientRepository>()),
   );
+
+  getIt.registerLazySingleton(() => AuthUseCase(getIt<AuthRepository>()));
 }
 
 void setupHelpers() {
@@ -109,11 +123,12 @@ void setupBlocs() {
 
   getIt.registerFactory(() => HomeBloc(getIt<CacheHelper>()));
 
-  getIt.registerFactory(AuthBloc.new);
+  getIt.registerFactory(
+    () => AuthBloc(getIt<CacheHelper>(), getIt<AuthUseCase>()),
+  );
 }
 
 void setupProviders() {
-
   getIt.registerLazySingleton<UserProvider>(
     () => UserProvider(getIt<UserRepository>()),
   );
