@@ -10,10 +10,10 @@ Bill _$BillFromJson(Map<String, dynamic> json) => Bill(
   total: (json['total'] as num).toDouble(),
   subtotal: (json['subtotal'] as num).toDouble(),
   tax: (json['tax'] as num).toDouble(),
-  notes: json['additional_notes'] as String,
   status: json['status'] as String,
   createdAt: DateTime.parse(json['created_at'] as String),
   dueDate: DateTime.parse(json['due_date'] as String),
+  notes: json['additional_notes'] as String?,
   billId: (json['bill_id'] as num?)?.toInt(),
 );
 

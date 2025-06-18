@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../domain/entities/bill.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/constants/custom_icons.dart';
+import '../../../../utils/extensions/date_formatter.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/action_button.dart';
 import '../../../widgets/bordered_container.dart';
@@ -57,9 +58,9 @@ class BillTile extends StatelessWidget {
         10.hGap,
         TileRow(
           key1: 'Bill Date',
-          value1: bill.createdAt.toString(),
+          value1: bill.createdAt.toFormattedWithSuffix(),
           key2: 'Due Date',
-          value2: bill.dueDate.toString(),
+          value2: bill.dueDate.toFormattedWithSuffix(),
         ),
         10.hGap,
         Row(

@@ -15,7 +15,7 @@ class Bill {
   final double tax;
 
   @JsonKey(name: 'additional_notes')
-  final String notes;
+  final String? notes;
 
   final String status;
 
@@ -26,10 +26,10 @@ class Bill {
     required this.total,
     required this.subtotal,
     required this.tax,
-    required this.notes,
     required this.status,
     required this.createdAt,
     required this.dueDate,
+    this.notes,
     this.billId,
   });
 

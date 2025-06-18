@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../utils/enums/user_role.dart';
 import '../../screens/agency/agency_page.dart';
 import '../../screens/bill/bill_page.dart';
-import '../../screens/customer/customer_page.dart';
+import '../../screens/customer/client_page.dart';
 import '../../screens/home/pages/admin_home_page.dart';
 import '../../screens/task/task_page.dart';
 

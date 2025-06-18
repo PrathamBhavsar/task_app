@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../utils/constants/custom_icons.dart';
 
 import '../../../utils/constants/app_constants.dart';
-import '../../../utils/enums/user_role.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../widgets/action_button.dart';
@@ -111,31 +110,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                           ),
                           10.hGap,
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildUserRoleRadio(
-                                context: context,
-                                state: state,
-                                label: 'Admin',
-                                role: UserRole.admin,
-                              ),
-                              _buildUserRoleRadio(
-                                context: context,
-                                state: state,
-                                label: 'Salesperson',
-                                role: UserRole.salesperson,
-                              ),
-                              _buildUserRoleRadio(
-                                context: context,
-                                state: state,
-                                label: 'Agency',
-                                role: UserRole.agent,
-                              ),
-                            ],
-                          ),
-                          10.hGap,
                           ActionButton(
                             backgroundColor: Colors.black,
                             label: 'Log In',
@@ -159,30 +133,6 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildUserRoleRadio({
-    required BuildContext context,
-    required AuthState state,
-    required String label,
-    required UserRole role,
-  }) {
-    return Row(
-      children: [
-        Radio<UserRole>(
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          activeColor: Colors.black,
-          value: role,
-          groupValue: state.userRole,
-          onChanged: (value) {
-            if (value != null) {
-              context.read<AuthBloc>().add(SetUserRoleEvent(value));
-            }
-          },
-        ),
-        Text(label, style: AppTexts.inputTextStyle),
-      ],
     );
   }
 }

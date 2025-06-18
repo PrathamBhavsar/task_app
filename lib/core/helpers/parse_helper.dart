@@ -1,7 +1,5 @@
 import '../../data/models/api/api_error.dart';
 import '../../data/models/api/api_response.dart';
-import '../di/di.dart';
-import 'snack_bar_helper.dart';
 
 ApiResponse<T> parseApiError<T>(
     int statusCode,

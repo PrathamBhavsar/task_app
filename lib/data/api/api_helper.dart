@@ -2,11 +2,13 @@ import 'package:either_dart/either.dart';
 
 import '../../core/error/failure.dart';
 import '../../core/helpers/log_helper.dart';
+import '../../domain/entities/bill.dart';
 import '../../domain/entities/client.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/user.dart';
 import '../models/api/api_response.dart';
 import '../models/payloads/auth_payload.dart';
+import '../responses/get_bills_response.dart';
 import '../responses/get_clients_response.dart';
 import '../responses/get_tasks_response.dart';
 import '../responses/get_users_response.dart';
@@ -67,12 +69,25 @@ class ApiHelper {
     }
   }
 
-  Future<Either<Failure, User>> login(AuthPayload data) async {
-    final ApiResponse<User> result = await handler
-        .execute<User>(
-          () => service.post(ApiConstants.user.login, data: data.toJson()),
-          (json) => User.fromJson(json as Map<String, dynamic>),
+  Future<Either<Failure, List<Bill>>> getAllBills() async {
+    final ApiResponse<GetBillsResponse> result = await handler
+        .execute<GetBillsResponse>(
+          () => service.get(ApiConstants.bill.base),
+          (json) => GetBillsResponse.fromJson(json as Map<String, dynamic>),
         );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.bills);
+    } else {
+      return Left(Failure('Failed to fetch tasks'));
+    }
+  }
+
+  Future<Either<Failure, User>> login(AuthPayload data) async {
+    final ApiResponse<User> result = await handler.execute<User>(
+      () => service.post(ApiConstants.user.login, data: data.toJson()),
+      (json) => User.fromJson(json as Map<String, dynamic>),
+    );
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!);

@@ -8,14 +8,18 @@ import '../../data/api/api_handler.dart';
 import '../../data/api/api_helper.dart';
 import '../../data/api/api_service.dart';
 import '../../data/repositories/auth_repository_impl.dart';
+import '../../data/repositories/bill_repository_impl.dart';
 import '../../data/repositories/client_repository_impl.dart';
 import '../../data/repositories/task_repository.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/repositories/bill_repository.dart';
 import '../../domain/repositories/client_repository.dart';
 import '../../domain/usecases/auth_usecase.dart';
+import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
+import '../../presentation/blocs/bill/bill_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
 import '../../presentation/providers/appointment_provider.dart';
@@ -85,11 +89,18 @@ void setupRepositories() {
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(getIt<ApiHelper>()),
   );
+
+  getIt.registerLazySingleton<BillRepository>(
+    () => BillRepositoryImpl(getIt<ApiHelper>()),
+  );
 }
 
 void setupUseCases() {
   getIt.registerLazySingleton(
     () => GetAllClientsUseCase(getIt<ClientRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => GetAllBillsUseCase(getIt<BillRepository>()),
   );
 
   getIt.registerLazySingleton(() => AuthUseCase(getIt<AuthRepository>()));
@@ -126,6 +137,8 @@ void setupBlocs() {
   getIt.registerFactory(
     () => AuthBloc(getIt<CacheHelper>(), getIt<AuthUseCase>()),
   );
+
+  getIt.registerFactory(() => BillBloc(getIt<GetAllBillsUseCase>()));
 }
 
 void setupProviders() {
