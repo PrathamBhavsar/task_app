@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../utils/enums/bill_status.dart';
+
 part 'bill.g.dart';
 
 @JsonSerializable()
@@ -17,7 +19,8 @@ class Bill {
   @JsonKey(name: 'additional_notes')
   final String? notes;
 
-  final String status;
+ @BillStatusConverter()
+  final BillStatus status;
 
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
@@ -36,4 +39,14 @@ class Bill {
   factory Bill.fromJson(Map<String, dynamic> json) => _$BillFromJson(json);
 
   Map<String, dynamic> toJson() => _$BillToJson(this);
+}
+
+class BillStatusConverter implements JsonConverter<BillStatus, String> {
+  const BillStatusConverter();
+
+  @override
+  BillStatus fromJson(String json) => BillStatus.fromString(json);
+
+  @override
+  String toJson(BillStatus status) => status.status;
 }

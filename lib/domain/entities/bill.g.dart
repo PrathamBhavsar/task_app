@@ -10,7 +10,7 @@ Bill _$BillFromJson(Map<String, dynamic> json) => Bill(
   total: (json['total'] as num).toDouble(),
   subtotal: (json['subtotal'] as num).toDouble(),
   tax: (json['tax'] as num).toDouble(),
-  status: json['status'] as String,
+  status: const BillStatusConverter().fromJson(json['status'] as String),
   createdAt: DateTime.parse(json['created_at'] as String),
   dueDate: DateTime.parse(json['due_date'] as String),
   notes: json['additional_notes'] as String?,
@@ -24,6 +24,6 @@ Map<String, dynamic> _$BillToJson(Bill instance) => <String, dynamic>{
   'subtotal': instance.subtotal,
   'tax': instance.tax,
   'additional_notes': instance.notes,
-  'status': instance.status,
+  'status': const BillStatusConverter().toJson(instance.status),
   'created_at': instance.createdAt.toIso8601String(),
 };

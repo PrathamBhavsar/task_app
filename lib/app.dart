@@ -8,6 +8,7 @@ import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/bill/bill_bloc.dart';
 import 'presentation/blocs/client/client_bloc.dart';
 import 'presentation/blocs/home/home_bloc.dart';
+import 'presentation/blocs/tab/tab_bloc.dart';
 import 'utils/constants/app_constants.dart';
 
 class MyApp extends StatelessWidget {
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => getIt<HomeBloc>()),
           BlocProvider(create: (_) => getIt<AuthBloc>()),
           BlocProvider(create: (_) => getIt<BillBloc>()),
+          BlocProvider(create: (_) => getIt<TabBloc>()),
 
           // ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
           // ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),

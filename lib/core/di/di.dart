@@ -22,6 +22,7 @@ import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/bill/bill_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
+import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/providers/appointment_provider.dart';
 import '../../presentation/providers/measurement_provider.dart';
 import '../../presentation/providers/task_provider.dart';
@@ -139,6 +140,7 @@ void setupBlocs() {
   );
 
   getIt.registerFactory(() => BillBloc(getIt<GetAllBillsUseCase>()));
+  getIt.registerFactory(TabBloc.new);
 }
 
 void setupProviders() {

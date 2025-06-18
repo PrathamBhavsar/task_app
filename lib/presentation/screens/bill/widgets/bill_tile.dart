@@ -45,7 +45,7 @@ class BillTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 CustomTag(
-                  text: bill.status,
+                  text: bill.status.status,
                   color: Colors.black,
                   textColor: Colors.white,
                 ),
