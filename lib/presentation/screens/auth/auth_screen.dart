@@ -43,7 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: BlocConsumer<AuthBloc, AuthState>(
                     listener: (context, state) {
                       if (state.status == AuthStatus.success) {
-                        context.go(AppRoutes.home);
+                        context.go(AppRoutes.splash);
                       }
                     },
                     builder: (context, state) {

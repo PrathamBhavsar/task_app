@@ -17,8 +17,12 @@ class HomeScreen extends StatelessWidget {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: Colors.white,
           drawer: const SelectionDrawer(),
-          appBar: AppBar(title: Text(state.currentTitle)),
+          appBar:
+              state.barIndex == 0
+                  ? AppBar(title: Text(state.currentTitle))
+                  : null,
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.white,
             elevation: 0,
@@ -31,20 +35,28 @@ class HomeScreen extends StatelessWidget {
             onTap: (i) => context.read<HomeBloc>().add(SetBarIndexEvent(i)),
             items: [
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: Icon(Icons.dashboard),
                 label: "Dashboard",
               ),
-              BottomNavigationBarItem(icon: Icon(Icons.task), label: "Tasks"),
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
+                icon: Icon(Icons.task),
+                label: "Tasks",
+              ),
+              BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: Icon(Icons.person),
                 label: "Customers",
               ),
               if (state.userRole == UserRole.admin)
                 BottomNavigationBarItem(
+                  backgroundColor: Colors.white,
                   icon: Icon(Icons.business),
                   label: "Agencies",
                 ),
               BottomNavigationBarItem(
+                backgroundColor: Colors.white,
                 icon: Icon(Icons.receipt),
                 label: "Bills",
               ),

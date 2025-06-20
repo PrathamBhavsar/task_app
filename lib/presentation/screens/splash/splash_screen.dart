@@ -11,6 +11,8 @@ import '../../blocs/bill/bill_state.dart';
 import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_event.dart';
 import '../../blocs/client/client_state.dart';
+import '../../blocs/task/task_bloc.dart';
+import '../../blocs/task/task_event.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,6 +24,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final Completer<void> _billLoaded = Completer();
   final Completer<void> _clientLoaded = Completer();
+  final Completer<void> _taskLoaded = Completer();
 
   @override
   void initState() {
@@ -30,6 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ClientBloc>().add(FetchClientsRequested());
       context.read<BillBloc>().add(FetchBillsRequested());
+      context.read<TaskBloc>().add(FetchTasksRequested());
 
       Future.wait([_clientLoaded.future, _billLoaded.future]).then((_) {
         context.go(AppRoutes.home);

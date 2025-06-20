@@ -25,6 +25,7 @@ class Task {
   final String dueDate;
 
   final Priority priority;
+
   final Status status;
 
   final Client client;

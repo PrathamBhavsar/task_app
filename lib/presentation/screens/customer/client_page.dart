@@ -44,10 +44,10 @@ class ClientPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Customers', style: AppTexts.titleTextStyle),
+                      Text('Clients', style: AppTexts.titleTextStyle),
                       IntrinsicWidth(
                         child: ActionButton(
-                          label: 'New Customer',
+                          label: 'New Client',
                           onPress: () => context.push(AppRoutes.newCustomer),
                           prefixIcon: CustomIcon.badgePlus,
                           fontColor: Colors.white,
@@ -58,7 +58,7 @@ class ClientPage extends StatelessWidget {
                   ),
                   10.hGap,
                   CustomTextField(
-                    hintTxt: 'Search customers...',
+                    hintTxt: 'Search clients',
                     isSearch: true,
                   ),
                   10.hGap,

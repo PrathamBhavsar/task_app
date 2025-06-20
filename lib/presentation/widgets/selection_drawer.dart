@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/di/di.dart';
+import '../../core/helpers/cache_helper.dart';
 import '../../utils/constants/app_constants.dart';
 import '../../utils/constants/custom_icons.dart';
 import 'action_button.dart';
@@ -37,6 +39,7 @@ class SelectionDrawer extends StatelessWidget {
               fontColor: AppColors.errorRed,
               onPress: () {
                 Navigator.pop(context);
+                getIt<CacheHelper>().clearUser();
                 context.go(AppRoutes.auth);
               },
             ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../data/repositories/task_repository.dart';
 import '../../data/states/get_tasks_states.dart';
 import '../../domain/entities/task.dart';
+import '../../domain/repositories/task_repository.dart';
 
 class TaskProvider extends ChangeNotifier {
   final TaskRepository _repository;
