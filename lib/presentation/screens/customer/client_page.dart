@@ -10,9 +10,11 @@ import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/client/client_bloc.dart';
+import '../../blocs/client/client_event.dart';
 import '../../blocs/client/client_state.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/refresh_wrapper.dart';
 import 'widgets/customer_tile.dart';
 
 class ClientPage extends StatelessWidget {
@@ -38,32 +40,34 @@ class ClientPage extends StatelessWidget {
             if (state.clients.isEmpty) {
               return Center(child: Text('There are no clients!'));
             } else {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Clients', style: AppTexts.titleTextStyle),
-                      IntrinsicWidth(
-                        child: ActionButton(
-                          label: 'New Client',
-                          onPress: () => context.push(AppRoutes.newCustomer),
-                          prefixIcon: CustomIcon.badgePlus,
-                          fontColor: Colors.white,
-                          backgroundColor: Colors.black,
+              return RefreshWrapper(
+                onRefresh:
+                    () async =>
+                        context.read<ClientBloc>().add(FetchClientsRequested()),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Clients', style: AppTexts.titleTextStyle),
+                        IntrinsicWidth(
+                          child: ActionButton(
+                            label: 'New Client',
+                            onPress: () => context.push(AppRoutes.newCustomer),
+                            prefixIcon: CustomIcon.badgePlus,
+                            fontColor: Colors.white,
+                            backgroundColor: Colors.black,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  10.hGap,
-                  CustomTextField(
-                    hintTxt: 'Search clients',
-                    isSearch: true,
-                  ),
-                  10.hGap,
-                  _buildCustomers(state.clients),
-                ],
+                      ],
+                    ),
+                    10.hGap,
+                    CustomTextField(hintTxt: 'Search clients', isSearch: true),
+                    10.hGap,
+                    _buildCustomers(state.clients),
+                  ],
+                ),
               );
             }
           }

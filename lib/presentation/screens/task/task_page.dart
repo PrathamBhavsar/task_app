@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 import '../../../core/di/di.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
-import '../../../utils/enums/task_status.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/tab/tab_bloc.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
-import '../../providers/task_provider.dart';
 import '../../providers/user_provider.dart';
 import '../../widgets/action_button.dart';
+import '../../widgets/refresh_wrapper.dart';
 import '../../widgets/tab_header.dart';
 import 'widgets/task_tile.dart';
 
@@ -41,49 +39,42 @@ class TaskPage extends StatelessWidget {
             return const Center(child: Text('There are no tasks!'));
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('My Tasks', style: AppTexts.titleTextStyle),
-                  IntrinsicWidth(
-                    child: ActionButton(
-                      label: 'New Task',
-                      onPress: () {
-                        getIt<UserProvider>().fetchAllUsers();
-                      },
-                      // () => context.push(
-                      //   AppRoutes.editTask,
-                      //   extra: {'task': Task.empty(), 'isNew': true},
-                      // ),
-                      prefixIcon: CustomIcon.badgePlus,
-                      fontColor: Colors.white,
-                      backgroundColor: Colors.black,
+          return RefreshWrapper(
+            onRefresh:
+                () async => context.read<TaskBloc>().add(FetchTasksRequested()),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('My Tasks', style: AppTexts.titleTextStyle),
+                    IntrinsicWidth(
+                      child: ActionButton(
+                        label: 'New Task',
+                        onPress: () {
+                          getIt<UserProvider>().fetchAllUsers();
+                        },
+                        // () => context.push(
+                        //   AppRoutes.editTask,
+                        //   extra: {'task': Task.empty(), 'isNew': true},
+                        // ),
+                        prefixIcon: CustomIcon.badgePlus,
+                        fontColor: Colors.white,
+                        backgroundColor: Colors.black,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              TabHeader(tabs: [Tab(text: 'Active'), Tab(text: 'Completed')]),
-              10.hGap,
-              BlocBuilder<TabBloc, TabState>(
-                builder: (context, tabState) {
-                  // List<Task> selectedTasks =
-                  //     tasks
-                  //         .where(
-                  //           (t) =>
-                  //               t.status.name ==
-                  //               (tabState.tabIndex == 0
-                  //                   ? TaskStatus.pending.status
-                  //                   : TaskStatus.rejected.status),
-                  //         )
-                  //         .toList();
-
-                  return _buildActiveTasks(tasks);
-                },
-              ),
-            ],
+                  ],
+                ),
+                TabHeader(tabs: [Tab(text: 'Active'), Tab(text: 'Completed')]),
+                10.hGap,
+                BlocBuilder<TabBloc, TabState>(
+                  builder: (context, tabState) {
+                    return _buildActiveTasks(tasks);
+                  },
+                ),
+              ],
+            ),
           );
         }
         return const Center(child: Text('There are no tasks!'));

@@ -58,9 +58,9 @@ class BillTile extends StatelessWidget {
         10.hGap,
         TileRow(
           key1: 'Bill Date',
-          value1: bill.createdAt.toFormattedWithSuffix(),
+          value1: bill.createdAt.toPrettyDateTime(),
           key2: 'Due Date',
-          value2: bill.dueDate.toFormattedWithSuffix(),
+          value2: bill.dueDate.toPrettyDate(),
         ),
         10.hGap,
         Row(

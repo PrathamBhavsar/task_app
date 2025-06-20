@@ -48,5 +48,5 @@ class BillStatusConverter implements JsonConverter<BillStatus, String> {
   BillStatus fromJson(String json) => BillStatus.fromString(json);
 
   @override
-  String toJson(BillStatus status) => status.status;
+  String toJson(BillStatus role) => role.status;
 }

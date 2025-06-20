@@ -22,7 +22,7 @@ class Task {
   final DateTime createdAt;
 
   @JsonKey(name: 'due_date')
-  final String dueDate;
+  final DateTime dueDate;
 
   final Priority priority;
 

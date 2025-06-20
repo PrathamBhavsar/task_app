@@ -37,12 +37,12 @@ class _EditTaskPageState extends State<EditTaskPage> {
       _noteController.text = '';
       _phoneController.text = widget.task.client.contactNo;
 
-      _dueDateController.text = widget.task.dueDate;
+      _dueDateController.text = widget.task.dueDate.toPrettyDate();
     } else {
       taskProvider.resetFields();
 
       _dueDateController.text =
-          DateTime.now().add(const Duration(days: 2)).toFormattedWithSuffix();
+          DateTime.now().add(const Duration(days: 2)).toPrettyDateTime();
     }
   }
 

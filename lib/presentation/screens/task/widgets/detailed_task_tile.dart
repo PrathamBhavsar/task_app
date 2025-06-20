@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../domain/entities/task.dart';
 import '../../../../utils/constants/app_constants.dart';
+import '../../../../utils/extensions/date_formatter.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/action_button.dart';
 import '../../../widgets/bordered_container.dart';
@@ -69,7 +70,7 @@ class DetailedTaskTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Due Date', style: AppTexts.inputHintTextStyle),
-            Text(task.dueDate, style: AppTexts.inputTextStyle),
+            Text(task.dueDate.toPrettyDate(), style: AppTexts.inputTextStyle),
           ],
         ),
         10.hGap,

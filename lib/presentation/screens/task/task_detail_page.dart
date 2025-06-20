@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/di/di.dart';
+import '../../../core/helpers/cache_helper.dart';
 import '../../../domain/entities/message.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/constants/dummy_data.dart';
 import '../../../utils/enums/user_role.dart';
+import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/home/home_state.dart';
+import '../../blocs/tab/tab_bloc.dart';
+import '../../blocs/task/task_bloc.dart';
+import '../../blocs/task/task_state.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
@@ -22,313 +29,338 @@ import '../../widgets/tile_row.dart';
 
 final timeline = DummyData.taskDetailTimeline;
 
-class TaskDetailPage extends StatelessWidget {
+class TaskDetailPage extends StatefulWidget {
   const TaskDetailPage({required this.task, super.key});
 
   final Task task;
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      forceMaterialTransparency: true,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text(task.name, style: AppTexts.titleTextStyle)],
+  State<TaskDetailPage> createState() => _TaskDetailPageState();
+}
+
+class _TaskDetailPageState extends State<TaskDetailPage> {
+
+  late List<Message> messages;
+  late List<Message> timelines;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        forceMaterialTransparency: true,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [Text(widget.task.name, style: AppTexts.titleTextStyle)],
+        ),
       ),
-    ),
-    body: SafeArea(
-      child: Consumer<TaskProvider>(
-        builder: (context, provider, child) {
-          UserRole userRole = context.read<HomeState>().userRole;
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                BorderedContainer(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            task.client.name,
-                            style: AppTexts.titleTextStyle.copyWith(
-                              fontVariations: [FontVariation.weight(500)],
-                            ),
-                          ),
-                          IconButton(
-                            onPressed:
-                                () => context.replace(
-                                  AppRoutes.editTask,
-                                  extra: {'task': task, 'isNew': false},
-                                ),
-                            icon: Icon(
-                              CustomIcon.squarePen,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          CustomTag(
-                            text: task.priority.name,
-                            color: Colors.redAccent,
-                            textColor: Colors.white,
-                          ),
-                          10.wGap,
-                          CustomTag(
-                            text: task.status.name,
-                            color: Colors.black,
-                            textColor: Colors.white,
-                          ),
-                        ],
-                      ),
-                      10.hGap,
-                      TileRow(
-                        key1: 'Due Date',
-                        value1: task.dueDate,
-                        key2: 'Created',
-                        value2: task.createdAt.toString(),
-                      ),
-                      10.hGap,
-                      if (userRole != UserRole.agent) ...[
-                        TileRow(
-                          key1: 'Due Date',
-                          value1: task.dueDate,
-                          key2: 'Created',
-                          value2: task.createdAt.toString(),
-                        ),
-                        10.hGap,
-                      ],
-                      Text('Address', style: AppTexts.inputHintTextStyle),
-                      Text(
-                        '123 Main St, Anytown, CA 12345',
-                        style: AppTexts.inputTextStyle,
-                      ),
-                      // if (task.notes != null && task.notes!.isNotEmpty) ...[
-                      //   10.hGap,
-                      //   Text('Notes', style: AppTexts.inputHintTextStyle),
-                      //   Text(
-                      //     task.notes ?? '',
-                      //     style: AppTexts.inputTextStyle,
-                      //   ),
-                      // ],
-                      10.hGap,
-                      if (provider.isMeasurementSent) ...[
-                        BorderedContainer(
-                          color: AppColors.bgYellow,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Agency Bill Pending Approval',
-                                style: AppTexts.headingTextStyle,
-                              ),
-                              10.hGap,
-                              Text(
-                                'Bill #BILL-123456 from ${task.agency} requires your approval',
-                                style: AppTexts.inputTextStyle,
-                              ),
-                              10.hGap,
-                              ActionButton(
-                                label: 'Review Bill',
-                                onPress:
-                                    () => context.push(AppRoutes.reviewBill),
-                                backgroundColor: Colors.black,
-                                fontColor: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                if (userRole == UserRole.agent) ...[
-                  10.hGap,
+      body: SafeArea(
+        child: BlocBuilder<TaskBloc, TaskState>(
+          builder: (context, state) {
+            final UserRole userRole = getIt<CacheHelper>().getUserRole();
+            final int tabIndex = context.select<TabBloc, int>(
+              (bloc) => bloc.state.tabIndex,
+            );
+            return SingleChildScrollView(
+              child: Column(
+                children: [
                   BorderedContainer(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              widget.task.client.name,
+                              style: AppTexts.titleTextStyle.copyWith(
+                                fontVariations: [FontVariation.weight(500)],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed:
+                                  () => context.replace(
+                                    AppRoutes.editTask,
+                                    extra: {
+                                      'task': widget.task,
+                                      'isNew': false,
+                                    },
+                                  ),
+                              icon: Icon(
+                                CustomIcon.squarePen,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            CustomTag(
+                              text: widget.task.priority.name,
+                              color: Colors.redAccent,
+                              textColor: Colors.white,
+                            ),
+                            10.wGap,
+                            CustomTag(
+                              text: widget.task.status.name,
+                              color: Colors.black,
+                              textColor: Colors.white,
+                            ),
+                          ],
+                        ),
+                        10.hGap,
+                        TileRow(
+                          key1: 'Due Date',
+                          value1: widget.task.dueDate.toPrettyDate(),
+                          key2: 'Created',
+                          value2: widget.task.createdAt.toPrettyDateTime(),
+                        ),
+                        10.hGap,
+                        if (userRole != UserRole.agent) ...[
+                          TileRow(
+                            key1: 'Due Date',
+                            value1: widget.task.dueDate.toPrettyDate(),
+                            key2: 'Created',
+                            value2: widget.task.createdAt.toPrettyDateTime(),
+                          ),
+                          10.hGap,
+                        ],
+                        Text('Address', style: AppTexts.inputHintTextStyle),
                         Text(
-                          'Measurement Details',
-                          style: AppTexts.titleTextStyle,
+                          '123 Main St, Anytown, CA 12345',
+                          style: AppTexts.inputTextStyle,
                         ),
-                        20.hGap,
-                        Text('Measurements', style: AppTexts.labelTextStyle),
-                        5.hGap,
-                        ...List.generate(
-                          4,
-                          (index) => Padding(
-                            padding:
-                                index == 0
-                                    ? EdgeInsets.zero
-                                    : EdgeInsets.only(top: 10.h),
-                            child: _buildBorderedTile(
-                              'Living Room Window 1',
-                              '72" × 48"',
-                              'Near the fireplace',
+                        // if (task.notes != null && task.notes!.isNotEmpty) ...[
+                        //   10.hGap,
+                        //   Text('Notes', style: AppTexts.inputHintTextStyle),
+                        //   Text(
+                        //     task.notes ?? '',
+                        //     style: AppTexts.inputTextStyle,
+                        //   ),
+                        // ],
+                        10.hGap,
+                        if (tabIndex == 0) ...[
+                          BorderedContainer(
+                            color: AppColors.bgYellow,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Agency Bill Pending Approval',
+                                  style: AppTexts.headingTextStyle,
+                                ),
+                                10.hGap,
+                                Text(
+                                  'Bill #BILL-123456 from ${widget.task.agency?.name} requires your approval',
+                                  style: AppTexts.inputTextStyle,
+                                ),
+                                10.hGap,
+                                ActionButton(
+                                  label: 'Review Bill',
+                                  onPress:
+                                      () => context.push(AppRoutes.reviewBill),
+                                  backgroundColor: Colors.black,
+                                  fontColor: Colors.white,
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                        20.hGap,
-                        Text('Service Charges', style: AppTexts.labelTextStyle),
-                        5.hGap,
-                        ...List.generate(
-                          2,
-                          (index) => Padding(
-                            padding:
-                                index == 0
-                                    ? EdgeInsets.zero
-                                    : EdgeInsets.only(top: 10.h),
-                            child: _buildBorderedTile(
-                              'Curtain Stitching',
-                              '\$180.00',
-                              'Near the fireplace',
-                            ),
-                          ),
-                        ),
+                        ],
                       ],
                     ),
                   ),
-                  10.hGap,
-                  ActionButton(
-                    label: 'Edit Bill',
-                    onPress: () => context.push(AppRoutes.measurement),
-                    prefixIcon: CustomIcon.receiptIndianRupee,
-                  ),
-                ] else ...[
-                  TabHeader(
-                    tabs: [
-                      Tab(text: 'Workflow'),
-                      Tab(text: 'Timeline'),
-                      Tab(text: 'Messages'),
-                    ],
-                  ),
-                  Builder(
-                    builder: (context) {
-                      switch (provider.tabIndex) {
-                        case 0:
-                          return _buildTaskOverFlow(
-                            provider.currentAgency,
-                            provider.isProductSelected,
-                            provider.isMeasurementSent,
-                            provider.increaseTaskDetailIndex,
-                            provider.setAgency,
-                          );
-                        case 1:
-                          return _buildTimeline();
-                        default:
-                          // return _buildMessages(task.messages);
-                          return SizedBox.shrink();
-                      }
-                    },
-                  ),
+                  if (userRole == UserRole.agent) ...[
+                    10.hGap,
+                    BorderedContainer(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Measurement Details',
+                            style: AppTexts.titleTextStyle,
+                          ),
+                          20.hGap,
+                          Text('Measurements', style: AppTexts.labelTextStyle),
+                          5.hGap,
+                          ...List.generate(
+                            4,
+                            (index) => Padding(
+                              padding:
+                                  index == 0
+                                      ? EdgeInsets.zero
+                                      : EdgeInsets.only(top: 10.h),
+                              child: _buildBorderedTile(
+                                'Living Room Window 1',
+                                '72" × 48"',
+                                'Near the fireplace',
+                              ),
+                            ),
+                          ),
+                          20.hGap,
+                          Text(
+                            'Service Charges',
+                            style: AppTexts.labelTextStyle,
+                          ),
+                          5.hGap,
+                          ...List.generate(
+                            2,
+                            (index) => Padding(
+                              padding:
+                                  index == 0
+                                      ? EdgeInsets.zero
+                                      : EdgeInsets.only(top: 10.h),
+                              child: _buildBorderedTile(
+                                'Curtain Stitching',
+                                '\$180.00',
+                                'Near the fireplace',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    10.hGap,
+                    ActionButton(
+                      label: 'Edit Bill',
+                      onPress: () => context.push(AppRoutes.measurement),
+                      prefixIcon: CustomIcon.receiptIndianRupee,
+                    ),
+                  ] else ...[
+                    TabHeader(
+                      tabs: [
+                        Tab(text: 'Workflow'),
+                        Tab(text: 'Timeline'),
+                        Tab(text: 'Messages'),
+                      ],
+                    ),
+                    Builder(
+                      builder: (context) {
+                        switch (tabIndex) {
+                          case 0:
+                            return _buildTaskOverFlow(
+                              widget.task.agency?.name ?? "",
+                              tabIndex == 1,
+                              tabIndex == 2,
+                            );
+                          case 1:
+                            return _buildTimeline();
+                          default:
+                            // return _buildMessages(task.messages);
+                            return SizedBox.shrink();
+                        }
+                      },
+                    ),
+                  ],
                 ],
-              ],
-            ).padAll(AppPaddings.appPaddingInt),
-          );
-        },
-      ),
-    ),
-  );
-
-  BorderedContainer _buildBorderedTile(String title, amount, subtitle) =>
-      BorderedContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(title, style: AppTexts.labelTextStyle),
-                Text(amount, style: AppTexts.labelTextStyle),
-              ],
-            ),
-            Text(subtitle, style: AppTexts.inputHintTextStyle),
-          ],
+              ).padAll(AppPaddings.appPaddingInt),
+            );
+          },
         ),
-      );
+      ),
+    );
+  }
+
+  BorderedContainer _buildBorderedTile(String title, amount, subtitle) {
+    return BorderedContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(title, style: AppTexts.labelTextStyle),
+              Text(amount, style: AppTexts.labelTextStyle),
+            ],
+          ),
+          Text(subtitle, style: AppTexts.inputHintTextStyle),
+        ],
+      ),
+    );
+  }
 
   Widget _buildTaskOverFlow(
     String selectedAgency,
     bool isProductSelected,
     bool isMeasurementSent,
-    VoidCallback increment,
-    Function(String) selection,
-  ) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Task Workflow', style: AppTexts.titleTextStyle),
-      10.hGap,
-      BorderedContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            isMeasurementSent
-                ? Container(
-                  padding: EdgeInsets.all(AppPaddings.appPaddingInt),
-                  decoration: BoxDecoration(
-                    borderRadius: AppBorders.radius,
-                    color: AppColors.blueBg,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Measurement Scheduled",
-                        style: AppTexts.inputTextStyle.copyWith(
-                          color: AppColors.darkBlueText,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Task Workflow', style: AppTexts.titleTextStyle),
+        10.hGap,
+        BorderedContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              isMeasurementSent
+                  ? Container(
+                    padding: EdgeInsets.all(AppPaddings.appPaddingInt),
+                    decoration: BoxDecoration(
+                      borderRadius: AppBorders.radius,
+                      color: AppColors.blueBg,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Measurement Scheduled",
+                          style: AppTexts.inputTextStyle.copyWith(
+                            color: AppColors.darkBlueText,
+                          ),
                         ),
-                      ),
-                      10.hGap,
-                      Text(
-                        "The measurement task has been assigned to $selectedAgency for ${task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
-                        style: AppTexts.inputTextStyle.copyWith(
-                          color: AppColors.darkBlueText,
+                        10.hGap,
+                        Text(
+                          "The measurement task has been assigned to $selectedAgency for ${widget.task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
+                          style: AppTexts.inputTextStyle.copyWith(
+                            color: AppColors.darkBlueText,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-                : SizedBox.shrink(),
-            isMeasurementSent
-                ? SizedBox.shrink()
-                : Text(
-                  isProductSelected
-                      ? "Assign a measurement task to one of our partner agencies."
-                      : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
+                      ],
+                    ),
+                  )
+                  : SizedBox.shrink(),
+              isMeasurementSent
+                  ? SizedBox.shrink()
+                  : Text(
+                    isProductSelected
+                        ? "Assign a measurement task to one of our partner agencies."
+                        : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
 
-                  style: AppTexts.inputTextStyle,
+                    style: AppTexts.inputTextStyle,
+                  ),
+              if (isProductSelected) ...[
+                // _buildDropDown('Select Agency', Agency.names),
+                _buildTextInput('Schedule Date', 'Select Date'),
+                _buildTextInput(
+                  'Instructions for Agency',
+                  'Provide any specific instructions',
+                  isMultiline: true,
                 ),
-            if (isProductSelected) ...[
-              // _buildDropDown('Select Agency', Agency.names),
-              _buildTextInput('Schedule Date', 'Select Date'),
-              _buildTextInput(
-                'Instructions for Agency',
-                'Provide any specific instructions',
-                isMultiline: true,
+              ],
+              10.hGap,
+              ActionButton(
+                label:
+                    isMeasurementSent
+                        ? 'Mark Measurement as Complete'
+                        : isProductSelected
+                        ? 'Assign Measurement Task'
+                        : 'Complete Product Selection',
+                onPress: () {},
+                prefixIcon: CustomIcon.circleCheckBig,
+                backgroundColor: Colors.black,
+                fontColor: Colors.white,
               ),
             ],
-            10.hGap,
-            ActionButton(
-              label:
-                  isMeasurementSent
-                      ? 'Mark Measurement as Complete'
-                      : isProductSelected
-                      ? 'Assign Measurement Task'
-                      : 'Complete Product Selection',
-              onPress: () => isMeasurementSent ? null : increment(),
-              prefixIcon: CustomIcon.circleCheckBig,
-              backgroundColor: Colors.black,
-              fontColor: Colors.white,
-            ),
-          ],
+          ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 
   Widget _buildTextInput(
     String title,

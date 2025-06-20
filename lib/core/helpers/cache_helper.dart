@@ -1,5 +1,6 @@
 
 import '../../domain/entities/user.dart';
+import '../../utils/enums/user_role.dart';
 import 'shared_prefs_helper.dart';
 
 class CacheHelper {
@@ -18,6 +19,8 @@ class CacheHelper {
     _user = user;
     _prefs.saveUser(user);
   }
+
+  UserRole getUserRole() => _user?.userType ?? UserRole.agent;
 
   User? get user => _user;
 

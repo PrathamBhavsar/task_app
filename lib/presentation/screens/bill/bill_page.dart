@@ -7,8 +7,10 @@ import '../../../utils/constants/app_constants.dart';
 import '../../../utils/enums/bill_status.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/bill/bill_bloc.dart';
+import '../../blocs/bill/bill_event.dart';
 import '../../blocs/bill/bill_state.dart';
 import '../../blocs/tab/tab_bloc.dart';
+import '../../widgets/refresh_wrapper.dart';
 import '../../widgets/tab_header.dart';
 import 'widgets/bill_tile.dart';
 
@@ -34,57 +36,61 @@ class BillPage extends StatelessWidget {
             return const Center(child: Text('There are no bills!'));
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Bills', style: AppTexts.titleTextStyle),
-              TabHeader(
-                tabs: [
-                  Tab(text: BillStatus.pending.status),
-                  Tab(text: BillStatus.approved.status),
-                  Tab(text: 'Paid'),
-                  Tab(text: BillStatus.rejected.status),
-                ],
-              ),
-              10.hGap,
-              BlocBuilder<TabBloc, TabState>(
-                builder: (context, tabState) {
-                  final index = tabState.tabIndex;
+          return RefreshWrapper(
+            onRefresh:
+                () async => context.read<BillBloc>().add(FetchBillsRequested()),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Bills', style: AppTexts.titleTextStyle),
+                TabHeader(
+                  tabs: [
+                    Tab(text: BillStatus.pending.status),
+                    Tab(text: BillStatus.approved.status),
+                    Tab(text: 'Paid'),
+                    Tab(text: BillStatus.rejected.status),
+                  ],
+                ),
+                10.hGap,
+                BlocBuilder<TabBloc, TabState>(
+                  builder: (context, tabState) {
+                    final index = tabState.tabIndex;
 
-                  List<Bill> selectedBills;
-                  switch (index) {
-                    case 0:
-                      selectedBills =
-                          bills
-                              .where((b) => b.status == BillStatus.pending)
-                              .toList();
-                      break;
-                    case 1:
-                      selectedBills =
-                          bills
-                              .where((b) => b.status == BillStatus.approved)
-                              .toList();
-                      break;
-                    case 2:
-                      selectedBills =
-                          bills
-                              .where((b) => b.status == BillStatus.rejected)
-                              .toList();
-                      break;
-                    case 3:
-                      selectedBills =
-                          bills
-                              .where((b) => b.status == BillStatus.rejected)
-                              .toList();
-                      break;
-                    default:
-                      selectedBills = bills;
-                  }
+                    List<Bill> selectedBills;
+                    switch (index) {
+                      case 0:
+                        selectedBills =
+                            bills
+                                .where((b) => b.status == BillStatus.pending)
+                                .toList();
+                        break;
+                      case 1:
+                        selectedBills =
+                            bills
+                                .where((b) => b.status == BillStatus.approved)
+                                .toList();
+                        break;
+                      case 2:
+                        selectedBills =
+                            bills
+                                .where((b) => b.status == BillStatus.rejected)
+                                .toList();
+                        break;
+                      case 3:
+                        selectedBills =
+                            bills
+                                .where((b) => b.status == BillStatus.rejected)
+                                .toList();
+                        break;
+                      default:
+                        selectedBills = bills;
+                    }
 
-                  return _buildBills(selectedBills);
-                },
-              ),
-            ],
+                    return _buildBills(selectedBills);
+                  },
+                ),
+              ],
+            ),
           );
         }
         return const SizedBox.shrink();

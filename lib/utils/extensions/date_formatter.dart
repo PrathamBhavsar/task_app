@@ -1,25 +1,33 @@
 import 'package:intl/intl.dart';
 
-extension PrettyDate on DateTime {
-  String toFormattedWithSuffix() {
-    final day = this.day;
-    final suffix = _getDaySuffix(day);
-    final dayName = DateFormat('E').format(this);
-    final month = DateFormat('MMM').format(this);
-    return '$dayName, $day$suffix $month';
+extension PrettyPaidAt on String {
+  String toPrettyDateTime() {
+    DateTime date = DateTime.parse(this);
+
+    final monthDay = DateFormat('MMM d').format(date);
+    final time = DateFormat('h:mma').format(date);
+
+    return '$monthDay, $time';
+  }
+}
+
+extension PrettyPaidAtDateTime on DateTime {
+  String toPrettyDateTime() {
+    final localDate = toLocal();
+    final monthDay = DateFormat('MMM d').format(localDate);
+    final time = DateFormat('h:mma').format(localDate);
+    return '$monthDay, $time';
   }
 
-  String _getDaySuffix(int day) {
-    if (day >= 11 && day <= 13) return 'th';
-    switch (day % 10) {
-      case 1:
-        return 'st';
-      case 2:
-        return 'nd';
-      case 3:
-        return 'rd';
-      default:
-        return 'th';
-    }
+  String toPrettyDate() {
+    final localDate = toLocal();
+    final formattedDate = DateFormat('MMM d, yyyy').format(localDate);
+    return formattedDate;
+  }
+
+  /// Converts to ISO string in local time (not UTC)
+  String toLocalIsoString() {
+    final local = toLocal();
+    return DateFormat("yyyy-MM-ddTHH:mm:ss").format(local);
   }
 }

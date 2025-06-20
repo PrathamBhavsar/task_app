@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../utils/enums/user_role.dart';
+
 part 'user.g.dart';
 
 @JsonSerializable()
@@ -20,7 +22,8 @@ class User extends Equatable {
   final String address;
 
   @JsonKey(name: 'user_type')
-  final String userType;
+  @UserRoleConverter()
+  final UserRole userType;
 
   @JsonKey(name: 'profile_bg_color')
   final String profileBgColor;
@@ -55,4 +58,14 @@ class User extends Equatable {
     userType,
     profileBgColor,
   ];
+}
+
+class UserRoleConverter implements JsonConverter<UserRole, String> {
+  const UserRoleConverter();
+
+  @override
+  UserRole fromJson(String json) => UserRole.fromString(json);
+
+  @override
+  String toJson(UserRole role) => role.role;
 }

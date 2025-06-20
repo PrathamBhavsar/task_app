@@ -18,7 +18,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
   name: json['name'] as String,
   status: Status.fromJson(json['status'] as Map<String, dynamic>),
   priority: Priority.fromJson(json['priority'] as Map<String, dynamic>),
-  dueDate: json['due_date'] as String,
+  dueDate: DateTime.parse(json['due_date'] as String),
   createdAt: DateTime.parse(json['created_at'] as String),
   agency:
       json['agency'] == null
@@ -31,7 +31,7 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
   'deal_no': instance.dealNo,
   'name': instance.name,
   'created_at': instance.createdAt.toIso8601String(),
-  'due_date': instance.dueDate,
+  'due_date': instance.dueDate.toIso8601String(),
   'priority': instance.priority.toJson(),
   'status': instance.status.toJson(),
   'client': instance.client.toJson(),

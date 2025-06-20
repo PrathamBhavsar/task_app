@@ -26,7 +26,6 @@ import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
-import '../../presentation/providers/appointment_provider.dart';
 import '../../presentation/providers/measurement_provider.dart';
 import '../../presentation/providers/task_provider.dart';
 import '../../presentation/providers/user_provider.dart';
@@ -159,8 +158,6 @@ void setupProviders() {
   getIt.registerLazySingleton<TaskProvider>(
     () => TaskProvider(getIt<TaskRepository>()),
   );
-
-  getIt.registerLazySingleton<AppointmentProvider>(AppointmentProvider.new);
 
   getIt.registerLazySingleton<MeasurementProvider>(MeasurementProvider.new);
 }
