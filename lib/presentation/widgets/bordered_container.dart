@@ -18,7 +18,7 @@ class BorderedContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Material(
     color: Colors.transparent,
-    child: Ink(
+    child: Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: color,

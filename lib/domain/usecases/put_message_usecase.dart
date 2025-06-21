@@ -5,10 +5,10 @@ import '../../data/models/payloads/message_payload.dart';
 import '../entities/message.dart';
 import '../repositories/message_repository.dart';
 
-class GetAllMessagesUseCase {
+class PutMessageUseCase {
   final MessageRepository repository;
-  GetAllMessagesUseCase(this.repository);
-  Future<Either<Failure, List<Message>>> call(int taskId) {
-    return repository.getAll(taskId);
+  PutMessageUseCase(this.repository);
+  Future<Either<Failure, Message>> call(MessagePayload data) {
+    return repository.put(data);
   }
 }

@@ -5,7 +5,9 @@ import '../../utils/extensions/padding.dart';
 
 class ActionButton extends StatelessWidget {
   const ActionButton({
-    required this.label, required this.onPress, super.key,
+    required this.label,
+    required this.onPress,
+    super.key,
     this.fontColor = Colors.black,
     this.backgroundColor = Colors.white,
     this.backgroundColorDisabled = Colors.transparent,
@@ -24,54 +26,56 @@ class ActionButton extends StatelessWidget {
   final IconData? prefixIcon;
 
   @override
-  Widget build(BuildContext context) => SizedBox(
-    height: 50.h,
-    width: double.infinity,
-    child: ElevatedButton(
-      onPressed: isDisabled ? null : onPress,
-      style: ButtonStyle(
-        elevation: WidgetStateProperty.all(0),
-        shape: WidgetStateProperty.all(
-          RoundedRectangleBorder(
-            borderRadius: AppBorders.radius,
-            side:
-                hasBorder
-                    ? BorderSide(width: 1, color: AppColors.accent)
-                    : BorderSide.none,
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 50.h,
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: isDisabled ? null : onPress,
+        style: ButtonStyle(
+          elevation: WidgetStateProperty.all(0),
+          shape: WidgetStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: AppBorders.radius,
+              side:
+                  hasBorder
+                      ? BorderSide(width: 1, color: AppColors.accent)
+                      : BorderSide.none,
+            ),
+          ),
+          backgroundColor: WidgetStateProperty.all(
+            isDisabled ? backgroundColorDisabled : backgroundColor,
           ),
         ),
-        backgroundColor: WidgetStateProperty.all(
-          isDisabled ? backgroundColorDisabled : backgroundColor,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (prefixIcon != null) ...[
-            Icon(
-              prefixIcon,
-              color: fontColor,
-              size: 18.sp,
-              applyTextScaling: true,
-            ),
-            8.wGap,
-          ],
-          Flexible(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontVariations: [FontVariation.weight(600)],
-                  color: isDisabled ? Colors.black : fontColor,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (prefixIcon != null) ...[
+              Icon(
+                prefixIcon,
+                color: fontColor,
+                size: 18.sp,
+                applyTextScaling: true,
+              ),
+              8.wGap,
+            ],
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontVariations: [FontVariation.weight(600)],
+                    color: isDisabled ? Colors.black : fontColor,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }

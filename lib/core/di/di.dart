@@ -24,6 +24,7 @@ import '../../domain/usecases/auth_usecase.dart';
 import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../domain/usecases/message_usecase.dart';
+import '../../domain/usecases/put_message_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
@@ -110,7 +111,7 @@ void setupRepositories() {
   );
 
   getIt.registerLazySingleton<MessageRepository>(
-        () => MessageRepositoryImpl(getIt<ApiHelper>()),
+    () => MessageRepositoryImpl(getIt<ApiHelper>()),
   );
 }
 
@@ -130,6 +131,10 @@ void setupUseCases() {
 
   getIt.registerLazySingleton(
     () => GetAllMessagesUseCase(getIt<MessageRepository>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => PutMessageUseCase(getIt<MessageRepository>()),
   );
   getIt.registerLazySingleton(() => AuthUseCase(getIt<AuthRepository>()));
 }
@@ -172,7 +177,10 @@ void setupBlocs() {
 
   getIt.registerFactory(() => TimelineBloc(getIt<GetAllTimelinesUseCase>()));
 
-  getIt.registerFactory(() => MessageBloc(getIt<GetAllMessagesUseCase>()));
+  getIt.registerFactory(
+    () =>
+        MessageBloc(getIt<GetAllMessagesUseCase>(), getIt<PutMessageUseCase>()),
+  );
 
   getIt.registerFactory(TabBloc.new);
 }

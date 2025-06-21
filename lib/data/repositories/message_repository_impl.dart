@@ -4,6 +4,7 @@ import '../../core/error/failure.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/repositories/message_repository.dart';
 import '../api/api_helper.dart';
+import '../models/payloads/message_payload.dart';
 
 class MessageRepositoryImpl implements MessageRepository {
   final ApiHelper api;
@@ -13,5 +14,10 @@ class MessageRepositoryImpl implements MessageRepository {
   @override
   Future<Either<Failure, List<Message>>> getAll(int taskId) {
     return api.getMessagesByTask(taskId);
+  }
+
+  @override
+  Future<Either<Failure, Message>> put(MessagePayload data) {
+    return api.putMessage(data);
   }
 }

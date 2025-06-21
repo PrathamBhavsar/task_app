@@ -21,6 +21,7 @@ class CacheHelper {
   }
 
   UserRole getUserRole() => _user?.userType ?? UserRole.agent;
+  int? getUserId() => _user?.userId;
 
   User? get user => _user;
 

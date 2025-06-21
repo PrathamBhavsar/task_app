@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
+import '../../../core/helpers/validator.dart';
+import '../../../data/models/payloads/message_payload.dart';
 import '../../../domain/entities/message.dart';
 import '../../../domain/entities/task.dart';
 import '../../../domain/entities/timeline.dart';
@@ -34,6 +36,8 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
+import 'widgets/message_tile.dart';
+import 'widgets/timeline_tile.dart';
 
 class TaskDetailPage extends StatefulWidget {
   const TaskDetailPage({required this.task, super.key});
@@ -45,8 +49,12 @@ class TaskDetailPage extends StatefulWidget {
 }
 
 class _TaskDetailPageState extends State<TaskDetailPage> {
+  late final TextEditingController _messageController;
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
+    _messageController = TextEditingController();
     context.read<TimelineBloc>().add(
       FetchTimelinesRequested(widget.task.taskId!),
     );
@@ -58,7 +66,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final int tabIndex = context.select<TabBloc, int>(
+      (bloc) => bloc.state.tabIndex,
+    );
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         forceMaterialTransparency: true,
         title: Column(
@@ -70,9 +83,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         child: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {
             final UserRole userRole = getIt<CacheHelper>().getUserRole();
-            final int tabIndex = context.select<TabBloc, int>(
-              (bloc) => bloc.state.tabIndex,
-            );
+
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -191,108 +202,50 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           },
         ),
       ),
-    );
-  }
+      persistentFooterButtons:
+          tabIndex == 2
+              ? [
+                Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: Form(
+                    key: _formKey,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CustomTextField(
+                            hintTxt: "Enter Message",
+                            controller: _messageController,
+                            validator: Validator.validateRequiredField,
+                          ),
+                        ),
+                        10.wGap,
+                        IconButton(
+                          onPressed: () {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
 
-  Widget _buildAgentView(int tabIndex) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        10.hGap,
-        BorderedContainer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Measurement Details', style: AppTexts.titleTextStyle),
-              20.hGap,
-              Text('Measurements', style: AppTexts.labelTextStyle),
-              5.hGap,
-              ...List.generate(
-                4,
-                (index) => Padding(
-                  padding:
-                      index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-                  child: _buildBorderedTile(
-                    'Living Room Window 1',
-                    '72" × 48"',
-                    'Near the fireplace',
+                            FocusScope.of(context).unfocus();
+
+                            context.read<MessageBloc>().add(
+                              PutMessageRequested(
+                                MessagePayload(
+                                  userId: getIt<CacheHelper>().getUserId()!,
+                                  taskId: widget.task.taskId!,
+                                  message: _messageController.text,
+                                ),
+                              ),
+                            );
+                            _messageController.clear();
+                          },
+                          icon: Icon(Icons.send_outlined, color: Colors.black),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              20.hGap,
-              Text('Service Charges', style: AppTexts.labelTextStyle),
-              5.hGap,
-              ...List.generate(
-                2,
-                (index) => Padding(
-                  padding:
-                      index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-                  child: _buildBorderedTile(
-                    'Curtain Stitching',
-                    '\$180.00',
-                    'Near the fireplace',
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        10.hGap,
-        ActionButton(
-          label: 'Edit Bill',
-          onPress: () => context.push(AppRoutes.measurement),
-          prefixIcon: CustomIcon.receiptIndianRupee,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNonAgentView(int tabIndex) {
-    return Column(
-      children: [
-        TabHeader(
-          tabs: [
-            Tab(text: 'Workflow'),
-            Tab(text: 'Timeline'),
-            Tab(text: 'Messages'),
-          ],
-        ),
-        Builder(
-          builder: (context) {
-            switch (tabIndex) {
-              case 0:
-                return _buildTaskOverFlow(
-                  widget.task.agency?.name ?? "",
-                  tabIndex == 1,
-                  tabIndex == 2,
-                );
-              case 1:
-                return _buildTimeline();
-              default:
-                // return SizedBox.shrink();
-                return _buildMessages();
-            }
-          },
-        ),
-      ],
-    );
-  }
-
-  BorderedContainer _buildBorderedTile(String title, amount, subtitle) {
-    return BorderedContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: AppTexts.labelTextStyle),
-              Text(amount, style: AppTexts.labelTextStyle),
-            ],
-          ),
-          Text(subtitle, style: AppTexts.inputHintTextStyle),
-        ],
-      ),
+              ]
+              : null,
     );
   }
 
@@ -375,30 +328,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     );
   }
 
-  Widget _buildTextInput(
-    String title,
-    String hint, {
-    bool isMultiline = false,
-  }) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: AppTexts.labelTextStyle),
-      10.hGap,
-      CustomTextField(hintTxt: hint, isMultiline: isMultiline),
-      10.hGap,
-    ],
-  );
-
-  Widget _buildDropDown(String title, List<String> items) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: AppTexts.labelTextStyle),
-      10.hGap,
-      CustomDropdownMenu(items: items),
-      10.hGap,
-    ],
-  );
-
   Widget _buildTimeline() {
     return BlocBuilder<TimelineBloc, TimelineState>(
       builder: (context, timelineState) {
@@ -420,52 +349,26 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Task Timeline', style: AppTexts.titleTextStyle),
+              Text(
+                'History of events for this task',
+                style: AppTexts.inputHintTextStyle,
+              ),
               10.hGap,
-              BorderedContainer(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'History of events for this task',
-                      style: AppTexts.inputHintTextStyle,
-                    ),
-                    20.hGap,
-                    ...List.generate(timelines.length, (index) {
-                      final Timeline timeline = timelines[index];
-                      return Padding(
-                        padding:
-                            index == 0
-                                ? EdgeInsets.zero
-                                : EdgeInsets.only(top: 20.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTag(
-                              text: timeline.createdAt.toPrettyDateTime(),
-                              color: timeline.status.color.toColor(),
-                              textColor: Colors.white,
-                            ),
-                            5.hGap,
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.w),
-                              child: Text(
-                                timeline.status.name,
-                                style: AppTexts.labelTextStyle,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.w),
-                              child: Text(
-                                "By ${timeline.user.name}",
-                                style: AppTexts.inputHintTextStyle,
-                              ),
-                            ),
-                          ],
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    itemCount: timelineState.timelines.length,
+                    itemBuilder:
+                        (context, index) => TimelineTile(
+                          timeline: timelineState.timelines[index],
                         ),
-                      );
-                    }),
-                  ],
-                ),
+                    separatorBuilder: (context, index) => 20.hGap,
+                  ),
+                ],
               ),
             ],
           );
@@ -476,7 +379,16 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   Widget _buildMessages() {
-    return BlocBuilder<MessageBloc, MessageState>(
+    return BlocConsumer<MessageBloc, MessageState>(
+      listener: (context, state) {
+        if (state is PutMessageSuccess) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<MessageBloc>().add(
+              FetchMessagesRequested(widget.task.taskId!),
+            );
+          });
+        }
+      },
       builder: (BuildContext context, messageState) {
         if (messageState is MessageLoadInProgress) {
           return const Center(child: CircularProgressIndicator());
@@ -499,48 +411,15 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             children: [
               Text('Task Messages', style: AppTexts.titleTextStyle),
               10.hGap,
-              BorderedContainer(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...List.generate(messageState.messages.length, (index) {
-                      final Message message = messageState.messages[index];
-                      return Padding(
-                        padding:
-                            index == 0
-                                ? EdgeInsets.zero
-                                : EdgeInsets.only(top: 20.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  message.user.name,
-                                  style: AppTexts.labelTextStyle,
-                                ),
-                                10.wGap,
-                                Text(
-                                  message.createdAt.toPrettyDateTime(),
-                                  style: AppTexts.inputHintTextStyle,
-                                ),
-                              ],
-                            ),
-                            5.hGap,
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.w),
-                              child: Text(
-                                message.message,
-                                style: AppTexts.inputLabelTextStyle,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                  ],
-                ),
+              ListView.separated(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                itemCount: messageState.messages.length,
+                itemBuilder:
+                    (context, index) =>
+                        MessageTile(message: messageState.messages[index]),
+                separatorBuilder: (context, index) => 10.hGap,
               ),
             ],
           );
@@ -549,4 +428,135 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       },
     );
   }
+
+  Widget _buildAgentView(int tabIndex) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        10.hGap,
+        BorderedContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Measurement Details', style: AppTexts.titleTextStyle),
+              20.hGap,
+              Text('Measurements', style: AppTexts.labelTextStyle),
+              5.hGap,
+              ...List.generate(
+                4,
+                (index) => Padding(
+                  padding:
+                      index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+                  child: _buildBorderedTile(
+                    'Living Room Window 1',
+                    '72" × 48"',
+                    'Near the fireplace',
+                  ),
+                ),
+              ),
+              20.hGap,
+              Text('Service Charges', style: AppTexts.labelTextStyle),
+              5.hGap,
+              ...List.generate(
+                2,
+                (index) => Padding(
+                  padding:
+                      index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+                  child: _buildBorderedTile(
+                    'Curtain Stitching',
+                    '\$180.00',
+                    'Near the fireplace',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        10.hGap,
+        ActionButton(
+          label: 'Edit Bill',
+          onPress: () => context.push(AppRoutes.measurement),
+          prefixIcon: CustomIcon.receiptIndianRupee,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNonAgentView(int tabIndex) {
+    return Column(
+      children: [
+        TabHeader(
+          tabs: [
+            Tab(text: 'Workflow'),
+            Tab(text: 'Timeline'),
+            Tab(text: 'Messages'),
+          ],
+        ),
+        IndexedStack(
+          index: tabIndex,
+          children: [
+            _buildTaskOverFlow(
+              widget.task.agency?.name ?? "",
+              tabIndex == 1,
+              tabIndex == 2,
+            ),
+            _buildTimeline(),
+            _buildMessages(),
+          ],
+        ),
+        // Builder(
+        //   builder: (context) {
+        //     switch (tabIndex) {
+        //       case 0:
+        //         return _buildTaskOverFlow(
+        //           widget.task.agency?.name ?? "",
+        //           tabIndex == 1,
+        //           tabIndex == 2,
+        //         );
+        //       case 1:
+        //         return _buildTimeline();
+        //       default:
+        //         // return SizedBox.shrink();
+        //         return _buildMessages();
+        //     }
+        //   },
+        // ),
+      ],
+    );
+  }
+
+  BorderedContainer _buildBorderedTile(String title, amount, subtitle) {
+    return BorderedContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(title, style: AppTexts.labelTextStyle),
+              Text(amount, style: AppTexts.labelTextStyle),
+            ],
+          ),
+          Text(subtitle, style: AppTexts.inputHintTextStyle),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextInput(
+    String title,
+    String hint, {
+    bool isMultiline = false,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: AppTexts.labelTextStyle),
+        10.hGap,
+        CustomTextField(hintTxt: hint, isMultiline: isMultiline),
+        10.hGap,
+      ],
+    );
+  }
+
 }

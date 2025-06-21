@@ -22,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.onChangedFunc,
     this.onTap,
+    this.validator,
   });
 
   final TextEditingController? controller;
@@ -37,34 +38,41 @@ class CustomTextField extends StatelessWidget {
   final Icon? prefixIcon;
   final Function(String)? onChangedFunc;
   final VoidCallback? onTap;
+  final FormFieldValidator<String>? validator;
+
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        return TextField(
-          autofocus: false,
-          controller: controller,
-          focusNode: focusNode,
-          enabled: isEnabled,
-          maxLines: isMultiline ? null : 1,
-          minLines: isMultiline ? 3 : 1,
-          obscureText: isPassword ? !state.isVisible : false,
-          onChanged: onChangedFunc,
-          onTap: onTap,
-          keyboardType: keyboardType ?? TextInputType.text,
-          inputFormatters:
-              isPhone
-                  ? [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
-                  ]
-                  : null,
-          style: AppTexts.inputTextStyle,
-          textAlignVertical: TextAlignVertical.center,
-          decoration: _buildInputDecoration(
-            state.isVisible,
-            () => context.read<AuthBloc>().add(ToggleVisibilityEvent()),
+        return SizedBox(
+          height: 50.h,
+          width: double.infinity,
+          child: TextFormField(
+            autofocus: false,
+            controller: controller,
+            validator: validator,
+            focusNode: focusNode,
+            enabled: isEnabled,
+            maxLines: isMultiline ? null : 1,
+            minLines: isMultiline ? 3 : 1,
+            obscureText: isPassword ? !state.isVisible : false,
+            onChanged: onChangedFunc,
+            onTap: onTap,
+            keyboardType: keyboardType ?? TextInputType.text,
+            inputFormatters:
+                isPhone
+                    ? [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ]
+                    : null,
+            style: AppTexts.inputTextStyle,
+            textAlignVertical: TextAlignVertical.center,
+            decoration: _buildInputDecoration(
+              state.isVisible,
+              () => context.read<AuthBloc>().add(ToggleVisibilityEvent()),
+            ),
           ),
         );
       },

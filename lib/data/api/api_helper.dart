@@ -8,14 +8,17 @@ import '../../domain/entities/message.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/timeline.dart';
 import '../../domain/entities/user.dart';
+import '../../presentation/blocs/message/message_state.dart';
 import '../models/api/api_response.dart';
 import '../models/payloads/auth_payload.dart';
+import '../models/payloads/message_payload.dart';
 import '../responses/get_bills_response.dart';
 import '../responses/get_clients_response.dart';
 import '../responses/get_messages_response.dart';
 import '../responses/get_tasks_response.dart';
 import '../responses/get_timelines_response.dart';
 import '../responses/get_users_response.dart';
+import '../responses/put_message_response.dart';
 import 'api_constants.dart';
 import 'api_handler.dart';
 import 'api_service.dart';
@@ -98,6 +101,20 @@ class ApiHelper {
       return Right(result.data!.timelines);
     } else {
       return Left(Failure('Failed to fetch timelines'));
+    }
+  }
+
+  Future<Either<Failure, Message>> putMessage(MessagePayload data) async {
+    final ApiResponse result = await handler
+        .execute<PutMessageResponse>(
+          () => service.post(ApiConstants.message.base, data: data.toJson()),
+          (json) => PutMessageResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.message);
+    } else {
+      return Left(Failure('Failed to send message'));
     }
   }
 
