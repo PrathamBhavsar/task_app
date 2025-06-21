@@ -35,6 +35,9 @@ class Task {
   @JsonKey(name: 'assigned_users')
   final List<User> assignedUsers;
 
+  @JsonKey(name: 'additional_notes')
+  final String? notes;
+
   Task({
     required this.taskId,
     required this.dealNo,
@@ -47,6 +50,7 @@ class Task {
     required this.dueDate,
     required this.createdAt,
     this.agency,
+    this.notes,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);

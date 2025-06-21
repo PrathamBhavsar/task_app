@@ -1,24 +1,32 @@
-import 'dart:math';
+import 'package:json_annotation/json_annotation.dart';
+import 'user.dart';
 
+part 'message.g.dart';
+
+@JsonSerializable()
 class Message {
-  final String name;
+  @JsonKey(name: 'message_id')
+  final int? messageId;
+
+  @JsonKey(name: 'task_id')
+  final int taskId;
+
+  final User user;
+
   final String message;
-  final String createdAt;
 
-  Message({required this.name, required this.message, required this.createdAt});
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
 
-  // Factory constructor to create a Message from a Map
-  factory Message.fromMap(Map<String, dynamic> map) => Message(
-    name: map['name'] ?? '',
-    message: map['message'] ?? '',
-    createdAt: map['created_at'] ?? '',
-  );
+  Message({
+    required this.taskId,
+    required this.user,
+    required this.message,
+    required this.createdAt,
+    this.messageId,
+  });
 
-  // Convert Message to Map
-  Map<String, dynamic> toMap() => {
-    'name': name,
-    'message': message,
-    'created_at': createdAt,
-  };
+  factory Message.fromJson(Map<String, dynamic> json) => _$MessageFromJson(json);
 
+  Map<String, dynamic> toJson() => _$MessageToJson(this);
 }

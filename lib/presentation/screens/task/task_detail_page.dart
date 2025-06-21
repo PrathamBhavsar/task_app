@@ -8,16 +8,24 @@ import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
 import '../../../domain/entities/message.dart';
 import '../../../domain/entities/task.dart';
+import '../../../domain/entities/timeline.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/constants/dummy_data.dart';
 import '../../../utils/enums/user_role.dart';
+import '../../../utils/extensions/color_translator.dart';
 import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/home/home_state.dart';
+import '../../blocs/message/message_bloc.dart';
+import '../../blocs/message/message_event.dart';
+import '../../blocs/message/message_state.dart';
 import '../../blocs/tab/tab_bloc.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_state.dart';
+import '../../blocs/timeline/timeline_bloc.dart';
+import '../../blocs/timeline/timeline_event.dart';
+import '../../blocs/timeline/timeline_state.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
@@ -26,8 +34,6 @@ import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
-
-final timeline = DummyData.taskDetailTimeline;
 
 class TaskDetailPage extends StatefulWidget {
   const TaskDetailPage({required this.task, super.key});
@@ -39,13 +45,14 @@ class TaskDetailPage extends StatefulWidget {
 }
 
 class _TaskDetailPageState extends State<TaskDetailPage> {
-
-  late List<Message> messages;
-  late List<Message> timelines;
-
   @override
   void initState() {
-    // TODO: implement initState
+    context.read<TimelineBloc>().add(
+      FetchTimelinesRequested(widget.task.taskId!),
+    );
+    context.read<MessageBloc>().add(
+      FetchMessagesRequested(widget.task.taskId!),
+    );
     super.initState();
   }
 
@@ -102,13 +109,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                           children: [
                             CustomTag(
                               text: widget.task.priority.name,
-                              color: Colors.redAccent,
+                              color: widget.task.priority.color.toColor(),
                               textColor: Colors.white,
                             ),
                             10.wGap,
                             CustomTag(
                               text: widget.task.status.name,
-                              color: Colors.black,
+                              color: widget.task.status.color.toColor(),
                               textColor: Colors.white,
                             ),
                           ],
@@ -132,17 +139,18 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         ],
                         Text('Address', style: AppTexts.inputHintTextStyle),
                         Text(
-                          '123 Main St, Anytown, CA 12345',
+                          widget.task.client.address,
                           style: AppTexts.inputTextStyle,
                         ),
-                        // if (task.notes != null && task.notes!.isNotEmpty) ...[
-                        //   10.hGap,
-                        //   Text('Notes', style: AppTexts.inputHintTextStyle),
-                        //   Text(
-                        //     task.notes ?? '',
-                        //     style: AppTexts.inputTextStyle,
-                        //   ),
-                        // ],
+                        if (widget.task.notes != null &&
+                            widget.task.notes!.isNotEmpty) ...[
+                          10.hGap,
+                          Text('Notes', style: AppTexts.inputHintTextStyle),
+                          Text(
+                            widget.task.notes ?? '',
+                            style: AppTexts.inputTextStyle,
+                          ),
+                        ],
                         10.hGap,
                         if (tabIndex == 0) ...[
                           BorderedContainer(
@@ -174,94 +182,99 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                       ],
                     ),
                   ),
-                  if (userRole == UserRole.agent) ...[
-                    10.hGap,
-                    BorderedContainer(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Measurement Details',
-                            style: AppTexts.titleTextStyle,
-                          ),
-                          20.hGap,
-                          Text('Measurements', style: AppTexts.labelTextStyle),
-                          5.hGap,
-                          ...List.generate(
-                            4,
-                            (index) => Padding(
-                              padding:
-                                  index == 0
-                                      ? EdgeInsets.zero
-                                      : EdgeInsets.only(top: 10.h),
-                              child: _buildBorderedTile(
-                                'Living Room Window 1',
-                                '72" × 48"',
-                                'Near the fireplace',
-                              ),
-                            ),
-                          ),
-                          20.hGap,
-                          Text(
-                            'Service Charges',
-                            style: AppTexts.labelTextStyle,
-                          ),
-                          5.hGap,
-                          ...List.generate(
-                            2,
-                            (index) => Padding(
-                              padding:
-                                  index == 0
-                                      ? EdgeInsets.zero
-                                      : EdgeInsets.only(top: 10.h),
-                              child: _buildBorderedTile(
-                                'Curtain Stitching',
-                                '\$180.00',
-                                'Near the fireplace',
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    10.hGap,
-                    ActionButton(
-                      label: 'Edit Bill',
-                      onPress: () => context.push(AppRoutes.measurement),
-                      prefixIcon: CustomIcon.receiptIndianRupee,
-                    ),
-                  ] else ...[
-                    TabHeader(
-                      tabs: [
-                        Tab(text: 'Workflow'),
-                        Tab(text: 'Timeline'),
-                        Tab(text: 'Messages'),
-                      ],
-                    ),
-                    Builder(
-                      builder: (context) {
-                        switch (tabIndex) {
-                          case 0:
-                            return _buildTaskOverFlow(
-                              widget.task.agency?.name ?? "",
-                              tabIndex == 1,
-                              tabIndex == 2,
-                            );
-                          case 1:
-                            return _buildTimeline();
-                          default:
-                            // return _buildMessages(task.messages);
-                            return SizedBox.shrink();
-                        }
-                      },
-                    ),
-                  ],
+                  userRole == UserRole.agent
+                      ? _buildAgentView(tabIndex)
+                      : _buildNonAgentView(tabIndex),
                 ],
               ).padAll(AppPaddings.appPaddingInt),
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildAgentView(int tabIndex) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        10.hGap,
+        BorderedContainer(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Measurement Details', style: AppTexts.titleTextStyle),
+              20.hGap,
+              Text('Measurements', style: AppTexts.labelTextStyle),
+              5.hGap,
+              ...List.generate(
+                4,
+                (index) => Padding(
+                  padding:
+                      index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+                  child: _buildBorderedTile(
+                    'Living Room Window 1',
+                    '72" × 48"',
+                    'Near the fireplace',
+                  ),
+                ),
+              ),
+              20.hGap,
+              Text('Service Charges', style: AppTexts.labelTextStyle),
+              5.hGap,
+              ...List.generate(
+                2,
+                (index) => Padding(
+                  padding:
+                      index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
+                  child: _buildBorderedTile(
+                    'Curtain Stitching',
+                    '\$180.00',
+                    'Near the fireplace',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        10.hGap,
+        ActionButton(
+          label: 'Edit Bill',
+          onPress: () => context.push(AppRoutes.measurement),
+          prefixIcon: CustomIcon.receiptIndianRupee,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNonAgentView(int tabIndex) {
+    return Column(
+      children: [
+        TabHeader(
+          tabs: [
+            Tab(text: 'Workflow'),
+            Tab(text: 'Timeline'),
+            Tab(text: 'Messages'),
+          ],
+        ),
+        Builder(
+          builder: (context) {
+            switch (tabIndex) {
+              case 0:
+                return _buildTaskOverFlow(
+                  widget.task.agency?.name ?? "",
+                  tabIndex == 1,
+                  tabIndex == 2,
+                );
+              case 1:
+                return _buildTimeline();
+              default:
+                // return SizedBox.shrink();
+                return _buildMessages();
+            }
+          },
+        ),
+      ],
     );
   }
 
@@ -386,105 +399,154 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     ],
   );
 
-  Widget _buildTimeline() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Task Timeline', style: AppTexts.titleTextStyle),
-      10.hGap,
-      BorderedContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'History of events for this task',
-              style: AppTexts.inputHintTextStyle,
-            ),
-            20.hGap,
-            ...List.generate(
-              timeline.length,
-              (index) => Padding(
-                padding:
-                    index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomTag(
-                      text: timeline[index]['time'],
-                      color:
-                          index == 0 ? AppColors.darkBlueText : AppColors.green,
-                      textColor: Colors.white,
-                    ),
-                    5.hGap,
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.w),
-                      child: Text(
-                        timeline[index]['title'],
-                        style: AppTexts.labelTextStyle,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.w),
-                      child: Text(
-                        timeline[index]['subtitle'],
-                        style: AppTexts.inputHintTextStyle,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
+  Widget _buildTimeline() {
+    return BlocBuilder<TimelineBloc, TimelineState>(
+      builder: (context, timelineState) {
+        if (timelineState is TimelineLoadInProgress) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-  Widget _buildMessages(List<Message> messages) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text('Task Messages', style: AppTexts.titleTextStyle),
-      10.hGap,
-      BorderedContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ...List.generate(
-              messages.length,
-              (index) => Padding(
-                padding:
-                    index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
+        if (timelineState is TimelineLoadFailure) {
+          return const Center(child: Text('There was an issue loading bills!'));
+        }
+
+        if (timelineState is TimelineLoadSuccess) {
+          final timelines = timelineState.timelines;
+
+          if (timelines.isEmpty) {
+            return const Center(child: Text('There are no bills!'));
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Task Timeline', style: AppTexts.titleTextStyle),
+              10.hGap,
+              BorderedContainer(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          messages[index].name,
-                          style: AppTexts.labelTextStyle,
-                        ),
-                        10.wGap,
-                        Text(
-                          messages[index].createdAt,
-                          style: AppTexts.inputHintTextStyle,
-                        ),
-                      ],
+                    Text(
+                      'History of events for this task',
+                      style: AppTexts.inputHintTextStyle,
                     ),
-                    5.hGap,
-                    Padding(
-                      padding: EdgeInsets.only(left: 10.w),
-                      child: Text(
-                        messages[index].message,
-                        style: AppTexts.inputLabelTextStyle,
-                      ),
-                    ),
+                    20.hGap,
+                    ...List.generate(timelines.length, (index) {
+                      final Timeline timeline = timelines[index];
+                      return Padding(
+                        padding:
+                            index == 0
+                                ? EdgeInsets.zero
+                                : EdgeInsets.only(top: 20.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomTag(
+                              text: timeline.createdAt.toPrettyDateTime(),
+                              color: timeline.status.color.toColor(),
+                              textColor: Colors.white,
+                            ),
+                            5.hGap,
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.w),
+                              child: Text(
+                                timeline.status.name,
+                                style: AppTexts.labelTextStyle,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.w),
+                              child: Text(
+                                "By ${timeline.user.name}",
+                                style: AppTexts.inputHintTextStyle,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
+            ],
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  Widget _buildMessages() {
+    return BlocBuilder<MessageBloc, MessageState>(
+      builder: (BuildContext context, messageState) {
+        if (messageState is MessageLoadInProgress) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (messageState is MessageLoadFailure) {
+          return const Center(
+            child: Text('There was an issue loading messages!'),
+          );
+        }
+
+        if (messageState is MessageLoadSuccess) {
+          final messages = messageState.messages;
+
+          if (messages.isEmpty) {
+            return const Center(child: Text('There are no messages!'));
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Task Messages', style: AppTexts.titleTextStyle),
+              10.hGap,
+              BorderedContainer(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...List.generate(messageState.messages.length, (index) {
+                      final Message message = messageState.messages[index];
+                      return Padding(
+                        padding:
+                            index == 0
+                                ? EdgeInsets.zero
+                                : EdgeInsets.only(top: 20.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  message.user.name,
+                                  style: AppTexts.labelTextStyle,
+                                ),
+                                10.wGap,
+                                Text(
+                                  message.createdAt.toPrettyDateTime(),
+                                  style: AppTexts.inputHintTextStyle,
+                                ),
+                              ],
+                            ),
+                            5.hGap,
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.w),
+                              child: Text(
+                                message.message,
+                                style: AppTexts.inputLabelTextStyle,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
 }

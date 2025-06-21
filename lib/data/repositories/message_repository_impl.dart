@@ -1,0 +1,17 @@
+import 'package:either_dart/either.dart';
+
+import '../../core/error/failure.dart';
+import '../../domain/entities/message.dart';
+import '../../domain/repositories/message_repository.dart';
+import '../api/api_helper.dart';
+
+class MessageRepositoryImpl implements MessageRepository {
+  final ApiHelper api;
+
+  MessageRepositoryImpl(this.api);
+
+  @override
+  Future<Either<Failure, List<Message>>> getAll(int taskId) {
+    return api.getMessagesByTask(taskId);
+  }
+}

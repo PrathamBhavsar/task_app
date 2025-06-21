@@ -10,22 +10,30 @@ import '../../data/api/api_service.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/bill_repository_impl.dart';
 import '../../data/repositories/client_repository_impl.dart';
+import '../../data/repositories/message_repository_impl.dart';
 import '../../data/repositories/task_repository_impl.dart';
+import '../../data/repositories/timeline_repository_impl.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/bill_repository.dart';
 import '../../domain/repositories/client_repository.dart';
+import '../../domain/repositories/message_repository.dart';
 import '../../domain/repositories/task_repository.dart';
+import '../../domain/repositories/timeline_repository.dart';
 import '../../domain/usecases/auth_usecase.dart';
 import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
+import '../../domain/usecases/message_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
+import '../../domain/usecases/timeline_usecase.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/bill/bill_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
+import '../../presentation/blocs/message/message_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
+import '../../presentation/blocs/timeline/timeline_bloc.dart';
 import '../../presentation/providers/measurement_provider.dart';
 import '../../presentation/providers/task_provider.dart';
 import '../../presentation/providers/user_provider.dart';
@@ -96,6 +104,14 @@ void setupRepositories() {
   getIt.registerLazySingleton<BillRepository>(
     () => BillRepositoryImpl(getIt<ApiHelper>()),
   );
+
+  getIt.registerLazySingleton<TimelineRepository>(
+    () => TimelineRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton<MessageRepository>(
+        () => MessageRepositoryImpl(getIt<ApiHelper>()),
+  );
 }
 
 void setupUseCases() {
@@ -107,6 +123,13 @@ void setupUseCases() {
   );
   getIt.registerLazySingleton(
     () => GetAllTasksUseCase(getIt<TaskRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => GetAllTimelinesUseCase(getIt<TimelineRepository>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllMessagesUseCase(getIt<MessageRepository>()),
   );
   getIt.registerLazySingleton(() => AuthUseCase(getIt<AuthRepository>()));
 }
@@ -146,6 +169,10 @@ void setupBlocs() {
   getIt.registerFactory(() => BillBloc(getIt<GetAllBillsUseCase>()));
 
   getIt.registerFactory(() => TaskBloc(getIt<GetAllTasksUseCase>()));
+
+  getIt.registerFactory(() => TimelineBloc(getIt<GetAllTimelinesUseCase>()));
+
+  getIt.registerFactory(() => MessageBloc(getIt<GetAllMessagesUseCase>()));
 
   getIt.registerFactory(TabBloc.new);
 }

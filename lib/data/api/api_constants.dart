@@ -1,6 +1,6 @@
 class ApiConstants {
   /// Base URLs
-  static const String _localDomainUrl = "http://192.168.1.6:8000";
+  static const String _localDomainUrl = "http://192.168.1.10:8000";
   static const String _developmentDomainUrl = "";
 
   static String currentDomainBaseUrl = _localDomainUrl;
@@ -21,6 +21,8 @@ class ApiConstants {
   static final measurement = _GenericRoutes("/measurement");
   static final service = _GenericRoutes("/service");
   static final bill = _GenericRoutes("/bill");
+  static final timeline = _GenericRoutes("/timeline");
+  static final message = _GenericRoutes("/message");
 }
 
 /// User-specific routes

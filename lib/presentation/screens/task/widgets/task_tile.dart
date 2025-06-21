@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../domain/entities/task.dart';
 import '../../../../utils/constants/app_constants.dart';
+import '../../../../utils/extensions/color_translator.dart';
 import '../../../../utils/extensions/date_formatter.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/bordered_container.dart';
@@ -34,7 +35,7 @@ class TaskTile extends StatelessWidget {
                       ),
                       CustomTag(
                         text: task.status.name,
-                        color: AppColors.accent,
+                        color: task.status.color.toColor(),
                         textColor: Colors.black,
                       ),
                     ],

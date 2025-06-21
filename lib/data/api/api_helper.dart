@@ -4,13 +4,17 @@ import '../../core/error/failure.dart';
 import '../../core/helpers/log_helper.dart';
 import '../../domain/entities/bill.dart';
 import '../../domain/entities/client.dart';
+import '../../domain/entities/message.dart';
 import '../../domain/entities/task.dart';
+import '../../domain/entities/timeline.dart';
 import '../../domain/entities/user.dart';
 import '../models/api/api_response.dart';
 import '../models/payloads/auth_payload.dart';
 import '../responses/get_bills_response.dart';
 import '../responses/get_clients_response.dart';
+import '../responses/get_messages_response.dart';
 import '../responses/get_tasks_response.dart';
+import '../responses/get_timelines_response.dart';
 import '../responses/get_users_response.dart';
 import 'api_constants.dart';
 import 'api_handler.dart';
@@ -80,6 +84,34 @@ class ApiHelper {
       return Right(result.data!.bills);
     } else {
       return Left(Failure('Failed to fetch tasks'));
+    }
+  }
+
+  Future<Either<Failure, List<Timeline>>> getTimelinesByTask(int taskId) async {
+    final ApiResponse result = await handler
+        .execute<GetTimelinesResponse>(
+          () => service.get(ApiConstants.timeline.base, queryParameters: {"task_id" : taskId}),
+          (json) => GetTimelinesResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.timelines);
+    } else {
+      return Left(Failure('Failed to fetch timelines'));
+    }
+  }
+
+  Future<Either<Failure, List<Message>>> getMessagesByTask(int taskId) async {
+    final ApiResponse result = await handler
+        .execute<GetMessagesResponse>(
+          () => service.get(ApiConstants.message.base, queryParameters: {"task_id" : taskId}),
+          (json) => GetMessagesResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.taskMessages);
+    } else {
+      return Left(Failure('Failed to fetch messages'));
     }
   }
 

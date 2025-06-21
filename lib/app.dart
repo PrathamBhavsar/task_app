@@ -8,8 +8,10 @@ import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/bill/bill_bloc.dart';
 import 'presentation/blocs/client/client_bloc.dart';
 import 'presentation/blocs/home/home_bloc.dart';
+import 'presentation/blocs/message/message_bloc.dart';
 import 'presentation/blocs/tab/tab_bloc.dart';
 import 'presentation/blocs/task/task_bloc.dart';
+import 'presentation/blocs/timeline/timeline_bloc.dart';
 import 'utils/constants/app_constants.dart';
 
 class MyApp extends StatelessWidget {
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => getIt<BillBloc>()),
           BlocProvider(create: (_) => getIt<TabBloc>()),
           BlocProvider(create: (_) => getIt<TaskBloc>()),
+          BlocProvider(create: (_) => getIt<TimelineBloc>()),
+          BlocProvider(create: (_) => getIt<MessageBloc>()),
+
 
           // ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
           // ChangeNotifierProvider(create: (_) => getIt<UserProvider>()),
