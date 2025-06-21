@@ -11,6 +11,8 @@ import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/bill_repository_impl.dart';
 import '../../data/repositories/client_repository_impl.dart';
 import '../../data/repositories/message_repository_impl.dart';
+import '../../data/repositories/priority_repository_impl.dart';
+import '../../data/repositories/status_repository_impl.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../data/repositories/timeline_repository_impl.dart';
 import '../../data/repositories/user_repository.dart';
@@ -18,23 +20,31 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/bill_repository.dart';
 import '../../domain/repositories/client_repository.dart';
 import '../../domain/repositories/message_repository.dart';
+import '../../domain/repositories/priority_repository.dart';
+import '../../domain/repositories/status_repository.dart';
 import '../../domain/repositories/task_repository.dart';
 import '../../domain/repositories/timeline_repository.dart';
 import '../../domain/usecases/auth_usecase.dart';
 import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../domain/usecases/message_usecase.dart';
+import '../../domain/usecases/priority_usecase.dart';
 import '../../domain/usecases/put_message_usecase.dart';
+import '../../domain/usecases/status_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
+import '../../domain/usecases/user_usecase.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/bill/bill_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
+import '../../presentation/blocs/priority/priority_bloc.dart';
+import '../../presentation/blocs/status/status_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
 import '../../presentation/blocs/timeline/timeline_bloc.dart';
+import '../../presentation/blocs/user/user_bloc.dart';
 import '../../presentation/providers/measurement_provider.dart';
 import '../../presentation/providers/task_provider.dart';
 import '../../presentation/providers/user_provider.dart';
@@ -49,10 +59,18 @@ final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 void setupLocator() {
   setupApiModule();
   setupHelpers();
-  setupRepositories();
-  setupUseCases();
-  setupBlocs();
-  setupProviders();
+
+  setupHome();
+  setupAuth();
+  setupTask();
+  setupClient();
+  setupBill();
+  setupMessage();
+  setupTimeline();
+  setupUser();
+  setupStatus();
+  setupPriority();
+  getIt.registerFactory(TabBloc.new);
 }
 
 void setupApiModule() {
@@ -84,61 +102,6 @@ void setupApiModule() {
   );
 }
 
-void setupRepositories() {
-  getIt.registerLazySingleton<UserRepository>(
-    () => UserRepository(getIt<ApiHelper>()),
-  );
-
-  getIt.registerLazySingleton<TaskRepository>(
-    () => TaskRepositoryImpl(getIt<ApiHelper>()),
-  );
-
-  // Data layer
-  getIt.registerLazySingleton<ClientRepository>(
-    () => ClientRepositoryImpl(getIt<ApiHelper>()),
-  );
-
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepositoryImpl(getIt<ApiHelper>()),
-  );
-
-  getIt.registerLazySingleton<BillRepository>(
-    () => BillRepositoryImpl(getIt<ApiHelper>()),
-  );
-
-  getIt.registerLazySingleton<TimelineRepository>(
-    () => TimelineRepositoryImpl(getIt<ApiHelper>()),
-  );
-
-  getIt.registerLazySingleton<MessageRepository>(
-    () => MessageRepositoryImpl(getIt<ApiHelper>()),
-  );
-}
-
-void setupUseCases() {
-  getIt.registerLazySingleton(
-    () => GetAllClientsUseCase(getIt<ClientRepository>()),
-  );
-  getIt.registerLazySingleton(
-    () => GetAllBillsUseCase(getIt<BillRepository>()),
-  );
-  getIt.registerLazySingleton(
-    () => GetAllTasksUseCase(getIt<TaskRepository>()),
-  );
-  getIt.registerLazySingleton(
-    () => GetAllTimelinesUseCase(getIt<TimelineRepository>()),
-  );
-
-  getIt.registerLazySingleton(
-    () => GetAllMessagesUseCase(getIt<MessageRepository>()),
-  );
-
-  getIt.registerLazySingleton(
-    () => PutMessageUseCase(getIt<MessageRepository>()),
-  );
-  getIt.registerLazySingleton(() => AuthUseCase(getIt<AuthRepository>()));
-}
-
 void setupHelpers() {
   getIt.registerLazySingleton<LogHelper>(LogHelper.new);
 
@@ -162,37 +125,121 @@ void setupHelpers() {
   );
 }
 
-void setupBlocs() {
-  getIt.registerFactory(() => ClientBloc(getIt<GetAllClientsUseCase>()));
-
+void setupHome() {
   getIt.registerFactory(() => HomeBloc(getIt<CacheHelper>()));
+}
+
+void setupAuth() {
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(() => AuthUseCase(getIt<AuthRepository>()));
 
   getIt.registerFactory(
     () => AuthBloc(getIt<CacheHelper>(), getIt<AuthUseCase>()),
   );
+}
 
-  getIt.registerFactory(() => BillBloc(getIt<GetAllBillsUseCase>()));
+void setupTask() {
+  getIt.registerLazySingleton<TaskRepository>(
+    () => TaskRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllTasksUseCase(getIt<TaskRepository>()),
+  );
 
   getIt.registerFactory(() => TaskBloc(getIt<GetAllTasksUseCase>()));
+}
 
-  getIt.registerFactory(() => TimelineBloc(getIt<GetAllTimelinesUseCase>()));
+void setupClient() {
+  getIt.registerLazySingleton<ClientRepository>(
+    () => ClientRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllClientsUseCase(getIt<ClientRepository>()),
+  );
+
+  getIt.registerFactory(() => ClientBloc(getIt<GetAllClientsUseCase>()));
+}
+
+void setupBill() {
+  getIt.registerLazySingleton<BillRepository>(
+    () => BillRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllBillsUseCase(getIt<BillRepository>()),
+  );
+
+  getIt.registerFactory(() => BillBloc(getIt<GetAllBillsUseCase>()));
+}
+
+void setupMessage() {
+  getIt.registerLazySingleton<MessageRepository>(
+    () => MessageRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllMessagesUseCase(getIt<MessageRepository>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => PutMessageUseCase(getIt<MessageRepository>()),
+  );
 
   getIt.registerFactory(
     () =>
         MessageBloc(getIt<GetAllMessagesUseCase>(), getIt<PutMessageUseCase>()),
   );
-
-  getIt.registerFactory(TabBloc.new);
 }
 
-void setupProviders() {
-  getIt.registerLazySingleton<UserProvider>(
-    () => UserProvider(getIt<UserRepository>()),
+void setupTimeline() {
+  getIt.registerLazySingleton<TimelineRepository>(
+    () => TimelineRepositoryImpl(getIt<ApiHelper>()),
   );
 
-  getIt.registerLazySingleton<TaskProvider>(
-    () => TaskProvider(getIt<TaskRepository>()),
+  getIt.registerLazySingleton(
+    () => GetAllTimelinesUseCase(getIt<TimelineRepository>()),
   );
 
-  getIt.registerLazySingleton<MeasurementProvider>(MeasurementProvider.new);
+  getIt.registerFactory(() => TimelineBloc(getIt<GetAllTimelinesUseCase>()));
+}
+
+void setupUser() {
+  getIt.registerLazySingleton<UserRepository>(
+    () => UserRepository(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllUsersUseCase(getIt<UserRepository>()),
+  );
+
+  getIt.registerFactory(() => UserBloc(getIt<GetAllUsersUseCase>()));
+}
+
+void setupStatus() {
+  getIt.registerLazySingleton<StatusRepository>(
+    () => StatusRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllStatusesUseCase(getIt<StatusRepository>()),
+  );
+
+  getIt.registerFactory(() => StatusBloc(getIt<GetAllStatusesUseCase>()));
+}
+
+void setupPriority() {
+  getIt.registerLazySingleton<PriorityRepository>(
+    () => PriorityRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllPrioritiesUseCase(getIt<PriorityRepository>()),
+  );
+
+  getIt.registerFactory(() => PriorityBloc(getIt<GetAllPrioritiesUseCase>()));
 }

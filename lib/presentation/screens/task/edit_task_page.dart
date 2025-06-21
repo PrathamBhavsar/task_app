@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
+import '../../blocs/task_form/task_form_bloc.dart';
+import '../../blocs/task_form/task_form_event.dart';
+import '../../blocs/task_form/task_form_state.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_text_field.dart';
@@ -24,23 +28,18 @@ class _EditTaskPageState extends State<EditTaskPage> {
   late final _taskNameController = TextEditingController();
   late final _noteController = TextEditingController();
   late final _phoneController = TextEditingController();
-
   late final _dueDateController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    final taskProvider = context.read<TaskProvider>();
 
     if (!widget.isNew) {
       _taskNameController.text = widget.task.name;
       _noteController.text = '';
       _phoneController.text = widget.task.client.contactNo;
-
       _dueDateController.text = widget.task.dueDate.toPrettyDate();
     } else {
-      taskProvider.resetFields();
-
       _dueDateController.text =
           DateTime.now().add(const Duration(days: 2)).toPrettyDateTime();
     }
@@ -51,49 +50,49 @@ class _EditTaskPageState extends State<EditTaskPage> {
     _taskNameController.dispose();
     _noteController.dispose();
     _phoneController.dispose();
-
     _dueDateController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      forceMaterialTransparency: true,
-      title: Text('Edit Task', style: AppTexts.titleTextStyle),
-      actions: [
-        TextButton(
-          onPressed: () {
-            final provider = context.read<TaskProvider>();
-            // final updatedTask = Task(
-            //   name: _taskNameController.text,
-            //   client: provider.currentCustomer,
-            //   phone: _phoneController.text,
-            //   product: _productController.text,
-            //   status: provider.currentStatus,
-            //   priority: provider.currentPriority,
-            //   notes: _noteController.text,
-            //   dueDate: _dueDateController.text,
-            //   createdAt: DateTime.now().toFormattedWithSuffix(),
-            //   messages: Message.randomMessages,
-            //   bill: Bill.sampleBills.first,
-            //   address: widget.task.address,
-            // );
-            // context.pushReplacement(AppRoutes.taskDetails, extra: updatedTask);
-          },
-          child: Text(
-            'Done',
-            style: AppTexts.labelTextStyle.copyWith(color: Colors.black),
+  Widget build(BuildContext context) {
+    return BlocBuilder<TaskFormBloc, TaskFormState>(
+      builder: (BuildContext context, TaskFormState state) {
+        return Scaffold(
+          appBar: AppBar(
+            forceMaterialTransparency: true,
+            title: Text('Edit Task', style: AppTexts.titleTextStyle),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  final provider = context.read<TaskProvider>();
+                  // final updatedTask = Task(
+                  //   name: _taskNameController.text,
+                  //   client: provider.currentCustomer,
+                  //   phone: _phoneController.text,
+                  //   product: _productController.text,
+                  //   status: provider.currentStatus,
+                  //   priority: provider.currentPriority,
+                  //   notes: _noteController.text,
+                  //   dueDate: _dueDateController.text,
+                  //   createdAt: DateTime.now().toFormattedWithSuffix(),
+                  //   messages: Message.randomMessages,
+                  //   bill: Bill.sampleBills.first,
+                  //   address: widget.task.address,
+                  // );
+                  // context.pushReplacement(AppRoutes.taskDetails, extra: updatedTask);
+                },
+                child: Text(
+                  'Done',
+                  style: AppTexts.labelTextStyle.copyWith(color: Colors.black),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
-    ),
-    body: GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      behavior: HitTestBehavior.opaque,
-      child: Consumer<TaskProvider>(
-        builder:
-            (context, provider, child) => SingleChildScrollView(
+          body: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            behavior: HitTestBehavior.opaque,
+            child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -113,12 +112,30 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           'Enter task title',
                           _taskNameController,
                         ),
-                        // _buildDropdown(
-                        //   'Status',
-                        //   Task.statuses,
-                        //   widget.task.status,
-                        //   (value) => provider.setStatus(value),
-                        //   widget.isNew,
+                        // CustomDropdownMenu(
+                        //   items: state.statuses.map((s) => s.name).toList(),
+                        //   initialValue: state.selectedStatus?.name,
+                        //   onChanged: (val) {
+                        //     final selected = state.statuses.firstWhere((s) =>
+                        //     s.name == val);
+                        //     context.read<TaskFormBloc>().add(
+                        //         StatusChanged(selected));
+                        //   },
+                        // ),
+                        _buildDropdown(
+                          'Status',
+                          state.statuses.map((s) => s.name).toList(),
+                          state.selectedStatus!.name,
+                          (val) {
+                            final selected = state.statuses.firstWhere(
+                              (s) => s.name == val,
+                            );
+                            context.read<TaskFormBloc>().add(
+                              StatusChanged(selected),
+                            );
+                          },
+                          widget.isNew,
+                        ),
                         // ),
                         // _buildDropdown(
                         //   'Priority',
@@ -165,9 +182,11 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 ],
               ).padAll(AppPaddings.appPaddingInt),
             ),
-      ),
-    ),
-  );
+          ),
+        );
+      },
+    );
+  }
 
   Column _buildDropdown(
     String title,
@@ -175,37 +194,41 @@ class _EditTaskPageState extends State<EditTaskPage> {
     String initialValue,
     Function(String) onChanged,
     bool isNew,
-  ) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      10.hGap,
-      Text(title, style: AppTexts.labelTextStyle),
-      10.hGap,
-      CustomDropdownMenu(
-        items: list,
-        initialValue: isNew ? null : initialValue,
-        onChanged: onChanged,
-      ),
-      10.hGap,
-    ],
-  );
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        10.hGap,
+        Text(title, style: AppTexts.labelTextStyle),
+        10.hGap,
+        CustomDropdownMenu(
+          items: list,
+          initialValue: isNew ? null : initialValue,
+          onChanged: onChanged,
+        ),
+        10.hGap,
+      ],
+    );
+  }
 
   Widget _buildTextInput(
     String title,
     String hint,
     TextEditingController controller, {
     bool isMultiline = false,
-  }) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: AppTexts.labelTextStyle),
-      10.hGap,
-      CustomTextField(
-        hintTxt: hint,
-        isMultiline: isMultiline,
-        controller: controller,
-      ),
-      10.hGap,
-    ],
-  );
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: AppTexts.labelTextStyle),
+        10.hGap,
+        CustomTextField(
+          hintTxt: hint,
+          isMultiline: isMultiline,
+          controller: controller,
+        ),
+        10.hGap,
+      ],
+    );
+  }
 }

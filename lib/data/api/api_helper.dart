@@ -5,6 +5,8 @@ import '../../core/helpers/log_helper.dart';
 import '../../domain/entities/bill.dart';
 import '../../domain/entities/client.dart';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/priority.dart';
+import '../../domain/entities/status.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/timeline.dart';
 import '../../domain/entities/user.dart';
@@ -15,6 +17,8 @@ import '../models/payloads/message_payload.dart';
 import '../responses/get_bills_response.dart';
 import '../responses/get_clients_response.dart';
 import '../responses/get_messages_response.dart';
+import '../responses/get_priorities_response.dart';
+import '../responses/get_statuses_response.dart';
 import '../responses/get_tasks_response.dart';
 import '../responses/get_timelines_response.dart';
 import '../responses/get_users_response.dart';
@@ -86,7 +90,35 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.bills);
     } else {
-      return Left(Failure('Failed to fetch tasks'));
+      return Left(Failure('Failed to fetch bills'));
+    }
+  }
+
+  Future<Either<Failure, List<Status>>> getAllStatuses() async {
+    final ApiResponse<GetStatusesResponse> result = await handler
+        .execute<GetStatusesResponse>(
+          () => service.get(ApiConstants.status.base),
+          (json) => GetStatusesResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.statuses);
+    } else {
+      return Left(Failure('Failed to fetch statues'));
+    }
+  }
+
+  Future<Either<Failure, List<Priority>>> getAllPriorities() async {
+    final ApiResponse<GetPrioritiesResponse> result = await handler
+        .execute<GetPrioritiesResponse>(
+          () => service.get(ApiConstants.priorities.base),
+          (json) => GetPrioritiesResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.priorities);
+    } else {
+      return Left(Failure('Failed to fetch priorities'));
     }
   }
 
