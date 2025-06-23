@@ -13,6 +13,8 @@ import 'presentation/blocs/priority/priority_bloc.dart';
 import 'presentation/blocs/status/status_bloc.dart';
 import 'presentation/blocs/tab/tab_bloc.dart';
 import 'presentation/blocs/task/task_bloc.dart';
+import 'presentation/blocs/task_form/task_form_bloc.dart';
+import 'presentation/blocs/task_form/task_form_state.dart';
 import 'presentation/blocs/timeline/timeline_bloc.dart';
 import 'presentation/blocs/user/user_bloc.dart';
 import 'utils/constants/app_constants.dart';
@@ -39,6 +41,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => getIt<StatusBloc>()),
           BlocProvider(create: (_) => getIt<PriorityBloc>()),
           BlocProvider(create: (_) => getIt<UserBloc>()),
+          BlocProvider(create: (_) => getIt<TaskFormBloc>()),
 
 
           // ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),

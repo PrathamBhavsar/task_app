@@ -22,9 +22,9 @@ class PriorityChanged extends TaskFormEvent {
   PriorityChanged(this.priority);
 }
 
-class CustomerChanged extends TaskFormEvent {
+class ClientChanged extends TaskFormEvent {
   final Client customer;
-  CustomerChanged(this.customer);
+  ClientChanged(this.customer);
 }
 
 class AgencyChanged extends TaskFormEvent {

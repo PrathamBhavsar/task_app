@@ -43,6 +43,7 @@ import '../../presentation/blocs/priority/priority_bloc.dart';
 import '../../presentation/blocs/status/status_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
+import '../../presentation/blocs/task_form/task_form_bloc.dart';
 import '../../presentation/blocs/timeline/timeline_bloc.dart';
 import '../../presentation/blocs/user/user_bloc.dart';
 import '../../presentation/providers/measurement_provider.dart';
@@ -61,6 +62,7 @@ void setupLocator() {
   setupHelpers();
 
   setupHome();
+  setupTaskForm();
   setupAuth();
   setupTask();
   setupClient();
@@ -127,6 +129,17 @@ void setupHelpers() {
 
 void setupHome() {
   getIt.registerFactory(() => HomeBloc(getIt<CacheHelper>()));
+}
+
+void setupTaskForm() {
+  getIt.registerFactory(
+    () => TaskFormBloc(
+      getAllStatuses: getIt<GetAllStatusesUseCase>(),
+      getAllPriorities: getIt<GetAllPrioritiesUseCase>(),
+      getAllCustomers: getIt<GetAllClientsUseCase>(),
+      getAllAgencies: getIt<GetAllUsersUseCase>(),
+    ),
+  );
 }
 
 void setupAuth() {

@@ -112,20 +112,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           'Enter task title',
                           _taskNameController,
                         ),
-                        // CustomDropdownMenu(
-                        //   items: state.statuses.map((s) => s.name).toList(),
-                        //   initialValue: state.selectedStatus?.name,
-                        //   onChanged: (val) {
-                        //     final selected = state.statuses.firstWhere((s) =>
-                        //     s.name == val);
-                        //     context.read<TaskFormBloc>().add(
-                        //         StatusChanged(selected));
-                        //   },
-                        // ),
                         _buildDropdown(
                           'Status',
                           state.statuses.map((s) => s.name).toList(),
-                          state.selectedStatus!.name,
+                          state.selectedStatus?.name,
                           (val) {
                             final selected = state.statuses.firstWhere(
                               (s) => s.name == val,
@@ -136,19 +126,20 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           },
                           widget.isNew,
                         ),
-                        // ),
-                        // _buildDropdown(
-                        //   'Priority',
-                        //   ['Low', 'Medium', 'High'],
-                        //   widget.task.priority,
-                        //   (value) => provider.setPriority(value),
-                        //   widget.isNew,
-                        // ),
-                        // _buildTextInput(
-                        //   'Product',
-                        //   'Enter product name',
-                        //   _productController,
-                        // ),
+                        _buildDropdown(
+                          'Priority',
+                          state.priorities.map((p) => p.name).toList(),
+                          state.selectedPriority?.name,
+                          (val) {
+                            final selected = state.priorities.firstWhere(
+                              (p) => p.name == val,
+                            );
+                            context.read<TaskFormBloc>().add(
+                              PriorityChanged(selected),
+                            );
+                          },
+                          widget.isNew,
+                        ),
                         _buildTextInput(
                           'Due Date',
                           'Enter due date',
@@ -160,21 +151,35 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           _noteController,
                           isMultiline: true,
                         ),
-                        // _buildDropdown(
-                        //   'Select Customer',
-                        //   Customer.names,
-                        //   widget.task.customer,
-                        //   (value) => provider.setCustomer(value),
-                        //   widget.isNew,
-                        // ),
+                        _buildDropdown(
+                          'Client',
+                          state.clients.map((c) => c.name).toList(),
+                          state.selectedClient?.name,
+                          (val) {
+                            final selected = state.clients.firstWhere(
+                              (c) => c.name == val,
+                            );
+                            context.read<TaskFormBloc>().add(
+                              ClientChanged(selected),
+                            );
+                          },
+                          widget.isNew,
+                        ),
                         if (widget.task.agency != null && !widget.isNew) ...[
-                          // _buildDropdown(
-                          //   'Select Agency',
-                          //   Agency.names,
-                          //   widget.task.agency!,
-                          //   (value) => provider.setAgency(value),
-                          //   widget.isNew,
-                          // ),
+                          _buildDropdown(
+                            'Agency',
+                            state.agencies.map((a) => a.name).toList(),
+                            state.selectedAgency?.name,
+                            (val) {
+                              final selected = state.agencies.firstWhere(
+                                (a) => a.name == val,
+                              );
+                              context.read<TaskFormBloc>().add(
+                                AgencyChanged(selected),
+                              );
+                            },
+                            widget.isNew,
+                          ),
                         ],
                       ],
                     ),
@@ -191,7 +196,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   Column _buildDropdown(
     String title,
     List<String> list,
-    String initialValue,
+    String? initialValue,
     Function(String) onChanged,
     bool isNew,
   ) {

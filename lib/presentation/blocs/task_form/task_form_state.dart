@@ -6,22 +6,22 @@ import '../../../domain/entities/user.dart';
 class TaskFormState {
   final Status? selectedStatus;
   final Priority? selectedPriority;
-  final Client? selectedCustomer;
+  final Client? selectedClient;
   final User? selectedAgency;
 
   final List<Status> statuses;
   final List<Priority> priorities;
-  final List<Client> customers;
+  final List<Client> clients;
   final List<User> agencies;
 
   TaskFormState({
     required this.selectedStatus,
     required this.selectedPriority,
-    required this.selectedCustomer,
+    required this.selectedClient,
     required this.selectedAgency,
     required this.statuses,
     required this.priorities,
-    required this.customers,
+    required this.clients,
     required this.agencies,
   });
 
@@ -38,11 +38,11 @@ class TaskFormState {
     return TaskFormState(
       selectedStatus: selectedStatus ?? this.selectedStatus,
       selectedPriority: selectedPriority ?? this.selectedPriority,
-      selectedCustomer: selectedCustomer ?? this.selectedCustomer,
+      selectedClient: selectedCustomer ?? this.selectedClient,
       selectedAgency: selectedAgency ?? this.selectedAgency,
       statuses: statuses ?? this.statuses,
       priorities: priorities ?? this.priorities,
-      customers: customers ?? this.customers,
+      clients: customers ?? this.clients,
       agencies: agencies ?? this.agencies,
     );
   }
