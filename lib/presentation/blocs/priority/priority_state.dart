@@ -1,6 +1,5 @@
 import '../../../core/error/failure.dart';
 import '../../../domain/entities/priority.dart';
-import '../../../domain/entities/status.dart';
 
 abstract class PriorityState {}
 class PriorityInitial extends PriorityState {}

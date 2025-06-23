@@ -2,9 +2,7 @@ import 'package:either_dart/either.dart';
 
 import '../../core/error/failure.dart';
 import '../../domain/entities/priority.dart';
-import '../../domain/entities/status.dart';
 import '../../domain/repositories/priority_repository.dart';
-import '../../domain/repositories/status_repository.dart';
 import '../api/api_helper.dart';
 
 class PriorityRepositoryImpl implements PriorityRepository {

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../../utils/constants/app_constants.dart';
 import '../blocs/tab/tab_bloc.dart';
-import '../providers/task_provider.dart';
 
 class TabHeader extends StatefulWidget {
   const TabHeader({required this.tabs, super.key});

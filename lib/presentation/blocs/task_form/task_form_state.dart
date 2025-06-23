@@ -38,11 +38,11 @@ class TaskFormState {
     return TaskFormState(
       selectedStatus: selectedStatus ?? this.selectedStatus,
       selectedPriority: selectedPriority ?? this.selectedPriority,
-      selectedClient: selectedCustomer ?? this.selectedClient,
+      selectedClient: selectedCustomer ?? selectedClient,
       selectedAgency: selectedAgency ?? this.selectedAgency,
       statuses: statuses ?? this.statuses,
       priorities: priorities ?? this.priorities,
-      clients: customers ?? this.clients,
+      clients: customers ?? clients,
       agencies: agencies ?? this.agencies,
     );
   }

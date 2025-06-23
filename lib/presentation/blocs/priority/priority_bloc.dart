@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/usecases/priority_usecase.dart';
-import '../../../domain/usecases/status_usecase.dart';
 import 'priority_event.dart';
 import 'priority_state.dart';
 

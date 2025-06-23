@@ -5,11 +5,10 @@ import '../../../../domain/entities/timeline.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/color_translator.dart';
 import '../../../../utils/extensions/date_formatter.dart';
-import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/custom_tag.dart';
 
 class TimelineTile extends StatelessWidget {
-  const TimelineTile({super.key, required this.timeline});
+  const TimelineTile({required this.timeline, super.key});
 
   final Timeline timeline;
 

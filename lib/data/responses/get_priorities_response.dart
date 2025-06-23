@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../domain/entities/priority.dart';
-import '../../domain/entities/status.dart';
 
 part 'get_priorities_response.g.dart';
 
