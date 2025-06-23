@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../utils/converters/status_converter.dart';
 import 'status.dart';
 import 'user.dart';
 
@@ -15,6 +16,7 @@ class Timeline {
 
   final User user;
 
+  @StatusConverter()
   final Status status;
 
   @JsonKey(name: 'created_at')

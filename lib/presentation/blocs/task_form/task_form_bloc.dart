@@ -8,32 +8,27 @@ import '../../../domain/usecases/client_usecase.dart';
 import '../../../domain/usecases/priority_usecase.dart';
 import '../../../domain/usecases/status_usecase.dart';
 import '../../../domain/usecases/user_usecase.dart';
+import '../../../utils/enums/status_type.dart';
 import 'task_form_event.dart';
 import 'task_form_state.dart';
 
 class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
-  final GetAllStatusesUseCase getAllStatuses;
-  final GetAllPrioritiesUseCase getAllPriorities;
   final GetAllClientsUseCase getAllCustomers;
   final GetAllUsersUseCase getAllAgencies;
 
-  TaskFormBloc({
-    required this.getAllStatuses,
-    required this.getAllPriorities,
-    required this.getAllCustomers,
-    required this.getAllAgencies,
-  }) : super(
-         TaskFormState(
-           selectedStatus: null,
-           selectedPriority: null,
-           selectedClient: null,
-           selectedAgency: null,
-           statuses: [],
-           priorities: [],
-           clients: [],
-           agencies: [],
-         ),
-       ) {
+  TaskFormBloc({required this.getAllCustomers, required this.getAllAgencies})
+    : super(
+        TaskFormState(
+          selectedStatus: null,
+          selectedPriority: null,
+          selectedClient: null,
+          selectedAgency: null,
+          statuses: [],
+          priorities: [],
+          clients: [],
+          agencies: [],
+        ),
+      ) {
     on<InitializeTaskForm>(_onInit);
     on<StatusChanged>(
       (e, emit) => emit(state.copyWith(selectedStatus: e.status)),
@@ -53,13 +48,11 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
     InitializeTaskForm event,
     Emitter<TaskFormState> emit,
   ) async {
-    final statusResult = await getAllStatuses();
-    final priorityResult = await getAllPriorities();
     final customerResult = await getAllCustomers();
     final agencyResult = await getAllAgencies();
 
-    final statuses = statusResult.fold((l) => <Status>[], (r) => r);
-    final priorities = priorityResult.fold((l) => <Priority>[], (r) => r);
+    final statuses = Status.list;
+    final priorities = Priority.list;
     final customers = customerResult.fold((l) => <Client>[], (r) => r);
     final agencies = agencyResult.fold((l) => <User>[], (r) => r);
 
@@ -71,8 +64,7 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
         priorities: priorities,
         customers: customers,
         agencies: agencies,
-        selectedStatus:
-            task?.status ?? (statuses.isNotEmpty ? statuses.first : null),
+        selectedStatus: task?.status ?? (statuses.first),
         selectedPriority:
             task?.priority ?? (priorities.isNotEmpty ? priorities.first : null),
         selectedCustomer:

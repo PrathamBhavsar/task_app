@@ -131,8 +131,6 @@ void setupHome() {
 void setupTaskForm() {
   getIt.registerFactory(
     () => TaskFormBloc(
-      getAllStatuses: getIt<GetAllStatusesUseCase>(),
-      getAllPriorities: getIt<GetAllPrioritiesUseCase>(),
       getAllCustomers: getIt<GetAllClientsUseCase>(),
       getAllAgencies: getIt<GetAllUsersUseCase>(),
     ),

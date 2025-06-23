@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../utils/converters/priority_converter.dart';
+import '../../utils/converters/status_converter.dart';
 import 'client.dart';
 import 'designer.dart';
 import 'priority.dart';
@@ -24,8 +26,10 @@ class Task {
   @JsonKey(name: 'due_date')
   final DateTime dueDate;
 
+  @PriorityConverter()
   final Priority priority;
 
+  @StatusConverter()
   final Status status;
 
   final Client client;

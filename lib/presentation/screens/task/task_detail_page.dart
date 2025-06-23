@@ -43,11 +43,24 @@ class TaskDetailPage extends StatefulWidget {
 
 class _TaskDetailPageState extends State<TaskDetailPage> {
   late final TextEditingController _messageController;
+  final ScrollController _scrollController = ScrollController();
+  final FocusNode _textFieldFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     _messageController = TextEditingController();
+    _textFieldFocusNode.addListener(() {
+      if (_textFieldFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          );
+        });
+      }
+    });
     context.read<TimelineBloc>().add(
       FetchTimelinesRequested(widget.task.taskId!),
     );
@@ -58,13 +71,19 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    _textFieldFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final int tabIndex = context.select<TabBloc, int>(
       (bloc) => bloc.state.tabIndex,
     );
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         forceMaterialTransparency: true,
         title: Column(
@@ -77,62 +96,57 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           builder: (context, state) {
             final UserRole userRole = getIt<CacheHelper>().getUserRole();
 
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  BorderedContainer(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              widget.task.client.name,
-                              style: AppTexts.titleTextStyle.copyWith(
-                                fontVariations: [FontVariation.weight(500)],
+            return GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    BorderedContainer(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                widget.task.client.name,
+                                style: AppTexts.titleTextStyle.copyWith(
+                                  fontVariations: [FontVariation.weight(500)],
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed:
-                                  () => context.replace(
-                                    AppRoutes.editTask,
-                                    extra: {
-                                      'task': widget.task,
-                                      'isNew': false,
-                                    },
-                                  ),
-                              icon: Icon(
-                                CustomIcon.squarePen,
-                                color: Colors.black,
+                              IconButton(
+                                onPressed:
+                                    () => context.replace(
+                                      AppRoutes.editTask,
+                                      extra: {
+                                        'task': widget.task,
+                                        'isNew': false,
+                                      },
+                                    ),
+                                icon: Icon(
+                                  CustomIcon.squarePen,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            CustomTag(
-                              text: widget.task.priority.name,
-                              color: widget.task.priority.color.toColor(),
-                              textColor: Colors.white,
-                            ),
-                            10.wGap,
-                            CustomTag(
-                              text: widget.task.status.name,
-                              color: widget.task.status.color.toColor(),
-                              textColor: Colors.white,
-                            ),
-                          ],
-                        ),
-                        10.hGap,
-                        TileRow(
-                          key1: 'Due Date',
-                          value1: widget.task.dueDate.toPrettyDate(),
-                          key2: 'Created',
-                          value2: widget.task.createdAt.toPrettyDateTime(),
-                        ),
-                        10.hGap,
-                        if (userRole != UserRole.agent) ...[
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              CustomTag(
+                                text: widget.task.priority.name,
+                                color: widget.task.priority.color.toColor(),
+                                textColor: Colors.white,
+                              ),
+                              10.wGap,
+                              CustomTag(
+                                text: widget.task.status.name,
+                                color: widget.task.status.color.toColor(),
+                                textColor: Colors.white,
+                              ),
+                            ],
+                          ),
+                          10.hGap,
                           TileRow(
                             key1: 'Due Date',
                             value1: widget.task.dueDate.toPrettyDate(),
@@ -140,72 +154,85 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             value2: widget.task.createdAt.toPrettyDateTime(),
                           ),
                           10.hGap,
-                        ],
-                        Text('Address', style: AppTexts.inputHintTextStyle),
-                        Text(
-                          widget.task.client.address,
-                          style: AppTexts.inputTextStyle,
-                        ),
-                        if (widget.task.notes != null &&
-                            widget.task.notes!.isNotEmpty) ...[
-                          10.hGap,
-                          Text('Notes', style: AppTexts.inputHintTextStyle),
+                          if (userRole != UserRole.agent) ...[
+                            TileRow(
+                              key1: 'Due Date',
+                              value1: widget.task.dueDate.toPrettyDate(),
+                              key2: 'Created',
+                              value2: widget.task.createdAt.toPrettyDateTime(),
+                            ),
+                            10.hGap,
+                          ],
+                          Text('Address', style: AppTexts.inputHintTextStyle),
                           Text(
-                            widget.task.notes ?? '',
+                            widget.task.client.address,
                             style: AppTexts.inputTextStyle,
                           ),
-                        ],
-                        10.hGap,
-                        if (tabIndex == 0) ...[
-                          BorderedContainer(
-                            color: AppColors.bgYellow,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Agency Bill Pending Approval',
-                                  style: AppTexts.headingTextStyle,
-                                ),
-                                10.hGap,
-                                Text(
-                                  'Bill #BILL-123456 from ${widget.task.agency?.name} requires your approval',
-                                  style: AppTexts.inputTextStyle,
-                                ),
-                                10.hGap,
-                                ActionButton(
-                                  label: 'Review Bill',
-                                  onPress:
-                                      () => context.push(AppRoutes.reviewBill),
-                                  backgroundColor: Colors.black,
-                                  fontColor: Colors.white,
-                                ),
-                              ],
+                          if (widget.task.notes != null &&
+                              widget.task.notes!.isNotEmpty) ...[
+                            10.hGap,
+                            Text('Notes', style: AppTexts.inputHintTextStyle),
+                            Text(
+                              widget.task.notes ?? '',
+                              style: AppTexts.inputTextStyle,
                             ),
-                          ),
+                          ],
+                          10.hGap,
+                          if (tabIndex == 0) ...[
+                            BorderedContainer(
+                              color: AppColors.bgYellow,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Agency Bill Pending Approval',
+                                    style: AppTexts.headingTextStyle,
+                                  ),
+                                  10.hGap,
+                                  Text(
+                                    'Bill #BILL-123456 from ${widget.task.agency?.name} requires your approval',
+                                    style: AppTexts.inputTextStyle,
+                                  ),
+                                  10.hGap,
+                                  ActionButton(
+                                    label: 'Review Bill',
+                                    onPress:
+                                        () =>
+                                            context.push(AppRoutes.reviewBill),
+                                    backgroundColor: Colors.black,
+                                    fontColor: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
-                  ),
-                  userRole == UserRole.agent
-                      ? _buildAgentView(tabIndex)
-                      : _buildNonAgentView(tabIndex),
-                ],
-              ).padAll(AppPaddings.appPaddingInt),
+                    userRole == UserRole.agent
+                        ? _buildAgentView(tabIndex)
+                        : _buildNonAgentView(tabIndex),
+                  ],
+                ).padAll(AppPaddings.appPaddingInt),
+              ),
             );
           },
         ),
       ),
-      persistentFooterButtons:
+
+      bottomSheet:
           tabIndex == 2
-              ? [
-                Padding(
-                  padding: MediaQuery.of(context).viewInsets,
+              ? SafeArea(
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(10),
                   child: Form(
                     key: _formKey,
                     child: Row(
                       children: [
                         Expanded(
                           child: CustomTextField(
+                            focusNode: _textFieldFocusNode,
                             hintTxt: "Enter Message",
                             controller: _messageController,
                             validator: Validator.validateRequiredField,
@@ -214,9 +241,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         10.wGap,
                         IconButton(
                           onPressed: () {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
+                            if (!_formKey.currentState!.validate()) return;
 
                             FocusScope.of(context).unfocus();
 
@@ -237,8 +262,8 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     ),
                   ),
                 ),
-              ]
-              : null,
+              )
+              : SizedBox.shrink(),
     );
   }
 
@@ -551,5 +576,4 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
       ],
     );
   }
-
 }

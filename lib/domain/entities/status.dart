@@ -24,4 +24,11 @@ class Status extends Equatable {
 
   @override
   List<Object?> get props => [statusId, name, slug, color];
+
+  static List<Status> get list => [
+    Status(statusId: 1, name: "Created", slug: "created", color: "#FFA500"),
+    Status(statusId: 2, name: "Pending", slug: "pending", color: "#FFA500"),
+    Status(statusId: 3, name: "Approved", slug: "approved", color: "#008000"),
+    Status(statusId: 4, name: "Rejected", slug: "rejected", color: "#FF0000"),
+  ];
 }

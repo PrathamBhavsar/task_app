@@ -24,4 +24,10 @@ class Priority extends Equatable {
 
   @override
   List<Object?> get props => [priorityId, name, color];
+
+  static List<Priority> get list => [
+    Priority(priorityId: 1, name: "Medium", color: "#FFA500"),
+    Priority(priorityId: 2, name: "Low", color: "#008000"),
+    Priority(priorityId: 3, name: "High", color: "#FF0000"),
+  ];
 }
