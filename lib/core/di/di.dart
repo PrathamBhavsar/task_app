@@ -10,6 +10,7 @@ import '../../data/api/api_service.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/bill_repository_impl.dart';
 import '../../data/repositories/client_repository_impl.dart';
+import '../../data/repositories/designer_repository_impl.dart';
 import '../../data/repositories/message_repository_impl.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../data/repositories/timeline_repository_impl.dart';
@@ -17,20 +18,24 @@ import '../../data/repositories/user_repository.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/bill_repository.dart';
 import '../../domain/repositories/client_repository.dart';
+import '../../domain/repositories/designer_repository.dart';
 import '../../domain/repositories/message_repository.dart';
 import '../../domain/repositories/task_repository.dart';
 import '../../domain/repositories/timeline_repository.dart';
 import '../../domain/usecases/auth_usecase.dart';
 import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
+import '../../domain/usecases/designer_usecase.dart';
 import '../../domain/usecases/message_usecase.dart';
 import '../../domain/usecases/put_message_usecase.dart';
+import '../../domain/usecases/put_task_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
 import '../../domain/usecases/user_usecase.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/bill/bill_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
+import '../../presentation/blocs/designer/designer_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
@@ -55,6 +60,7 @@ void setupLocator() {
   setupAuth();
   setupTask();
   setupClient();
+  setupDesigner();
   setupBill();
   setupMessage();
   setupTimeline();
@@ -148,7 +154,11 @@ void setupTask() {
     () => GetAllTasksUseCase(getIt<TaskRepository>()),
   );
 
-  getIt.registerFactory(() => TaskBloc(getIt<GetAllTasksUseCase>()));
+  getIt.registerLazySingleton(() => PutTaskUseCase(getIt<TaskRepository>()));
+
+  getIt.registerFactory(
+    () => TaskBloc(getIt<GetAllTasksUseCase>(), getIt<PutTaskUseCase>()),
+  );
 }
 
 void setupClient() {
@@ -161,6 +171,18 @@ void setupClient() {
   );
 
   getIt.registerFactory(() => ClientBloc(getIt<GetAllClientsUseCase>()));
+}
+
+void setupDesigner() {
+  getIt.registerLazySingleton<DesignerRepository>(
+    () => DesignerRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllDesignersUseCase(getIt<DesignerRepository>()),
+  );
+
+  getIt.registerFactory(() => DesignerBloc(getIt<GetAllDesignersUseCase>()));
 }
 
 void setupBill() {

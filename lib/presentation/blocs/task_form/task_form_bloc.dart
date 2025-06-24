@@ -17,10 +17,12 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
           selectedStatus: null,
           selectedPriority: null,
           selectedClient: null,
+          selectedDesigner: null,
           selectedAgency: null,
           statuses: [],
           priorities: [],
           clients: [],
+          designers: [],
           agencies: [],
         ),
       ) {
@@ -35,6 +37,9 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
     on<ClientChanged>(
       (e, emit) => emit(state.copyWith(selectedClient: e.client)),
     );
+    on<DesignerChanged>(
+      (e, emit) => emit(state.copyWith(selectedDesigner: e.designer)),
+    );
     on<AgencyChanged>(
       (e, emit) => emit(state.copyWith(selectedAgency: e.agency)),
     );
@@ -43,13 +48,15 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
   void _onInit(InitializeTaskForm event, Emitter<TaskFormState> emit) {
     final statuses = Status.list;
     final priorities = Priority.list;
-    final customers = event.clients;
+    final clients = event.clients;
+    final designers = event.designers;
     final agencies = event.agencies;
     final task = event.existingTask;
 
     print(task?.status.name ?? statuses.first.name);
     print(task?.priority.name ?? priorities.first.name);
-    print(task?.client.name ?? customers.first.name);
+    print(task?.client.name ?? clients.first.name);
+    print(task?.designer.name ?? designers.first.name);
     print(task?.agency?.name ?? agencies.first.name);
 
     emit(
@@ -57,11 +64,13 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
         isInitialized: true,
         statuses: statuses,
         priorities: priorities,
-        customers: customers,
+        clients: clients,
+        designers: designers,
         agencies: agencies,
         selectedStatus: task?.status ?? statuses.first,
         selectedPriority: task?.priority ?? priorities.first,
-        selectedClient: task?.client ?? customers.first,
+        selectedClient: task?.client ?? clients.first,
+        selectedDesigner: task?.designer ?? designers.first,
         selectedAgency: task?.agency ?? agencies.first,
       ),
     );
@@ -71,6 +80,7 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
     final statuses = Status.list;
     final priorities = Priority.list;
     final clients = event.clients;
+    final designers = event.designers;
     final agencies = event.agencies;
 
     emit(
@@ -78,11 +88,13 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
         isInitialized: true,
         statuses: statuses,
         priorities: priorities,
-        customers: clients,
+        clients: clients,
+        designers: designers,
         agencies: agencies,
         selectedStatus: statuses.first,
         selectedPriority: priorities.first,
         selectedClient: clients.first,
+        selectedDesigner: designers.first,
         selectedAgency: agencies.first,
       ),
     );

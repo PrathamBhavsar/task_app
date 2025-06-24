@@ -4,6 +4,7 @@ import '../../core/error/failure.dart';
 import '../../core/helpers/log_helper.dart';
 import '../../domain/entities/bill.dart';
 import '../../domain/entities/client.dart';
+import '../../domain/entities/designer.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/timeline.dart';
@@ -11,8 +12,10 @@ import '../../domain/entities/user.dart';
 import '../models/api/api_response.dart';
 import '../models/payloads/auth_payload.dart';
 import '../models/payloads/message_payload.dart';
+import '../models/payloads/task_payload.dart';
 import '../responses/get_bills_response.dart';
 import '../responses/get_clients_response.dart';
+import '../responses/get_designers_response.dart';
 import '../responses/get_messages_response.dart';
 import '../responses/get_tasks_response.dart';
 import '../responses/get_timelines_response.dart';
@@ -61,6 +64,19 @@ class ApiHelper {
     }
   }
 
+  Future<Either<Failure, Task>> putTask(TaskPayload data) async {
+    final ApiResponse<Task> result = await handler.execute<Task>(
+      () => service.post(ApiConstants.task.base, data: data.toJson()),
+      (json) => Task.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!);
+    } else {
+      return Left(Failure('Failed to create task'));
+    }
+  }
+
   Future<Either<Failure, List<Client>>> getAllClients() async {
     final ApiResponse<GetClientsResponse> result = await handler
         .execute<GetClientsResponse>(
@@ -70,6 +86,20 @@ class ApiHelper {
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.clients);
+    } else {
+      return Left(Failure('Failed to fetch tasks'));
+    }
+  }
+
+  Future<Either<Failure, List<Designer>>> getAllDesigners() async {
+    final ApiResponse<GetDesignersResponse> result = await handler
+        .execute<GetDesignersResponse>(
+          () => service.get(ApiConstants.designer.base),
+          (json) => GetDesignersResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.designers);
     } else {
       return Left(Failure('Failed to fetch tasks'));
     }
@@ -90,10 +120,12 @@ class ApiHelper {
   }
 
   Future<Either<Failure, List<Timeline>>> getTimelinesByTask(int taskId) async {
-    final ApiResponse result = await handler
-        .execute<GetTimelinesResponse>(
-          () => service.get(ApiConstants.timeline.base, queryParameters: {"task_id" : taskId}),
-          (json) => GetTimelinesResponse.fromJson(json as Map<String, dynamic>),
+    final ApiResponse result = await handler.execute<GetTimelinesResponse>(
+      () => service.get(
+        ApiConstants.timeline.base,
+        queryParameters: {"task_id": taskId},
+      ),
+      (json) => GetTimelinesResponse.fromJson(json as Map<String, dynamic>),
     );
 
     if (result.isSuccess && result.data != null) {
@@ -104,10 +136,9 @@ class ApiHelper {
   }
 
   Future<Either<Failure, Message>> putMessage(MessagePayload data) async {
-    final ApiResponse result = await handler
-        .execute<PutMessageResponse>(
-          () => service.post(ApiConstants.message.base, data: data.toJson()),
-          (json) => PutMessageResponse.fromJson(json as Map<String, dynamic>),
+    final ApiResponse result = await handler.execute<PutMessageResponse>(
+      () => service.post(ApiConstants.message.base, data: data.toJson()),
+      (json) => PutMessageResponse.fromJson(json as Map<String, dynamic>),
     );
 
     if (result.isSuccess && result.data != null) {
@@ -118,10 +149,12 @@ class ApiHelper {
   }
 
   Future<Either<Failure, List<Message>>> getMessagesByTask(int taskId) async {
-    final ApiResponse result = await handler
-        .execute<GetMessagesResponse>(
-          () => service.get(ApiConstants.message.base, queryParameters: {"task_id" : taskId}),
-          (json) => GetMessagesResponse.fromJson(json as Map<String, dynamic>),
+    final ApiResponse result = await handler.execute<GetMessagesResponse>(
+      () => service.get(
+        ApiConstants.message.base,
+        queryParameters: {"task_id": taskId},
+      ),
+      (json) => GetMessagesResponse.fromJson(json as Map<String, dynamic>),
     );
 
     if (result.isSuccess && result.data != null) {

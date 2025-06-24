@@ -7,6 +7,7 @@ import 'core/router/app_router.dart';
 import 'presentation/blocs/auth/auth_bloc.dart';
 import 'presentation/blocs/bill/bill_bloc.dart';
 import 'presentation/blocs/client/client_bloc.dart';
+import 'presentation/blocs/designer/designer_bloc.dart';
 import 'presentation/blocs/home/home_bloc.dart';
 import 'presentation/blocs/message/message_bloc.dart';
 import 'presentation/blocs/tab/tab_bloc.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => getIt<MessageBloc>()),
           BlocProvider(create: (_) => getIt<UserBloc>()),
           BlocProvider(create: (_) => getIt<TaskFormBloc>()),
+          BlocProvider(create: (_) => getIt<DesignerBloc>()),
 
 
           // ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),

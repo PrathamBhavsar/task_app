@@ -439,6 +439,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         MessageTile(message: messageState.messages[index]),
                 separatorBuilder: (context, index) => 10.hGap,
               ),
+              const SizedBox(height: kBottomNavigationBarHeight + 10),
             ],
           );
         }

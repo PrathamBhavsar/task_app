@@ -12,6 +12,9 @@ import '../../blocs/bill/bill_state.dart';
 import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_event.dart';
 import '../../blocs/client/client_state.dart';
+import '../../blocs/designer/designer_bloc.dart';
+import '../../blocs/designer/designer_event.dart';
+import '../../blocs/designer/designer_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
@@ -28,6 +31,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final Completer<void> _clientLoaded = Completer();
+  final Completer<void> _designerLoaded = Completer();
   final Completer<void> _billLoaded = Completer();
   final Completer<void> _taskLoaded = Completer();
   final Completer<void> _usersLoaded = Completer();
@@ -38,12 +42,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       context.read<ClientBloc>().add(FetchClientsRequested());
+      context.read<DesignerBloc>().add(FetchDesignersRequested());
       context.read<BillBloc>().add(FetchBillsRequested());
       context.read<TaskBloc>().add(FetchTasksRequested());
       context.read<UserBloc>().add(FetchUsersRequested());
 
       try {
         await _clientLoaded.future;
+        await _designerLoaded.future;
         await _billLoaded.future;
         await _taskLoaded.future;
         await _usersLoaded.future;
@@ -72,6 +78,17 @@ class _SplashScreenState extends State<SplashScreen> {
                 }
               } else if (state is ClientLoadFailure) {
                 _clientLoaded.completeError('Client failed');
+              }
+            },
+          ),
+          BlocListener<DesignerBloc, DesignerState>(
+            listener: (context, state) {
+              if (state is DesignerLoadSuccess) {
+                if (!_designerLoaded.isCompleted) {
+                  _designerLoaded.complete();
+                }
+              } else if (state is DesignerLoadFailure) {
+                _designerLoaded.completeError('Designer failed');
               }
             },
           ),

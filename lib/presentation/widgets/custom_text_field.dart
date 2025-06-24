@@ -55,7 +55,6 @@ class CustomTextField extends StatelessWidget {
             focusNode: focusNode,
             enabled: isEnabled,
             maxLines: isMultiline ? null : 1,
-            minLines: isMultiline ? 3 : 1,
             obscureText: isPassword ? !state.isVisible : false,
             onChanged: onChangedFunc,
             onTap: onTap,
