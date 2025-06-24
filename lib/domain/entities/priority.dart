@@ -30,4 +30,14 @@ class Priority extends Equatable {
     Priority(priorityId: 2, name: "Low", color: "#008000"),
     Priority(priorityId: 3, name: "High", color: "#FF0000"),
   ];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Priority &&
+          runtimeType == other.runtimeType &&
+          priorityId == other.priorityId;
+
+  @override
+  int get hashCode => priorityId.hashCode;
 }

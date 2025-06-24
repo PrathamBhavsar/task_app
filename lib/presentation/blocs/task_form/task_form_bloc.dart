@@ -1,14 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entities/client.dart';
 import '../../../domain/entities/priority.dart';
 import '../../../domain/entities/status.dart';
-import '../../../domain/entities/user.dart';
 import '../../../domain/usecases/client_usecase.dart';
-import '../../../domain/usecases/priority_usecase.dart';
-import '../../../domain/usecases/status_usecase.dart';
 import '../../../domain/usecases/user_usecase.dart';
-import '../../../utils/enums/status_type.dart';
 import 'task_form_event.dart';
 import 'task_form_state.dart';
 
@@ -30,6 +25,7 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
         ),
       ) {
     on<InitializeTaskForm>(_onInit);
+    on<ResetTaskForm>(_onReset);
     on<StatusChanged>(
       (e, emit) => emit(state.copyWith(selectedStatus: e.status)),
     );
@@ -44,29 +40,27 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
     );
   }
 
-  Future<void> _onInit(
-    InitializeTaskForm event,
-    Emitter<TaskFormState> emit,
-  ) async {
-    final customerResult = await getAllCustomers();
-    final agencyResult = await getAllAgencies();
-
+  void _onInit(InitializeTaskForm event, Emitter<TaskFormState> emit) {
     final statuses = Status.list;
     final priorities = Priority.list;
-    final customers = customerResult.fold((l) => <Client>[], (r) => r);
-    final agencies = agencyResult.fold((l) => <User>[], (r) => r);
-
+    final customers = event.clients;
+    final agencies = event.agencies;
     final task = event.existingTask;
+
+    print(task?.status.name ?? statuses.first.name);
+    print(task?.priority.name ?? priorities.first.name);
+    print(task?.client.name ?? customers.first.name);
+    print(task?.agency?.name ?? agencies.first.name);
 
     emit(
       state.copyWith(
+        isInitialized: true,
         statuses: statuses,
         priorities: priorities,
         customers: customers,
         agencies: agencies,
-        selectedStatus: task?.status ?? (statuses.first),
-        selectedPriority:
-            task?.priority ?? (priorities.isNotEmpty ? priorities.first : null),
+        selectedStatus: task?.status ?? statuses.first,
+        selectedPriority: task?.priority ?? priorities.first,
         selectedCustomer:
             task?.client ?? (customers.isNotEmpty ? customers.first : null),
         selectedAgency:
@@ -74,4 +68,26 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
       ),
     );
   }
+
+  void _onReset(ResetTaskForm event, Emitter<TaskFormState> emit) {
+    final statuses = Status.list;
+    final priorities = Priority.list;
+    final customers = event.clients;
+    final agencies = event.agencies;
+
+    emit(
+      state.copyWith(
+        isInitialized: true,
+        statuses: statuses,
+        priorities: priorities,
+        customers: customers,
+        agencies: agencies,
+        selectedStatus: statuses.first,
+        selectedPriority: priorities.first,
+        selectedCustomer: customers.isNotEmpty ? customers.first : null,
+        selectedAgency: agencies.isNotEmpty ? agencies.first : null,
+      ),
+    );
+  }
+
 }

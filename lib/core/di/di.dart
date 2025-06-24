@@ -11,8 +11,6 @@ import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/bill_repository_impl.dart';
 import '../../data/repositories/client_repository_impl.dart';
 import '../../data/repositories/message_repository_impl.dart';
-import '../../data/repositories/priority_repository_impl.dart';
-import '../../data/repositories/status_repository_impl.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../data/repositories/timeline_repository_impl.dart';
 import '../../data/repositories/user_repository.dart';
@@ -20,17 +18,13 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/bill_repository.dart';
 import '../../domain/repositories/client_repository.dart';
 import '../../domain/repositories/message_repository.dart';
-import '../../domain/repositories/priority_repository.dart';
-import '../../domain/repositories/status_repository.dart';
 import '../../domain/repositories/task_repository.dart';
 import '../../domain/repositories/timeline_repository.dart';
 import '../../domain/usecases/auth_usecase.dart';
 import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../domain/usecases/message_usecase.dart';
-import '../../domain/usecases/priority_usecase.dart';
 import '../../domain/usecases/put_message_usecase.dart';
-import '../../domain/usecases/status_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
 import '../../domain/usecases/user_usecase.dart';
@@ -39,8 +33,6 @@ import '../../presentation/blocs/bill/bill_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
-import '../../presentation/blocs/priority/priority_bloc.dart';
-import '../../presentation/blocs/status/status_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
 import '../../presentation/blocs/task_form/task_form_bloc.dart';
@@ -67,8 +59,6 @@ void setupLocator() {
   setupMessage();
   setupTimeline();
   setupUser();
-  setupStatus();
-  setupPriority();
   getIt.registerFactory(TabBloc.new);
 }
 
@@ -226,28 +216,4 @@ void setupUser() {
   );
 
   getIt.registerFactory(() => UserBloc(getIt<GetAllUsersUseCase>()));
-}
-
-void setupStatus() {
-  getIt.registerLazySingleton<StatusRepository>(
-    () => StatusRepositoryImpl(getIt<ApiHelper>()),
-  );
-
-  getIt.registerLazySingleton(
-    () => GetAllStatusesUseCase(getIt<StatusRepository>()),
-  );
-
-  getIt.registerFactory(() => StatusBloc(getIt<GetAllStatusesUseCase>()));
-}
-
-void setupPriority() {
-  getIt.registerLazySingleton<PriorityRepository>(
-    () => PriorityRepositoryImpl(getIt<ApiHelper>()),
-  );
-
-  getIt.registerLazySingleton(
-    () => GetAllPrioritiesUseCase(getIt<PriorityRepository>()),
-  );
-
-  getIt.registerFactory(() => PriorityBloc(getIt<GetAllPrioritiesUseCase>()));
 }

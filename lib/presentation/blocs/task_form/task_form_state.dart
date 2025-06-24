@@ -13,6 +13,7 @@ class TaskFormState {
   final List<Priority> priorities;
   final List<Client> clients;
   final List<User> agencies;
+  final bool isInitialized;
 
   TaskFormState({
     required this.selectedStatus,
@@ -23,9 +24,11 @@ class TaskFormState {
     required this.priorities,
     required this.clients,
     required this.agencies,
+    this.isInitialized = false,
   });
 
   TaskFormState copyWith({
+    bool? isInitialized,
     Status? selectedStatus,
     Priority? selectedPriority,
     Client? selectedCustomer,
@@ -36,6 +39,7 @@ class TaskFormState {
     List<User>? agencies,
   }) {
     return TaskFormState(
+      isInitialized: isInitialized ?? this.isInitialized,
       selectedStatus: selectedStatus ?? this.selectedStatus,
       selectedPriority: selectedPriority ?? this.selectedPriority,
       selectedClient: selectedCustomer ?? selectedClient,

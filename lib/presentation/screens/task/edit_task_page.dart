@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entities/client.dart';
+import '../../../domain/entities/priority.dart';
+import '../../../domain/entities/status.dart';
 import '../../../domain/entities/task.dart';
+import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/enums/user_role.dart';
 import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
+import '../../blocs/client/client_bloc.dart';
+import '../../blocs/client/client_state.dart';
 import '../../blocs/task_form/task_form_bloc.dart';
 import '../../blocs/task_form/task_form_event.dart';
 import '../../blocs/task_form/task_form_state.dart';
-import '../../providers/task_provider.dart';
+import '../../blocs/user/user_bloc.dart';
+import '../../blocs/user/user_state.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
@@ -32,16 +40,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   @override
   void initState() {
     super.initState();
-
-    if (!widget.isNew) {
-      _taskNameController.text = widget.task.name;
-      _noteController.text = '';
-      _phoneController.text = widget.task.client.contactNo;
-      _dueDateController.text = widget.task.dueDate.toPrettyDate();
-    } else {
-      _dueDateController.text =
-          DateTime.now().add(const Duration(days: 2)).toPrettyDateTime();
-    }
+    _handleInit();
   }
 
   @override
@@ -55,40 +54,27 @@ class _EditTaskPageState extends State<EditTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TaskFormBloc, TaskFormState>(
-      builder: (BuildContext context, TaskFormState state) {
-        return Scaffold(
-          appBar: AppBar(
-            forceMaterialTransparency: true,
-            title: Text('Edit Task', style: AppTexts.titleTextStyle),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  final provider = context.read<TaskProvider>();
-                  // final updatedTask = Task(
-                  //   name: _taskNameController.text,
-                  //   client: provider.currentCustomer,
-                  //   phone: _phoneController.text,
-                  //   product: _productController.text,
-                  //   status: provider.currentStatus,
-                  //   priority: provider.currentPriority,
-                  //   notes: _noteController.text,
-                  //   dueDate: _dueDateController.text,
-                  //   createdAt: DateTime.now().toFormattedWithSuffix(),
-                  //   messages: Message.randomMessages,
-                  //   bill: Bill.sampleBills.first,
-                  //   address: widget.task.address,
-                  // );
-                  // context.pushReplacement(AppRoutes.taskDetails, extra: updatedTask);
-                },
-                child: Text(
-                  'Done',
-                  style: AppTexts.labelTextStyle.copyWith(color: Colors.black),
-                ),
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        forceMaterialTransparency: true,
+        title: Text('Edit Task', style: AppTexts.titleTextStyle),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: Text(
+              'Done',
+              style: AppTexts.labelTextStyle.copyWith(color: Colors.black),
+            ),
           ),
-          body: GestureDetector(
+        ],
+      ),
+      body: BlocBuilder<TaskFormBloc, TaskFormState>(
+        builder: (context, state) {
+          if (!state.isInitialized) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             behavior: HitTestBehavior.opaque,
             child: SingleChildScrollView(
@@ -111,33 +97,31 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           'Enter task title',
                           _taskNameController,
                         ),
-                        _buildDropdown(
-                          'Status',
-                          state.statuses.map((s) => s.name).toList(),
-                          state.selectedStatus?.name,
-                          (val) {
-                            final selected = state.statuses.firstWhere(
-                              (s) => s.name == val,
-                            );
+                        _buildDropdown<Status>(
+                          title: 'Status',
+                          list: state.statuses,
+                          initialValue: state.selectedStatus,
+                          onChanged: (selected) {
                             context.read<TaskFormBloc>().add(
                               StatusChanged(selected),
                             );
                           },
-                          widget.isNew,
+                          isNew: widget.isNew,
+                          labelBuilder: (s) => s.name,
+                          idBuilder: (s) => s.statusId?.toString() ?? '',
                         ),
-                        _buildDropdown(
-                          'Priority',
-                          state.priorities.map((p) => p.name).toList(),
-                          state.selectedPriority?.name,
-                          (val) {
-                            final selected = state.priorities.firstWhere(
-                              (p) => p.name == val,
-                            );
+                        _buildDropdown<Priority>(
+                          title: 'Priority',
+                          list: state.priorities,
+                          initialValue: state.selectedPriority,
+                          onChanged: (selected) {
                             context.read<TaskFormBloc>().add(
                               PriorityChanged(selected),
                             );
                           },
-                          widget.isNew,
+                          isNew: widget.isNew,
+                          labelBuilder: (p) => p.name,
+                          idBuilder: (p) => p.priorityId?.toString() ?? '',
                         ),
                         _buildTextInput(
                           'Due Date',
@@ -150,34 +134,32 @@ class _EditTaskPageState extends State<EditTaskPage> {
                           _noteController,
                           isMultiline: true,
                         ),
-                        _buildDropdown(
-                          'Client',
-                          state.clients.map((c) => c.name).toList(),
-                          state.selectedClient?.name,
-                          (val) {
-                            final selected = state.clients.firstWhere(
-                              (c) => c.name == val,
-                            );
+                        _buildDropdown<Client>(
+                          title: 'Client',
+                          list: state.clients,
+                          initialValue: state.selectedClient,
+                          onChanged: (selected) {
                             context.read<TaskFormBloc>().add(
                               ClientChanged(selected),
                             );
                           },
-                          widget.isNew,
+                          isNew: widget.isNew,
+                          labelBuilder: (c) => c.name,
+                          idBuilder: (c) => c.clientId?.toString() ?? '',
                         ),
                         if (widget.task.agency != null && !widget.isNew) ...[
-                          _buildDropdown(
-                            'Agency',
-                            state.agencies.map((a) => a.name).toList(),
-                            state.selectedAgency?.name,
-                            (val) {
-                              final selected = state.agencies.firstWhere(
-                                (a) => a.name == val,
-                              );
+                          _buildDropdown<User>(
+                            title: 'Agency',
+                            list: state.agencies,
+                            initialValue: state.selectedAgency,
+                            onChanged: (selected) {
                               context.read<TaskFormBloc>().add(
                                 AgencyChanged(selected),
                               );
                             },
-                            widget.isNew,
+                            isNew: widget.isNew,
+                            labelBuilder: (a) => a.name,
+                            idBuilder: (a) => a.userId?.toString() ?? '',
                           ),
                         ],
                       ],
@@ -186,29 +168,72 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 ],
               ).padAll(AppPaddings.appPaddingInt),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
-  Column _buildDropdown(
-    String title,
-    List<String> list,
-    String? initialValue,
-    Function(String) onChanged,
-    bool isNew,
-  ) {
+  void _handleInit() {
+    final clientState = context.read<ClientBloc>().state;
+    final List<Client> customerList =
+        clientState is ClientLoadSuccess ? clientState.clients : [];
+
+    final agencyState = context.read<UserBloc>().state;
+    final List<User> agencyList =
+        agencyState is UserLoadSuccess
+            ? agencyState.users
+                .where((u) => u.userType == UserRole.agent)
+                .toList()
+            : [];
+
+    if (!widget.isNew) {
+      context.read<TaskFormBloc>().add(
+        ResetTaskForm(clients: customerList, agencies: agencyList),
+      );
+      _taskNameController.text = widget.task.name;
+      _noteController.text = '';
+      _phoneController.text = widget.task.client.contactNo;
+      _dueDateController.text = widget.task.dueDate.toPrettyDate();
+    } else {
+      _dueDateController.text =
+          DateTime.now().add(const Duration(days: 2)).toPrettyDateTime();
+
+      context.read<TaskFormBloc>().add(
+        InitializeTaskForm(
+          existingTask: widget.task,
+          clients: customerList,
+          agencies: agencyList,
+        ),
+      );
+    }
+  }
+
+  Column _buildDropdown<T>({
+    required String title,
+    required List<T> list,
+    required ValueChanged<T> onChanged,
+    required bool isNew,
+    T? initialValue,
+    String Function(T)? labelBuilder,
+    String Function(T)? idBuilder,
+  }) {
+    final effectiveLabelBuilder = labelBuilder ?? (value) => value.toString();
+    final effectiveIdBuilder =
+        idBuilder ?? (value) => value.hashCode.toString();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         10.hGap,
         Text(title, style: AppTexts.labelTextStyle),
         10.hGap,
-        CustomDropdownMenu(
+        ModelDropdownMenu<T>(
           items: list,
           initialValue: isNew ? null : initialValue,
           onChanged: onChanged,
+          labelBuilder: effectiveLabelBuilder,
+          idBuilder: effectiveIdBuilder,
         ),
         10.hGap,
       ],
