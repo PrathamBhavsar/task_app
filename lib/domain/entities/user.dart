@@ -15,7 +15,6 @@ class User extends Equatable {
 
   final String name;
   final String email;
-  final String? password;
   @JsonKey(name: 'contact_no')
   final String contactNo;
 
@@ -38,7 +37,6 @@ class User extends Equatable {
     required this.address,
     required this.userType,
     required this.profileBgColor,
-    this.password,
     this.createdAt,
   });
 
@@ -52,7 +50,6 @@ class User extends Equatable {
     createdAt,
     name,
     email,
-    password,
     contactNo,
     address,
     userType,

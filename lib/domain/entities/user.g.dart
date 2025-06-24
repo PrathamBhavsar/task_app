@@ -14,7 +14,6 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
   address: json['address'] as String,
   userType: const UserRoleConverter().fromJson(json['user_type'] as String),
   profileBgColor: json['profile_bg_color'] as String,
-  password: json['password'] as String?,
   createdAt:
       json['created_at'] == null
           ? null
@@ -26,7 +25,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
   'created_at': instance.createdAt?.toIso8601String(),
   'name': instance.name,
   'email': instance.email,
-  'password': instance.password,
   'contact_no': instance.contactNo,
   'address': instance.address,
   'user_type': const UserRoleConverter().toJson(instance.userType),

@@ -168,12 +168,12 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             widget.task.client.address,
                             style: AppTexts.inputTextStyle,
                           ),
-                          if (widget.task.notes != null &&
-                              widget.task.notes!.isNotEmpty) ...[
+                          if (widget.task.remarks != null &&
+                              widget.task.remarks!.isNotEmpty) ...[
                             10.hGap,
                             Text('Notes', style: AppTexts.inputHintTextStyle),
                             Text(
-                              widget.task.notes ?? '',
+                              widget.task.remarks ?? '',
                               style: AppTexts.inputTextStyle,
                             ),
                           ],

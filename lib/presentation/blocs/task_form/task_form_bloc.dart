@@ -33,7 +33,7 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
       (e, emit) => emit(state.copyWith(selectedPriority: e.priority)),
     );
     on<ClientChanged>(
-      (e, emit) => emit(state.copyWith(selectedCustomer: e.customer)),
+      (e, emit) => emit(state.copyWith(selectedClient: e.client)),
     );
     on<AgencyChanged>(
       (e, emit) => emit(state.copyWith(selectedAgency: e.agency)),
@@ -61,10 +61,8 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
         agencies: agencies,
         selectedStatus: task?.status ?? statuses.first,
         selectedPriority: task?.priority ?? priorities.first,
-        selectedCustomer:
-            task?.client ?? (customers.isNotEmpty ? customers.first : null),
-        selectedAgency:
-            task?.agency ?? (agencies.isNotEmpty ? agencies.first : null),
+        selectedClient: task?.client ?? customers.first,
+        selectedAgency: task?.agency ?? agencies.first,
       ),
     );
   }
@@ -72,7 +70,7 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
   void _onReset(ResetTaskForm event, Emitter<TaskFormState> emit) {
     final statuses = Status.list;
     final priorities = Priority.list;
-    final customers = event.clients;
+    final clients = event.clients;
     final agencies = event.agencies;
 
     emit(
@@ -80,14 +78,13 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
         isInitialized: true,
         statuses: statuses,
         priorities: priorities,
-        customers: customers,
+        customers: clients,
         agencies: agencies,
         selectedStatus: statuses.first,
         selectedPriority: priorities.first,
-        selectedCustomer: customers.isNotEmpty ? customers.first : null,
-        selectedAgency: agencies.isNotEmpty ? agencies.first : null,
+        selectedClient: clients.first,
+        selectedAgency: agencies.first,
       ),
     );
   }
-
 }

@@ -24,7 +24,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
       json['agency'] == null
           ? null
           : User.fromJson(json['agency'] as Map<String, dynamic>),
-  notes: json['additional_notes'] as String?,
+  remarks: json['remarks'] as String?,
 );
 
 Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
@@ -39,5 +39,5 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
   'agency': instance.agency?.toJson(),
   'designer': instance.designer.toJson(),
   'assigned_users': instance.assignedUsers.map((e) => e.toJson()).toList(),
-  'additional_notes': instance.notes,
+  'remarks': instance.remarks,
 };

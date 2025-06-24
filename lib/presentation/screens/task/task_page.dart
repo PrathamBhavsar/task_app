@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../core/di/di.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
@@ -11,7 +11,6 @@ import '../../blocs/tab/tab_bloc.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
-import '../../providers/user_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/refresh_wrapper.dart';
 import '../../widgets/tab_header.dart';
@@ -52,13 +51,11 @@ class TaskPage extends StatelessWidget {
                     IntrinsicWidth(
                       child: ActionButton(
                         label: 'New Task',
-                        onPress: () {
-                          getIt<UserProvider>().fetchAllUsers();
-                        },
-                        // () => context.push(
-                        //   AppRoutes.editTask,
-                        //   extra: {'task': Task.empty(), 'isNew': true},
-                        // ),
+                        onPress:
+                            () => context.push(
+                              AppRoutes.editTask,
+                              extra: {'isNew': true},
+                            ),
                         prefixIcon: CustomIcon.badgePlus,
                         fontColor: Colors.white,
                         backgroundColor: Colors.black,

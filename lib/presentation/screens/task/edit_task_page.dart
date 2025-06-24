@@ -24,7 +24,7 @@ import '../../widgets/drop_down_menu.dart';
 class EditTaskPage extends StatefulWidget {
   const EditTaskPage({required this.task, required this.isNew, super.key});
 
-  final Task task;
+  final Task? task;
   final bool isNew;
 
   @override
@@ -106,7 +106,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
                               StatusChanged(selected),
                             );
                           },
-                          isNew: widget.isNew,
                           labelBuilder: (s) => s.name,
                           idBuilder: (s) => s.statusId?.toString() ?? '',
                         ),
@@ -119,7 +118,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
                               PriorityChanged(selected),
                             );
                           },
-                          isNew: widget.isNew,
                           labelBuilder: (p) => p.name,
                           idBuilder: (p) => p.priorityId?.toString() ?? '',
                         ),
@@ -143,11 +141,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
                               ClientChanged(selected),
                             );
                           },
-                          isNew: widget.isNew,
                           labelBuilder: (c) => c.name,
                           idBuilder: (c) => c.clientId?.toString() ?? '',
                         ),
-                        if (widget.task.agency != null && !widget.isNew) ...[
+                        if (widget.task?.agency != null && !widget.isNew) ...[
                           _buildDropdown<User>(
                             title: 'Agency',
                             list: state.agencies,
@@ -157,7 +154,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
                                 AgencyChanged(selected),
                               );
                             },
-                            isNew: widget.isNew,
                             labelBuilder: (a) => a.name,
                             idBuilder: (a) => a.userId?.toString() ?? '',
                           ),
@@ -187,25 +183,26 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 .toList()
             : [];
 
-    if (!widget.isNew) {
-      context.read<TaskFormBloc>().add(
-        ResetTaskForm(clients: customerList, agencies: agencyList),
-      );
-      _taskNameController.text = widget.task.name;
-      _noteController.text = '';
-      _phoneController.text = widget.task.client.contactNo;
-      _dueDateController.text = widget.task.dueDate.toPrettyDate();
-    } else {
-      _dueDateController.text =
-          DateTime.now().add(const Duration(days: 2)).toPrettyDateTime();
+    final TaskFormBloc bloc = context.read<TaskFormBloc>();
 
-      context.read<TaskFormBloc>().add(
+    if (!widget.isNew) {
+      bloc.add(
         InitializeTaskForm(
           existingTask: widget.task,
           clients: customerList,
           agencies: agencyList,
         ),
       );
+
+      _taskNameController.text = widget.task?.name ?? '';
+      _noteController.text = widget.task?.remarks ?? '';
+      _phoneController.text = widget.task?.client.contactNo ?? '';
+      _dueDateController.text = widget.task?.dueDate.toPrettyDate() ?? '';
+    } else {
+      _dueDateController.text =
+          DateTime.now().add(const Duration(days: 2)).toPrettyDateTime();
+
+      bloc.add(ResetTaskForm(clients: customerList, agencies: agencyList));
     }
   }
 
@@ -213,7 +210,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
     required String title,
     required List<T> list,
     required ValueChanged<T> onChanged,
-    required bool isNew,
     T? initialValue,
     String Function(T)? labelBuilder,
     String Function(T)? idBuilder,
@@ -230,7 +226,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
         10.hGap,
         ModelDropdownMenu<T>(
           items: list,
-          initialValue: isNew ? null : initialValue,
+          initialValue: widget.isNew ? null : initialValue,
           onChanged: onChanged,
           labelBuilder: effectiveLabelBuilder,
           idBuilder: effectiveIdBuilder,
