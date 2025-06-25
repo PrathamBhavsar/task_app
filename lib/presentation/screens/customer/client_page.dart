@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/di.dart';
@@ -40,34 +39,45 @@ class ClientPage extends StatelessWidget {
             if (state.clients.isEmpty) {
               return Center(child: Text('There are no clients!'));
             } else {
-              return RefreshWrapper(
-                onRefresh:
-                    () async =>
-                        context.read<ClientBloc>().add(FetchClientsRequested()),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Clients', style: AppTexts.titleTextStyle),
-                        IntrinsicWidth(
-                          child: ActionButton(
-                            label: 'New Client',
-                            onPress: () => context.push(AppRoutes.newCustomer),
-                            prefixIcon: CustomIcon.badgePlus,
-                            fontColor: Colors.white,
-                            backgroundColor: Colors.black,
-                          ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Clients', style: AppTexts.titleTextStyle),
+                      IntrinsicWidth(
+                        child: ActionButton(
+                          label: 'New Client',
+                          onPress: () => context.push(AppRoutes.newCustomer),
+                          prefixIcon: CustomIcon.badgePlus,
+                          fontColor: Colors.white,
+                          backgroundColor: Colors.black,
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  10.hGap,
+                  CustomTextField(hintTxt: 'Search clients', isSearch: true),
+                  10.hGap,
+                  Expanded(
+                    child: RefreshableStateWrapper<Client>(
+                      state: state,
+                      fetchFunction:
+                          () async => context.read<ClientBloc>().add(
+                            FetchClientsRequested(),
+                          ),
+                      isLoading: (s) => s is ClientLoadInProgress,
+                      isFailure: (s) => s is ClientLoadFailure,
+                      getFailureMessage:
+                          (s) => (s as ClientLoadFailure).error.message,
+                      extractItems:
+                          (s) => s is ClientLoadSuccess ? s.clients : [],
+                      itemBuilder:
+                          (context, client) => ClientTile(customer: client),
                     ),
-                    10.hGap,
-                    CustomTextField(hintTxt: 'Search clients', isSearch: true),
-                    10.hGap,
-                    _buildCustomers(state.clients),
-                  ],
-                ),
+                  ),
+                ],
               );
             }
           }
@@ -76,17 +86,4 @@ class ClientPage extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildCustomers(List<Client> clients) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      ...List.generate(
-        clients.length,
-        (index) => Padding(
-          padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-          child: CustomerTile(customer: clients[index]),
-        ),
-      ),
-    ],
-  );
 }

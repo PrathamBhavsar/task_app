@@ -63,9 +63,7 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           body: SafeArea(
-            child: SingleChildScrollView(
-              child: state.currentPage,
-            ).padAll(AppPaddings.appPaddingInt),
+            child: state.currentPage.padAll(AppPaddings.appPaddingInt),
           ),
         );
       },

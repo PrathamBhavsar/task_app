@@ -6,8 +6,8 @@ import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../widgets/bordered_container.dart';
 
-class CustomerTile extends StatelessWidget {
-  const CustomerTile({
+class ClientTile extends StatelessWidget {
+  const ClientTile({
     required this.customer,
     super.key,
     this.isSelected = false,

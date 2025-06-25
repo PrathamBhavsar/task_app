@@ -86,6 +86,10 @@ abstract class AppThemes {
     appBarTheme: AppBarTheme(backgroundColor: Colors.white),
     scaffoldBackgroundColor: Colors.white,
     dividerTheme: DividerThemeData(color: Colors.transparent),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: Colors.black,
+      refreshBackgroundColor: Colors.white,
+    ),
   );
 }
 

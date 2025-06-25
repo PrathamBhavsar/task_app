@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../domain/entities/bill.dart';
 import '../../../utils/constants/app_constants.dart';
@@ -36,78 +35,75 @@ class BillPage extends StatelessWidget {
             return const Center(child: Text('There are no bills!'));
           }
 
-          return RefreshWrapper(
-            onRefresh:
-                () async => context.read<BillBloc>().add(FetchBillsRequested()),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Bills', style: AppTexts.titleTextStyle),
-                TabHeader(
-                  tabs: [
-                    Tab(text: BillStatus.pending.status),
-                    Tab(text: BillStatus.approved.status),
-                    Tab(text: 'Paid'),
-                    Tab(text: BillStatus.rejected.status),
-                  ],
-                ),
-                10.hGap,
-                BlocBuilder<TabBloc, TabState>(
-                  builder: (context, tabState) {
-                    final index = tabState.tabIndex;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Bills', style: AppTexts.titleTextStyle),
+              TabHeader(
+                tabs: [
+                  Tab(text: BillStatus.pending.status),
+                  Tab(text: BillStatus.approved.status),
+                  Tab(text: 'Paid'),
+                  Tab(text: BillStatus.rejected.status),
+                ],
+              ),
+              10.hGap,
+              BlocBuilder<TabBloc, TabState>(
+                builder: (context, tabState) {
+                  final index = tabState.tabIndex;
 
-                    List<Bill> selectedBills;
-                    switch (index) {
-                      case 0:
-                        selectedBills =
-                            bills
-                                .where((b) => b.status == BillStatus.pending)
-                                .toList();
-                        break;
-                      case 1:
-                        selectedBills =
-                            bills
-                                .where((b) => b.status == BillStatus.approved)
-                                .toList();
-                        break;
-                      case 2:
-                        selectedBills =
-                            bills
-                                .where((b) => b.status == BillStatus.rejected)
-                                .toList();
-                        break;
-                      case 3:
-                        selectedBills =
-                            bills
-                                .where((b) => b.status == BillStatus.rejected)
-                                .toList();
-                        break;
-                      default:
-                        selectedBills = bills;
-                    }
+                  List<Bill> selectedBills;
+                  switch (index) {
+                    case 0:
+                      selectedBills =
+                          bills
+                              .where((b) => b.status == BillStatus.pending)
+                              .toList();
+                      break;
+                    case 1:
+                      selectedBills =
+                          bills
+                              .where((b) => b.status == BillStatus.approved)
+                              .toList();
+                      break;
+                    case 2:
+                      selectedBills =
+                          bills
+                              .where((b) => b.status == BillStatus.rejected)
+                              .toList();
+                      break;
+                    case 3:
+                      selectedBills =
+                          bills
+                              .where((b) => b.status == BillStatus.rejected)
+                              .toList();
+                      break;
+                    default:
+                      selectedBills = bills;
+                  }
 
-                    return _buildBills(selectedBills);
-                  },
-                ),
-              ],
-            ),
+                  return Expanded(
+                    child: RefreshableStateWrapper<Bill>(
+                      state: billState,
+                      fetchFunction:
+                          () async => context.read<BillBloc>().add(
+                            FetchBillsRequested(),
+                          ),
+                      isLoading: (s) => s is BillLoadInProgress,
+                      isFailure: (s) => s is BillLoadFailure,
+                      getFailureMessage:
+                          (s) => (s as BillLoadFailure).error.message,
+                      extractItems: (s) => selectedBills,
+                      itemBuilder: (context, bill) => BillTile(bill: bill),
+                    ),
+                  );
+                },
+              ),
+            ],
           );
         }
         return const SizedBox.shrink();
       },
-    );
-  }
-
-  Widget _buildBills(List<Bill> list) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(
-        list.length,
-        (index) => Padding(
-          padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-          child: BillTile(bill: list[index]),
-        ),
-      ),
     );
   }
 }

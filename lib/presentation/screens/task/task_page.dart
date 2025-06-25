@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../blocs/tab/tab_bloc.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/refresh_wrapper.dart';
-import '../../widgets/tab_header.dart';
 import 'widgets/task_tile.dart';
 
 class TaskPage extends StatelessWidget {
@@ -30,77 +27,44 @@ class TaskPage extends StatelessWidget {
         }
       },
       builder: (context, taskState) {
-        if (taskState is TaskLoadInProgress) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (taskState is TaskLoadFailure) {
-          return const Center(child: Text('There was an issue loading tasks!'));
-        }
-
-        if (taskState is TaskLoadSuccess) {
-          final tasks = taskState.tasks;
-
-          if (tasks.isEmpty) {
-            return const Center(child: Text('There are no tasks!'));
-          }
-
-          return RefreshWrapper(
-            onRefresh:
-                () async => context.read<TaskBloc>().add(FetchTasksRequested()),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        return Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('My Tasks', style: AppTexts.titleTextStyle),
-                    IntrinsicWidth(
-                      child: ActionButton(
-                        label: 'New Task',
-                        onPress:
-                            () => context.push(
-                              AppRoutes.editTask,
-                              extra: {'isNew': true},
-                            ),
-                        prefixIcon: CustomIcon.badgePlus,
-                        fontColor: Colors.white,
-                        backgroundColor: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-                TabHeader(tabs: [Tab(text: 'Active'), Tab(text: 'Completed')]),
-                10.hGap,
-                BlocBuilder<TabBloc, TabState>(
-                  builder: (context, tabState) {
-                    return _buildActiveTasks(tasks);
-                  },
+                Text('My Tasks', style: AppTexts.titleTextStyle),
+                IntrinsicWidth(
+                  child: ActionButton(
+                    label: 'New Task',
+                    onPress:
+                        () => context.push(
+                          AppRoutes.editTask,
+                          extra: {'isNew': true},
+                        ),
+                    prefixIcon: CustomIcon.badgePlus,
+                    fontColor: Colors.white,
+                    backgroundColor: Colors.black,
+                  ),
                 ),
               ],
             ),
-          );
-        }
-        return const Center(child: Text('There are no tasks!'));
+            20.hGap,
+            Expanded(
+              child: RefreshableStateWrapper<Task>(
+                state: taskState,
+                fetchFunction:
+                    () async =>
+                        context.read<TaskBloc>().add(FetchTasksRequested()),
+                isLoading: (s) => s is TaskLoadInProgress,
+                isFailure: (s) => s is TaskLoadFailure,
+                getFailureMessage: (s) => (s as TaskLoadFailure).error.message,
+                extractItems: (s) => s is TaskLoadSuccess ? s.tasks : [],
+                itemBuilder: (context, task) => TaskTile(task: task),
+              ),
+            ),
+          ],
+        );
       },
-    );
-  }
-
-  Widget _buildActiveTasks(List<Task> tasks) {
-    if (tasks.isEmpty) {
-      return const Center(child: Text('There are no tasks with status!'));
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...List.generate(
-          tasks.length,
-          (index) => Padding(
-            padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-            child: TaskTile(task: tasks[index]),
-          ),
-        ),
-      ],
     );
   }
 }
