@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
@@ -20,6 +21,7 @@ import '../../blocs/designer/designer_bloc.dart';
 import '../../blocs/designer/designer_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_event.dart';
+import '../../blocs/task/task_state.dart';
 import '../../blocs/task_form/task_form_bloc.dart';
 import '../../blocs/task_form/task_form_event.dart';
 import '../../blocs/task_form/task_form_state.dart';
@@ -73,11 +75,12 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 final int? currentUserId = getIt<CacheHelper>().getUserId();
                 final TaskFormState taskFormState =
                     context.read<TaskFormBloc>().state;
+
                 final TaskPayload payload = TaskPayload(
                   assignedUsers: [],
                   dealNo: "dealNo",
                   name: _taskNameController.text,
-                  startDate: DateTime.now().toPrettyDate(),
+                  startDate: DateTime.now().toString(),
                   dueDate: _dueDateController.text,
                   priority: taskFormState.selectedPriority?.name ?? '',
                   status: taskFormState.selectedStatus?.name ?? '',
@@ -85,7 +88,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   agencyId: taskFormState.selectedAgency?.userId,
                   createdById: currentUserId ?? 0,
                   clientId: taskFormState.selectedClient?.clientId ?? 0,
-                  designerId: 0,
+                  designerId: taskFormState.selectedDesigner?.designerId ?? 0,
                 );
 
                 context.read<TaskBloc>().add(PutTaskRequested(payload));
@@ -98,32 +101,39 @@ class _EditTaskPageState extends State<EditTaskPage> {
           ),
         ],
       ),
-      body: BlocBuilder<TaskFormBloc, TaskFormState>(
-        builder: (context, state) {
-          if (!state.isInitialized) {
-            return const Center(child: CircularProgressIndicator());
+      body: BlocListener<TaskBloc, TaskState>(
+        listener: (context, state) {
+          if (state is PutTaskSuccess) {
+            context.pop();
           }
-
-          return GestureDetector(
-            onTap: () => FocusScope.of(context).unfocus(),
-            behavior: HitTestBehavior.opaque,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Task Details',
-                    style: AppTexts.titleTextStyle.copyWith(
-                      fontVariations: [FontVariation.weight(600)],
-                    ),
-                  ),
-                  20.hGap,
-                  _buildTaskFormWidgets(state, context),
-                ],
-              ).padAll(AppPaddings.appPaddingInt),
-            ),
-          );
         },
+        child: BlocBuilder<TaskFormBloc, TaskFormState>(
+          builder: (context, state) {
+            if (!state.isInitialized) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            return GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              behavior: HitTestBehavior.opaque,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Task Details',
+                      style: AppTexts.titleTextStyle.copyWith(
+                        fontVariations: [FontVariation.weight(600)],
+                      ),
+                    ),
+                    20.hGap,
+                    _buildTaskFormWidgets(state, context),
+                  ],
+                ).padAll(AppPaddings.appPaddingInt),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -215,13 +225,13 @@ class _EditTaskPageState extends State<EditTaskPage> {
     final List<Designer> designerList =
         designerState is DesignerLoadSuccess ? designerState.designers : [];
 
-    final agencyState = context.read<UserBloc>().state;
+    final userState = context.read<UserBloc>().state;
+
+    final List<User> userList =
+        userState is UserLoadSuccess ? userState.users : [];
+
     final List<User> agencyList =
-        agencyState is UserLoadSuccess
-            ? agencyState.users
-                .where((u) => u.userType == UserRole.agent)
-                .toList()
-            : [];
+        userList.where((u) => u.userType == UserRole.agent).toList();
 
     final TaskFormBloc bloc = context.read<TaskFormBloc>();
 
@@ -241,7 +251,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
       _dueDateController.text = widget.task?.dueDate.toPrettyDate() ?? '';
     } else {
       _dueDateController.text =
-          DateTime.now().add(const Duration(days: 2)).toPrettyDateTime();
+          DateTime.now().add(const Duration(days: 2)).toString();
 
       bloc.add(
         ResetTaskForm(

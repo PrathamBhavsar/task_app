@@ -157,7 +157,7 @@ void setupTask() {
   getIt.registerLazySingleton(() => PutTaskUseCase(getIt<TaskRepository>()));
 
   getIt.registerFactory(
-    () => TaskBloc(getIt<GetAllTasksUseCase>(), getIt<PutTaskUseCase>()),
+    () => TaskBloc(getIt<GetAllTasksUseCase>(), getIt<PutTaskUseCase>(), getIt<SnackBarHelper>()),
   );
 }
 

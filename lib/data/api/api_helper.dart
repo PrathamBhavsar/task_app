@@ -21,6 +21,7 @@ import '../responses/get_tasks_response.dart';
 import '../responses/get_timelines_response.dart';
 import '../responses/get_users_response.dart';
 import '../responses/put_message_response.dart';
+import '../responses/put_task_response.dart';
 import 'api_constants.dart';
 import 'api_handler.dart';
 import 'api_service.dart';
@@ -46,7 +47,7 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.users);
     } else {
-      return Left(Failure('Failed to fetch users'));
+      return Left(Failure(result.error!.message));
     }
   }
 
@@ -60,20 +61,20 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.tasks);
     } else {
-      return Left(Failure('Failed to fetch tasks'));
+      return Left(Failure(result.error!.message));
     }
   }
 
   Future<Either<Failure, Task>> putTask(TaskPayload data) async {
-    final ApiResponse<Task> result = await handler.execute<Task>(
+    final ApiResponse result = await handler.execute<PutTaskResponse>(
       () => service.post(ApiConstants.task.base, data: data.toJson()),
-      (json) => Task.fromJson(json as Map<String, dynamic>),
+      (json) => PutTaskResponse.fromJson(json as Map<String, dynamic>),
     );
 
     if (result.isSuccess && result.data != null) {
-      return Right(result.data!);
+      return Right(result.data!.task);
     } else {
-      return Left(Failure('Failed to create task'));
+      return Left(Failure(result.error!.message));
     }
   }
 
@@ -87,7 +88,7 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.clients);
     } else {
-      return Left(Failure('Failed to fetch tasks'));
+      return Left(Failure(result.error!.message));
     }
   }
 
@@ -96,12 +97,12 @@ class ApiHelper {
         .execute<GetDesignersResponse>(
           () => service.get(ApiConstants.designer.base),
           (json) => GetDesignersResponse.fromJson(json as Map<String, dynamic>),
-    );
+        );
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.designers);
     } else {
-      return Left(Failure('Failed to fetch tasks'));
+      return Left(Failure(result.error!.message));
     }
   }
 
@@ -115,7 +116,7 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.bills);
     } else {
-      return Left(Failure('Failed to fetch bills'));
+      return Left(Failure(result.error!.message));
     }
   }
 
@@ -131,7 +132,7 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.timelines);
     } else {
-      return Left(Failure('Failed to fetch timelines'));
+      return Left(Failure(result.error!.message));
     }
   }
 
@@ -144,7 +145,7 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.message);
     } else {
-      return Left(Failure('Failed to send message'));
+      return Left(Failure(result.error!.message));
     }
   }
 
@@ -160,7 +161,7 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.taskMessages);
     } else {
-      return Left(Failure('Failed to fetch messages'));
+      return Left(Failure(result.error!.message));
     }
   }
 
@@ -173,7 +174,7 @@ class ApiHelper {
     if (result.isSuccess && result.data != null) {
       return Right(result.data!);
     } else {
-      return Left(Failure('Failed to login'));
+      return Left(Failure(result.error!.message));
     }
   }
 }

@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'task_payload.g.dart';
 
-@JsonSerializable(includeIfNull: false)
+@JsonSerializable()
 class TaskPayload {
   @JsonKey(name: "deal_no")
   final String dealNo;
@@ -29,7 +29,7 @@ class TaskPayload {
   @JsonKey(name: "designer_id")
   final int designerId;
 
-  @JsonKey(name: "agency_id")
+  @JsonKey(name: "agency_id", includeIfNull: false)
   final int? agencyId;
 
   @JsonKey(name: "assigned_users")

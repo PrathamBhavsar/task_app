@@ -31,7 +31,7 @@ Map<String, dynamic> _$TaskPayloadToJson(TaskPayload instance) =>
       'start_date': instance.startDate,
       'due_date': instance.dueDate,
       'priority': instance.priority,
-      if (instance.remarks case final value?) 'remarks': value,
+      'remarks': instance.remarks,
       'status': instance.status,
       'created_by': instance.createdById,
       'client_id': instance.clientId,

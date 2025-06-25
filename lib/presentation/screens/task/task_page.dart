@@ -21,7 +21,14 @@ class TaskPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TaskBloc, TaskState>(
+    return BlocConsumer<TaskBloc, TaskState>(
+      listener: (context, taskState) {
+        if (taskState is PutTaskSuccess) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<TaskBloc>().add(FetchTasksRequested());
+          });
+        }
+      },
       builder: (context, taskState) {
         if (taskState is TaskLoadInProgress) {
           return const Center(child: CircularProgressIndicator());
