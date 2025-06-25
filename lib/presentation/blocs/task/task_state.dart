@@ -32,3 +32,24 @@ class PutTaskFailure extends TaskState {
 
   PutTaskFailure(this.error);
 }
+
+class UpdateTaskStatusInProgress extends TaskState {}
+
+class UpdateTaskStatusSuccess extends TaskState {
+  final Task message;
+
+  UpdateTaskStatusSuccess(this.message);
+}
+
+class UpdateTaskStatusFailure extends TaskState {
+  final Failure error;
+
+  UpdateTaskStatusFailure(this.error);
+}
+
+class TaskSelectionState extends TaskState {
+  final bool isProductSelected;
+
+  TaskSelectionState({required this.isProductSelected});
+}
+

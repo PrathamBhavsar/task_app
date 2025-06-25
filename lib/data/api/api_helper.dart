@@ -11,17 +11,20 @@ import '../../domain/entities/timeline.dart';
 import '../../domain/entities/user.dart';
 import '../models/api/api_response.dart';
 import '../models/payloads/auth_payload.dart';
+import '../models/payloads/client_payload.dart';
 import '../models/payloads/message_payload.dart';
 import '../models/payloads/task_payload.dart';
+import '../models/payloads/update_status_payload.dart';
+import '../responses/client/put_client_response.dart';
 import '../responses/get_bills_response.dart';
-import '../responses/get_clients_response.dart';
+import '../responses/client/get_clients_response.dart';
 import '../responses/get_designers_response.dart';
 import '../responses/get_messages_response.dart';
-import '../responses/get_tasks_response.dart';
+import '../responses/task/get_tasks_response.dart';
 import '../responses/get_timelines_response.dart';
 import '../responses/get_users_response.dart';
 import '../responses/put_message_response.dart';
-import '../responses/put_task_response.dart';
+import '../responses/task/put_task_response.dart';
 import 'api_constants.dart';
 import 'api_handler.dart';
 import 'api_service.dart';
@@ -78,6 +81,25 @@ class ApiHelper {
     }
   }
 
+  Future<Either<Failure, Task>> updateTaskStatus(
+    UpdateStatusPayload data,
+  ) async {
+    final ApiResponse result = await handler.execute<Task>(
+      () => service.put(
+        ApiConstants.task.update,
+        data: data.toJson(),
+        params: {"id": data.taskId, "status": data.status},
+      ),
+      (json) => Task.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
   Future<Either<Failure, List<Client>>> getAllClients() async {
     final ApiResponse<GetClientsResponse> result = await handler
         .execute<GetClientsResponse>(
@@ -87,6 +109,19 @@ class ApiHelper {
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.clients);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+  Future<Either<Failure, Client>> putClient(ClientPayload data) async {
+    final ApiResponse result = await handler.execute<PutClientResponse>(
+      () => service.post(ApiConstants.client.base, data: data.toJson()),
+      (json) => PutClientResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.client);
     } else {
       return Left(Failure(result.error!.message));
     }
@@ -143,7 +178,7 @@ class ApiHelper {
     );
 
     if (result.isSuccess && result.data != null) {
-      return Right(result.data!.message);
+      return Right(result.data!.status);
     } else {
       return Left(Failure(result.error!.message));
     }

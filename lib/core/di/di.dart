@@ -27,10 +27,12 @@ import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../domain/usecases/designer_usecase.dart';
 import '../../domain/usecases/message_usecase.dart';
+import '../../domain/usecases/put_client_usecase.dart';
 import '../../domain/usecases/put_message_usecase.dart';
 import '../../domain/usecases/put_task_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
+import '../../domain/usecases/update_task_status_usecase.dart';
 import '../../domain/usecases/user_usecase.dart';
 import '../../presentation/blocs/auth/auth_bloc.dart';
 import '../../presentation/blocs/bill/bill_bloc.dart';
@@ -155,9 +157,17 @@ void setupTask() {
   );
 
   getIt.registerLazySingleton(() => PutTaskUseCase(getIt<TaskRepository>()));
+  getIt.registerLazySingleton(
+    () => UpdateTaskStatusUseCase(getIt<TaskRepository>()),
+  );
 
   getIt.registerFactory(
-    () => TaskBloc(getIt<GetAllTasksUseCase>(), getIt<PutTaskUseCase>(), getIt<SnackBarHelper>()),
+    () => TaskBloc(
+      getIt<GetAllTasksUseCase>(),
+      getIt<PutTaskUseCase>(),
+      getIt<SnackBarHelper>(),
+      getIt<UpdateTaskStatusUseCase>(),
+    ),
   );
 }
 
@@ -170,7 +180,13 @@ void setupClient() {
     () => GetAllClientsUseCase(getIt<ClientRepository>()),
   );
 
-  getIt.registerFactory(() => ClientBloc(getIt<GetAllClientsUseCase>()));
+  getIt.registerLazySingleton(
+    () => PutClientUseCase(getIt<ClientRepository>()),
+  );
+
+  getIt.registerFactory(
+    () => ClientBloc(getIt<GetAllClientsUseCase>(), getIt<PutClientUseCase>()),
+  );
 }
 
 void setupDesigner() {

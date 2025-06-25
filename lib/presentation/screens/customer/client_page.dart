@@ -29,7 +29,14 @@ class ClientPage extends StatelessWidget {
           );
         }
       },
-      child: BlocBuilder<ClientBloc, ClientState>(
+      child: BlocConsumer<ClientBloc, ClientState>(
+        listener: (context, state) {
+          if (state is PutClientSuccess) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.read<ClientBloc>().add(FetchClientsRequested());
+            });
+          }
+        },
         builder: (context, state) {
           if (state is ClientLoadInProgress) {
             return Center(child: CircularProgressIndicator());

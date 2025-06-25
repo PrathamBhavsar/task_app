@@ -17,6 +17,14 @@ class ApiService {
     return _dio.post(path, data: data);
   }
 
+  Future<Response<String>> put(
+    String path, {
+    dynamic data,
+    Map<String, dynamic>? params,
+  }) async {
+    return _dio.put(path, data: data, queryParameters: params);
+  }
+
   Future<Response<String>> patch(String path, {dynamic data}) async {
     return _dio.patch(path, data: data);
   }

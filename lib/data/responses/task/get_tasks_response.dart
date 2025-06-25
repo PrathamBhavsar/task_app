@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../domain/entities/task.dart';
+import '../../../domain/entities/task.dart';
 
 part 'get_tasks_response.g.dart';
 

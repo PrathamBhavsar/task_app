@@ -7,26 +7,41 @@ import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
 import '../../../core/helpers/validator.dart';
 import '../../../data/models/payloads/message_payload.dart';
+import '../../../data/models/payloads/update_status_payload.dart';
+import '../../../domain/entities/client.dart';
+import '../../../domain/entities/designer.dart';
 import '../../../domain/entities/task.dart';
+import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/enums/user_role.dart';
 import '../../../utils/extensions/color_translator.dart';
 import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
+import '../../blocs/client/client_bloc.dart';
+import '../../blocs/client/client_state.dart';
+import '../../blocs/designer/designer_bloc.dart';
+import '../../blocs/designer/designer_state.dart';
 import '../../blocs/message/message_bloc.dart';
 import '../../blocs/message/message_event.dart';
 import '../../blocs/message/message_state.dart';
 import '../../blocs/tab/tab_bloc.dart';
 import '../../blocs/task/task_bloc.dart';
+import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
+import '../../blocs/task_form/task_form_bloc.dart';
+import '../../blocs/task_form/task_form_event.dart';
+import '../../blocs/task_form/task_form_state.dart';
 import '../../blocs/timeline/timeline_bloc.dart';
 import '../../blocs/timeline/timeline_event.dart';
 import '../../blocs/timeline/timeline_state.dart';
+import '../../blocs/user/user_bloc.dart';
+import '../../blocs/user/user_state.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/drop_down_menu.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
 import 'widgets/message_tile.dart';
@@ -49,24 +64,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   @override
   void initState() {
-    _messageController = TextEditingController();
-    _textFieldFocusNode.addListener(() {
-      if (_textFieldFocusNode.hasFocus) {
-        Future.delayed(const Duration(milliseconds: 100), () {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-          );
-        });
-      }
-    });
-    context.read<TimelineBloc>().add(
-      FetchTimelinesRequested(widget.task.taskId!),
-    );
-    context.read<MessageBloc>().add(
-      FetchMessagesRequested(widget.task.taskId!),
-    );
+    _handleInit();
     super.initState();
   }
 
@@ -154,15 +152,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             value2: widget.task.createdAt.toPrettyDateTime(),
                           ),
                           10.hGap,
-                          if (userRole != UserRole.agent) ...[
-                            TileRow(
-                              key1: 'Due Date',
-                              value1: widget.task.dueDate.toPrettyDate(),
-                              key2: 'Created',
-                              value2: widget.task.createdAt.toPrettyDateTime(),
-                            ),
-                            10.hGap,
-                          ],
                           Text('Address', style: AppTexts.inputHintTextStyle),
                           Text(
                             widget.task.client.address,
@@ -241,7 +230,9 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         10.wGap,
                         IconButton(
                           onPressed: () {
-                            if (!_formKey.currentState!.validate()) return;
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
 
                             FocusScope.of(context).unfocus();
 
@@ -267,11 +258,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     );
   }
 
-  Widget _buildTaskOverFlow(
-    String selectedAgency,
-    bool isProductSelected,
-    bool isMeasurementSent,
-  ) {
+  Widget _buildTaskOverFlow(String selectedAgency, bool isProductSelected) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -281,60 +268,76 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              isMeasurementSent
-                  ? Container(
-                    padding: EdgeInsets.all(AppPaddings.appPaddingInt),
-                    decoration: BoxDecoration(
-                      borderRadius: AppBorders.radius,
-                      color: AppColors.blueBg,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Measurement Scheduled",
-                          style: AppTexts.inputTextStyle.copyWith(
-                            color: AppColors.darkBlueText,
-                          ),
-                        ),
-                        10.hGap,
-                        Text(
-                          "The measurement task has been assigned to $selectedAgency for ${widget.task.createdAt}. Once they complete the measurements, you'll be notified to proceed with creating a quote.",
-                          style: AppTexts.inputTextStyle.copyWith(
-                            color: AppColors.darkBlueText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                  : SizedBox.shrink(),
-              isMeasurementSent
-                  ? SizedBox.shrink()
-                  : Text(
-                    isProductSelected
-                        ? "Assign a measurement task to one of our partner agencies."
-                        : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
+              BlocBuilder<TaskFormBloc, TaskFormState>(
+                builder: (context, state) {
+                  if (!state.isInitialized) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                    style: AppTexts.inputTextStyle,
-                  ),
-              if (isProductSelected) ...[
-                // _buildDropDown('Select Agency', Agency.names),
-                _buildTextInput('Schedule Date', 'Select Date'),
-                _buildTextInput(
-                  'Instructions for Agency',
-                  'Provide any specific instructions',
-                  isMultiline: true,
-                ),
-              ],
+                  if (!isProductSelected) {
+                    return const SizedBox.shrink(); // or skip rendering
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildDropdown<User>(
+                        title: 'Agency',
+                        list: state.agencies,
+                        initialValue: state.selectedAgency,
+                        onChanged:
+                            (selected) => context.read<TaskFormBloc>().add(
+                              AgencyChanged(selected),
+                            ),
+                        labelBuilder: (a) => a.name,
+                        idBuilder: (a) => a.userId?.toString() ?? '',
+                      ),
+                      _buildTextInput('Schedule Date', 'Select Date'),
+                      _buildTextInput(
+                        'Instructions for Agency',
+                        'Provide any specific instructions',
+                        isMultiline: true,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              Text(
+                isProductSelected
+                    ? "Assign a measurement task to one of our partner agencies."
+                    : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
+                style: AppTexts.inputTextStyle,
+              ),
               10.hGap,
               ActionButton(
                 label:
-                    isMeasurementSent
-                        ? 'Mark Measurement as Complete'
-                        : isProductSelected
+                    isProductSelected
                         ? 'Assign Measurement Task'
                         : 'Complete Product Selection',
-                onPress: () {},
+                onPress: () {
+                  final TaskBloc taskBloc = context.read<TaskBloc>();
+                  if (!isProductSelected) {
+                    taskBloc.add(ToggleStatusEvent(true));
+                  } else {
+                    final int? userId = getIt<CacheHelper>().getUserId();
+                    taskBloc.add(
+                      UpdateTaskStatusRequested(
+                        UpdateStatusPayload(
+                          status: "Pending",
+                          taskId: widget.task.taskId ?? 0,
+                          agencyId:
+                              context
+                                  .read<TaskFormBloc>()
+                                  .state
+                                  .selectedAgency
+                                  ?.userId ??
+                              0,
+                          userId: userId ?? 0,
+                        ),
+                      ),
+                    );
+                  }
+                },
                 prefixIcon: CustomIcon.circleCheckBig,
                 backgroundColor: Colors.black,
                 fontColor: Colors.white,
@@ -514,32 +517,25 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         IndexedStack(
           index: tabIndex,
           children: [
-            _buildTaskOverFlow(
-              widget.task.agency?.name ?? "",
-              tabIndex == 1,
-              tabIndex == 2,
+            BlocBuilder<TaskBloc, TaskState>(
+              builder: (context, state) {
+                bool isProductSelected = false;
+
+                if (state is TaskSelectionState) {
+                  isProductSelected = state.isProductSelected;
+                }
+
+                return _buildTaskOverFlow(
+                  widget.task.agency?.name ?? "",
+                  isProductSelected,
+                );
+              },
             ),
+
             _buildTimeline(),
             _buildMessages(),
           ],
         ),
-        // Builder(
-        //   builder: (context) {
-        //     switch (tabIndex) {
-        //       case 0:
-        //         return _buildTaskOverFlow(
-        //           widget.task.agency?.name ?? "",
-        //           tabIndex == 1,
-        //           tabIndex == 2,
-        //         );
-        //       case 1:
-        //         return _buildTimeline();
-        //       default:
-        //         // return SizedBox.shrink();
-        //         return _buildMessages();
-        //     }
-        //   },
-        // ),
       ],
     );
   }
@@ -562,6 +558,36 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     );
   }
 
+  Column _buildDropdown<T>({
+    required String title,
+    required List<T> list,
+    required ValueChanged<T> onChanged,
+    T? initialValue,
+    String Function(T)? labelBuilder,
+    String Function(T)? idBuilder,
+  }) {
+    final effectiveLabelBuilder = labelBuilder ?? (value) => value.toString();
+    final effectiveIdBuilder =
+        idBuilder ?? (value) => value.hashCode.toString();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        10.hGap,
+        Text(title, style: AppTexts.labelTextStyle),
+        10.hGap,
+        ModelDropdownMenu<T>(
+          items: list,
+          initialValue: initialValue,
+          onChanged: onChanged,
+          labelBuilder: effectiveLabelBuilder,
+          idBuilder: effectiveIdBuilder,
+        ),
+        10.hGap,
+      ],
+    );
+  }
+
   Widget _buildTextInput(
     String title,
     String hint, {
@@ -575,6 +601,54 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         CustomTextField(hintTxt: hint, isMultiline: isMultiline),
         10.hGap,
       ],
+    );
+  }
+
+  void _handleInit() {
+    final clientState = context.read<ClientBloc>().state;
+    final List<Client> customerList =
+        clientState is ClientLoadSuccess ? clientState.clients : [];
+
+    final designerState = context.read<DesignerBloc>().state;
+    final List<Designer> designerList =
+        designerState is DesignerLoadSuccess ? designerState.designers : [];
+
+    final userState = context.read<UserBloc>().state;
+
+    final List<User> userList =
+        userState is UserLoadSuccess ? userState.users : [];
+
+    final List<User> agencyList =
+        userList.where((u) => u.userType == UserRole.agent).toList();
+
+    final TaskFormBloc bloc = context.read<TaskFormBloc>();
+
+    _messageController = TextEditingController();
+    _textFieldFocusNode.addListener(() {
+      if (_textFieldFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 100), () {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          );
+        });
+      }
+    });
+    context.read<TimelineBloc>().add(
+      FetchTimelinesRequested(widget.task.taskId!),
+    );
+    context.read<MessageBloc>().add(
+      FetchMessagesRequested(widget.task.taskId!),
+    );
+
+    bloc.add(
+      InitializeTaskForm(
+        existingTask: widget.task,
+        clients: customerList,
+        designers: designerList,
+        agencies: agencyList,
+      ),
     );
   }
 }

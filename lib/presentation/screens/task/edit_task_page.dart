@@ -236,15 +236,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
     final TaskFormBloc bloc = context.read<TaskFormBloc>();
 
     if (!widget.isNew) {
-      bloc.add(
-        InitializeTaskForm(
-          existingTask: widget.task,
-          clients: customerList,
-          designers: designerList,
-          agencies: agencyList,
-        ),
-      );
-
       _taskNameController.text = widget.task?.name ?? '';
       _noteController.text = widget.task?.remarks ?? '';
       _phoneController.text = widget.task?.client.contactNo ?? '';

@@ -21,7 +21,10 @@ class HomeScreen extends StatelessWidget {
           drawer: const SelectionDrawer(),
           appBar:
               state.barIndex == 0
-                  ? AppBar(title: Text(state.currentTitle))
+                  ? AppBar(
+                    title: Text(state.currentTitle),
+                    forceMaterialTransparency: true,
+                  )
                   : null,
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.white,

@@ -16,14 +16,14 @@ class CustomTag extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     decoration: BoxDecoration(
       color: color,
-      borderRadius: BorderRadius.circular(15),
+      borderRadius: BorderRadius.circular(8),
     ),
     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
     child: Text(
       text,
       style: AppTexts.inputLabelTextStyle.copyWith(
         color: textColor,
-        fontSize: 12.sp,
+        fontSize: 11.sp,
         fontVariations: [FontVariation.weight(700)],
       ),
       softWrap: true,

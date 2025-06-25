@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../domain/entities/client.dart';
+import '../../../domain/entities/client.dart';
 
 part 'get_clients_response.g.dart';
 

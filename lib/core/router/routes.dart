@@ -7,7 +7,7 @@ import '../../presentation/screens/agency/agency_detail_page.dart';
 import '../../presentation/screens/agency/new_agency_screen.dart';
 import '../../presentation/screens/auth/auth_screen.dart';
 import '../../presentation/screens/bill/review_bill_screen.dart';
-import '../../presentation/screens/customer/new_customer_screen.dart';
+import '../../presentation/screens/customer/new_client_screen.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/measurement/measurement_screen.dart';
 import '../../presentation/screens/quote/edit_quote_screen.dart';
@@ -62,7 +62,7 @@ final List<GoRoute> appRoutes = [
   GoRoute(
     path: AppRoutes.newCustomer,
     pageBuilder:
-        (context, state) => _slideTransition(NewCustomerScreen(), state),
+        (context, state) => _slideTransition(NewClientScreen(), state),
   ),
   GoRoute(
     path: AppRoutes.editAgency,
