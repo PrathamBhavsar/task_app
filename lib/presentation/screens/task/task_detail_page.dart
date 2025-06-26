@@ -141,13 +141,11 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                               CustomTag(
                                 text: widget.task.priority.name,
                                 color: widget.task.priority.color.toColor(),
-                                textColor: Colors.white,
                               ),
                               10.wGap,
                               CustomTag(
                                 text: widget.task.status.name,
                                 color: widget.task.status.color.toColor(),
-                                textColor: Colors.white,
                               ),
                             ],
                           ),
@@ -321,7 +319,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
   Widget _buildAgencyAssignmentStatus(Task task) {
     final status = task.status.toStatusType();
-
+    final String agencyName = task.agency?.name ?? "";
     switch (status) {
       case StatusType.created:
         final nextStatus = StatusType.agencyAssigned;
@@ -329,18 +327,28 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
 
       case StatusType.agencyAssigned:
         return BorderedContainer(
-          color: AppColors.bgYellow,
+          color: AppColors.blueBg,
           child: Text(
-            "This task has been assigned to ${widget.task.agency?.name ?? ""}, they'll add the measurements!",
+            "This task has been assigned to $agencyName, they'll add the measurements!",
             style: AppTexts.inputTextStyle.copyWith(
-              color: AppColors.darkYellowText,
+              color: AppColors.darkBlueText,
+            ),
+          ),
+        );
+
+      case StatusType.quotationSent:
+        return BorderedContainer(
+          color: AppColors.blueBg,
+          child: Text(
+            "Review the quotation sent by $agencyName!",
+            style: AppTexts.inputTextStyle.copyWith(
+              color: AppColors.darkBlueText,
             ),
           ),
         );
 
       default:
         return Text(status?.name ?? "NONE");
-        return const SizedBox.shrink();
     }
   }
 

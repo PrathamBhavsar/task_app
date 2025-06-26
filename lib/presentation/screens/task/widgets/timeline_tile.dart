@@ -37,7 +37,6 @@ class TimelineTile extends StatelessWidget {
         CustomTag(
           text: timeline.createdAt.toPrettyDateTime(),
           color: timeline.status.color.toColor(),
-          textColor: Colors.white,
         ),
       ],
     );

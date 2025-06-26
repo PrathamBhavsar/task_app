@@ -55,7 +55,6 @@ class DetailedTaskTile extends StatelessWidget {
               CustomTag(
                 text: task.status.name,
                 color: AppColors.accent,
-                textColor: Colors.black,
               ),
             ],
           ),

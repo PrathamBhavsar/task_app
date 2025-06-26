@@ -47,7 +47,6 @@ class BillTile extends StatelessWidget {
                 CustomTag(
                   text: bill.status.status,
                   color: Colors.black,
-                  textColor: Colors.white,
                 ),
                 5.hGap,
                 Text('\$${bill.total}', style: AppTexts.inputTextStyle),

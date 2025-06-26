@@ -36,7 +36,6 @@ class TaskTile extends StatelessWidget {
                       CustomTag(
                         text: task.status.name,
                         color: task.status.color.toColor(),
-                        textColor: Colors.black,
                       ),
                     ],
                   ),

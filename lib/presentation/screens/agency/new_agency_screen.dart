@@ -94,7 +94,6 @@ class _NewAgencyScreenState extends State<NewAgencyScreen> {
                             child: CustomTag(
                               text: state.isVisible ? 'Active' : 'Inactive',
                               color: Colors.black,
-                              textColor: Colors.white,
                             ),
                           );
                         },

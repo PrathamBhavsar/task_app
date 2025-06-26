@@ -48,7 +48,6 @@ class ReviewBillScreen extends StatelessWidget {
                       CustomTag(
                         text: 'Pending Approval',
                         color: Colors.black,
-                        textColor: Colors.white,
                       ),
                     ],
                   ),

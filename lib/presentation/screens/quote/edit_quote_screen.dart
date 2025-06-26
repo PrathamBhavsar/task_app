@@ -164,7 +164,6 @@ class EditQuoteScreen extends StatelessWidget {
     trailing: CustomTag(
       text: length.toString(),
       color: Colors.black,
-      textColor: Colors.white,
     ),
     shape: UnderlineInputBorder(
       borderSide: BorderSide(color: AppColors.accent),
