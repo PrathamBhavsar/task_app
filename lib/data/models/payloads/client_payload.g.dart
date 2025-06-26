@@ -6,7 +6,7 @@ part of 'client_payload.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ClientPayload _$CustomerPayloadFromJson(Map<String, dynamic> json) =>
+ClientPayload _$ClientPayloadFromJson(Map<String, dynamic> json) =>
     ClientPayload(
       name: json['name'] as String,
       contactNo: json['contact_no'] as String,
@@ -14,7 +14,7 @@ ClientPayload _$CustomerPayloadFromJson(Map<String, dynamic> json) =>
       address: json['address'] as String,
     );
 
-Map<String, dynamic> _$CustomerPayloadToJson(ClientPayload instance) =>
+Map<String, dynamic> _$ClientPayloadToJson(ClientPayload instance) =>
     <String, dynamic>{
       'name': instance.name,
       'contact_no': instance.contactNo,

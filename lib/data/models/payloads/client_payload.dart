@@ -19,5 +19,5 @@ class ClientPayload {
     required this.address,
   });
 
-  Map<String, dynamic> toJson() => _$CustomerPayloadToJson(this);
+  Map<String, dynamic> toJson() => _$ClientPayloadToJson(this);
 }

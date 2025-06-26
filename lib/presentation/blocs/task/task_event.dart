@@ -11,6 +11,12 @@ class PutTaskRequested extends TaskEvent {
   PutTaskRequested(this.data);
 }
 
+class UpdateTaskRequested extends TaskEvent {
+  final TaskPayload data;
+
+  UpdateTaskRequested(this.data);
+}
+
 class UpdateTaskStatusRequested extends TaskEvent {
   final UpdateStatusPayload data;
 

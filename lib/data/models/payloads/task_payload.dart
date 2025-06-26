@@ -4,6 +4,8 @@ part 'task_payload.g.dart';
 
 @JsonSerializable()
 class TaskPayload {
+  @JsonKey(name: "task_id", includeIfNull: false)
+  final int? taskId;
   @JsonKey(name: "deal_no")
   final String dealNo;
   final String name;
@@ -48,6 +50,7 @@ class TaskPayload {
     required this.designerId,
     this.remarks,
     this.agencyId,
+    this.taskId,
   });
 
   Map<String, dynamic> toJson() => _$TaskPayloadToJson(this);

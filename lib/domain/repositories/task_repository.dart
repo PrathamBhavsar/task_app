@@ -9,4 +9,5 @@ abstract class TaskRepository {
   Future<Either<Failure, List<Task>>> getAll();
   Future<Either<Failure, Task>> put(TaskPayload data);
   Future<Either<Failure, Task>> updateStatus(UpdateStatusPayload data);
+  Future<Either<Failure, Task>> updateTask(TaskPayload data);
 }

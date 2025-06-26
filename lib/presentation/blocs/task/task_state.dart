@@ -47,9 +47,22 @@ class UpdateTaskStatusFailure extends TaskState {
   UpdateTaskStatusFailure(this.error);
 }
 
+class UpdateTaskInProgress extends TaskState {}
+
+class UpdateTaskSuccess extends TaskState {
+  final Task task;
+
+  UpdateTaskSuccess(this.task);
+}
+
+class UpdateTaskFailure extends TaskState {
+  final Failure error;
+
+  UpdateTaskFailure(this.error);
+}
+
 class TaskSelectionState extends TaskState {
   final bool isProductSelected;
 
   TaskSelectionState({required this.isProductSelected});
 }
-

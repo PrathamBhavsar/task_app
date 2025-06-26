@@ -25,10 +25,6 @@ class ApiService {
     return _dio.put(path, data: data, queryParameters: params);
   }
 
-  Future<Response<String>> patch(String path, {dynamic data}) async {
-    return _dio.patch(path, data: data);
-  }
-
   Future<Response<String>> delete(String path, {dynamic data}) async {
     return _dio.delete(path, data: data);
   }

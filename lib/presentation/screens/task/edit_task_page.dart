@@ -71,27 +71,30 @@ class _EditTaskPageState extends State<EditTaskPage> {
         actions: [
           TextButton(
             onPressed: () {
+              final int? currentUserId = getIt<CacheHelper>().getUserId();
+              final TaskFormState taskFormState =
+                  context.read<TaskFormBloc>().state;
+
+              final TaskPayload payload = TaskPayload(
+                taskId: widget.task!.taskId,
+                assignedUsers: [],
+                dealNo: "dealNo",
+                name: _taskNameController.text,
+                startDate: DateTime.now().toString(),
+                dueDate: _dueDateController.text,
+                priority: taskFormState.selectedPriority?.name ?? '',
+                status: taskFormState.selectedStatus?.name ?? '',
+                remarks: _noteController.text,
+                agencyId: taskFormState.selectedAgency?.userId,
+                createdById: currentUserId ?? 0,
+                clientId: taskFormState.selectedClient?.clientId ?? 0,
+                designerId: taskFormState.selectedDesigner?.designerId ?? 0,
+              );
+
               if (widget.isNew) {
-                final int? currentUserId = getIt<CacheHelper>().getUserId();
-                final TaskFormState taskFormState =
-                    context.read<TaskFormBloc>().state;
-
-                final TaskPayload payload = TaskPayload(
-                  assignedUsers: [],
-                  dealNo: "dealNo",
-                  name: _taskNameController.text,
-                  startDate: DateTime.now().toString(),
-                  dueDate: _dueDateController.text,
-                  priority: taskFormState.selectedPriority?.name ?? '',
-                  status: taskFormState.selectedStatus?.name ?? '',
-                  remarks: _noteController.text,
-                  agencyId: taskFormState.selectedAgency?.userId,
-                  createdById: currentUserId ?? 0,
-                  clientId: taskFormState.selectedClient?.clientId ?? 0,
-                  designerId: taskFormState.selectedDesigner?.designerId ?? 0,
-                );
-
                 context.read<TaskBloc>().add(PutTaskRequested(payload));
+              } else {
+                context.read<TaskBloc>().add(UpdateTaskRequested(payload));
               }
             },
             child: Text(
@@ -239,7 +242,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
       _taskNameController.text = widget.task?.name ?? '';
       _noteController.text = widget.task?.remarks ?? '';
       _phoneController.text = widget.task?.client.contactNo ?? '';
-      _dueDateController.text = widget.task?.dueDate.toPrettyDate() ?? '';
+      _dueDateController.text = widget.task?.dueDate.toString() ?? '';
     } else {
       _dueDateController.text =
           DateTime.now().add(const Duration(days: 2)).toString();

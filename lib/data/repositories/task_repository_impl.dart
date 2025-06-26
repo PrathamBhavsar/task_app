@@ -26,4 +26,9 @@ class TaskRepositoryImpl implements TaskRepository {
   Future<Either<Failure, Task>> updateStatus(UpdateStatusPayload data) {
     return api.updateTaskStatus(data);
   }
+
+  @override
+  Future<Either<Failure, Task>> updateTask(TaskPayload data) {
+    return api.updateTask(data);
+  }
 }

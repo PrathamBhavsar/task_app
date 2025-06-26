@@ -81,6 +81,20 @@ class ApiHelper {
     }
   }
 
+  Future<Either<Failure, Task>> updateTask(TaskPayload data) async {
+    final ApiResponse result = await handler.execute<PutTaskResponse>(
+          () => service.put(ApiConstants.task.update, data: data.toJson(), params: {"id": data.taskId}),
+          (json) => PutTaskResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.task);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+
   Future<Either<Failure, Task>> updateTaskStatus(
     UpdateStatusPayload data,
   ) async {

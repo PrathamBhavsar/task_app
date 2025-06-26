@@ -22,10 +22,12 @@ TaskPayload _$TaskPayloadFromJson(Map<String, dynamic> json) => TaskPayload(
   designerId: (json['designer_id'] as num).toInt(),
   remarks: json['remarks'] as String?,
   agencyId: (json['agency_id'] as num?)?.toInt(),
+  taskId: (json['task_id'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$TaskPayloadToJson(TaskPayload instance) =>
     <String, dynamic>{
+      if (instance.taskId case final value?) 'task_id': value,
       'deal_no': instance.dealNo,
       'name': instance.name,
       'start_date': instance.startDate,
