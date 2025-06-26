@@ -13,7 +13,6 @@ import '../../../domain/entities/task.dart';
 import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/enums/user_role.dart';
-import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_state.dart';
@@ -76,7 +75,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
                   context.read<TaskFormBloc>().state;
 
               final TaskPayload payload = TaskPayload(
-                taskId: widget.task!.taskId,
+                taskId: widget.task?.taskId,
                 assignedUsers: [],
                 dealNo: "dealNo",
                 name: _taskNameController.text,
@@ -106,7 +105,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
       ),
       body: BlocListener<TaskBloc, TaskState>(
         listener: (context, state) {
-          if (state is PutTaskSuccess) {
+          if (state is PutTaskSuccess || state is UpdateTaskSuccess) {
             context.pop();
           }
         },

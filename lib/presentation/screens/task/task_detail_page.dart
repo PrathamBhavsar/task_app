@@ -10,9 +10,7 @@ import '../../../data/models/payloads/message_payload.dart';
 import '../../../data/models/payloads/update_status_payload.dart';
 import '../../../domain/entities/client.dart';
 import '../../../domain/entities/designer.dart';
-import '../../../domain/entities/status.dart';
 import '../../../domain/entities/task.dart';
-import '../../../domain/entities/timeline.dart';
 import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
@@ -21,13 +19,13 @@ import '../../../utils/enums/user_role.dart';
 import '../../../utils/extensions/color_translator.dart';
 import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
+import '../../../utils/extensions/status_type_extractor.dart';
 import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_state.dart';
 import '../../blocs/designer/designer_bloc.dart';
 import '../../blocs/designer/designer_state.dart';
 import '../../blocs/message/message_bloc.dart';
 import '../../blocs/message/message_event.dart';
-import '../../blocs/message/message_state.dart';
 import '../../blocs/tab/tab_bloc.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_event.dart';
@@ -37,7 +35,6 @@ import '../../blocs/task_form/task_form_event.dart';
 import '../../blocs/task_form/task_form_state.dart';
 import '../../blocs/timeline/timeline_bloc.dart';
 import '../../blocs/timeline/timeline_event.dart';
-import '../../blocs/timeline/timeline_state.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_state.dart';
 import '../../widgets/action_button.dart';
@@ -45,12 +42,10 @@ import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
-import '../../widgets/refresh_wrapper.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
-import 'widgets/message_tile.dart';
 import 'widgets/messages_widget.dart';
-import 'widgets/timeline_tile.dart';
+import 'widgets/review_widget.dart';
 import 'widgets/timeline_widget.dart';
 
 class TaskDetailPage extends StatefulWidget {
@@ -96,7 +91,13 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         ),
       ),
       body: SafeArea(
-        child: BlocBuilder<TaskBloc, TaskState>(
+        child: BlocConsumer<TaskBloc, TaskState>(
+          listener: (context, state) {
+            if (state is UpdateTaskStatusSuccess) {
+              context.read<TaskBloc>().add(FetchTasksRequested());
+              context.pop();
+            }
+          },
           builder: (context, state) {
             final UserRole userRole = getIt<CacheHelper>().getUserRole();
 
@@ -173,31 +174,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                             ),
                           ],
                           10.hGap,
-                          BorderedContainer(
-                            color: AppColors.bgYellow,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Agency Bill Pending Approval',
-                                  style: AppTexts.headingTextStyle,
-                                ),
-                                10.hGap,
-                                Text(
-                                  'Bill #BILL-123456 from ${widget.task.agency?.name} requires your approval',
-                                  style: AppTexts.inputTextStyle,
-                                ),
-                                10.hGap,
-                                ActionButton(
-                                  label: 'Review Bill',
-                                  onPress:
-                                      () => context.push(AppRoutes.reviewBill),
-                                  backgroundColor: Colors.black,
-                                  fontColor: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
+                          ReviewWidget(task: widget.task),
                         ],
                       ),
                     ),
@@ -211,7 +188,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           },
         ),
       ),
-
       bottomSheet:
           tabIndex == 2
               ? SafeArea(
@@ -327,125 +303,113 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
         IndexedStack(
           index: tabIndex,
           children: [
-            BlocConsumer<TaskBloc, TaskState>(
-              listener: (context, state) {
-                if (state is UpdateTaskStatusSuccess) {
-                  context.read<TaskBloc>().add(FetchTasksRequested());
-                  context.pop();
-                }
-              },
-
-              builder: (context, state) {
-                bool isProductSelected = false;
-
-                if (state is TaskSelectionState) {
-                  isProductSelected = state.isProductSelected;
-                }
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Task Workflow', style: AppTexts.titleTextStyle),
-                    10.hGap,
-                    BorderedContainer(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          BlocBuilder<TaskFormBloc, TaskFormState>(
-                            builder: (context, state) {
-                              if (!state.isInitialized) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-
-                              if (!isProductSelected) {
-                                return const SizedBox.shrink();
-                              }
-
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildDropdown<User>(
-                                    title: 'Agency',
-                                    list: state.agencies,
-                                    initialValue: state.selectedAgency,
-                                    onChanged:
-                                        (selected) => context
-                                            .read<TaskFormBloc>()
-                                            .add(AgencyChanged(selected)),
-                                    labelBuilder: (a) => a.name,
-                                    idBuilder:
-                                        (a) => a.userId?.toString() ?? '',
-                                  ),
-                                  _buildTextInput(
-                                    'Schedule Date',
-                                    'Select Date',
-                                  ),
-                                  _buildTextInput(
-                                    'Instructions for Agency',
-                                    'Provide any specific instructions',
-                                    isMultiline: true,
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                          Text(
-                            isProductSelected
-                                ? "Assign a measurement task to one of our partner agencies."
-                                : "The customer is currently in the product selection stage. Once they've selected their products, you can move to the measurement stage.",
-                            style: AppTexts.inputTextStyle,
-                          ),
-                          10.hGap,
-                          ActionButton(
-                            label:
-                                isProductSelected
-                                    ? 'Assign Measurement Task'
-                                    : 'Complete Product Selection',
-                            onPress: () {
-                              final TaskBloc taskBloc =
-                                  context.read<TaskBloc>();
-                              if (!isProductSelected) {
-                                taskBloc.add(ToggleStatusEvent(true));
-                              } else {
-                                final int? userId =
-                                    getIt<CacheHelper>().getUserId();
-                                taskBloc.add(
-                                  UpdateTaskStatusRequested(
-                                    UpdateStatusPayload(
-                                      status:
-                                          StatusType.agencyAssigned.status.name,
-                                      taskId: widget.task.taskId ?? 0,
-                                      agencyId:
-                                          context
-                                              .read<TaskFormBloc>()
-                                              .state
-                                              .selectedAgency
-                                              ?.userId ??
-                                          0,
-                                      userId: userId ?? 0,
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                            prefixIcon: CustomIcon.circleCheckBig,
-                            backgroundColor: Colors.black,
-                            fontColor: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              },
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Task Workflow', style: AppTexts.titleTextStyle),
+                10.hGap,
+                _buildAgencyAssignmentStatus(widget.task),
+              ],
             ),
             TimeLineWidget(),
             MessagesWidget(widget: widget),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildAgencyAssignmentStatus(Task task) {
+    final status = task.status.toStatusType();
+
+    switch (status) {
+      case StatusType.created:
+        final nextStatus = StatusType.agencyAssigned;
+        return _buildAssignAgency(nextStatus);
+
+      case StatusType.agencyAssigned:
+        return BorderedContainer(
+          color: AppColors.bgYellow,
+          child: Text(
+            "This task has been assigned to ${widget.task.agency?.name ?? ""}, they'll add the measurements!",
+            style: AppTexts.inputTextStyle.copyWith(
+              color: AppColors.darkYellowText,
+            ),
+          ),
+        );
+
+      default:
+        return Text(status?.name ?? "NONE");
+        return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildAssignAgency(StatusType? nextStatus) {
+    return BorderedContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BlocBuilder<TaskFormBloc, TaskFormState>(
+            builder: (context, state) {
+              if (!state.isInitialized) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDropdown<User>(
+                    title: 'Agency',
+                    list: state.agencies,
+                    initialValue: state.selectedAgency,
+                    onChanged:
+                        (selected) => context.read<TaskFormBloc>().add(
+                          AgencyChanged(selected),
+                        ),
+                    labelBuilder: (a) => a.name,
+                    idBuilder: (a) => a.userId?.toString() ?? '',
+                  ),
+                  _buildTextInput('Schedule Date', 'Select Date'),
+                  _buildTextInput(
+                    'Instructions for Agency',
+                    'Provide any specific instructions',
+                    isMultiline: true,
+                  ),
+                ],
+              );
+            },
+          ),
+          Text(
+            "Assign a measurement task to one of our partner agencies.",
+            style: AppTexts.inputTextStyle,
+          ),
+          10.hGap,
+          if (nextStatus != null)
+            ActionButton(
+              label: 'Move to ${nextStatus.status.name}',
+              prefixIcon: CustomIcon.circleCheckBig,
+              backgroundColor: Colors.black,
+              fontColor: Colors.white,
+              onPress: () {
+                final taskBloc = context.read<TaskBloc>();
+                final int? userId = getIt<CacheHelper>().getUserId();
+                final selectedAgencyId =
+                    context.read<TaskFormBloc>().state.selectedAgency?.userId ??
+                    0;
+                taskBloc.add(
+                  UpdateTaskStatusRequested(
+                    UpdateStatusPayload(
+                      status: nextStatus.status.name,
+                      taskId: widget.task.taskId ?? 0,
+                      agencyId: selectedAgencyId,
+                      userId: userId ?? 0,
+                    ),
+                  ),
+                );
+              },
+            ),
+        ],
+      ),
     );
   }
 

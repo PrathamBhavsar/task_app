@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/helpers/validator.dart';
@@ -8,7 +7,6 @@ import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_event.dart';
-import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_text_field.dart';
 

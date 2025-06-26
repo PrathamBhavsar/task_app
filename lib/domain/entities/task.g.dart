@@ -20,6 +20,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
   priority: const PriorityConverter().fromJson(json['priority'] as String),
   dueDate: DateTime.parse(json['due_date'] as String),
   createdAt: DateTime.parse(json['created_at'] as String),
+  createdBy: User.fromJson(json['created_by'] as Map<String, dynamic>),
   agency:
       json['agency'] == null
           ? null
@@ -32,6 +33,7 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
   'deal_no': instance.dealNo,
   'name': instance.name,
   'created_at': instance.createdAt.toIso8601String(),
+  'created_by': instance.createdBy.toJson(),
   'due_date': instance.dueDate.toIso8601String(),
   'priority': const PriorityConverter().toJson(instance.priority),
   'status': const StatusConverter().toJson(instance.status),

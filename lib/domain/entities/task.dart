@@ -23,6 +23,9 @@ class Task {
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
 
+  @JsonKey(name: 'created_by')
+  final User createdBy;
+
   @JsonKey(name: 'due_date')
   final DateTime dueDate;
 
@@ -52,6 +55,7 @@ class Task {
     required this.priority,
     required this.dueDate,
     required this.createdAt,
+    required this.createdBy,
     this.agency,
     this.remarks,
   });

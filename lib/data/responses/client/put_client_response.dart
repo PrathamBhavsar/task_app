@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../../domain/entities/client.dart';
-import '../../../domain/entities/task.dart';
 part 'put_client_response.g.dart';
 
 @JsonSerializable()

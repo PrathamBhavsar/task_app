@@ -20,7 +20,7 @@ class TaskPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<TaskBloc, TaskState>(
       listener: (context, taskState) {
-        if (taskState is PutTaskSuccess) {
+        if (taskState is PutTaskSuccess || taskState is UpdateTaskSuccess) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<TaskBloc>().add(FetchTasksRequested());
           });

@@ -45,7 +45,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     PutTaskRequested event,
     Emitter<TaskState> emit,
   ) async {
-    emit(TaskLoadInProgress());
+    emit(PutTaskInProgress());
 
     final result = await _putTaskUseCase(event.data);
 

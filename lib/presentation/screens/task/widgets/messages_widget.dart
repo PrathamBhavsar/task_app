@@ -10,7 +10,7 @@ import '../task_detail_page.dart';
 import 'message_tile.dart';
 
 class MessagesWidget extends StatelessWidget {
-  const MessagesWidget({super.key, required this.widget});
+  const MessagesWidget({required this.widget, super.key});
 
   final TaskDetailPage widget;
 

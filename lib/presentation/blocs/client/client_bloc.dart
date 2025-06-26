@@ -1,7 +1,6 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/responses/client/put_client_response.dart';
 import '../../../domain/usecases/client_usecase.dart';
 import '../../../domain/usecases/put_client_usecase.dart';
 import 'client_event.dart';
