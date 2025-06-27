@@ -15,6 +15,7 @@ import '../../presentation/screens/splash/splash_screen.dart';
 import '../../presentation/screens/task/edit_task_page.dart';
 import '../../presentation/screens/task/task_detail_page.dart';
 import '../../utils/constants/app_constants.dart';
+import 'args.dart';
 
 final List<GoRoute> appRoutes = [
   GoRoute(
@@ -56,13 +57,15 @@ final List<GoRoute> appRoutes = [
   ),
   GoRoute(
     path: AppRoutes.measurement,
-    pageBuilder:
-        (context, state) => _slideTransition(MeasurementScreen(), state),
+    pageBuilder: (context, state) {
+      final data = state.extra as MeasurementArgs;
+
+      return _slideTransition(MeasurementScreen(task: data.task), state);
+    },
   ),
   GoRoute(
     path: AppRoutes.newCustomer,
-    pageBuilder:
-        (context, state) => _slideTransition(NewClientScreen(), state),
+    pageBuilder: (context, state) => _slideTransition(NewClientScreen(), state),
   ),
   GoRoute(
     path: AppRoutes.editAgency,

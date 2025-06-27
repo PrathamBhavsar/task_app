@@ -7,11 +7,7 @@ import '../../../widgets/bordered_container.dart';
 
 class ReviewWidgetTile extends StatelessWidget {
   const ReviewWidgetTile({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.btnText,
-    required this.onTap,
+    required this.title, required this.subtitle, required this.btnText, required this.onTap, super.key,
   });
 
   final String title;

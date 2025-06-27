@@ -9,6 +9,7 @@ import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/labeled_text_field.dart';
 
 class EditQuoteScreen extends StatelessWidget {
   const EditQuoteScreen({super.key});
@@ -75,7 +76,10 @@ class EditQuoteScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildTextInput('Overall Discount %', '0.00'),
+                        LabeledTextInput(
+                          title: 'Overall Discount %',
+                          hint: '0.00',
+                        ),
                         Divider(color: AppColors.accent),
                         Column(
                           spacing: 3.h,
@@ -111,9 +115,9 @@ class EditQuoteScreen extends StatelessWidget {
                     ),
                   ),
                   10.hGap,
-                  _buildTextInput(
-                    'Notes',
-                    'Enter notes here',
+                  LabeledTextInput(
+                    title: 'Notes',
+                    hint: 'Enter notes here',
                     isMultiline: true,
                   ),
                   ActionButton(
@@ -161,10 +165,7 @@ class EditQuoteScreen extends StatelessWidget {
     collapsedShape: UnderlineInputBorder(
       borderSide: BorderSide(color: AppColors.accent),
     ),
-    trailing: CustomTag(
-      text: length.toString(),
-      color: Colors.black,
-    ),
+    trailing: CustomTag(text: length.toString(), color: Colors.black),
     shape: UnderlineInputBorder(
       borderSide: BorderSide(color: AppColors.accent),
     ),
@@ -286,14 +287,16 @@ class EditQuoteScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTextInput(title, 'Enter measurement description'),
+          LabeledTextInput(title: title, hint: 'Enter measurement description'),
           Row(
             children: [
-              Expanded(child: _buildTextInput('Quantity', '1')),
+              Expanded(child: LabeledTextInput(title: 'Quantity', hint: '1')),
               10.wGap,
-              Expanded(child: _buildTextInput('Rate', '0.00')),
+              Expanded(child: LabeledTextInput(title: 'Rate', hint: '0.00')),
               10.wGap,
-              Expanded(child: _buildTextInput('Discount %', '0.00')),
+              Expanded(
+                child: LabeledTextInput(title: 'Discount %', hint: '0.00'),
+              ),
             ],
           ),
           Row(
@@ -344,32 +347,18 @@ class EditQuoteScreen extends StatelessWidget {
             ],
           ),
           10.hGap,
-          _buildTextInput('Service Type', 'Enter service type'),
+          LabeledTextInput(title: 'Service Type', hint: 'Enter service type'),
           Row(
             children: [
-              Expanded(child: _buildTextInput('Quantity', '0')),
+              Expanded(child: LabeledTextInput(title: 'Quantity', hint: '0')),
               10.wGap,
-              Expanded(child: _buildTextInput('Rate', '0.00')),
+              Expanded(child: LabeledTextInput(title: 'Rate', hint: '0.00')),
               10.wGap,
-              Expanded(child: _buildTextInput('Amount', '0.00')),
+              Expanded(child: LabeledTextInput(title: 'Amount', hint: '0.00')),
             ],
           ),
         ],
       ),
     ),
-  );
-
-  Widget _buildTextInput(
-    String title,
-    String hint, {
-    bool isMultiline = false,
-  }) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: AppTexts.labelTextStyle),
-      10.hGap,
-      CustomTextField(hintTxt: hint, isMultiline: isMultiline),
-      10.hGap,
-    ],
   );
 }

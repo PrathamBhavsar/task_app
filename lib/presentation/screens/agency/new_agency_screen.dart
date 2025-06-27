@@ -11,6 +11,7 @@ import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/labeled_text_field.dart';
 
 class NewAgencyScreen extends StatefulWidget {
   const NewAgencyScreen({super.key, this.agent});
@@ -105,25 +106,25 @@ class _NewAgencyScreenState extends State<NewAgencyScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildTextInput(
-                          'Name',
-                          'Enter agent name',
-                          _nameController,
+                        LabeledTextInput(
+                          title: 'Name',
+                          hint: 'Enter agent name',
+                          controller: _nameController,
                         ),
-                        _buildTextInput(
-                          'Phone',
-                          'Enter agent phone',
-                          _phoneController,
+                        LabeledTextInput(
+                          title: 'Phone',
+                          hint: 'Enter agent phone',
+                          controller: _phoneController,
                         ),
-                        _buildTextInput(
-                          'Email',
-                          'Enter agent email',
-                          _emailController,
+                        LabeledTextInput(
+                          title: 'Email',
+                          hint: 'Enter agent email',
+                          controller: _emailController,
                         ),
-                        _buildTextInput(
-                          'Address',
-                          'Enter agent address',
-                          _addressController,
+                        LabeledTextInput(
+                          title: 'Address',
+                          hint: 'Enter agent address',
+                          controller: _addressController,
                           isMultiline: true,
                         ),
                       ],
@@ -134,24 +135,5 @@ class _NewAgencyScreenState extends State<NewAgencyScreen> {
             ),
       ),
     ),
-  );
-
-  Widget _buildTextInput(
-    String title,
-    String hint,
-    TextEditingController controller, {
-    bool isMultiline = false,
-  }) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: AppTexts.labelTextStyle),
-      10.hGap,
-      CustomTextField(
-        hintTxt: hint,
-        isMultiline: isMultiline,
-        controller: controller,
-      ),
-      10.hGap,
-    ],
   );
 }

@@ -53,12 +53,6 @@ class TaskFormBloc extends Bloc<TaskFormEvent, TaskFormState> {
     final agencies = event.agencies;
     final task = event.existingTask;
 
-    print(task?.status.name ?? statuses.first.name);
-    print(task?.priority.name ?? priorities.first.name);
-    print(task?.client.name ?? clients.first.name);
-    print(task?.designer.name ?? designers.first.name);
-    print(task?.agency?.name ?? agencies.first.name);
-
     emit(
       state.copyWith(
         isInitialized: true,

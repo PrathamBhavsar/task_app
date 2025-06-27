@@ -32,11 +32,11 @@ class MeasurementProvider extends ChangeNotifier {
   }
 
   ///measurements
-  final List<Measurement> additionalItems = [Measurement.empty];
+  final List<Measurement> additionalItems = [];
 
   void addAdditionalItems() {
-    additionalItems.add(Measurement.empty);
-    notifyListeners();
+    // additionalItems.add(Measurement.empty);
+    // notifyListeners();
   }
 
   void removeAdditionalItems(int index) {
@@ -46,11 +46,11 @@ class MeasurementProvider extends ChangeNotifier {
   }
 
   ///measurements
-  final List<Measurement> measurements = [Measurement.empty];
+  final List<Measurement> measurements = [];
 
   void addMeasurement() {
-    measurements.add(Measurement.empty);
-    notifyListeners();
+    // measurements.add(Measurement.empty);
+    // notifyListeners();
   }
 
   void removeMeasurementAt(int index) {

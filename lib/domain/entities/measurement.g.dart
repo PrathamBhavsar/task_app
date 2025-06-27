@@ -7,11 +7,12 @@ part of 'measurement.dart';
 // **************************************************************************
 
 Measurement _$MeasurementFromJson(Map<String, dynamic> json) => Measurement(
-  measurementId: (json['measurement_id'] as num?)?.toInt(),
   location: json['location'] as String,
   width: (json['width'] as num).toDouble(),
   height: (json['height'] as num).toDouble(),
   notes: json['notes'] as String,
+  taskId: (json['task_id'] as num).toInt(),
+  measurementId: (json['measurement_id'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$MeasurementToJson(Measurement instance) =>
@@ -21,4 +22,5 @@ Map<String, dynamic> _$MeasurementToJson(Measurement instance) =>
       'width': instance.width,
       'height': instance.height,
       'notes': instance.notes,
+      'task_id': instance.taskId,
     };

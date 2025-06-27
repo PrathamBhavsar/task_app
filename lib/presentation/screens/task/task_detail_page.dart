@@ -42,6 +42,7 @@ import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
+import '../../widgets/labeled_text_field.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
 import 'widgets/messages_widget.dart';
@@ -377,10 +378,10 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                     labelBuilder: (a) => a.name,
                     idBuilder: (a) => a.userId?.toString() ?? '',
                   ),
-                  _buildTextInput('Schedule Date', 'Select Date'),
-                  _buildTextInput(
-                    'Instructions for Agency',
-                    'Provide any specific instructions',
+                  LabeledTextInput(title: 'Schedule Date', hint: 'Select Date'),
+                  LabeledTextInput(
+                    title: 'Instructions for Agency',
+                    hint: 'Provide any specific instructions',
                     isMultiline: true,
                   ),
                 ],
@@ -464,22 +465,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           labelBuilder: effectiveLabelBuilder,
           idBuilder: effectiveIdBuilder,
         ),
-        10.hGap,
-      ],
-    );
-  }
-
-  Widget _buildTextInput(
-    String title,
-    String hint, {
-    bool isMultiline = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: AppTexts.labelTextStyle),
-        10.hGap,
-        CustomTextField(hintTxt: hint, isMultiline: isMultiline),
         10.hGap,
       ],
     );

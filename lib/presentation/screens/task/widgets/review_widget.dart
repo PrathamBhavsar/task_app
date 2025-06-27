@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/router/args.dart';
 import '../../../../domain/entities/task.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/status_type.dart';
@@ -32,7 +33,11 @@ class ReviewWidget extends StatelessWidget {
           subtitle:
               "Task ${task.dealNo} from ${task.createdBy.name} requires measurements",
           btnText: "Add Measurement",
-          onTap: () => context.push(AppRoutes.measurement),
+          onTap:
+              () => context.push(
+                AppRoutes.measurement,
+                extra: MeasurementArgs(task: task),
+              ),
         );
 
       case StatusType.quotationSent:
@@ -45,7 +50,6 @@ class ReviewWidget extends StatelessWidget {
         );
 
       default:
-        
         return Text(status?.name ?? "NONE");
     }
   }

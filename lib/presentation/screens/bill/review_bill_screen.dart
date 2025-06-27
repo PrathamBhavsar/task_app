@@ -9,6 +9,7 @@ import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/labeled_text_field.dart';
 import '../../widgets/tile_row.dart';
 
 TextStyle textStyle = AppTexts.labelTextStyle.copyWith(fontSize: 14.sp);
@@ -45,10 +46,7 @@ class ReviewBillScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Bill Details', style: AppTexts.labelTextStyle),
-                      CustomTag(
-                        text: 'Pending Approval',
-                        color: Colors.black,
-                      ),
+                      CustomTag(text: 'Pending Approval', color: Colors.black),
                     ],
                   ),
 
@@ -121,9 +119,9 @@ class ReviewBillScreen extends StatelessWidget {
                     ),
                   ),
                   10.hGap,
-                  _buildTextInput(
-                    'Notes',
-                    'Enter note here',
+                  LabeledTextInput(
+                    title: 'Notes',
+                    hint: 'Enter note here',
                     isMultiline: true,
                   ),
                   20.hGap,
@@ -167,20 +165,6 @@ class ReviewBillScreen extends StatelessWidget {
           Text('\$$total.00', style: textStyle),
         ],
       ),
-    ],
-  );
-
-  Widget _buildTextInput(
-    String title,
-    String hint, {
-    bool isMultiline = false,
-  }) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: AppTexts.labelTextStyle),
-      10.hGap,
-      CustomTextField(hintTxt: hint, isMultiline: isMultiline),
-      10.hGap,
     ],
   );
 }

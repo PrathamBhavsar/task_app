@@ -9,6 +9,7 @@ import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_event.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_text_field.dart';
+import '../../widgets/labeled_text_field.dart';
 
 class NewClientScreen extends StatefulWidget {
   const NewClientScreen({super.key});
@@ -85,29 +86,29 @@ class _NewClientScreenState extends State<NewClientScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildTextInput(
-                        'Name',
-                        'Enter customer name',
-                        _nameController,
-                        Validator.validateName,
+                      LabeledTextInput(
+                        title: 'Name',
+                        hint: 'Enter customer name',
+                        controller: _nameController,
+                        validator: Validator.validateName,
                       ),
-                      _buildTextInput(
-                        'Phone',
-                        'Enter customer phone',
-                        _phoneController,
-                        Validator.validatePhone,
+                      LabeledTextInput(
+                        title: 'Phone',
+                        hint: 'Enter customer phone',
+                        controller: _phoneController,
+                        validator: Validator.validatePhone,
                       ),
-                      _buildTextInput(
-                        'Email',
-                        'Enter customer email',
-                        _emailController,
-                        Validator.validateEmail,
+                      LabeledTextInput(
+                        title: 'Email',
+                        hint: 'Enter customer email',
+                        controller: _emailController,
+                        validator: Validator.validateEmail,
                       ),
-                      _buildTextInput(
-                        'Address',
-                        'Enter customer address',
-                        _addressController,
-                        Validator.validateRequiredField,
+                      LabeledTextInput(
+                        title: 'Address',
+                        hint: 'Enter customer address',
+                        controller: _addressController,
+                        validator: Validator.validateRequiredField,
                         isMultiline: true,
                       ),
                     ],
@@ -118,29 +119,6 @@ class _NewClientScreenState extends State<NewClientScreen> {
           ).padAll(AppPaddings.appPaddingInt),
         ),
       ),
-    );
-  }
-
-  Widget _buildTextInput(
-    String title,
-    String hint,
-    TextEditingController controller,
-    FormFieldValidator<String>? validator, {
-    bool isMultiline = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: AppTexts.labelTextStyle),
-        10.hGap,
-        CustomTextField(
-          hintTxt: hint,
-          isMultiline: isMultiline,
-          controller: controller,
-          validator: validator,
-        ),
-        10.hGap,
-      ],
     );
   }
 }

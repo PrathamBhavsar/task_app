@@ -11,6 +11,7 @@ import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/bill_repository_impl.dart';
 import '../../data/repositories/client_repository_impl.dart';
 import '../../data/repositories/designer_repository_impl.dart';
+import '../../data/repositories/measurement_repository_impl.dart';
 import '../../data/repositories/message_repository_impl.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../data/repositories/timeline_repository_impl.dart';
@@ -19,6 +20,7 @@ import '../../domain/repositories/auth_repository.dart';
 import '../../domain/repositories/bill_repository.dart';
 import '../../domain/repositories/client_repository.dart';
 import '../../domain/repositories/designer_repository.dart';
+import '../../domain/repositories/measurement_repository.dart';
 import '../../domain/repositories/message_repository.dart';
 import '../../domain/repositories/task_repository.dart';
 import '../../domain/repositories/timeline_repository.dart';
@@ -26,8 +28,10 @@ import '../../domain/usecases/auth_usecase.dart';
 import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../domain/usecases/designer_usecase.dart';
+import '../../domain/usecases/get_measurements_usecase.dart';
 import '../../domain/usecases/message_usecase.dart';
 import '../../domain/usecases/put_client_usecase.dart';
+import '../../domain/usecases/put_measurement_usecase.dart';
 import '../../domain/usecases/put_message_usecase.dart';
 import '../../domain/usecases/put_task_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
@@ -40,6 +44,8 @@ import '../../presentation/blocs/bill/bill_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/designer/designer_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
+import '../../presentation/blocs/measurement/measurement_bloc.dart';
+import '../../presentation/blocs/measurement_api/measurement_api_bloc.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
@@ -62,12 +68,14 @@ void setupLocator() {
   setupTaskForm();
   setupAuth();
   setupTask();
+  setupMeasurement();
   setupClient();
   setupDesigner();
   setupBill();
   setupMessage();
   setupTimeline();
   setupUser();
+
   getIt.registerFactory(TabBloc.new);
 }
 
@@ -161,9 +169,7 @@ void setupTask() {
   getIt.registerLazySingleton(
     () => UpdateTaskStatusUseCase(getIt<TaskRepository>()),
   );
-  getIt.registerLazySingleton(
-        () => UpdateTaskUseCase(getIt<TaskRepository>()),
-  );
+  getIt.registerLazySingleton(() => UpdateTaskUseCase(getIt<TaskRepository>()));
 
   getIt.registerFactory(
     () => TaskBloc(
@@ -172,6 +178,29 @@ void setupTask() {
       getIt<SnackBarHelper>(),
       getIt<UpdateTaskStatusUseCase>(),
       getIt<UpdateTaskUseCase>(),
+    ),
+  );
+}
+
+void setupMeasurement() {
+  getIt.registerLazySingleton<MeasurementRepository>(
+    () => MeasurementRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllMeasurementsUseCase(getIt<MeasurementRepository>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => PutMeasurementUseCase(getIt<MeasurementRepository>()),
+  );
+
+  getIt.registerFactory(MeasurementBloc.new);
+
+  getIt.registerFactory(
+    () => MeasurementApiBloc(
+      getIt<GetAllMeasurementsUseCase>(),
+      getIt<PutMeasurementUseCase>(),
     ),
   );
 }

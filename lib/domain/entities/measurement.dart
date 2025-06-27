@@ -12,12 +12,16 @@ class Measurement {
   final double height;
   final String notes;
 
+  @JsonKey(name: 'task_id')
+  final int taskId;
+
   Measurement({
-    required this.measurementId,
     required this.location,
     required this.width,
     required this.height,
     required this.notes,
+    required this.taskId,
+    this.measurementId,
   });
 
   factory Measurement.fromJson(Map<String, dynamic> json) =>
@@ -25,11 +29,11 @@ class Measurement {
 
   Map<String, dynamic> toJson() => _$MeasurementToJson(this);
 
-  static Measurement get empty => Measurement(
-    measurementId: -1,
+  static Measurement empty(int taskId) => Measurement(
     location: '',
     width: 0.00,
     height: 0.00,
     notes: '',
+    taskId: taskId,
   );
 }

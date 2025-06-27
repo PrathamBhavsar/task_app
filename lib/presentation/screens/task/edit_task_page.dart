@@ -29,6 +29,7 @@ import '../../blocs/user/user_state.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
+import '../../widgets/labeled_text_field.dart';
 
 class EditTaskPage extends StatefulWidget {
   const EditTaskPage({required this.task, required this.isNew, super.key});
@@ -148,10 +149,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTextInput(
-            'Task Title',
-            'Enter task title',
-            _taskNameController,
+          LabeledTextInput(
+            title: 'Task Title',
+            hint: 'Enter task title',
+            controller: _taskNameController,
           ),
           if (!widget.isNew)
             _buildDropdown<Status>(
@@ -174,11 +175,15 @@ class _EditTaskPageState extends State<EditTaskPage> {
             labelBuilder: (p) => p.name,
             idBuilder: (p) => p.priorityId?.toString() ?? '',
           ),
-          _buildTextInput('Due Date', 'Enter due date', _dueDateController),
-          _buildTextInput(
-            'Notes',
-            'Add note',
-            _noteController,
+          LabeledTextInput(
+            title: 'Due Date',
+            hint: 'Enter due date',
+            controller: _dueDateController,
+          ),
+          LabeledTextInput(
+            title: 'Notes',
+            hint: 'Add note',
+            controller: _noteController,
             isMultiline: true,
           ),
           _buildDropdown<Client>(
@@ -280,27 +285,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
           onChanged: onChanged,
           labelBuilder: effectiveLabelBuilder,
           idBuilder: effectiveIdBuilder,
-        ),
-        10.hGap,
-      ],
-    );
-  }
-
-  Widget _buildTextInput(
-    String title,
-    String hint,
-    TextEditingController controller, {
-    bool isMultiline = true,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: AppTexts.labelTextStyle),
-        10.hGap,
-        CustomTextField(
-          hintTxt: hint,
-          isMultiline: isMultiline,
-          controller: controller,
         ),
         10.hGap,
       ],
