@@ -7,6 +7,8 @@ import '../../domain/entities/client.dart';
 import '../../domain/entities/designer.dart';
 import '../../domain/entities/measurement.dart';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/service.dart';
+import '../../domain/entities/service_master.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/timeline.dart';
 import '../../domain/entities/user.dart';
@@ -15,6 +17,7 @@ import '../models/payloads/auth_payload.dart';
 import '../models/payloads/client_payload.dart';
 import '../models/payloads/measurement_payload.dart';
 import '../models/payloads/message_payload.dart';
+import '../models/payloads/service_payload.dart';
 import '../models/payloads/task_payload.dart';
 import '../models/payloads/update_status_payload.dart';
 import '../responses/client/put_client_response.dart';
@@ -23,6 +26,8 @@ import '../responses/client/get_clients_response.dart';
 import '../responses/get_designers_response.dart';
 import '../responses/get_messages_response.dart';
 import '../responses/task/get_measurement_response.dart';
+import '../responses/task/get_service_masters_response.dart';
+import '../responses/task/get_service_response.dart';
 import '../responses/task/get_tasks_response.dart';
 import '../responses/get_timelines_response.dart';
 import '../responses/get_users_response.dart';
@@ -251,6 +256,56 @@ class ApiHelper {
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.measurements);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+  Future<Either<Failure, List<ServiceMaster>>> getAllServiceMasters() async {
+    final ApiResponse<GetServiceMastersResponse> result = await handler
+        .execute<GetServiceMastersResponse>(
+          () => service.get(ApiConstants.serviceMaster.base),
+          (json) => GetServiceMastersResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.serviceMasters);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+  Future<Either<Failure, List<Service>>> getServicesByTaskId(
+      int taskId,
+      ) async {
+    final ApiResponse result = await handler.execute<GetServiceResponse>(
+          () => service.get(
+        ApiConstants.service.base,
+        queryParameters: {"task_id": taskId},
+      ),
+          (json) => GetServiceResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.serviceMasters);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+  Future<Either<Failure, List<Service>>> putService(
+      ServicePayload data,
+      ) async {
+    final ApiResponse result = await handler.execute<GetServiceResponse>(
+          () => service.post(
+        ApiConstants.service.base,
+        data: data.services.map((m) => m.toJson()).toList(),
+      ),
+          (json) => GetServiceResponse.fromJson(json as Map<String, dynamic>),
+    );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.serviceMasters);
     } else {
       return Left(Failure(result.error!.message));
     }

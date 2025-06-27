@@ -18,10 +18,10 @@ class MeasurementProvider extends ChangeNotifier {
   }
 
   ///services
-  final List<Service> services = [Service.empty];
+  final List<Service> services = [];
 
   void addService() {
-    services.add(Service.empty);
+    // services.add(Service.empty);
     notifyListeners();
   }
 

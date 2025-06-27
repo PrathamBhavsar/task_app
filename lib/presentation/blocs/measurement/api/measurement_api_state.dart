@@ -1,6 +1,6 @@
 
-import '../../../core/error/failure.dart';
-import '../../../domain/entities/measurement.dart';
+import '../../../../core/error/failure.dart';
+import '../../../../domain/entities/measurement.dart';
 
 abstract class MeasurementApiState {}
 

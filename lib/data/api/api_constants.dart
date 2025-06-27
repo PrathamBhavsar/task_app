@@ -20,6 +20,7 @@ class ApiConstants {
   static final priorities = _GenericRoutes("/priority");
   static final measurement = _GenericRoutes("/measurement");
   static final service = _GenericRoutes("/service");
+  static final serviceMaster = _GenericRoutes("/service-master");
   static final bill = _GenericRoutes("/bill");
   static final timeline = _GenericRoutes("/timeline");
   static final message = _GenericRoutes("/message");

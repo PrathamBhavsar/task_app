@@ -15,6 +15,9 @@ import '../../blocs/client/client_state.dart';
 import '../../blocs/designer/designer_bloc.dart';
 import '../../blocs/designer/designer_event.dart';
 import '../../blocs/designer/designer_state.dart';
+import '../../blocs/measurement/api/service_api_bloc.dart';
+import '../../blocs/measurement/api/service_api_event.dart';
+import '../../blocs/measurement/api/service_api_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
@@ -32,6 +35,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final Completer<void> _clientLoaded = Completer();
   final Completer<void> _designerLoaded = Completer();
+  final Completer<void> _serviceMasterLoaded = Completer();
   final Completer<void> _billLoaded = Completer();
   final Completer<void> _taskLoaded = Completer();
   final Completer<void> _usersLoaded = Completer();
@@ -46,6 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
       context.read<BillBloc>().add(FetchBillsRequested());
       context.read<TaskBloc>().add(FetchTasksRequested());
       context.read<UserBloc>().add(FetchUsersRequested());
+      context.read<ServiceApiBloc>().add(FetchServiceMastersRequested());
 
       try {
         await _clientLoaded.future;
@@ -53,6 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
         await _billLoaded.future;
         await _taskLoaded.future;
         await _usersLoaded.future;
+        await _serviceMasterLoaded.future;
 
         if (mounted) {
           context.go(AppRoutes.home);
@@ -122,6 +128,18 @@ class _SplashScreenState extends State<SplashScreen> {
                 }
               } else if (state is UserLoadFailure) {
                 _usersLoaded.completeError('Users failed');
+              }
+            },
+          ),
+
+          BlocListener<ServiceApiBloc, ServiceApiState>(
+            listener: (context, state) {
+              if (state is ServiceMasterLoadSuccess) {
+                if (!_serviceMasterLoaded.isCompleted) {
+                  _serviceMasterLoaded.complete();
+                }
+              } else if (state is ServiceMasterLoadFailure) {
+                _serviceMasterLoaded.completeError('Service Masters failed');
               }
             },
           ),

@@ -45,7 +45,7 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
   }
 
   void _onServiceAdded(ServiceAdded event, Emitter<MeasurementState> emit) {
-    state.services.add(Service.empty);
+    state.services.add(Service.empty(event.task.taskId!, event.serviceMaster));
     return emit(state.copyWith(services: state.services));
   }
 
@@ -79,7 +79,9 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
     final attachments = event.attachments ?? [];
 
     measurements.add(Measurement.empty(event.existingTask.taskId!));
-    services.add(Service.empty);
+    services.add(
+      Service.empty(event.existingTask.taskId!, event.serviceMaster),
+    );
 
     emit(
       state.copyWith(

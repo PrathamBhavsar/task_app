@@ -1,6 +1,4 @@
-
-
-import '../../../data/models/payloads/measurement_payload.dart';
+import '../../../../data/models/payloads/measurement_payload.dart';
 
 abstract class MeasurementApiEvent {}
 

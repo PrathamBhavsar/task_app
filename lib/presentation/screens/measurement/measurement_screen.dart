@@ -4,20 +4,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/models/payloads/measurement_payload.dart';
+import '../../../data/models/payloads/service_payload.dart';
+import '../../../domain/entities/service_master.dart';
 import '../../../domain/entities/task.dart';
-import '../../../domain/usecases/put_measurement_usecase.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
+import '../../../utils/extensions/get_data.dart';
 import '../../../utils/extensions/padding.dart';
+import '../../blocs/measurement/api/measurement_api_bloc.dart';
+import '../../blocs/measurement/api/measurement_api_event.dart';
+import '../../blocs/measurement/api/measurement_api_state.dart';
+import '../../blocs/measurement/api/service_api_bloc.dart';
+import '../../blocs/measurement/api/service_api_event.dart';
+import '../../blocs/measurement/api/service_api_state.dart';
 import '../../blocs/measurement/measurement_bloc.dart';
 import '../../blocs/measurement/measurement_event.dart';
 import '../../blocs/measurement/measurement_state.dart';
-import '../../blocs/measurement_api/measurement_api_bloc.dart';
-import '../../blocs/measurement_api/measurement_api_event.dart';
-import '../../blocs/measurement_api/measurement_api_state.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
-import '../../widgets/custom_text_field.dart';
 import '../../widgets/labeled_text_field.dart';
 import 'widgets/attachment_tile.dart';
 import 'widgets/measurement_tile.dart';
@@ -46,18 +50,25 @@ class MeasurementScreen extends StatelessWidget {
             onTap: () => FocusScope.of(context).unfocus(),
             child: BlocConsumer<MeasurementBloc, MeasurementState>(
               listener: (context, state) {
-                if (state is PutMeasurementSuccess) {
+                if (state is PutMeasurementSuccess &&
+                    state is PutServiceSuccess) {
                   context.read<MeasurementBloc>().add(ResetMeasurement());
 
                   context.pop();
                   context.pop();
                 }
+
               },
               builder: (context, state) {
                 final MeasurementBloc measurementBloc =
                     context.read<MeasurementBloc>();
 
-                measurementBloc.add(InitializeMeasurement(existingTask: task));
+                measurementBloc.add(
+                  InitializeMeasurement(
+                    existingTask: task,
+                    serviceMaster: context.serviceMasters.first,
+                  ),
+                );
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +107,13 @@ class MeasurementScreen extends StatelessWidget {
                           child: ActionButton(
                             label: 'Add Service',
                             prefixIcon: Icons.add,
-                            onPress: () => measurementBloc.add(ServiceAdded()),
+                            onPress:
+                                () => measurementBloc.add(
+                                  ServiceAdded(
+                                    task,
+                                    ServiceMaster(name: "MASTER", rate: 50),
+                                  ),
+                                ),
                           ),
                         ),
                       ],
@@ -159,11 +176,17 @@ class MeasurementScreen extends StatelessWidget {
                     ActionButton(
                       label: 'Submit Measurements',
                       onPress: () {
-                        context.read<MeasurementApiBloc>().add(
-                          PutMeasurementRequested(
-                            MeasurementPayload(
-                              measurements: state.measurements,
-                            ),
+                        // context.read<MeasurementApiBloc>().add(
+                        //   PutMeasurementRequested(
+                        //     MeasurementPayload(
+                        //       measurements: state.measurements,
+                        //     ),
+                        //   ),
+                        // );
+
+                        context.read<ServiceApiBloc>().add(
+                          PutServiceRequested(
+                            ServicePayload(services: state.services),
                           ),
                         );
                       },

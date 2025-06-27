@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/usecases/get_measurements_usecase.dart';
-import '../../../domain/usecases/put_measurement_usecase.dart';
+import '../../../../domain/usecases/get_measurements_usecase.dart';
+import '../../../../domain/usecases/put_measurement_usecase.dart';
 import 'measurement_api_event.dart';
 import 'measurement_api_state.dart';
 

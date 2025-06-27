@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/bill.dart';
 import '../../domain/entities/client.dart';
 import '../../domain/entities/designer.dart';
+import '../../domain/entities/service_master.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/user.dart';
 import '../../presentation/blocs/bill/bill_bloc.dart';
@@ -12,6 +13,8 @@ import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/client/client_state.dart';
 import '../../presentation/blocs/designer/designer_bloc.dart';
 import '../../presentation/blocs/designer/designer_state.dart';
+import '../../presentation/blocs/measurement/api/service_api_bloc.dart';
+import '../../presentation/blocs/measurement/api/service_api_state.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
 import '../../presentation/blocs/task/task_state.dart';
 import '../../presentation/blocs/user/user_bloc.dart';
@@ -44,5 +47,10 @@ extension BlocStates on BuildContext {
   List<Bill> get bills {
     final state = read<BillBloc>().state;
     return state is BillLoadSuccess ? state.bills : [];
+  }
+
+  List<ServiceMaster> get serviceMasters {
+    final state = read<ServiceApiBloc>().state;
+    return state is ServiceMasterLoadSuccess ? state.serviceMasters : [];
   }
 }

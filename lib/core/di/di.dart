@@ -13,6 +13,8 @@ import '../../data/repositories/client_repository_impl.dart';
 import '../../data/repositories/designer_repository_impl.dart';
 import '../../data/repositories/measurement_repository_impl.dart';
 import '../../data/repositories/message_repository_impl.dart';
+import '../../data/repositories/service_master_repository_impl.dart';
+import '../../data/repositories/service_repository_impl.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../data/repositories/timeline_repository_impl.dart';
 import '../../data/repositories/user_repository.dart';
@@ -22,6 +24,8 @@ import '../../domain/repositories/client_repository.dart';
 import '../../domain/repositories/designer_repository.dart';
 import '../../domain/repositories/measurement_repository.dart';
 import '../../domain/repositories/message_repository.dart';
+import '../../domain/repositories/service_master_repository.dart';
+import '../../domain/repositories/service_repository.dart';
 import '../../domain/repositories/task_repository.dart';
 import '../../domain/repositories/timeline_repository.dart';
 import '../../domain/usecases/auth_usecase.dart';
@@ -29,10 +33,13 @@ import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../domain/usecases/designer_usecase.dart';
 import '../../domain/usecases/get_measurements_usecase.dart';
+import '../../domain/usecases/get_service_masters_usecase.dart';
+import '../../domain/usecases/get_services_usecase.dart';
 import '../../domain/usecases/message_usecase.dart';
 import '../../domain/usecases/put_client_usecase.dart';
 import '../../domain/usecases/put_measurement_usecase.dart';
 import '../../domain/usecases/put_message_usecase.dart';
+import '../../domain/usecases/put_service_usecase.dart';
 import '../../domain/usecases/put_task_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
@@ -44,8 +51,9 @@ import '../../presentation/blocs/bill/bill_bloc.dart';
 import '../../presentation/blocs/client/client_bloc.dart';
 import '../../presentation/blocs/designer/designer_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
+import '../../presentation/blocs/measurement/api/measurement_api_bloc.dart';
+import '../../presentation/blocs/measurement/api/service_api_bloc.dart';
 import '../../presentation/blocs/measurement/measurement_bloc.dart';
-import '../../presentation/blocs/measurement_api/measurement_api_bloc.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
@@ -68,6 +76,8 @@ void setupLocator() {
   setupTaskForm();
   setupAuth();
   setupTask();
+  setupServiceMaster();
+  setupService();
   setupMeasurement();
   setupClient();
   setupDesigner();
@@ -201,6 +211,38 @@ void setupMeasurement() {
     () => MeasurementApiBloc(
       getIt<GetAllMeasurementsUseCase>(),
       getIt<PutMeasurementUseCase>(),
+    ),
+  );
+}
+
+void setupServiceMaster() {
+  getIt.registerLazySingleton<ServiceMasterRepository>(
+    () => ServiceMasterRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllServiceMastersUseCase(getIt<ServiceMasterRepository>()),
+  );
+}
+
+void setupService() {
+  getIt.registerLazySingleton<ServiceRepository>(
+    () => ServiceRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllServicesUseCase(getIt<ServiceRepository>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => PutServiceUseCase(getIt<ServiceRepository>()),
+  );
+
+  getIt.registerFactory(
+    () => ServiceApiBloc(
+      getIt<GetAllServicesUseCase>(),
+      getIt<PutServiceUseCase>(),
+      getIt<GetAllServiceMastersUseCase>(),
     ),
   );
 }
