@@ -6,19 +6,27 @@ import 'custom_text_field.dart';
 
 class LabeledTextInput extends StatelessWidget {
   const LabeledTextInput({
-    super.key,
     required this.title,
     required this.hint,
+    super.key,
     this.isMultiline = false,
+    this.isEnabled = true,
     this.validator,
     this.controller,
+    this.keyboardType,
+    this.onChanged,
+    this.onEditingComplete,
   });
 
   final String title;
   final String hint;
   final bool isMultiline;
+  final bool isEnabled;
   final FormFieldValidator<String>? validator;
   final TextEditingController? controller;
+  final TextInputType? keyboardType;
+  final Function(String)? onChanged;
+  final void Function()? onEditingComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +40,10 @@ class LabeledTextInput extends StatelessWidget {
           isMultiline: isMultiline,
           validator: validator,
           controller: controller,
+          keyboardType: keyboardType,
+          isEnabled: isEnabled,
+          onChangedFunc: onChanged,
+          onEditingCompleteFunc: onEditingComplete,
         ),
         10.hGap,
       ],

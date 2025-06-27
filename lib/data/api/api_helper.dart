@@ -287,7 +287,7 @@ class ApiHelper {
     );
 
     if (result.isSuccess && result.data != null) {
-      return Right(result.data!.serviceMasters);
+      return Right(result.data!.services);
     } else {
       return Left(Failure(result.error!.message));
     }
@@ -305,7 +305,7 @@ class ApiHelper {
     );
 
     if (result.isSuccess && result.data != null) {
-      return Right(result.data!.serviceMasters);
+      return Right(result.data!.services);
     } else {
       return Left(Failure(result.error!.message));
     }

@@ -23,6 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.onChangedFunc,
     this.onTap,
     this.validator,
+    this.onEditingCompleteFunc,
   });
 
   final TextEditingController? controller;
@@ -37,9 +38,9 @@ class CustomTextField extends StatelessWidget {
   final bool isMultiline;
   final Icon? prefixIcon;
   final Function(String)? onChangedFunc;
+  final void Function()? onEditingCompleteFunc;
   final VoidCallback? onTap;
   final FormFieldValidator<String>? validator;
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +58,7 @@ class CustomTextField extends StatelessWidget {
             maxLines: isMultiline ? null : 1,
             obscureText: isPassword ? !state.isVisible : false,
             onChanged: onChangedFunc,
+            onEditingComplete: onEditingCompleteFunc,
             onTap: onTap,
             keyboardType: keyboardType ?? TextInputType.text,
             inputFormatters:
@@ -110,6 +112,9 @@ class CustomTextField extends StatelessWidget {
         hintText: hintTxt,
         hintStyle: AppTexts.inputHintTextStyle,
         enabledBorder: AppBorders.outlineTFBorder(
+          const BorderSide(width: 1, color: AppColors.accent),
+        ),
+        disabledBorder: AppBorders.outlineTFBorder(
           const BorderSide(width: 1, color: AppColors.accent),
         ),
         focusedErrorBorder: AppBorders.outlineTFBorder(

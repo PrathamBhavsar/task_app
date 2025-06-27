@@ -48,6 +48,26 @@ class ServiceRemoved extends MeasurementEvent {
   ServiceRemoved(this.index);
 }
 
+class ServiceFieldUpdated extends MeasurementEvent {
+  final int index;
+  final double? rate;
+  final int? quantity;
+
+  ServiceFieldUpdated({
+    required this.index,
+    this.rate,
+    this.quantity,
+  });
+}
+
+
+class ServiceMasterUpdated extends MeasurementEvent {
+  final int index;
+  final ServiceMaster serviceMaster;
+
+  ServiceMasterUpdated({required this.index, required this.serviceMaster});
+}
+
 class AttachmentAdded extends MeasurementEvent {
   final String attachment;
 

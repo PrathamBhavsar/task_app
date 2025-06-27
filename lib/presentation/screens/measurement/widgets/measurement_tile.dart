@@ -46,6 +46,7 @@ class MeasurementTile extends StatelessWidget {
                   child: LabeledTextInput(
                     title: 'Width (inches)',
                     hint: '0.00',
+                    keyboardType: TextInputType.number,
                   ),
                 ),
                 10.wGap,
@@ -53,6 +54,7 @@ class MeasurementTile extends StatelessWidget {
                   child: LabeledTextInput(
                     title: 'Height (inches)',
                     hint: '0.00',
+                    keyboardType: TextInputType.number,
                   ),
                 ),
               ],

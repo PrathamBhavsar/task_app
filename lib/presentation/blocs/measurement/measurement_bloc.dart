@@ -13,6 +13,7 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
           measurements: [],
           services: [],
           isInitialized: false,
+          selectedServiceMaster: null,
         ),
       ) {
     on<InitializeMeasurement>(_onInit);
@@ -20,10 +21,38 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
     on<MeasurementAdded>(_onMeasurementAdded);
     on<MeasurementRemoved>(_onMeasurementRemoved);
     on<ServiceAdded>(_onServiceAdded);
+    on<ServiceMasterUpdated>((event, emit) {
+      final updated = List<Service>.from(state.services);
+      final old = updated[event.index];
+
+      updated[event.index] = old.copyWith(serviceMaster: event.serviceMaster);
+
+      emit(state.copyWith(services: updated));
+    });
+    on<ServiceFieldUpdated>(_onServiceFieldUpdated);
     on<ServiceRemoved>(_onServiceRemoved);
     on<AttachmentAdded>(_onAttachmentAdded);
     on<AttachmentRemoved>(_onAttachmentRemoved);
   }
+
+  void _onServiceFieldUpdated(
+    ServiceFieldUpdated event,
+    Emitter<MeasurementState> emit,
+  ) {
+    final updatedServices = List<Service>.from(state.services);
+    final old = updatedServices[event.index];
+
+    final newRate = event.rate ?? old.rate;
+    final int newQty = event.quantity ?? old.quantity;
+
+    updatedServices[event.index] = old.copyWith(
+      rate: newRate,
+      quantity: newQty,
+      amount: (newRate) * (newQty),
+    );
+
+    return emit(state.copyWith(services: updatedServices));
+    }
 
   void _onMeasurementAdded(
     MeasurementAdded event,
