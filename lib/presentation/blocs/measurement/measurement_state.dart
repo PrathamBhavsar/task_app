@@ -8,12 +8,14 @@ class MeasurementState {
   final List<Measurement> measurements;
   final bool isInitialized;
   final ServiceMaster? selectedServiceMaster;
+  final double totalAmount;
 
   MeasurementState({
     required this.attachments,
     required this.services,
     required this.measurements,
     required this.selectedServiceMaster,
+    required this.totalAmount,
     this.isInitialized = false,
   });
 
@@ -23,12 +25,14 @@ class MeasurementState {
     List<Service>? services,
     List<Measurement>? measurements,
     ServiceMaster? selectedServiceMaster,
+    double? totalAmount,
   }) {
     return MeasurementState(
       isInitialized: isInitialized ?? this.isInitialized,
       selectedServiceMaster: selectedServiceMaster ?? this.selectedServiceMaster,
       attachments: attachments ?? this.attachments,
       services: services ?? this.services,
+      totalAmount: totalAmount ?? this.totalAmount,
       measurements: measurements ?? this.measurements,
     );
   }

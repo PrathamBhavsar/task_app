@@ -3,12 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/di/di.dart';
+import '../../../core/helpers/cache_helper.dart';
 import '../../../data/models/payloads/measurement_payload.dart';
 import '../../../data/models/payloads/service_payload.dart';
+import '../../../data/models/payloads/update_status_payload.dart';
 import '../../../domain/entities/service_master.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
+import '../../../utils/enums/status_type.dart';
 import '../../../utils/extensions/get_data.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/measurement/api/measurement_api_bloc.dart';
@@ -20,6 +24,10 @@ import '../../blocs/measurement/api/service_api_state.dart';
 import '../../blocs/measurement/measurement_bloc.dart';
 import '../../blocs/measurement/measurement_event.dart';
 import '../../blocs/measurement/measurement_state.dart';
+import '../../blocs/task/task_bloc.dart';
+import '../../blocs/task/task_event.dart';
+import '../../blocs/task/task_state.dart';
+import '../../blocs/task_form/task_form_bloc.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/labeled_text_field.dart';
@@ -63,9 +71,26 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
       _isMeasurementSuccess = false;
       _isServiceSuccess = false;
 
-      context.read<MeasurementBloc>().add(ResetMeasurement());
-      context.pop();
-      context.pop();
+      final taskBloc = context.read<TaskBloc>();
+      final int? userId = getIt<CacheHelper>().getUserId();
+      final selectedAgencyId =
+          context.read<TaskFormBloc>().state.selectedAgency?.userId ?? 0;
+      taskBloc.add(
+        UpdateTaskStatusRequested(
+          UpdateStatusPayload(
+            status: StatusType.quotationSent.status.name,
+            taskId: widget.task.taskId ?? 0,
+            agencyId: selectedAgencyId,
+            userId: userId ?? 0,
+          ),
+        ),
+      );
+
+      if (taskBloc.state is UpdateTaskStatusSuccess) {
+        context.read<MeasurementBloc>().add(ResetMeasurement());
+        context.pop();
+        context.pop();
+      }
     }
   }
 
@@ -186,7 +211,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: Text(
-                          'Total: \$0.00',
+                          'Total: \$${state.totalAmount}',
                           style: AppTexts.labelTextStyle.copyWith(
                             fontVariations: [FontVariation.weight(600)],
                           ),
@@ -200,7 +225,6 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
 
                       ...List.generate(
                         state.attachments.length,
-
                         (index) => AttachmentTile(index: index),
                       ),
                       10.hGap,
