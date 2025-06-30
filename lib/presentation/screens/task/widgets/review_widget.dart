@@ -46,7 +46,7 @@ class ReviewWidget extends StatelessWidget {
           subtitle:
               "Task ${task.dealNo} from ${task.createdBy.name} requires quotation approval",
           btnText: "Review Quotation",
-          onTap: () => context.push(AppRoutes.editQuote),
+          onTap: () => context.push(AppRoutes.editQuote, extra: task),
         );
 
       default:

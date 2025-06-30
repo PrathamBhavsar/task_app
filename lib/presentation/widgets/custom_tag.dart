@@ -5,11 +5,15 @@ import '../../utils/constants/app_constants.dart';
 
 class CustomTag extends StatelessWidget {
   const CustomTag({
-    required this.text, required this.color, super.key,
+    required this.text,
+    required this.color,
+    super.key,
+    this.fontColor,
   });
 
   final String text;
   final Color color;
+  final Color? fontColor;
 
   @override
   Widget build(BuildContext context) => Container(
@@ -21,7 +25,7 @@ class CustomTag extends StatelessWidget {
     child: Text(
       text,
       style: AppTexts.inputLabelTextStyle.copyWith(
-        color: Colors.black,
+        color: fontColor ?? Colors.black,
         fontSize: 11.sp,
         fontVariations: [FontVariation.weight(700)],
       ),

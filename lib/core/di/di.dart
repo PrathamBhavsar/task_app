@@ -13,6 +13,7 @@ import '../../data/repositories/client_repository_impl.dart';
 import '../../data/repositories/designer_repository_impl.dart';
 import '../../data/repositories/measurement_repository_impl.dart';
 import '../../data/repositories/message_repository_impl.dart';
+import '../../data/repositories/quote_repository_impl.dart';
 import '../../data/repositories/service_master_repository_impl.dart';
 import '../../data/repositories/service_repository_impl.dart';
 import '../../data/repositories/task_repository_impl.dart';
@@ -24,6 +25,7 @@ import '../../domain/repositories/client_repository.dart';
 import '../../domain/repositories/designer_repository.dart';
 import '../../domain/repositories/measurement_repository.dart';
 import '../../domain/repositories/message_repository.dart';
+import '../../domain/repositories/quote_repository.dart';
 import '../../domain/repositories/service_master_repository.dart';
 import '../../domain/repositories/service_repository.dart';
 import '../../domain/repositories/task_repository.dart';
@@ -41,6 +43,7 @@ import '../../domain/usecases/put_measurement_usecase.dart';
 import '../../domain/usecases/put_message_usecase.dart';
 import '../../domain/usecases/put_service_usecase.dart';
 import '../../domain/usecases/put_task_usecase.dart';
+import '../../domain/usecases/quote_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
 import '../../domain/usecases/update_task_status_usecase.dart';
@@ -55,6 +58,7 @@ import '../../presentation/blocs/measurement/api/measurement_api_bloc.dart';
 import '../../presentation/blocs/measurement/api/service_api_bloc.dart';
 import '../../presentation/blocs/measurement/measurement_bloc.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
+import '../../presentation/blocs/quote/quote_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
 import '../../presentation/blocs/task_form/task_form_bloc.dart';
@@ -83,6 +87,7 @@ void setupLocator() {
   setupDesigner();
   setupBill();
   setupMessage();
+  setupQuote();
   setupTimeline();
   setupUser();
 
@@ -306,6 +311,18 @@ void setupMessage() {
     () =>
         MessageBloc(getIt<GetAllMessagesUseCase>(), getIt<PutMessageUseCase>()),
   );
+}
+
+void setupQuote() {
+  getIt.registerLazySingleton<QuoteRepository>(
+    () => QuoteRepositoryImpl(getIt<ApiHelper>()),
+  );
+
+  getIt.registerLazySingleton(
+    () => GetAllQuotesUseCase(getIt<QuoteRepository>()),
+  );
+
+  getIt.registerFactory(() => QuoteBloc(getIt<GetAllQuotesUseCase>()));
 }
 
 void setupTimeline() {

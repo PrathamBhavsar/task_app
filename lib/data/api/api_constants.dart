@@ -22,6 +22,7 @@ class ApiConstants {
   static final service = _GenericRoutes("/service");
   static final serviceMaster = _GenericRoutes("/service-master");
   static final bill = _GenericRoutes("/bill");
+  static final quote = _GenericRoutes("/quote");
   static final timeline = _GenericRoutes("/timeline");
   static final message = _GenericRoutes("/message");
 }

@@ -89,7 +89,11 @@ final List<GoRoute> appRoutes = [
   // ),
   GoRoute(
     path: AppRoutes.editQuote,
-    pageBuilder: (context, state) => _slideTransition(EditQuoteScreen(), state),
+    pageBuilder: (context, state) {
+      final Task task = state.extra as Task;
+
+      return _slideTransition(EditQuoteScreen(task: task), state);
+    },
   ),
 ];
 

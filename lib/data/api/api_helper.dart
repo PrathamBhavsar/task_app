@@ -7,6 +7,7 @@ import '../../domain/entities/client.dart';
 import '../../domain/entities/designer.dart';
 import '../../domain/entities/measurement.dart';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/quote.dart';
 import '../../domain/entities/service.dart';
 import '../../domain/entities/service_master.dart';
 import '../../domain/entities/task.dart';
@@ -25,6 +26,7 @@ import '../responses/get_bills_response.dart';
 import '../responses/client/get_clients_response.dart';
 import '../responses/get_designers_response.dart';
 import '../responses/get_messages_response.dart';
+import '../responses/get_quote_response.dart';
 import '../responses/task/get_measurement_response.dart';
 import '../responses/task/get_service_masters_response.dart';
 import '../responses/task/get_service_response.dart';
@@ -175,6 +177,19 @@ class ApiHelper {
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.bills);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+  Future<Either<Failure, Quote>> getAllQuotes(int taskId) async {
+    final ApiResponse<GetQuoteResponse> result = await handler
+        .execute<GetQuoteResponse>(
+          () => service.get(ApiConstants.quote.base, queryParameters: {"task_id" : taskId}),
+          (json) => GetQuoteResponse.fromJson(json as Map<String, dynamic>),
+        );
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.quote);
     } else {
       return Left(Failure(result.error!.message));
     }

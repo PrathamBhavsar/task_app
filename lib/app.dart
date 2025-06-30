@@ -13,6 +13,7 @@ import 'presentation/blocs/measurement/api/measurement_api_bloc.dart';
 import 'presentation/blocs/measurement/api/service_api_bloc.dart';
 import 'presentation/blocs/measurement/measurement_bloc.dart';
 import 'presentation/blocs/message/message_bloc.dart';
+import 'presentation/blocs/quote/quote_bloc.dart';
 import 'presentation/blocs/tab/tab_bloc.dart';
 import 'presentation/blocs/task/task_bloc.dart';
 import 'presentation/blocs/task_form/task_form_bloc.dart';
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => getIt<MeasurementBloc>()),
           BlocProvider(create: (_) => getIt<MeasurementApiBloc>()),
           BlocProvider(create: (_) => getIt<ServiceApiBloc>()),
+          BlocProvider(create: (_) => getIt<QuoteBloc>()),
 
 
           // ChangeNotifierProvider(create: (_) => getIt<AuthProvider>()),
