@@ -1,6 +1,6 @@
 class ApiConstants {
   /// Base URLs
-  static const String _localDomainUrl = "http://192.168.1.10:8000";
+  static const String _localDomainUrl = "http://192.168.1.4:8000";
   static const String _developmentDomainUrl = "";
 
   static String currentDomainBaseUrl = _localDomainUrl;
@@ -44,7 +44,6 @@ class _GenericRoutes {
 
   String get base => ApiConstants._build(path);
   String get update => ApiConstants._build("$path/update");
-  String get delete => ApiConstants._build("$path/delete");
 
   /// Custom endpoint
   String endpoint(String subPath) => ApiConstants._build("$path/$subPath");

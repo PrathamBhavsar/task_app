@@ -53,13 +53,24 @@ class ServiceFieldUpdated extends MeasurementEvent {
   final double? rate;
   final int? quantity;
 
-  ServiceFieldUpdated({
-    required this.index,
-    this.rate,
-    this.quantity,
-  });
+  ServiceFieldUpdated({required this.index, this.rate, this.quantity});
 }
 
+class MeasurementFieldUpdated extends MeasurementEvent {
+  final int index;
+  final double? height;
+  final double? width;
+  final String? notes;
+  final String? location;
+
+  MeasurementFieldUpdated({
+    required this.index,
+    this.location,
+    this.height,
+    this.width,
+    this.notes,
+  });
+}
 
 class ServiceMasterUpdated extends MeasurementEvent {
   final int index;

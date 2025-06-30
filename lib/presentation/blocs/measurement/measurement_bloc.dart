@@ -31,6 +31,7 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
       emit(state.copyWith(services: updated));
     });
     on<ServiceFieldUpdated>(_onServiceFieldUpdated);
+    on<MeasurementFieldUpdated>(_onMeasurementFieldUpdated);
     on<ServiceRemoved>(_onServiceRemoved);
     on<AttachmentAdded>(_onAttachmentAdded);
     on<AttachmentRemoved>(_onAttachmentRemoved);
@@ -60,6 +61,28 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
     emit(
       state.copyWith(services: updatedServices, totalAmount: newTotalAmount),
     );
+  }
+
+  void _onMeasurementFieldUpdated(
+    MeasurementFieldUpdated event,
+    Emitter<MeasurementState> emit,
+  ) {
+    final updatedMeasurements = List<Measurement>.from(state.measurements);
+    final old = updatedMeasurements[event.index];
+
+    final String newLocation = event.location ?? old.location;
+    final double newHeight = event.height ?? old.height;
+    final double newWidth = event.width ?? old.width;
+    final String newNote = event.notes ?? old.notes;
+
+    updatedMeasurements[event.index] = old.copyWith(
+      location: newLocation,
+      height: newHeight,
+      width: newWidth,
+      notes: newNote,
+    );
+
+    emit(state.copyWith(measurements: updatedMeasurements));
   }
 
   void _onMeasurementAdded(
@@ -126,7 +149,7 @@ class MeasurementBloc extends Bloc<MeasurementEvent, MeasurementState> {
         services: services,
         measurements: measurements,
         attachments: attachments,
-        totalAmount: event.serviceMaster.rate
+        totalAmount: event.serviceMaster.rate,
       ),
     );
   }

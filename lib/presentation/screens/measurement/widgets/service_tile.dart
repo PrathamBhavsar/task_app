@@ -17,8 +17,8 @@ class ServiceTile extends StatefulWidget {
     required this.index,
     required this.serviceMasters,
     required this.selectedServiceMaster,
-    super.key,
     required this.service,
+    super.key,
   });
 
   final int index;

@@ -257,6 +257,7 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                       ActionButton(
                         label: 'Submit Measurements',
                         onPress: () {
+
                           context.read<MeasurementApiBloc>().add(
                             PutMeasurementRequested(
                               MeasurementPayload(
