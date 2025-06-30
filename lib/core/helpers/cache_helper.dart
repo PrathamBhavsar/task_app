@@ -1,4 +1,4 @@
-
+import '../../domain/entities/service_master.dart';
 import '../../domain/entities/user.dart';
 import '../../utils/enums/user_role.dart';
 import 'shared_prefs_helper.dart';
@@ -9,6 +9,7 @@ class CacheHelper {
   CacheHelper(this._prefs);
 
   User? _user;
+  List<ServiceMaster>? _serviceMasters;
 
   Future<User?> getInitUser() async {
     _user = await _prefs.getUser();
@@ -21,13 +22,16 @@ class CacheHelper {
   }
 
   UserRole getUserRole() => _user?.userType ?? UserRole.agent;
+
   int? getUserId() => _user?.userId;
 
   User? get user => _user;
 
-  // int getUserId() => _user?.id ?? 0;
+  void setServiceMasters(List<ServiceMaster> serviceMasterList) {
+    _serviceMasters = serviceMasterList;
+  }
 
-  // UserRole? getUserRole() => _user?.userType ?? UserRole.agent.role;
+  List<ServiceMaster> getServiceMasterList() => _serviceMasters ?? [];
 
   void clearUser() {
     _user = null;

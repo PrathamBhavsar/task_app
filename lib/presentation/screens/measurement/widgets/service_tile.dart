@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/di/di.dart';
+import '../../../../core/helpers/cache_helper.dart';
 import '../../../../domain/entities/service.dart';
 import '../../../../domain/entities/service_master.dart';
 import '../../../../utils/constants/app_constants.dart';
@@ -15,15 +17,13 @@ import '../../../widgets/labeled_text_field.dart';
 class ServiceTile extends StatefulWidget {
   const ServiceTile({
     required this.index,
-    required this.serviceMasters,
-    required this.selectedServiceMaster,
     required this.service,
+    this.selectedServiceMaster,
     super.key,
   });
 
   final int index;
-  final List<ServiceMaster> serviceMasters;
-  final ServiceMaster selectedServiceMaster;
+  final ServiceMaster? selectedServiceMaster;
   final Service service;
 
   @override
@@ -34,6 +34,8 @@ class _ServiceTileState extends State<ServiceTile> {
   late TextEditingController quantityController;
   late TextEditingController rateController;
   late TextEditingController amountController;
+  final List<ServiceMaster> serviceMasters =
+      getIt<CacheHelper>().getServiceMasterList();
 
   @override
   void initState() {
@@ -113,8 +115,9 @@ class _ServiceTileState extends State<ServiceTile> {
             10.hGap,
             _buildDropdown<ServiceMaster>(
               title: 'Service Type',
-              list: widget.serviceMasters,
-              initialValue: widget.selectedServiceMaster,
+              list: serviceMasters,
+              initialValue:
+                  widget.selectedServiceMaster ?? serviceMasters.first,
               onChanged: (selected) {
                 rateController.text = selected.rate.toString();
                 amountController.text = (selected.rate * 1).toStringAsFixed(2);

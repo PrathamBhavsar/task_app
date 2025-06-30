@@ -10,7 +10,7 @@ class Quote {
   @JsonKey(name: 'task_id')
   final int taskId;
 
-
+  final double? discount;
   final double total;
   final double subtotal;
   final double tax;
@@ -26,6 +26,7 @@ class Quote {
     required this.subtotal,
     required this.tax,
     required this.createdAt,
+    this.discount,
     this.notes,
     this.quoteId,
   });

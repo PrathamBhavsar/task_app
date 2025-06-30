@@ -245,6 +245,7 @@ void setupService() {
 
   getIt.registerFactory(
     () => ServiceApiBloc(
+      getIt<CacheHelper>(),
       getIt<GetAllServicesUseCase>(),
       getIt<PutServiceUseCase>(),
       getIt<GetAllServiceMastersUseCase>(),

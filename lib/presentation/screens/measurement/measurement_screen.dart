@@ -202,7 +202,6 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                           index: index,
                           service: state.services[index],
                           selectedServiceMaster: serviceMasters.first,
-                          serviceMasters: serviceMasters,
                         ),
                       ),
                       Divider(

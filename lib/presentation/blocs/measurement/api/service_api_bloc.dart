@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/helpers/cache_helper.dart';
 import '../../../../domain/usecases/get_service_masters_usecase.dart';
 import '../../../../domain/usecases/get_services_usecase.dart';
 import '../../../../domain/usecases/put_service_usecase.dart';
@@ -8,11 +9,13 @@ import 'service_api_state.dart';
 
 class ServiceApiBloc
     extends Bloc<ServiceApiEvent, ServiceApiState> {
+  final CacheHelper _cache;
   final GetAllServiceMastersUseCase _getAllServiceMastersUseCase;
   final GetAllServicesUseCase _getAllServicesUseCase;
   final PutServiceUseCase _putServiceUseCase;
 
   ServiceApiBloc(
+      this._cache,
     this._getAllServicesUseCase,
     this._putServiceUseCase,
     this._getAllServiceMastersUseCase,
@@ -45,7 +48,10 @@ class ServiceApiBloc
 
     result.fold(
       (failure) => emit(ServiceMasterLoadFailure(failure)),
-      (services) => emit(ServiceMasterLoadSuccess(services)),
+      (services) {
+        _cache.setServiceMasters(services);
+        emit(ServiceMasterLoadSuccess(services));
+      },
     );
   }
 

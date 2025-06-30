@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
-import '../../../domain/entities/measurement.dart';
-import '../../../domain/entities/service.dart';
+import '../../../domain/entities/quote.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
@@ -14,8 +12,6 @@ import '../../blocs/measurement/api/measurement_api_state.dart';
 import '../../blocs/measurement/api/service_api_bloc.dart';
 import '../../blocs/measurement/api/service_api_event.dart';
 import '../../blocs/measurement/api/service_api_state.dart';
-import '../../blocs/measurement/measurement_bloc.dart';
-import '../../blocs/measurement/measurement_event.dart';
 import '../../blocs/quote/quote_bloc.dart';
 import '../../blocs/quote/quote_event.dart';
 import '../../blocs/quote/quote_state.dart';
@@ -23,8 +19,9 @@ import '../../providers/measurement_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
-import '../../widgets/custom_text_field.dart';
 import '../../widgets/labeled_text_field.dart';
+import 'widgets/quote_measurement_tile.dart';
+import 'widgets/static_service_tile.dart';
 
 class EditQuoteScreen extends StatefulWidget {
   const EditQuoteScreen({required this.task, super.key});
@@ -36,8 +33,13 @@ class EditQuoteScreen extends StatefulWidget {
 }
 
 class _EditQuoteScreenState extends State<EditQuoteScreen> {
+  late TextEditingController overallDiscountController;
+  bool _initialized = false;
+
   @override
   void initState() {
+    super.initState();
+    overallDiscountController = TextEditingController();
     context.read<MeasurementApiBloc>().add(
       FetchMeasurementsRequested(widget.task.taskId!),
     );
@@ -45,11 +47,39 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
       FetchServicesRequested(widget.task.taskId!),
     );
     context.read<QuoteBloc>().add(FetchQuotesRequested(widget.task.taskId!));
-    super.initState();
+  }
+
+  void _tryInitializeQuotes(BuildContext context) {
+    if (_initialized) {
+      return;
+    }
+
+    final measurementState = context.read<MeasurementApiBloc>().state;
+    final serviceState = context.read<ServiceApiBloc>().state;
+
+    if (measurementState is MeasurementLoadSuccess &&
+        serviceState is ServiceLoadSuccess) {
+      _initialized = true;
+
+      context.read<QuoteBloc>().add(
+        InitializeQuotes(
+          widget.task,
+          measurementState.measurements,
+          serviceState.services,
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    overallDiscountController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    _tryInitializeQuotes(context);
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
@@ -58,28 +88,12 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
           children: [Text('Edit Quote #1001', style: AppTexts.titleTextStyle)],
         ),
       ),
-      body: BlocConsumer<QuoteBloc, QuoteState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          if (state is QuoteLoadInProgress) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Colors.black,
-                backgroundColor: Colors.white,
-              ),
-            );
-          }
-
-          if (state is QuoteLoadSuccess) {
-            final serviceState = context.read<ServiceApiBloc>().state;
-            final measurementState = context.read<MeasurementApiBloc>().state;
-            final List<Service> serviceList =
-                serviceState is ServiceLoadSuccess ? serviceState.services : [];
-
-            final List<Measurement> measurementList =
-                measurementState is MeasurementLoadSuccess
-                    ? measurementState.measurements
-                    : [];
+      body: BlocBuilder<QuoteBloc, QuoteState>(
+        builder: (context, quoteState) {
+          if (quoteState is QuoteLoadSuccess) {
+            final Quote? quote = quoteState.quote;
+            final serviceList = quoteState.services;
+            final quoteMeasurementList = quoteState.quoteMeasurements;
 
             return SafeArea(
               child: SingleChildScrollView(
@@ -88,59 +102,105 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                   children: [
                     _buildExpansionTile(
                       title: 'Product Quotes',
-                      length: measurementList.length,
-                      tile: _buildTile(
-                        'Description',
-                        measurementList.length,
-                        // provider,
+                      length: quoteMeasurementList.length,
+                      widget: ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return QuoteMeasurementTile(
+                            index: index,
+                            quoteMeasurement: quoteMeasurementList[index],
+                          );
+                        },
+                        separatorBuilder: (context, index) => 10.hGap,
+                        itemCount: quoteMeasurementList.length,
                       ),
                       addLabel: 'Add Custom Product',
-                      // () => provider.addMeasurement(),
                       onAdd: () {},
                       isProduct: true,
                     ),
                     _buildExpansionTile(
                       title: 'Agency Service Charges',
-                      // provider.services.length,
                       length: serviceList.length,
-                      tile: _buildTile(
-                        'Service',
-                        // provider.services.length,
-                        serviceList.length,
-                        // provider,
-                        isService: true,
+                      widget: BorderedContainer(
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    "Service",
+                                    softWrap: true,
+                                    overflow: TextOverflow.visible,
+                                    style: AppTexts.inputLabelTextStyle,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    "Qty",
+                                    textAlign: TextAlign.center,
+                                    style: AppTexts.inputLabelTextStyle,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    "Rate",
+                                    textAlign: TextAlign.center,
+                                    style: AppTexts.inputLabelTextStyle,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    "Amount",
+                                    textAlign: TextAlign.right,
+                                    style: AppTexts.inputLabelTextStyle,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(color: AppColors.accent),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return StaticServiceTile(
+                                  service: serviceList[index],
+                                );
+                              },
+                              separatorBuilder: (context, index) => 10.hGap,
+                              itemCount: quoteMeasurementList.length,
+                            ),
+                          ],
+                        ),
                       ),
                       addLabel: 'Add Custom Service',
-                      // () => provider.addService(),
                       onAdd: () {},
                       isService: true,
-                    ),
-                    _buildExpansionTile(
-                      title: 'Additional Items',
-                      // provider.additionalItems.length,
-                      length: 1,
-
-                      tile: _buildTile(
-                        'Description',
-                        // provider.additionalItems.length,
-                        1,
-                        // provider,
-                      ),
-                      addLabel: 'Add Additional Item',
-                      // () => provider.addAdditionalItems(),
-                      onAdd: () {},
-                      isAdditional: true,
                     ),
                     10.hGap,
                     BorderedContainer(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          LabeledTextInput(
-                            title: 'Overall Discount %',
-                            hint: '0.00',
-                          ),
-                          Divider(color: AppColors.accent),
+                          // LabeledTextInput(
+                          //   title: 'Overall Discount %',
+                          //   hint: '0.00',
+                          //   controller: overallDiscountController,
+                          //   keyboardType: TextInputType.number,
+                          //   onChanged: (value) {
+                          //     final overallDiscount = double.tryParse(value);
+                          //     context.read<QuoteBloc>().add(
+                          //       QuoteUpdated(discount: overallDiscount),
+                          //     );
+                          //   },
+                          // ),
+                          // Divider(color: AppColors.accent),
                           Column(
                             spacing: 3.h,
                             children: [
@@ -149,7 +209,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                               // _buildTotalRow('Additional Items Subtotal', 150),
                               _buildTotalRow(
                                 'Subtotal',
-                                state.quote.subtotal,
+                                quote?.subtotal ?? 0,
                                 labelTextStyle: AppTexts.inputHintTextStyle
                                     .copyWith(
                                       fontVariations: [
@@ -163,10 +223,10 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                                       ],
                                     ),
                               ),
-                              _buildTotalRow('Tax (7%)', state.quote.tax),
+                              _buildTotalRow('Tax (7%)', quote?.tax ?? 0),
                               _buildTotalRow(
                                 'Total',
-                                state.quote.total,
+                                quote?.total ?? 0,
                                 labelTextStyle: AppTexts.inputTextStyle
                                     .copyWith(
                                       fontVariations: [
@@ -231,7 +291,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
   ExpansionTile _buildExpansionTile({
     required String title,
     required int length,
-    required Widget tile,
+    required Widget widget,
     required String addLabel,
     required Function() onAdd,
     bool isService = false,
@@ -243,7 +303,11 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
       collapsedShape: UnderlineInputBorder(
         borderSide: BorderSide(color: AppColors.accent),
       ),
-      trailing: CustomTag(text: length.toString(), color: Colors.black, fontColor: Colors.white),
+      trailing: CustomTag(
+        text: length.toString(),
+        color: Colors.black,
+        fontColor: Colors.white,
+      ),
       shape: UnderlineInputBorder(
         borderSide: BorderSide(color: AppColors.accent),
       ),
@@ -290,7 +354,8 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
           ),
           5.hGap,
         ],
-        ...List.generate(length, (index) => tile),
+        widget,
+        // ...List.generate(length, (index) => tile),
         10.hGap,
         ActionButton(label: addLabel, prefixIcon: Icons.add, onPress: onAdd),
         10.hGap,
@@ -352,58 +417,6 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
           10.hGap,
         ],
       ],
-    );
-  }
-
-  Padding _buildTile(String title, int index, {bool isService = false}) {
-    return Padding(
-      padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-      child: BorderedContainer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            LabeledTextInput(
-              title: title,
-              hint: 'Enter measurement description',
-            ),
-            Row(
-              children: [
-                Expanded(child: LabeledTextInput(title: 'Quantity', hint: '1')),
-                10.wGap,
-                Expanded(child: LabeledTextInput(title: 'Rate', hint: '0.00')),
-                10.wGap,
-                Expanded(
-                  child: LabeledTextInput(title: 'Discount %', hint: '0.00'),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Total: ₹350.00', style: AppTexts.labelTextStyle),
-                IconButton(
-                  // onPressed: () => provider.removeMeasurementAt(index),
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.delete_outline_rounded,
-                    color: AppColors.errorRed,
-                  ),
-                ),
-              ],
-            ),
-            if (isService) ...[
-              Text(
-                'Store pays: ₹35.00 per unit',
-                style: AppTexts.inputHintTextStyle,
-              ),
-              Text(
-                'Customer rate: ₹50.00 per unit',
-                style: AppTexts.inputHintTextStyle,
-              ),
-            ],
-          ],
-        ),
-      ),
     );
   }
 
