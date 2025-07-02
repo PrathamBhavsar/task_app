@@ -1,5 +1,4 @@
 import '../../../../data/models/payloads/service_payload.dart';
-import '../../../../domain/entities/service_master.dart';
 
 abstract class ServiceApiEvent {}
 

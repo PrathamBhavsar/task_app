@@ -5,7 +5,7 @@ part 'quote.g.dart';
 @JsonSerializable()
 class Quote {
   @JsonKey(name: 'quote_id')
-  final int? quoteId;
+  final int quoteId;
 
   @JsonKey(name: 'task_id')
   final int taskId;
@@ -26,9 +26,8 @@ class Quote {
     required this.subtotal,
     required this.tax,
     required this.createdAt,
-    this.discount,
+    required this.quoteId, this.discount,
     this.notes,
-    this.quoteId,
   });
 
   factory Quote.fromJson(Map<String, dynamic> json) => _$QuoteFromJson(json);

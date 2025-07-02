@@ -1,3 +1,4 @@
+import '../../domain/entities/status.dart';
 import '../enums/status_type.dart' show StatusType, StatusTypeX;
 
 extension StatusTypeExtension on StatusType {
@@ -23,5 +24,14 @@ extension StatusTypeExtension on StatusType {
       return null;
     }
     return StatusType.values[index + 1];
+  }
+}
+
+extension StatusExtension on Status {
+  Status? get next {
+    final nextId = statusId! + 1;
+    return Status.list.firstWhere(
+          (s) => s.statusId == nextId,
+    );
   }
 }

@@ -46,6 +46,8 @@ import '../../domain/usecases/put_task_usecase.dart';
 import '../../domain/usecases/quote_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
+import '../../domain/usecases/update_quote_measurement_usecase.dart';
+import '../../domain/usecases/update_quote_usecase.dart';
 import '../../domain/usecases/update_task_status_usecase.dart';
 import '../../domain/usecases/update_task_usecase.dart';
 import '../../domain/usecases/user_usecase.dart';
@@ -58,7 +60,8 @@ import '../../presentation/blocs/measurement/api/measurement_api_bloc.dart';
 import '../../presentation/blocs/measurement/api/service_api_bloc.dart';
 import '../../presentation/blocs/measurement/measurement_bloc.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
-import '../../presentation/blocs/quote/quote_bloc.dart';
+import '../../presentation/blocs/quote/cubits/quote_cubit.dart';
+import '../../presentation/blocs/quote/quote_api_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
 import '../../presentation/blocs/task_form/task_form_bloc.dart';
@@ -323,7 +326,22 @@ void setupQuote() {
     () => GetAllQuotesUseCase(getIt<QuoteRepository>()),
   );
 
-  getIt.registerFactory(() => QuoteBloc(getIt<GetAllQuotesUseCase>()));
+  getIt.registerLazySingleton(
+    () => UpdateQuoteUseCase(getIt<QuoteRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => UpdateQuoteMeasurementUseCase(getIt<QuoteRepository>()),
+  );
+
+  getIt.registerFactory(QuoteCubit.new);
+
+  getIt.registerFactory(
+    () => QuoteApiBloc(
+      getIt<GetAllQuotesUseCase>(),
+      getIt<UpdateQuoteUseCase>(),
+      getIt<UpdateQuoteMeasurementUseCase>(),
+    ),
+  );
 }
 
 void setupTimeline() {

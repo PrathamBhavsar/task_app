@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../../domain/entities/quote.dart';
+import '../../../core/di/di.dart';
+import '../../../core/helpers/cache_helper.dart';
+import '../../../data/models/payloads/update_quote_payload.dart';
+import '../../../data/models/payloads/update_status_payload.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
+import '../../../utils/extensions/get_next_status.dart';
 import '../../../utils/extensions/padding.dart';
+import '../../../utils/extensions/quote_measurement_converter.dart';
 import '../../blocs/measurement/api/measurement_api_bloc.dart';
 import '../../blocs/measurement/api/measurement_api_event.dart';
 import '../../blocs/measurement/api/measurement_api_state.dart';
 import '../../blocs/measurement/api/service_api_bloc.dart';
 import '../../blocs/measurement/api/service_api_event.dart';
 import '../../blocs/measurement/api/service_api_state.dart';
-import '../../blocs/quote/quote_bloc.dart';
-import '../../blocs/quote/quote_event.dart';
-import '../../blocs/quote/quote_state.dart';
+import '../../blocs/quote/cubits/quote_cubit.dart';
+import '../../blocs/quote/cubits/quote_cubit_state.dart';
+import '../../blocs/quote/quote_api_bloc.dart';
+import '../../blocs/quote/quote_api_event.dart';
+import '../../blocs/quote/quote_api_state.dart';
+import '../../blocs/task/task_bloc.dart';
+import '../../blocs/task/task_event.dart';
+import '../../blocs/task/task_state.dart';
+import '../../blocs/task_form/task_form_bloc.dart';
 import '../../providers/measurement_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/labeled_text_field.dart';
+import 'package:task_app/domain/entities/quote_measurement.dart';
 import 'widgets/quote_measurement_tile.dart';
 import 'widgets/static_service_tile.dart';
 
@@ -34,40 +47,38 @@ class EditQuoteScreen extends StatefulWidget {
 
 class _EditQuoteScreenState extends State<EditQuoteScreen> {
   late TextEditingController overallDiscountController;
+  late TextEditingController noteController;
   bool _initialized = false;
 
   @override
   void initState() {
     super.initState();
     overallDiscountController = TextEditingController();
+    noteController = TextEditingController();
     context.read<MeasurementApiBloc>().add(
       FetchMeasurementsRequested(widget.task.taskId!),
     );
     context.read<ServiceApiBloc>().add(
       FetchServicesRequested(widget.task.taskId!),
     );
-    context.read<QuoteBloc>().add(FetchQuotesRequested(widget.task.taskId!));
+    context.read<QuoteApiBloc>().add(FetchQuotesRequested(widget.task.taskId!));
   }
 
-  void _tryInitializeQuotes(BuildContext context) {
+  void _tryInitializeCubit(BuildContext context) {
     if (_initialized) {
       return;
     }
 
-    final measurementState = context.read<MeasurementApiBloc>().state;
-    final serviceState = context.read<ServiceApiBloc>().state;
+    final mState = context.read<MeasurementApiBloc>().state;
+    final sState = context.read<ServiceApiBloc>().state;
 
-    if (measurementState is MeasurementLoadSuccess &&
-        serviceState is ServiceLoadSuccess) {
+    if (mState is MeasurementLoadSuccess && sState is ServiceLoadSuccess) {
+      final task = widget.task;
+      final measurements = mState.measurements;
+      final services = sState.services;
+
+      context.read<QuoteCubit>().initialize(task, services, measurements);
       _initialized = true;
-
-      context.read<QuoteBloc>().add(
-        InitializeQuotes(
-          widget.task,
-          measurementState.measurements,
-          serviceState.services,
-        ),
-      );
     }
   }
 
@@ -79,21 +90,71 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _tryInitializeQuotes(context);
-    return Scaffold(
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Text('Edit Quote #1001', style: AppTexts.titleTextStyle)],
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<QuoteApiBloc, QuoteApiState>(
+          listener: (context, state) {
+            if (state is QuoteApiLoaded) {
+              context.read<QuoteCubit>().setQuote(state.quote);
+            }
+            if (state is QuoteApiUpdated) {
+              final taskBloc = context.read<TaskBloc>();
+              final int? userId = getIt<CacheHelper>().getUserId();
+              final selectedAgencyId =
+                  context.read<TaskFormBloc>().state.selectedAgency?.userId ??
+                  0;
+              taskBloc.add(
+                UpdateTaskStatusRequested(
+                  UpdateStatusPayload(
+                    status: widget.task.status.next!.name,
+                    taskId: widget.task.taskId ?? 0,
+                    agencyId: selectedAgencyId,
+                    userId: userId ?? 0,
+                  ),
+                ),
+              );
+              context.pop();
+            }
+          },
         ),
-      ),
-      body: BlocBuilder<QuoteBloc, QuoteState>(
-        builder: (context, quoteState) {
-          if (quoteState is QuoteLoadSuccess) {
-            final Quote? quote = quoteState.quote;
-            final serviceList = quoteState.services;
-            final quoteMeasurementList = quoteState.quoteMeasurements;
+        BlocListener<MeasurementApiBloc, MeasurementApiState>(
+          listener: (context, state) {
+            _tryInitializeCubit(context);
+          },
+        ),
+        BlocListener<ServiceApiBloc, ServiceApiState>(
+          listener: (context, state) {
+            _tryInitializeCubit(context);
+          },
+        ),
+        BlocListener<TaskBloc, TaskState>(
+          listener: (context, state) {
+            if (state is UpdateTaskStatusSuccess) {
+              context.read<TaskBloc>().add(FetchTasksRequested());
+              context.pop();
+            }
+          },
+        ),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          forceMaterialTransparency: true,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Edit Quote #1001', style: AppTexts.titleTextStyle),
+            ],
+          ),
+        ),
+        body: BlocBuilder<QuoteCubit, QuoteCubitState>(
+          builder: (context, state) {
+            final quote = state.quote;
+            final quoteMeasurementList = state.quoteMeasurements;
+            final serviceList = state.services;
+
+            if (quote == null || quoteMeasurementList.isEmpty) {
+              return Center(child: CircularProgressIndicator());
+            }
 
             return SafeArea(
               child: SingleChildScrollView(
@@ -188,28 +249,12 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // LabeledTextInput(
-                          //   title: 'Overall Discount %',
-                          //   hint: '0.00',
-                          //   controller: overallDiscountController,
-                          //   keyboardType: TextInputType.number,
-                          //   onChanged: (value) {
-                          //     final overallDiscount = double.tryParse(value);
-                          //     context.read<QuoteBloc>().add(
-                          //       QuoteUpdated(discount: overallDiscount),
-                          //     );
-                          //   },
-                          // ),
-                          // Divider(color: AppColors.accent),
                           Column(
                             spacing: 3.h,
                             children: [
-                              // _buildTotalRow('Products Subtotal', 952),
-                              // _buildTotalRow('Services Subtotal', 345),
-                              // _buildTotalRow('Additional Items Subtotal', 150),
                               _buildTotalRow(
                                 'Subtotal',
-                                quote?.subtotal ?? 0,
+                                quote.subtotal,
                                 labelTextStyle: AppTexts.inputHintTextStyle
                                     .copyWith(
                                       fontVariations: [
@@ -223,10 +268,10 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                                       ],
                                     ),
                               ),
-                              _buildTotalRow('Tax (7%)', quote?.tax ?? 0),
+                              _buildTotalRow('Tax (7%)', quote.tax),
                               _buildTotalRow(
                                 'Total',
-                                quote?.total ?? 0,
+                                quote.total,
                                 labelTextStyle: AppTexts.inputTextStyle
                                     .copyWith(
                                       fontVariations: [
@@ -250,10 +295,11 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                       title: 'Notes',
                       hint: 'Enter notes here',
                       isMultiline: true,
+                      controller: noteController,
                     ),
                     ActionButton(
                       label: 'Save Quote',
-                      onPress: () {},
+                      onPress: () => _onSubmit(context, quoteMeasurementList),
                       backgroundColor: Colors.black,
                       fontColor: Colors.white,
                     ),
@@ -263,9 +309,35 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                 ).padAll(AppPaddings.appPaddingInt),
               ),
             );
-          }
-          return Center(child: Text("Error loading quote"));
-        },
+          },
+        ),
+      ),
+    );
+  }
+
+  void _onSubmit(
+    BuildContext context,
+    List<QuoteMeasurement> quoteMeasurementList,
+  ) {
+    final quote = context.read<QuoteCubit>().state.quote!;
+    final taskId = context.read<QuoteCubit>().state.task!.taskId!;
+
+    context.read<QuoteApiBloc>().add(
+      UpdateQuoteRequested(
+        UpdateQuotePayload(
+          quoteId: quote.quoteId,
+          taskId: taskId,
+          subtotal: quote.subtotal,
+          tax: quote.tax,
+          total: quote.total,
+          notes: noteController.text,
+        ),
+      ),
+    );
+
+    context.read<QuoteApiBloc>().add(
+      UpdateQuoteMeasurementsRequested(
+        quoteMeasurementList.map((e) => e.toUpdatePayload()).toList(),
       ),
     );
   }
@@ -355,9 +427,6 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
           5.hGap,
         ],
         widget,
-        // ...List.generate(length, (index) => tile),
-        10.hGap,
-        ActionButton(label: addLabel, prefixIcon: Icons.add, onPress: onAdd),
         10.hGap,
         if (isService) ...[
           BorderedContainer(

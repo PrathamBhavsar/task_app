@@ -10,7 +10,6 @@ import '../../blocs/auth/auth_bloc.dart';
 import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
-import '../../widgets/custom_text_field.dart';
 import '../../widgets/labeled_text_field.dart';
 
 class NewAgencyScreen extends StatefulWidget {

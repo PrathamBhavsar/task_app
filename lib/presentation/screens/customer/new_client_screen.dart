@@ -8,7 +8,6 @@ import '../../../utils/extensions/padding.dart';
 import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_event.dart';
 import '../../widgets/bordered_container.dart';
-import '../../widgets/custom_text_field.dart';
 import '../../widgets/labeled_text_field.dart';
 
 class NewClientScreen extends StatefulWidget {

@@ -12,6 +12,7 @@ import '../../domain/entities/service.dart';
 import '../../domain/entities/service_master.dart';
 import '../../domain/entities/task.dart';
 import '../../domain/entities/timeline.dart';
+import '../../domain/entities/update_quote_measurement.dart';
 import '../../domain/entities/user.dart';
 import '../models/api/api_response.dart';
 import '../models/payloads/auth_payload.dart';
@@ -20,6 +21,7 @@ import '../models/payloads/measurement_payload.dart';
 import '../models/payloads/message_payload.dart';
 import '../models/payloads/service_payload.dart';
 import '../models/payloads/task_payload.dart';
+import '../models/payloads/update_quote_payload.dart';
 import '../models/payloads/update_status_payload.dart';
 import '../responses/client/put_client_response.dart';
 import '../responses/get_bills_response.dart';
@@ -35,6 +37,7 @@ import '../responses/get_timelines_response.dart';
 import '../responses/get_users_response.dart';
 import '../responses/put_message_response.dart';
 import '../responses/task/put_task_response.dart';
+import '../responses/task/update_quote_response.dart';
 import 'api_constants.dart';
 import 'api_handler.dart';
 import 'api_service.dart';
@@ -185,11 +188,44 @@ class ApiHelper {
   Future<Either<Failure, Quote>> getAllQuotes(int taskId) async {
     final ApiResponse<GetQuoteResponse> result = await handler
         .execute<GetQuoteResponse>(
-          () => service.get(ApiConstants.quote.base, queryParameters: {"task_id" : taskId}),
+          () => service.get(
+            ApiConstants.quote.base,
+            queryParameters: {"task_id": taskId},
+          ),
           (json) => GetQuoteResponse.fromJson(json as Map<String, dynamic>),
         );
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.quote);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+  Future<Either<Failure, Quote>> updateQuote(UpdateQuotePayload data) async {
+    final ApiResponse<UpdateQuoteResponse> result = await handler.execute(
+      () => service.put(
+        ApiConstants.quote.update,
+        data: data.toJson(),
+        params: {"id": data.quoteId},
+      ),
+      (json) => UpdateQuoteResponse.fromJson(json as Map<String, dynamic>),
+    );
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!.quote);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+  Future<Either<Failure, Quote>> updateQuoteMeasurements(
+    List<UpdateQuoteMeasurement> data,
+  ) async {
+    final ApiResponse<Quote> result = await handler.execute(
+      () => service.put(ApiConstants.quote.base, data: data),
+      (json) => Quote.fromJson(json as Map<String, dynamic>),
+    );
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!);
     } else {
       return Left(Failure(result.error!.message));
     }
@@ -280,8 +316,9 @@ class ApiHelper {
     final ApiResponse<GetServiceMastersResponse> result = await handler
         .execute<GetServiceMastersResponse>(
           () => service.get(ApiConstants.serviceMaster.base),
-          (json) => GetServiceMastersResponse.fromJson(json as Map<String, dynamic>),
-    );
+          (json) =>
+              GetServiceMastersResponse.fromJson(json as Map<String, dynamic>),
+        );
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.serviceMasters);
@@ -290,15 +327,13 @@ class ApiHelper {
     }
   }
 
-  Future<Either<Failure, List<Service>>> getServicesByTaskId(
-      int taskId,
-      ) async {
+  Future<Either<Failure, List<Service>>> getServicesByTaskId(int taskId) async {
     final ApiResponse result = await handler.execute<GetServiceResponse>(
-          () => service.get(
+      () => service.get(
         ApiConstants.service.base,
         queryParameters: {"task_id": taskId},
       ),
-          (json) => GetServiceResponse.fromJson(json as Map<String, dynamic>),
+      (json) => GetServiceResponse.fromJson(json as Map<String, dynamic>),
     );
 
     if (result.isSuccess && result.data != null) {
@@ -308,15 +343,13 @@ class ApiHelper {
     }
   }
 
-  Future<Either<Failure, List<Service>>> putService(
-      ServicePayload data,
-      ) async {
+  Future<Either<Failure, List<Service>>> putService(ServicePayload data) async {
     final ApiResponse result = await handler.execute<GetServiceResponse>(
-          () => service.post(
+      () => service.post(
         ApiConstants.service.base,
         data: data.services.map((m) => m.toJson()).toList(),
       ),
-          (json) => GetServiceResponse.fromJson(json as Map<String, dynamic>),
+      (json) => GetServiceResponse.fromJson(json as Map<String, dynamic>),
     );
 
     if (result.isSuccess && result.data != null) {

@@ -1,9 +1,7 @@
 import 'package:either_dart/either.dart';
 
 import '../../core/error/failure.dart';
-import '../../domain/entities/bill.dart';
 import '../../domain/entities/service_master.dart';
-import '../../domain/repositories/bill_repository.dart';
 import '../../domain/repositories/service_master_repository.dart';
 import '../api/api_helper.dart';
 

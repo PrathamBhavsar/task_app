@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../domain/entities/quote_measurement.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
-import '../../../blocs/quote/quote_bloc.dart';
-import '../../../blocs/quote/quote_event.dart';
+import '../../../blocs/quote/cubits/quote_cubit.dart';
 import '../../../widgets/bordered_container.dart' show BorderedContainer;
 import '../../../widgets/labeled_text_field.dart' show LabeledTextInput;
 
@@ -92,11 +90,9 @@ class _QuoteMeasurementTileState extends State<QuoteMeasurementTile> {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     final quantity = int.tryParse(value);
-                    context.read<QuoteBloc>().add(
-                      QuoteMeasurementFieldUpdated(
-                        index: widget.index,
-                        quantity: quantity,
-                      ),
+                    context.read<QuoteCubit>().updateQuoteMeasurement(
+                      widget.index,
+                      quantity: quantity,
                     );
                   },
                 ),
@@ -110,11 +106,9 @@ class _QuoteMeasurementTileState extends State<QuoteMeasurementTile> {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     final rate = double.tryParse(value);
-                    context.read<QuoteBloc>().add(
-                      QuoteMeasurementFieldUpdated(
-                        index: widget.index,
-                        rate: rate,
-                      ),
+                    context.read<QuoteCubit>().updateQuoteMeasurement(
+                      widget.index,
+                      rate: rate,
                     );
                   },
                 ),
@@ -128,11 +122,9 @@ class _QuoteMeasurementTileState extends State<QuoteMeasurementTile> {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     final discount = double.tryParse(value);
-                    context.read<QuoteBloc>().add(
-                      QuoteMeasurementFieldUpdated(
-                        index: widget.index,
-                        discount: discount,
-                      ),
+                    context.read<QuoteCubit>().updateQuoteMeasurement(
+                      widget.index,
+                      discount: discount,
                     );
                   },
                 ),
