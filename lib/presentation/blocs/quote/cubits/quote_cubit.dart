@@ -11,7 +11,7 @@ import 'quote_cubit_state.dart';
 class QuoteCubit extends Cubit<QuoteCubitState> {
   QuoteCubit() : super(QuoteCubitState.initial());
 
-  void initialize(
+  void initializeEmpty(
     Task task,
     List<Service> services,
     List<Measurement> measurements,
@@ -27,6 +27,32 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
         services: services,
         measurements: measurements,
         quoteMeasurements: quoteMeasurements,
+      ),
+    );
+  }
+
+  void initialize(
+    Task task,
+    List<Service> services,
+    List<Measurement> measurements,
+    List<QuoteMeasurement> quoteMeasurements,
+  ) {
+    final double productSubtotal = quoteMeasurements
+        .map((q) => q.totalPrice)
+        .fold(0.0, (sum, price) => sum + price);
+
+    final double serviceSubtotal = services
+        .map((s) => s.amount)
+        .fold(0.0, (sum, amount) => sum + amount);
+
+    emit(
+      state.copyWith(
+        task: task,
+        services: services,
+        measurements: measurements,
+        quoteMeasurements: quoteMeasurements,
+        productSubtotal: productSubtotal,
+        serviceSubtotal: serviceSubtotal,
       ),
     );
   }

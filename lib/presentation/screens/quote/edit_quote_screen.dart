@@ -3,15 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/di/di.dart';
-import '../../../core/helpers/cache_helper.dart';
 import '../../../data/models/payloads/update_quote_payload.dart';
-import '../../../data/models/payloads/update_status_payload.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
-import '../../../utils/extensions/get_next_status.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../../utils/extensions/quote_measurement_converter.dart';
+import '../../../utils/extensions/update_task_status.dart';
 import '../../blocs/measurement/api/measurement_api_bloc.dart';
 import '../../blocs/measurement/api/measurement_api_event.dart';
 import '../../blocs/measurement/api/measurement_api_state.dart';
@@ -26,13 +23,12 @@ import '../../blocs/quote/quote_api_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
-import '../../blocs/task_form/task_form_bloc.dart';
 import '../../providers/measurement_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/labeled_text_field.dart';
-import 'package:task_app/domain/entities/quote_measurement.dart';
+import '../../../domain/entities/quote_measurement.dart';
 import 'widgets/quote_measurement_tile.dart';
 import 'widgets/static_service_tile.dart';
 
@@ -77,7 +73,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
       final measurements = mState.measurements;
       final services = sState.services;
 
-      context.read<QuoteCubit>().initialize(task, services, measurements);
+      context.read<QuoteCubit>().initializeEmpty(task, services, measurements);
       _initialized = true;
     }
   }
@@ -98,21 +94,11 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
               context.read<QuoteCubit>().setQuote(state.quote);
             }
             if (state is QuoteApiUpdated) {
-              final taskBloc = context.read<TaskBloc>();
-              final int? userId = getIt<CacheHelper>().getUserId();
-              final selectedAgencyId =
-                  context.read<TaskFormBloc>().state.selectedAgency?.userId ??
-                  0;
-              taskBloc.add(
-                UpdateTaskStatusRequested(
-                  UpdateStatusPayload(
-                    status: widget.task.status.next!.name,
-                    taskId: widget.task.taskId ?? 0,
-                    agencyId: selectedAgencyId,
-                    userId: userId ?? 0,
-                  ),
-                ),
+              context.updateTaskStatusToQuotationSent(
+                task: widget.task,
+                context: context,
               );
+
               context.pop();
             }
           },

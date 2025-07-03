@@ -6,6 +6,7 @@ import '../../../../domain/entities/task.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/status_type.dart';
 import '../../../../utils/extensions/status_type_extractor.dart';
+import '../../../widgets/action_button.dart';
 import 'review_widget_tile.dart';
 
 class ReviewWidget extends StatelessWidget {
@@ -38,6 +39,21 @@ class ReviewWidget extends StatelessWidget {
                 AppRoutes.measurement,
                 extra: MeasurementArgs(task: task),
               ),
+        );
+
+      case StatusType.quotationInProgress:
+        return ReviewWidgetTile(
+          title: "Quotation Approval Required",
+          subtitle:
+              "Task ${task.dealNo} from ${task.createdBy.name} requires quotation approval",
+          btnText: "Review Quotation",
+          onTap: () => context.push(AppRoutes.quoteDetails, extra: task),
+          child: ActionButton(
+            label: "Edit Quotation",
+            backgroundColor: Colors.white,
+            fontColor: Colors.black,
+            onPress: () => context.push(AppRoutes.editQuote, extra: task),
+          ),
         );
 
       case StatusType.quotationSent:

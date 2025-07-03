@@ -65,57 +65,64 @@ class Status extends Equatable {
 
     Status(
       statusId: 7,
+      name: "Quotation: In Progress",
+      slug: "quotation_in_progress",
+      color: "#FFF5CA",
+    ),
+
+    Status(
+      statusId: 8,
       name: "Quotation: Approved",
       slug: "quotation_approved",
       color: "#C1E1C1",
     ),
 
     Status(
-      statusId: 8,
+      statusId: 9,
       name: "Quotation: Rejected",
       slug: "quotation_rejected",
       color: "#F2B5D4",
     ),
 
-    Status(statusId: 9, name: "Ordered", slug: "ordered", color: "#C6D8FF"),
+    Status(statusId: 10, name: "Ordered", slug: "ordered", color: "#C6D8FF"),
 
     Status(
-      statusId: 10,
+      statusId: 11,
       name: "Invoice: Approved",
       slug: "invoice_approved",
       color: "#D3F8E2",
     ),
 
     Status(
-      statusId: 11,
+      statusId: 12,
       name: "Invoice: Rejected",
       slug: "invoice_rejected",
       color: "#FFD6D6",
     ),
 
     Status(
-      statusId: 12,
+      statusId: 13,
       name: "Installation: Approved",
       slug: "installation_approved",
       color: "#E6E6FA",
     ),
 
     Status(
-      statusId: 13,
+      statusId: 14,
       name: "Bill: Created",
       slug: "bill_created",
       color: "#FEE1E8",
     ),
 
     Status(
-      statusId: 14,
+      statusId: 15,
       name: "Bill: Paid",
       slug: "bill_paid",
       color: "#D5E8D4",
     ),
 
     Status(
-      statusId: 15,
+      statusId: 16,
       name: "Bill: Unpaid",
       slug: "bill_unpaid",
       color: "#FBE7C6",

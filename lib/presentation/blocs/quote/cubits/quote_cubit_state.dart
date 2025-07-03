@@ -10,6 +10,10 @@ class QuoteCubitState {
   final List<Measurement> measurements;
   final List<QuoteMeasurement> quoteMeasurements;
   final Quote? quote;
+  final double? productSubtotal;
+  final double? serviceSubtotal;
+
+  factory QuoteCubitState.initial() => QuoteCubitState();
 
   QuoteCubitState({
     this.task,
@@ -17,9 +21,9 @@ class QuoteCubitState {
     this.measurements = const [],
     this.quoteMeasurements = const [],
     this.quote,
+    this.productSubtotal,
+    this.serviceSubtotal,
   });
-
-  factory QuoteCubitState.initial() => QuoteCubitState();
 
   QuoteCubitState copyWith({
     Task? task,
@@ -27,6 +31,8 @@ class QuoteCubitState {
     List<Measurement>? measurements,
     List<QuoteMeasurement>? quoteMeasurements,
     Quote? quote,
+    double? productSubtotal,
+    double? serviceSubtotal,
   }) {
     return QuoteCubitState(
       task: task ?? this.task,
@@ -34,6 +40,8 @@ class QuoteCubitState {
       measurements: measurements ?? this.measurements,
       quoteMeasurements: quoteMeasurements ?? this.quoteMeasurements,
       quote: quote ?? this.quote,
+      productSubtotal: productSubtotal ?? this.productSubtotal,
+      serviceSubtotal: serviceSubtotal ?? this.serviceSubtotal,
     );
   }
 }

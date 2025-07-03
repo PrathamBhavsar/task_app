@@ -7,19 +7,16 @@ import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
 import '../../../core/helpers/validator.dart';
 import '../../../data/models/payloads/message_payload.dart';
-import '../../../data/models/payloads/update_status_payload.dart';
 import '../../../domain/entities/client.dart';
 import '../../../domain/entities/designer.dart';
 import '../../../domain/entities/task.dart';
 import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
-import '../../../utils/enums/status_type.dart';
 import '../../../utils/enums/user_role.dart';
 import '../../../utils/extensions/color_translator.dart';
 import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../../utils/extensions/status_type_extractor.dart';
 import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_state.dart';
 import '../../blocs/designer/designer_bloc.dart';
@@ -32,7 +29,6 @@ import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
 import '../../blocs/task_form/task_form_bloc.dart';
 import '../../blocs/task_form/task_form_event.dart';
-import '../../blocs/task_form/task_form_state.dart';
 import '../../blocs/timeline/timeline_bloc.dart';
 import '../../blocs/timeline/timeline_event.dart';
 import '../../blocs/user/user_bloc.dart';
@@ -41,12 +37,11 @@ import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
-import '../../widgets/drop_down_menu.dart';
-import '../../widgets/labeled_text_field.dart';
 import '../../widgets/tab_header.dart';
 import '../../widgets/tile_row.dart';
 import 'widgets/messages_widget.dart';
 import 'widgets/review_widget.dart';
+import 'widgets/task_workflow_widget.dart';
 import 'widgets/timeline_widget.dart';
 
 class TaskDetailPage extends StatefulWidget {
@@ -307,7 +302,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
               children: [
                 Text('Task Workflow', style: AppTexts.titleTextStyle),
                 10.hGap,
-                _buildAgencyAssignmentStatus(widget.task),
+                TaskWorkflowWidget(task: widget.task),
               ],
             ),
             TimeLineWidget(),
@@ -315,110 +310,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildAgencyAssignmentStatus(Task task) {
-    final status = task.status.toStatusType();
-    final String agencyName = task.agency?.name ?? "";
-    switch (status) {
-      case StatusType.created:
-        final nextStatus = StatusType.agencyAssigned;
-        return _buildAssignAgency(nextStatus);
-
-      case StatusType.agencyAssigned:
-        return BorderedContainer(
-          color: AppColors.blueBg,
-          child: Text(
-            "This task has been assigned to $agencyName, they'll add the measurements!",
-            style: AppTexts.inputTextStyle.copyWith(
-              color: AppColors.darkBlueText,
-            ),
-          ),
-        );
-
-      case StatusType.quotationSent:
-        return BorderedContainer(
-          color: AppColors.blueBg,
-          child: Text(
-            "Review the quotation sent by $agencyName!",
-            style: AppTexts.inputTextStyle.copyWith(
-              color: AppColors.darkBlueText,
-            ),
-          ),
-        );
-
-      default:
-        return Text(status?.name ?? "NONE");
-    }
-  }
-
-  Widget _buildAssignAgency(StatusType? nextStatus) {
-    return BorderedContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BlocBuilder<TaskFormBloc, TaskFormState>(
-            builder: (context, state) {
-              if (!state.isInitialized) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDropdown<User>(
-                    title: 'Agency',
-                    list: state.agencies,
-                    initialValue: state.selectedAgency,
-                    onChanged:
-                        (selected) => context.read<TaskFormBloc>().add(
-                          AgencyChanged(selected),
-                        ),
-                    labelBuilder: (a) => a.name,
-                    idBuilder: (a) => a.userId?.toString() ?? '',
-                  ),
-                  LabeledTextInput(title: 'Schedule Date', hint: 'Select Date'),
-                  LabeledTextInput(
-                    title: 'Instructions for Agency',
-                    hint: 'Provide any specific instructions',
-                    isMultiline: true,
-                  ),
-                ],
-              );
-            },
-          ),
-          Text(
-            "Assign a measurement task to one of our partner agencies.",
-            style: AppTexts.inputTextStyle,
-          ),
-          10.hGap,
-          if (nextStatus != null)
-            ActionButton(
-              label: 'Move to ${nextStatus.status.name}',
-              prefixIcon: CustomIcon.circleCheckBig,
-              backgroundColor: Colors.black,
-              fontColor: Colors.white,
-              onPress: () {
-                final taskBloc = context.read<TaskBloc>();
-                final int? userId = getIt<CacheHelper>().getUserId();
-                final selectedAgencyId =
-                    context.read<TaskFormBloc>().state.selectedAgency?.userId ??
-                    0;
-                taskBloc.add(
-                  UpdateTaskStatusRequested(
-                    UpdateStatusPayload(
-                      status: nextStatus.status.name,
-                      taskId: widget.task.taskId ?? 0,
-                      agencyId: selectedAgencyId,
-                      userId: userId ?? 0,
-                    ),
-                  ),
-                );
-              },
-            ),
-        ],
-      ),
     );
   }
 
@@ -437,36 +328,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
           Text(subtitle, style: AppTexts.inputHintTextStyle),
         ],
       ),
-    );
-  }
-
-  Column _buildDropdown<T>({
-    required String title,
-    required List<T> list,
-    required ValueChanged<T> onChanged,
-    T? initialValue,
-    String Function(T)? labelBuilder,
-    String Function(T)? idBuilder,
-  }) {
-    final effectiveLabelBuilder = labelBuilder ?? (value) => value.toString();
-    final effectiveIdBuilder =
-        idBuilder ?? (value) => value.hashCode.toString();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        10.hGap,
-        Text(title, style: AppTexts.labelTextStyle),
-        10.hGap,
-        ModelDropdownMenu<T>(
-          items: list,
-          initialValue: initialValue,
-          onChanged: onChanged,
-          labelBuilder: effectiveLabelBuilder,
-          idBuilder: effectiveIdBuilder,
-        ),
-        10.hGap,
-      ],
     );
   }
 

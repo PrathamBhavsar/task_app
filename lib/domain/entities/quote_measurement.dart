@@ -6,7 +6,7 @@ part 'quote_measurement.g.dart';
 
 @JsonSerializable()
 class QuoteMeasurement {
-  @JsonKey(name: 'measurement_id')
+  @JsonKey(name: 'measurement')
   final Measurement measurement;
 
   final double rate;
