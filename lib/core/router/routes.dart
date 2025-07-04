@@ -77,8 +77,11 @@ final List<GoRoute> appRoutes = [
   ),
   GoRoute(
     path: AppRoutes.reviewBill,
-    pageBuilder:
-        (context, state) => _slideTransition(ReviewBillScreen(), state),
+    pageBuilder: (context, state) {
+      final Task task = state.extra as Task;
+
+      return _slideTransition(ReviewBillScreen(task: task), state);
+    },
   ),
   GoRoute(
     path: AppRoutes.quoteDetails,

@@ -7,6 +7,7 @@ part of 'bill.dart';
 // **************************************************************************
 
 Bill _$BillFromJson(Map<String, dynamic> json) => Bill(
+  taskId: (json['task_id'] as num).toInt(),
   total: (json['total'] as num).toDouble(),
   subtotal: (json['subtotal'] as num).toDouble(),
   tax: (json['tax'] as num).toDouble(),
@@ -19,6 +20,7 @@ Bill _$BillFromJson(Map<String, dynamic> json) => Bill(
 
 Map<String, dynamic> _$BillToJson(Bill instance) => <String, dynamic>{
   'bill_id': instance.billId,
+  'task_id': instance.taskId,
   'due_date': instance.dueDate.toIso8601String(),
   'total': instance.total,
   'subtotal': instance.subtotal,

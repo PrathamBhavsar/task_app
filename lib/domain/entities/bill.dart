@@ -6,8 +6,12 @@ part 'bill.g.dart';
 
 @JsonSerializable()
 class Bill {
+
   @JsonKey(name: 'bill_id')
   final int? billId;
+
+  @JsonKey(name: 'task_id')
+  final int taskId;
 
   @JsonKey(name: 'due_date')
   final DateTime dueDate;
@@ -26,6 +30,7 @@ class Bill {
   final DateTime createdAt;
 
   Bill({
+    required this.taskId,
     required this.total,
     required this.subtotal,
     required this.tax,

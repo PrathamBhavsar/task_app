@@ -1,4 +1,3 @@
-// quote_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/entities/measurement.dart';
