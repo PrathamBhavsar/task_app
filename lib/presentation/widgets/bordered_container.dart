@@ -4,7 +4,8 @@ import '../../utils/constants/app_constants.dart';
 
 class BorderedContainer extends StatelessWidget {
   const BorderedContainer({
-    required this.child, super.key,
+    required this.child,
+    super.key,
     this.padding,
     this.color = Colors.white,
     this.isSelected = false,
@@ -16,20 +17,29 @@ class BorderedContainer extends StatelessWidget {
   final bool isSelected;
 
   @override
-  Widget build(BuildContext context) => Material(
-    color: Colors.transparent,
-    child: Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: AppBorders.radius,
-        border:
-            isSelected
-                ? Border.all(color: Colors.black, width: 2)
-                : Border.all(color: AppColors.accent, width: 1),
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 1,
+              offset: Offset(0, 2),
+            ),
+          ],
+          color: color,
+          borderRadius: AppBorders.radius,
+          border:
+              isSelected
+                  ? Border.all(color: Colors.black, width: 2)
+                  : Border.all(color: AppColors.accent, width: 1),
+        ),
+        padding: EdgeInsets.all(padding ?? AppPaddings.appPaddingInt),
+        child: child,
       ),
-      padding: EdgeInsets.all(padding ?? AppPaddings.appPaddingInt),
-      child: child,
-    ),
-  );
+    );
+  }
 }

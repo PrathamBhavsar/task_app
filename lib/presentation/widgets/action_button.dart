@@ -12,7 +12,7 @@ class ActionButton extends StatelessWidget {
     this.backgroundColor = Colors.white,
     this.backgroundColorDisabled = Colors.transparent,
     this.isDisabled = false,
-    this.hasBorder = true,
+    this.hasBorder = false,
     this.prefixIcon,
   });
 
@@ -33,7 +33,7 @@ class ActionButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isDisabled ? null : onPress,
         style: ButtonStyle(
-          elevation: WidgetStateProperty.all(0),
+          elevation: WidgetStateProperty.all(2),
           shape: WidgetStateProperty.all(
             RoundedRectangleBorder(
               borderRadius: AppBorders.radius,

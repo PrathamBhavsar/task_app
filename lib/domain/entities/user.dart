@@ -55,6 +55,10 @@ class User extends Equatable {
     userType,
     profileBgColor,
   ];
+
+  bool get isAdmin => userType == UserRole.admin;
+
+  bool get isAgency => userType == UserRole.agent;
 }
 
 class UserRoleConverter implements JsonConverter<UserRole, String> {

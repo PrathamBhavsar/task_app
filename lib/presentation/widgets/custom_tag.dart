@@ -20,6 +20,13 @@ class CustomTag extends StatelessWidget {
     decoration: BoxDecoration(
       color: color,
       borderRadius: BorderRadius.circular(8),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          blurRadius: 1,
+          offset: Offset(0, 2),
+        ),
+      ],
     ),
     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.h),
     child: Text(

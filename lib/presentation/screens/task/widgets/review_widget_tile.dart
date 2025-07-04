@@ -12,6 +12,7 @@ class ReviewWidgetTile extends StatelessWidget {
     required this.btnText,
     required this.onTap,
     super.key,
+    this.prefixIcon,
     this.child,
   });
 
@@ -19,6 +20,7 @@ class ReviewWidgetTile extends StatelessWidget {
   final String subtitle;
   final String btnText;
   final void Function() onTap;
+  final IconData? prefixIcon;
   final Widget? child;
 
   @override
@@ -34,6 +36,7 @@ class ReviewWidgetTile extends StatelessWidget {
           ActionButton(
             label: btnText,
             onPress: onTap,
+            prefixIcon: prefixIcon,
             backgroundColor: Colors.black,
             fontColor: Colors.white,
           ),
