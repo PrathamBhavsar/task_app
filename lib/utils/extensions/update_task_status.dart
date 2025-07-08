@@ -11,7 +11,7 @@ import '../../presentation/blocs/task_form/task_form_bloc.dart';
 import 'get_next_status.dart';
 
 extension TaskContextActions on BuildContext {
-  void updateTaskStatusToQuotationSent({
+  void updateTaskStatus({
     required Task task,
     required BuildContext context,
     String? status

@@ -34,16 +34,26 @@ class ReviewWidget extends StatelessWidget {
 
   Widget _buildTileForStatus(BuildContext context, StatusType status) {
     switch (status) {
-      case StatusType.billCreated:
+      case StatusType.measurementReceived:
         return ReviewWidgetTile(
-          title: "Bill Approval Required",
-          subtitle:
-              "Bill #BILL-123456 from ${task.agency?.name ?? ""} requires your approval",
-          btnText: "Review Bill",
-          onTap: () => context.push(AppRoutes.reviewBill),
+          title: "Measurements Required",
+          subtitle: "${task.createdBy.name} has requested measurements",
+          btnText: "Accept Measurement",
+          onTap: () => context.updateTaskStatus(context: context, task: task),
+          child: ActionButton(
+            label: "Reject Measurement",
+            backgroundColor: Colors.white,
+            fontColor: Colors.black,
+            onPress:
+                () => context.updateTaskStatus(
+                  context: context,
+                  task: task,
+                  status: StatusType.measurementRejected.status.name,
+                ),
+          ),
         );
 
-      case StatusType.measurementReceived:
+      case StatusType.measurementInProgress:
         return ReviewWidgetTile(
           title: "Measurement Required",
           subtitle:
@@ -58,33 +68,42 @@ class ReviewWidget extends StatelessWidget {
               ),
         );
 
-      case StatusType.quotationInProgress:
+      case StatusType.billCreated:
         return ReviewWidgetTile(
-          title: "Quotation Approval Required",
+          title: "Bill Approval Required",
           subtitle:
-              "Task ${task.dealNo} from ${task.createdBy.name} requires quotation approval",
-          btnText: "Review Quotation",
-          onTap: () => context.push(AppRoutes.quoteDetails, extra: task),
-          child:
-              isSalesperson
-                  ? ActionButton(
-                    label: "Edit Quotation",
-                    backgroundColor: Colors.white,
-                    fontColor: Colors.black,
-                    onPress:
-                        () => context.push(AppRoutes.editQuote, extra: task),
-                  )
-                  : null,
+              "Bill #BILL-123456 from ${task.agency?.name ?? ""} requires your approval",
+          btnText: "Review Bill",
+          onTap: () => context.push(AppRoutes.reviewBill),
         );
 
-      case StatusType.quotationSent:
+      // case StatusType.measurementDone:
+      //   return ReviewWidgetTile(
+      //     title: "Quotation Approval Required",
+      //     subtitle:
+      //         "Task ${task.dealNo} from ${task.createdBy.name} requires quotation approval",
+      //     btnText: "Review Quotation",
+      //     onTap: () => context.push(AppRoutes.quoteDetails, extra: task),
+      //     child:
+      //         isSalesperson
+      //             ? ActionButton(
+      //               label: "Edit Quotation",
+      //               backgroundColor: Colors.white,
+      //               fontColor: Colors.black,
+      //               onPress:
+      //                   () => context.push(AppRoutes.editQuote, extra: task),
+      //             )
+      //             : null,
+      //   );
+
+      case StatusType.measurementDone:
         return ReviewWidgetTile(
           title: "Quotation Sent",
           subtitle:
               isSalesperson
                   ? "Quotation sent to ${task.client.name}"
                   : "Task ${task.dealNo} requires quotation approval",
-          btnText: "Review Quotation",
+          btnText: "Edit Quotation",
           onTap: () => context.push(AppRoutes.editQuote, extra: task),
         );
 
@@ -94,7 +113,7 @@ class ReviewWidget extends StatelessWidget {
           subtitle: "Task ${task.dealNo} approved by ${task.client.name}",
           btnText: "Set as Ordered",
           onTap:
-              () => context.updateTaskStatusToQuotationSent(
+              () => context.updateTaskStatus(
                 context: context,
                 task: task,
                 status: StatusType.ordered.status.name,
@@ -106,11 +125,7 @@ class ReviewWidget extends StatelessWidget {
           title: "Invoice Approval Required",
           subtitle: "Task ${task.dealNo} materials were ordered",
           btnText: "Accept Invoice",
-          onTap:
-              () => context.updateTaskStatusToQuotationSent(
-                context: context,
-                task: task,
-              ),
+          onTap: () => context.updateTaskStatus(context: context, task: task),
           child:
               isAdmin
                   ? ActionButton(
@@ -118,7 +133,7 @@ class ReviewWidget extends StatelessWidget {
                     backgroundColor: Colors.redAccent,
                     fontColor: Colors.white,
                     onPress:
-                        () => context.updateTaskStatusToQuotationSent(
+                        () => context.updateTaskStatus(
                           context: context,
                           task: task,
                           status: StatusType.invoiceRejected.status.name,
@@ -133,9 +148,10 @@ class ReviewWidget extends StatelessWidget {
           subtitle: "Task ${task.dealNo} ready for billing",
           btnText: "Send Bill",
           onTap:
-              () => context.updateTaskStatusToQuotationSent(
+              () => context.updateTaskStatus(
                 context: context,
                 task: task,
+                status: StatusType.billCreated.status.name,
               ),
           child:
               !isAgency
@@ -148,6 +164,21 @@ class ReviewWidget extends StatelessWidget {
                   )
                   : null,
         );
+
+      case StatusType.invoiceRejected:
+        return isSalesperson || isAdmin
+            ? ReviewWidgetTile(
+              title: "Invoice has been rejected",
+              subtitle: "Invoice was rejected by client ${task.client.name}. You can always revert this action",
+              btnText: "Go Back to Ordered status",
+              onTap:
+                  () => context.updateTaskStatus(
+                    context: context,
+                    task: task,
+                    status: StatusType.ordered.status.name,
+                  ),
+            )
+            : SizedBox.shrink();
 
       default:
         return Text(status.name);

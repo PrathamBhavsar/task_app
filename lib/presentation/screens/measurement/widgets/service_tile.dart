@@ -8,8 +8,7 @@ import '../../../../domain/entities/service.dart';
 import '../../../../domain/entities/service_master.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
-import '../../../blocs/measurement/measurement_bloc.dart';
-import '../../../blocs/measurement/measurement_event.dart';
+import '../../../blocs/measurement/measurement_cubit.dart';
 import '../../../widgets/bordered_container.dart';
 import '../../../widgets/drop_down_menu.dart';
 import '../../../widgets/labeled_text_field.dart';
@@ -100,11 +99,10 @@ class _ServiceTileState extends State<ServiceTile> {
               children: [
                 Text('#${widget.index + 1}', style: AppTexts.titleTextStyle),
                 IconButton(
-                  onPressed: () {
-                    context.read<MeasurementBloc>().add(
-                      ServiceRemoved(widget.index),
-                    );
-                  },
+                  onPressed:
+                      () => context.read<MeasurementCubit>().removeService(
+                        widget.index,
+                      ),
                   icon: Icon(
                     Icons.delete_outline_rounded,
                     color: AppColors.errorRed,
@@ -125,19 +123,15 @@ class _ServiceTileState extends State<ServiceTile> {
                 final quantity = int.tryParse(quantityController.text);
                 final rate = double.tryParse(rateController.text);
 
-                context.read<MeasurementBloc>().add(
-                  ServiceFieldUpdated(
-                    index: widget.index,
-                    quantity: quantity,
-                    rate: rate,
-                  ),
+                context.read<MeasurementCubit>().updateServiceField(
+                  index: widget.index,
+                  quantity: quantity,
+                  rate: rate,
                 );
 
-                context.read<MeasurementBloc>().add(
-                  ServiceMasterUpdated(
-                    index: widget.index,
-                    serviceMaster: selected,
-                  ),
+                context.read<MeasurementCubit>().updateServiceMaster(
+                  index: widget.index,
+                  serviceMaster: selected,
                 );
               },
               labelBuilder: (p) => p.name,
@@ -154,11 +148,9 @@ class _ServiceTileState extends State<ServiceTile> {
                     keyboardType: TextInputType.number,
                     onChanged: (value) {
                       final quantity = int.tryParse(value);
-                      context.read<MeasurementBloc>().add(
-                        ServiceFieldUpdated(
-                          index: widget.index,
-                          quantity: quantity,
-                        ),
+                      context.read<MeasurementCubit>().updateServiceField(
+                        index: widget.index,
+                        quantity: quantity,
                       );
                     },
                   ),
@@ -173,8 +165,9 @@ class _ServiceTileState extends State<ServiceTile> {
                     ),
                     onChanged: (value) {
                       final rate = double.tryParse(value);
-                      context.read<MeasurementBloc>().add(
-                        ServiceFieldUpdated(index: widget.index, rate: rate),
+                      context.read<MeasurementCubit>().updateServiceField(
+                        index: widget.index,
+                        rate: rate,
                       );
                     },
                   ),

@@ -30,23 +30,23 @@ class Status extends Equatable {
 
     Status(
       statusId: 2,
-      name: "Agency: Assigned",
-      slug: "agency_assigned",
-      color: "#A0D8B3",
-    ),
-
-    Status(
-      statusId: 3,
       name: "Measurement: Received",
       slug: "measurement_received",
       color: "#B0E0E6",
     ),
 
     Status(
-      statusId: 4,
+      statusId: 3,
       name: "Measurement: In Progress",
       slug: "measurement_in_progress",
       color: "#F6D6FF",
+    ),
+
+    Status(
+      statusId: 4,
+      name: "Measurement: Rejected",
+      slug: "measurement_rejected",
+      color: "#A0D8B3",
     ),
 
     Status(
@@ -58,71 +58,57 @@ class Status extends Equatable {
 
     Status(
       statusId: 6,
-      name: "Quotation: Sent",
-      slug: "quotation_sent",
-      color: "#FFF5BA",
-    ),
-
-    Status(
-      statusId: 7,
-      name: "Quotation: In Progress",
-      slug: "quotation_in_progress",
-      color: "#FFF5CA",
-    ),
-
-    Status(
-      statusId: 8,
       name: "Quotation: Approved",
       slug: "quotation_approved",
       color: "#C1E1C1",
     ),
 
     Status(
-      statusId: 9,
+      statusId: 7,
       name: "Quotation: Rejected",
       slug: "quotation_rejected",
       color: "#F2B5D4",
     ),
 
-    Status(statusId: 10, name: "Ordered", slug: "ordered", color: "#C6D8FF"),
+    Status(statusId: 8, name: "Ordered", slug: "ordered", color: "#C6D8FF"),
 
     Status(
-      statusId: 11,
+      statusId: 9,
       name: "Invoice: Approved",
       slug: "invoice_approved",
       color: "#D3F8E2",
     ),
 
     Status(
-      statusId: 12,
+      statusId: 10,
       name: "Invoice: Rejected",
       slug: "invoice_rejected",
       color: "#FFD6D6",
     ),
 
     Status(
-      statusId: 13,
+      statusId: 11,
       name: "Installation: Approved",
       slug: "installation_approved",
       color: "#E6E6FA",
     ),
 
     Status(
-      statusId: 14,
+      statusId: 12,
       name: "Bill: Created",
       slug: "bill_created",
       color: "#FEE1E8",
     ),
 
     Status(
-      statusId: 15,
+      statusId: 13,
       name: "Bill: Paid",
       slug: "bill_paid",
       color: "#D5E8D4",
     ),
 
     Status(
-      statusId: 16,
+      statusId: 14,
       name: "Bill: Unpaid",
       slug: "bill_unpaid",
       color: "#FBE7C6",

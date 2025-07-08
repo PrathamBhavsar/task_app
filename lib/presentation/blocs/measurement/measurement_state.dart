@@ -3,37 +3,52 @@ import '../../../domain/entities/service.dart';
 import '../../../domain/entities/service_master.dart';
 
 class MeasurementState {
-  final List<String> attachments;
-  final List<Service> services;
   final List<Measurement> measurements;
+  final List<Service> services;
+  final List<String> attachments;
   final bool isInitialized;
   final ServiceMaster? selectedServiceMaster;
   final double totalAmount;
+  final String unit;
 
   MeasurementState({
-    required this.attachments,
-    required this.services,
     required this.measurements,
+    required this.services,
+    required this.attachments,
+    required this.isInitialized,
     required this.selectedServiceMaster,
     required this.totalAmount,
-    this.isInitialized = false,
+    required this.unit,
   });
 
   MeasurementState copyWith({
-    bool? isInitialized,
-    List<String>? attachments,
-    List<Service>? services,
     List<Measurement>? measurements,
+    List<Service>? services,
+    List<String>? attachments,
+    bool? isInitialized,
     ServiceMaster? selectedServiceMaster,
     double? totalAmount,
+    String? unit,
   }) {
     return MeasurementState(
-      isInitialized: isInitialized ?? this.isInitialized,
-      selectedServiceMaster: selectedServiceMaster ?? this.selectedServiceMaster,
-      attachments: attachments ?? this.attachments,
-      services: services ?? this.services,
-      totalAmount: totalAmount ?? this.totalAmount,
       measurements: measurements ?? this.measurements,
+      services: services ?? this.services,
+      attachments: attachments ?? this.attachments,
+      isInitialized: isInitialized ?? this.isInitialized,
+      selectedServiceMaster:
+          selectedServiceMaster ?? this.selectedServiceMaster,
+      totalAmount: totalAmount ?? this.totalAmount,
+      unit: unit ?? this.unit,
     );
   }
+
+  factory MeasurementState.initial() => MeasurementState(
+    measurements: [],
+    services: [],
+    attachments: [],
+    isInitialized: false,
+    selectedServiceMaster: null,
+    totalAmount: 0.0,
+    unit: 'm',
+  );
 }

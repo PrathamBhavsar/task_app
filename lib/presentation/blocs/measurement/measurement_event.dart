@@ -60,12 +60,14 @@ class MeasurementFieldUpdated extends MeasurementEvent {
   final int index;
   final double? height;
   final double? width;
+  final double? area;
   final String? notes;
   final String? location;
 
   MeasurementFieldUpdated({
     required this.index,
     this.location,
+    this.area,
     this.height,
     this.width,
     this.notes,

@@ -21,7 +21,6 @@ import '../../blocs/quote/quote_api_bloc.dart';
 import '../../blocs/quote/quote_api_event.dart';
 import '../../blocs/quote/quote_api_state.dart';
 import '../../blocs/task/task_bloc.dart';
-import '../../blocs/task/task_event.dart';
 import '../../blocs/task/task_state.dart';
 import '../../providers/measurement_provider.dart';
 import '../../widgets/action_button.dart';
@@ -94,11 +93,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
               context.read<QuoteCubit>().setQuote(state.quote);
             }
             if (state is QuoteApiUpdated) {
-              context.updateTaskStatusToQuotationSent(
-                task: widget.task,
-                context: context,
-              );
-
+              context.updateTaskStatus(task: widget.task, context: context);
               context.pop();
             }
           },
@@ -116,7 +111,6 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
         BlocListener<TaskBloc, TaskState>(
           listener: (context, state) {
             if (state is UpdateTaskStatusSuccess) {
-              context.read<TaskBloc>().add(FetchTasksRequested());
               context.pop();
             }
           },
@@ -221,7 +215,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                                 );
                               },
                               separatorBuilder: (context, index) => 10.hGap,
-                              itemCount: quoteMeasurementList.length,
+                              itemCount: serviceList.length,
                             ),
                           ],
                         ),

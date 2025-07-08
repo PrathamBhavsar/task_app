@@ -3,8 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../utils/constants/app_constants.dart';
-import '../../../blocs/measurement/measurement_bloc.dart';
-import '../../../blocs/measurement/measurement_event.dart';
+import '../../../blocs/measurement/measurement_cubit.dart';
 import '../../../widgets/bordered_container.dart';
 
 class AttachmentTile extends StatelessWidget {
@@ -27,9 +26,8 @@ class AttachmentTile extends StatelessWidget {
             IconButton(
               padding: EdgeInsets.zero,
               onPressed:
-                  () => context.read<MeasurementBloc>().add(
-                    AttachmentRemoved(index),
-                  ),
+                  () =>
+                      context.read<MeasurementCubit>().removeAttachment(index),
               icon: Icon(
                 Icons.delete_outline_rounded,
                 color: AppColors.errorRed,

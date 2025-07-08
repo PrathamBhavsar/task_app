@@ -290,7 +290,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                         ActionButton(
                           label: 'Mark as Approved',
                           onPress: () {
-                            context.updateTaskStatusToQuotationSent(
+                            context.updateTaskStatus(
                               task: widget.task,
                               context: context,
                             );
@@ -301,7 +301,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                         ActionButton(
                           label: 'Mark as Rejected',
                           onPress: () {
-                            context.updateTaskStatusToQuotationSent(
+                            context.updateTaskStatus(
                               status: StatusType.quotationRejected.name,
                               task: widget.task,
                               context: context,

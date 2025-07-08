@@ -85,7 +85,7 @@ class _ReviewBillScreenState extends State<ReviewBillScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Review and approve or reject the bill from the agency',
+                          'Review and approve or reject the bill from ${widget.task.agency!.name}',
                           style: AppTexts.inputHintTextStyle,
                         ),
                         20.hGap,

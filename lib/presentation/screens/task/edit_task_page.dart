@@ -205,7 +205,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
             labelBuilder: (d) => d.name,
             idBuilder: (d) => d.designerId?.toString() ?? '',
           ),
-          if (widget.task?.agency != null || widget.isNew) ...[
+          if (widget.task?.agency != null || !widget.isNew) ...[
             _buildDropdown<User>(
               title: 'Agency',
               list: state.agencies,

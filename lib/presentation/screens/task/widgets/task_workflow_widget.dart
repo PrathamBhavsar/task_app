@@ -48,16 +48,26 @@ class TaskWorkflowWidget extends StatelessWidget {
       case StatusType.created:
         return _buildAssignAgency(context);
 
-      case StatusType.agencyAssigned:
+      case StatusType.measurementReceived:
         return _infoContainer(
           color: AppColors.blueBg,
           text:
               isAgency
-                  ? "You’ve been assigned to this task. Please add the measurements."
-                  : "This task has been assigned to $agencyName, they'll add the measurements!",
+                  ? "You’ve been assigned to this task. Please approve or reject measurements."
+                  : "This task has been assigned to $agencyName, they'll approve or reject the measurements!",
         );
 
-      case StatusType.quotationInProgress:
+      case StatusType.measurementInProgress:
+        return _infoContainer(
+          color: AppColors.bgYellow,
+          text:
+          isAgency
+              ? "You’ve accepted this task. Please add the measurements."
+              : "This task has been assigned to $agencyName, they'll add the measurements!",
+          textColor: AppColors.darkYellowText,
+        );
+
+      case StatusType.quotationApproved:
         return _infoContainer(
           color: AppColors.blueBg,
           text:
@@ -66,20 +76,13 @@ class TaskWorkflowWidget extends StatelessWidget {
                   : "Quotation for the measurements sent by $agencyName is in progress.",
         );
 
-      case StatusType.quotationSent:
+      case StatusType.measurementDone:
         return _infoContainer(
           color: AppColors.blueBg,
           text:
               isSalesperson
                   ? "Quotation has been sent. Awaiting approval from $clientName."
                   : "Review the quotation sent by $agencyName!",
-        );
-
-      case StatusType.quotationApproved:
-        return _infoContainer(
-          color: AppColors.blueBg,
-          text:
-              "Quotation was approved by $clientName, order the materials needed.",
         );
 
       case StatusType.ordered:
@@ -94,6 +97,13 @@ class TaskWorkflowWidget extends StatelessWidget {
         return _infoContainer(
           color: AppColors.bgYellow,
           text: "Approve or reject bill for $clientName.",
+          textColor: AppColors.darkYellowText,
+        );
+
+      case StatusType.invoiceRejected:
+        return _infoContainer(
+          color: AppColors.bgYellow,
+          text: "Invoice was rejected by $clientName.",
           textColor: AppColors.darkYellowText,
         );
 
@@ -164,7 +174,7 @@ class TaskWorkflowWidget extends StatelessWidget {
             backgroundColor: Colors.black,
             fontColor: Colors.white,
             onPress:
-                () => context.updateTaskStatusToQuotationSent(
+                () => context.updateTaskStatus(
                   task: task,
                   context: context,
                 ),

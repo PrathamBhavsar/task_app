@@ -4,12 +4,14 @@ part 'measurement.g.dart';
 
 @JsonSerializable()
 class Measurement {
-  @JsonKey(name: 'measurement_id')
+  @JsonKey(name: 'measurement_id', includeIfNull: false)
   final int? measurementId;
 
   final String location;
   final double width;
   final double height;
+  final double area;
+  final String unit;
   final String notes;
 
   @JsonKey(name: 'task_id')
@@ -19,6 +21,8 @@ class Measurement {
     required this.location,
     required this.width,
     required this.height,
+    required this.area,
+    required this.unit,
     required this.notes,
     required this.taskId,
     this.measurementId,
@@ -32,13 +36,17 @@ class Measurement {
   Measurement copyWith({
     String? location,
     String? notes,
+    String? unit,
     double? height,
+    double? area,
     double? width,
   }) {
     return Measurement(
       location: location ?? this.location,
       width: width ?? this.width,
       height: height ?? this.height,
+      area: area ?? this.area,
+      unit: unit ?? this.unit,
       notes: notes ?? this.notes,
       taskId: taskId,
     );
@@ -50,5 +58,7 @@ class Measurement {
     height: 0.00,
     notes: '',
     taskId: taskId,
+    area: 0.00,
+    unit: 'm',
   );
 }

@@ -9,6 +9,7 @@ import '../../../domain/entities/service_master.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
+import '../../../utils/enums/status_type.dart';
 import '../../../utils/extensions/get_data.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../../utils/extensions/update_task_status.dart';
@@ -18,8 +19,7 @@ import '../../blocs/measurement/api/measurement_api_state.dart';
 import '../../blocs/measurement/api/service_api_bloc.dart';
 import '../../blocs/measurement/api/service_api_event.dart';
 import '../../blocs/measurement/api/service_api_state.dart';
-import '../../blocs/measurement/measurement_bloc.dart';
-import '../../blocs/measurement/measurement_event.dart';
+import '../../blocs/measurement/measurement_cubit.dart';
 import '../../blocs/measurement/measurement_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_state.dart';
@@ -45,11 +45,9 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
 
   @override
   void initState() {
-    context.read<MeasurementBloc>().add(
-      InitializeMeasurement(
-        existingTask: widget.task,
-        serviceMaster: context.serviceMasters.first,
-      ),
+    context.read<MeasurementCubit>().initialize(
+      existingTask: widget.task,
+      serviceMaster: context.serviceMasters.first,
     );
     super.initState();
   }
@@ -68,13 +66,15 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
 
       final taskBloc = context.read<TaskBloc>();
 
-      context.updateTaskStatusToQuotationSent(
+      context.updateTaskStatus(
         task: widget.task,
-        context: context
+        status: StatusType.measurementDone.status.name,
+        context: context,
       );
 
       if (taskBloc.state is UpdateTaskStatusSuccess) {
-        context.read<MeasurementBloc>().add(ResetMeasurement());
+        context.read<MeasurementCubit>().reset();
+        context.pop();
         context.pop();
         context.pop();
       }
@@ -116,11 +116,8 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                   },
                 ),
               ],
-              child: BlocBuilder<MeasurementBloc, MeasurementState>(
+              child: BlocBuilder<MeasurementCubit, MeasurementState>(
                 builder: (context, state) {
-                  final MeasurementBloc measurementBloc =
-                      context.read<MeasurementBloc>();
-
                   final serviceMasterState =
                       context.read<ServiceApiBloc>().state;
                   final List<ServiceMaster> serviceMasters =
@@ -129,7 +126,6 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                           serviceMasters,
                         _ => [],
                       };
-
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -147,9 +143,9 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                               label: 'Add Measurement',
                               prefixIcon: Icons.add,
                               onPress:
-                                  () => measurementBloc.add(
-                                    MeasurementAdded(widget.task),
-                                  ),
+                                  () => context
+                                      .read<MeasurementCubit>()
+                                      .addMeasurement(widget.task),
                             ),
                           ),
                         ],
@@ -172,12 +168,12 @@ class _MeasurementScreenState extends State<MeasurementScreen> {
                               label: 'Add Service',
                               prefixIcon: Icons.add,
                               onPress:
-                                  () => measurementBloc.add(
-                                    ServiceAdded(
-                                      widget.task,
-                                      ServiceMaster(name: "MASTER", rate: 50),
-                                    ),
-                                  ),
+                                  () => context
+                                      .read<MeasurementCubit>()
+                                      .addService(
+                                        widget.task,
+                                        ServiceMaster(name: "MASTER", rate: 50),
+                                      ),
                             ),
                           ),
                         ],

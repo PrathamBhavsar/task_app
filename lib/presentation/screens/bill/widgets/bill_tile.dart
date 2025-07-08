@@ -49,7 +49,7 @@ class BillTile extends StatelessWidget {
                   color: Colors.black,
                 ),
                 5.hGap,
-                Text('\$${bill.total}', style: AppTexts.inputTextStyle),
+                Text('₹${bill.total}', style: AppTexts.inputTextStyle),
               ],
             ),
           ],

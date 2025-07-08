@@ -61,7 +61,7 @@ import '../../presentation/blocs/designer/designer_bloc.dart';
 import '../../presentation/blocs/home/home_bloc.dart';
 import '../../presentation/blocs/measurement/api/measurement_api_bloc.dart';
 import '../../presentation/blocs/measurement/api/service_api_bloc.dart';
-import '../../presentation/blocs/measurement/measurement_bloc.dart';
+import '../../presentation/blocs/measurement/measurement_cubit.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
 import '../../presentation/blocs/quote/cubits/quote_cubit.dart';
 import '../../presentation/blocs/quote/quote_api_bloc.dart';
@@ -218,7 +218,7 @@ void setupMeasurement() {
     () => PutMeasurementUseCase(getIt<MeasurementRepository>()),
   );
 
-  getIt.registerFactory(MeasurementBloc.new);
+  getIt.registerFactory(MeasurementCubit.new);
 
   getIt.registerFactory(
     () => MeasurementApiBloc(

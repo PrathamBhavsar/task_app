@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/di/di.dart';
@@ -33,7 +32,6 @@ import '../../blocs/timeline/timeline_bloc.dart';
 import '../../blocs/timeline/timeline_event.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_state.dart';
-import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/custom_text_field.dart';
@@ -95,8 +93,6 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
             }
           },
           builder: (context, state) {
-            final UserRole userRole = getIt<CacheHelper>().getUserRole();
-
             return GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: SingleChildScrollView(
@@ -172,9 +168,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
                         ],
                       ),
                     ),
-                    userRole == UserRole.agent
-                        ? _buildAgentView()
-                        : _buildNonAgentView(tabIndex),
+                  _buildTabs(tabIndex),
                   ],
                 ).padAll(AppPaddings.appPaddingInt),
               ),
@@ -231,60 +225,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
     );
   }
 
-  Widget _buildAgentView() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        10.hGap,
-        BorderedContainer(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Measurement Details', style: AppTexts.titleTextStyle),
-              20.hGap,
-              Text('Measurements', style: AppTexts.labelTextStyle),
-              5.hGap,
-              ...List.generate(
-                4,
-                (index) => Padding(
-                  padding:
-                      index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-                  child: _buildBorderedTile(
-                    'Living Room Window 1',
-                    '72" × 48"',
-                    'Near the fireplace',
-                  ),
-                ),
-              ),
-              20.hGap,
-              Text('Service Charges', style: AppTexts.labelTextStyle),
-              5.hGap,
-              ...List.generate(
-                2,
-                (index) => Padding(
-                  padding:
-                      index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
-                  child: _buildBorderedTile(
-                    'Curtain Stitching',
-                    '\$180.00',
-                    'Near the fireplace',
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        10.hGap,
-        ActionButton(
-          label: 'Edit Bill',
-          onPress: () => context.push(AppRoutes.measurement),
-          prefixIcon: CustomIcon.receiptIndianRupee,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildNonAgentView(int tabIndex) {
+  Widget _buildTabs(int tabIndex) {
     return Column(
       children: [
         TabHeader(
