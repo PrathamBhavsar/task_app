@@ -155,7 +155,7 @@ void setupHelpers() {
 }
 
 void setupHome() {
-  getIt.registerFactory(() => HomeBloc(getIt<CacheHelper>()));
+  getIt.registerFactory(HomeBloc.new);
 }
 
 void setupTaskForm() {

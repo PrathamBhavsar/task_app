@@ -5,14 +5,6 @@ import '../../../utils/enums/user_role.dart';
 @immutable
 abstract class HomeEvent {}
 
-class LoadUserRoleEvent extends HomeEvent {}
-
-class SetUserRoleEvent extends HomeEvent {
-  final UserRole role;
-
-  SetUserRoleEvent(this.role);
-}
-
 class SetBarIndexEvent extends HomeEvent {
   final int index;
 

@@ -19,13 +19,10 @@ class HomeScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: Colors.white,
           drawer: const SelectionDrawer(),
-          appBar:
-              state.barIndex == 0
-                  ? AppBar(
-                    title: Text(state.currentTitle),
-                    forceMaterialTransparency: true,
-                  )
-                  : null,
+          appBar: AppBar(
+            title: Text(state.currentTitle),
+            forceMaterialTransparency: true,
+          ),
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.white,
             elevation: 0,

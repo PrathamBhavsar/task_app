@@ -106,4 +106,5 @@ abstract class AppRoutes {
   static const String reviewBill = '/reviewBill';
   static const String quoteDetails = '/quoteDetails';
   static const String editQuote = '/editQuote';
+  static const String serviceMaster = '/serviceMaster';
 }

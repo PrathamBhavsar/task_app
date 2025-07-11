@@ -55,8 +55,8 @@ class AgencyTile extends StatelessWidget {
               child: ActionButton(
                 label: 'View Details',
                 prefixIcon: CustomIcon.eye,
-                onPress:
-                    () => context.push(AppRoutes.agencyDetails, extra: agency),
+                onPress: () {}
+                    // () => context.push(AppRoutes.agencyDetails, extra: agency),
               ),
             ),
             10.wGap,
