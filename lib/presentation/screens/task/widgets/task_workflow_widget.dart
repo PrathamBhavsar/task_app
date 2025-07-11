@@ -19,7 +19,6 @@ import '../../../blocs/task_form/task_form_state.dart';
 import '../../../widgets/action_button.dart';
 import '../../../widgets/bordered_container.dart';
 import '../../../widgets/drop_down_menu.dart';
-import '../../../widgets/labeled_text_field.dart';
 
 class TaskWorkflowWidget extends StatelessWidget {
   const TaskWorkflowWidget({required this.task, super.key});
@@ -61,10 +60,26 @@ class TaskWorkflowWidget extends StatelessWidget {
         return _infoContainer(
           color: AppColors.bgYellow,
           text:
-          isAgency
-              ? "You’ve accepted this task. Please add the measurements."
-              : "This task has been assigned to $agencyName, they'll add the measurements!",
+              isAgency
+                  ? "You’ve accepted this task. Please add the measurements."
+                  : "This task has been assigned to $agencyName, they'll add the measurements!",
           textColor: AppColors.darkYellowText,
+        );
+
+      case StatusType.measurementRejected:
+        return _infoContainer(
+          color: AppColors.bgYellow,
+          text: "Measurement was rejected by ${isAgency ? "you" : agencyName}.",
+          textColor: AppColors.darkYellowText,
+        );
+
+      case StatusType.measurementDone:
+        return _infoContainer(
+          color: AppColors.blueBg,
+          text:
+              isSalesperson
+                  ? "Quotation has been sent. Awaiting approval from $clientName. Approve or reject Quote"
+                  : "Review or Update the Measurements & Services sent by ${isAgency ? "you" : agencyName}!",
         );
 
       case StatusType.quotationApproved:
@@ -74,15 +89,6 @@ class TaskWorkflowWidget extends StatelessWidget {
               isSalesperson
                   ? "Please create a quotation for the measurements sent by $agencyName."
                   : "Quotation for the measurements sent by $agencyName is in progress.",
-        );
-
-      case StatusType.measurementDone:
-        return _infoContainer(
-          color: AppColors.blueBg,
-          text:
-              isSalesperson
-                  ? "Quotation has been sent. Awaiting approval from $clientName."
-                  : "Review the quotation sent by $agencyName!",
         );
 
       case StatusType.ordered:
@@ -139,27 +145,16 @@ class TaskWorkflowWidget extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDropdown<User>(
-                    title: 'Agency',
-                    list: state.agencies,
-                    initialValue: state.selectedAgency,
-                    onChanged:
-                        (selected) => context.read<TaskFormBloc>().add(
-                          AgencyChanged(selected),
-                        ),
-                    labelBuilder: (a) => a.name,
-                    idBuilder: (a) => a.userId?.toString() ?? '',
-                  ),
-                  LabeledTextInput(title: 'Schedule Date', hint: 'Select Date'),
-                  LabeledTextInput(
-                    title: 'Instructions for Agency',
-                    hint: 'Provide any specific instructions',
-                    isMultiline: true,
-                  ),
-                ],
+              return _buildDropdown<User>(
+                title: 'Agency',
+                list: state.agencies,
+                initialValue: state.selectedAgency,
+                onChanged:
+                    (selected) => context.read<TaskFormBloc>().add(
+                      AgencyChanged(selected),
+                    ),
+                labelBuilder: (a) => a.name,
+                idBuilder: (a) => a.userId?.toString() ?? '',
               );
             },
           ),
@@ -174,10 +169,7 @@ class TaskWorkflowWidget extends StatelessWidget {
             backgroundColor: Colors.black,
             fontColor: Colors.white,
             onPress:
-                () => context.updateTaskStatus(
-                  task: task,
-                  context: context,
-                ),
+                () => context.updateTaskStatus(task: task, context: context),
           ),
         ],
       ),

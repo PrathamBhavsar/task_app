@@ -20,6 +20,9 @@ import '../../blocs/quote/cubits/quote_cubit_state.dart';
 import '../../blocs/quote/quote_api_bloc.dart';
 import '../../blocs/quote/quote_api_event.dart';
 import '../../blocs/quote/quote_api_state.dart';
+import '../../blocs/quote_measurements/quote_measurement_bloc.dart';
+import '../../blocs/quote_measurements/quote_measurement_event.dart';
+import '../../blocs/quote_measurements/quote_measurement_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_state.dart';
 import '../../providers/measurement_provider.dart';
@@ -32,7 +35,10 @@ import 'widgets/quote_measurement_tile.dart';
 import 'widgets/static_service_tile.dart';
 
 class EditQuoteScreen extends StatefulWidget {
-  const EditQuoteScreen({required this.task, super.key});
+  const EditQuoteScreen({
+    required this.task,
+    super.key,
+  });
 
   final Task task;
 
@@ -47,7 +53,6 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
 
   @override
   void initState() {
-    super.initState();
     overallDiscountController = TextEditingController();
     noteController = TextEditingController();
     context.read<MeasurementApiBloc>().add(
@@ -57,6 +62,11 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
       FetchServicesRequested(widget.task.taskId!),
     );
     context.read<QuoteApiBloc>().add(FetchQuotesRequested(widget.task.taskId!));
+
+    context.read<QuoteMeasurementBloc>().add(
+      FetchQuoteMeasurementsRequested(widget.task.taskId!),
+    );
+    super.initState();
   }
 
   void _tryInitializeCubit(BuildContext context) {
@@ -66,13 +76,23 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
 
     final mState = context.read<MeasurementApiBloc>().state;
     final sState = context.read<ServiceApiBloc>().state;
+    final qmState = context.read<QuoteMeasurementBloc>().state;
 
-    if (mState is MeasurementLoadSuccess && sState is ServiceLoadSuccess) {
+    if (mState is MeasurementLoadSuccess &&
+        sState is ServiceLoadSuccess &&
+        qmState is QuoteMeasurementLoadSuccess) {
       final task = widget.task;
       final measurements = mState.measurements;
       final services = sState.services;
+      final quoteMeasurements = qmState.quoteMeasurements;
 
-      context.read<QuoteCubit>().initializeEmpty(task, services, measurements);
+      context.read<QuoteCubit>().initialize(
+        task,
+        services,
+        measurements,
+        quoteMeasurements,
+      );
+
       _initialized = true;
     }
   }
@@ -93,7 +113,6 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
               context.read<QuoteCubit>().setQuote(state.quote);
             }
             if (state is QuoteApiUpdated) {
-              context.updateTaskStatus(task: widget.task, context: context);
               context.pop();
             }
           },
@@ -115,6 +134,11 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
             }
           },
         ),
+        BlocListener<QuoteMeasurementBloc, QuoteMeasurementState>(
+          listener: (context, state) {
+            _tryInitializeCubit(context);
+          },
+        ),
       ],
       child: Scaffold(
         appBar: AppBar(
@@ -133,7 +157,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
             final serviceList = state.services;
 
             if (quote == null || quoteMeasurementList.isEmpty) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
 
             return SafeArea(

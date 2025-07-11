@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/di/di.dart';
+import '../../../core/helpers/cache_helper.dart';
 import '../../../domain/entities/quote_measurement.dart';
 import '../../../domain/entities/service.dart';
 import '../../../domain/entities/task.dart';
@@ -195,11 +197,15 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                   BorderedContainer(
                     child: Column(
                       children: [
-                        _buildQuote(
-                          quoteMeasurementList,
-                          state.productSubtotal,
-                        ),
-                        30.hGap,
+                        ...(getIt<CacheHelper>().isAgency
+                            ? []
+                            : [
+                              _buildQuote(
+                                quoteMeasurementList,
+                                state.productSubtotal,
+                              ),
+                              30.hGap,
+                            ]),
                         _buildAgencyServices(
                           serviceList,
                           state.serviceSubtotal,
@@ -269,50 +275,52 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                     style: AppTexts.inputLabelTextStyle,
                   ),
                   20.hGap,
-                  BorderedContainer(
-                    child: Column(
-                      spacing: 10.h,
-                      children: [
-                        ActionButton(
-                          label: 'Download PDF',
-                          onPress: () {},
-                          backgroundColor: Colors.white,
-                          fontColor: Colors.black,
-                          hasBorder: true,
+                  getIt<CacheHelper>().isAgency
+                      ? SizedBox.shrink()
+                      : BorderedContainer(
+                        child: Column(
+                          spacing: 10.h,
+                          children: [
+                            ActionButton(
+                              label: 'Download PDF',
+                              onPress: () {},
+                              backgroundColor: Colors.white,
+                              fontColor: Colors.black,
+                              hasBorder: true,
+                            ),
+                            ActionButton(
+                              label: 'Email to Customer',
+                              onPress: () {},
+                              backgroundColor: Colors.white,
+                              fontColor: Colors.black,
+                              hasBorder: true,
+                            ),
+                            ActionButton(
+                              label: 'Mark as Approved',
+                              onPress: () {
+                                context.updateTaskStatus(
+                                  task: widget.task,
+                                  context: context,
+                                );
+                              },
+                              backgroundColor: Colors.black,
+                              fontColor: Colors.white,
+                            ),
+                            ActionButton(
+                              label: 'Mark as Rejected',
+                              onPress: () {
+                                context.updateTaskStatus(
+                                  status: StatusType.quotationRejected.status.name,
+                                  task: widget.task,
+                                  context: context,
+                                );
+                              },
+                              fontColor: Colors.white,
+                              backgroundColor: Colors.red,
+                            ),
+                          ],
                         ),
-                        ActionButton(
-                          label: 'Email to Customer',
-                          onPress: () {},
-                          backgroundColor: Colors.white,
-                          fontColor: Colors.black,
-                          hasBorder: true,
-                        ),
-                        ActionButton(
-                          label: 'Mark as Approved',
-                          onPress: () {
-                            context.updateTaskStatus(
-                              task: widget.task,
-                              context: context,
-                            );
-                          },
-                          backgroundColor: Colors.black,
-                          fontColor: Colors.white,
-                        ),
-                        ActionButton(
-                          label: 'Mark as Rejected',
-                          onPress: () {
-                            context.updateTaskStatus(
-                              status: StatusType.quotationRejected.name,
-                              task: widget.task,
-                              context: context,
-                            );
-                          },
-                          fontColor: Colors.white,
-                          backgroundColor: Colors.red,
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
                 ],
               ),
             );
@@ -338,6 +346,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
         10.hGap,
         ListView.separated(
           shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return ProductTile(
               qm: quoteMeasurements[index],

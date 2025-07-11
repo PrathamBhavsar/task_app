@@ -27,6 +27,13 @@ class CacheHelper {
 
   User? get user => _user;
 
+  // Role helpers
+  bool get isAdmin => getUserRole() == UserRole.admin;
+
+  bool get isAgency => getUserRole() == UserRole.agent;
+
+  bool get isSalesperson => getUserRole() == UserRole.salesperson;
+
   void setServiceMasters(List<ServiceMaster> serviceMasterList) {
     _serviceMasters = serviceMasterList;
   }

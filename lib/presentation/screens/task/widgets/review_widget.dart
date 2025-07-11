@@ -7,7 +7,6 @@ import '../../../../core/router/args.dart';
 import '../../../../domain/entities/task.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/enums/status_type.dart';
-import '../../../../utils/enums/user_role.dart';
 import '../../../../utils/extensions/status_type_extractor.dart';
 import '../../../../utils/extensions/update_task_status.dart';
 import '../../../widgets/action_button.dart';
@@ -18,13 +17,11 @@ class ReviewWidget extends StatelessWidget {
 
   final Task task;
 
-  UserRole get _userRole => getIt<CacheHelper>().getUserRole();
+  bool get isAdmin => getIt<CacheHelper>().isAdmin;
 
-  bool get isAdmin => _userRole == UserRole.admin;
+  bool get isAgency => getIt<CacheHelper>().isAgency;
 
-  bool get isAgency => _userRole == UserRole.agent;
-
-  bool get isSalesperson => _userRole == UserRole.salesperson;
+  bool get isSalesperson => getIt<CacheHelper>().isSalesperson;
 
   @override
   Widget build(BuildContext context) {
@@ -35,38 +32,59 @@ class ReviewWidget extends StatelessWidget {
   Widget _buildTileForStatus(BuildContext context, StatusType status) {
     switch (status) {
       case StatusType.measurementReceived:
-        return ReviewWidgetTile(
-          title: "Measurements Required",
-          subtitle: "${task.createdBy.name} has requested measurements",
-          btnText: "Accept Measurement",
-          onTap: () => context.updateTaskStatus(context: context, task: task),
-          child: ActionButton(
-            label: "Reject Measurement",
-            backgroundColor: Colors.white,
-            fontColor: Colors.black,
-            onPress:
-                () => context.updateTaskStatus(
-                  context: context,
-                  task: task,
-                  status: StatusType.measurementRejected.status.name,
-                ),
-          ),
-        );
+        return isAgency || isAdmin
+            ? ReviewWidgetTile(
+              title: "Measurements Required",
+              subtitle: "${task.createdBy.name} has requested measurements",
+              btnText: "Accept Measurement",
+              onTap:
+                  () => context.updateTaskStatus(context: context, task: task),
+              child: ActionButton(
+                label: "Reject Measurement",
+                backgroundColor: Colors.white,
+                fontColor: Colors.black,
+                onPress:
+                    () => context.updateTaskStatus(
+                      context: context,
+                      task: task,
+                      status: StatusType.measurementRejected.status.name,
+                    ),
+              ),
+            )
+            : SizedBox.shrink();
 
       case StatusType.measurementInProgress:
-        return ReviewWidgetTile(
-          title: "Measurement Required",
-          subtitle:
-              isAgency
-                  ? "Please upload measurements for ${task.dealNo}"
-                  : "Task ${task.dealNo} from ${task.createdBy.name} requires measurements",
-          btnText: isAgency ? "Upload Now" : "Add Measurement",
-          onTap:
-              () => context.push(
-                AppRoutes.measurement,
-                extra: MeasurementArgs(task: task),
-              ),
-        );
+        return isAgency || isAdmin
+            ? ReviewWidgetTile(
+              title: "Measurement Required",
+              subtitle:
+                  isAgency
+                      ? "Please upload measurements for ${task.dealNo}"
+                      : "Task ${task.dealNo} from ${task.createdBy.name} requires measurements",
+              btnText: isAgency ? "Upload Now" : "Add Measurement",
+              onTap:
+                  () => context.push(
+                    AppRoutes.measurement,
+                    extra: MeasurementArgs(task: task),
+                  ),
+            )
+            : SizedBox.shrink();
+
+      case StatusType.measurementRejected:
+        return isAgency || isAdmin
+            ? ReviewWidgetTile(
+              title: "Measurement has been rejected",
+              subtitle:
+                  "Invoice was rejected by client ${task.client.name}. You can always revert this action",
+              btnText: "Go Back and review again",
+              onTap:
+                  () => context.updateTaskStatus(
+                    context: context,
+                    task: task,
+                    status: StatusType.measurementReceived.status.name,
+                  ),
+            )
+            : SizedBox.shrink();
 
       case StatusType.billCreated:
         return ReviewWidgetTile(
@@ -77,48 +95,40 @@ class ReviewWidget extends StatelessWidget {
           onTap: () => context.push(AppRoutes.reviewBill),
         );
 
-      // case StatusType.measurementDone:
-      //   return ReviewWidgetTile(
-      //     title: "Quotation Approval Required",
-      //     subtitle:
-      //         "Task ${task.dealNo} from ${task.createdBy.name} requires quotation approval",
-      //     btnText: "Review Quotation",
-      //     onTap: () => context.push(AppRoutes.quoteDetails, extra: task),
-      //     child:
-      //         isSalesperson
-      //             ? ActionButton(
-      //               label: "Edit Quotation",
-      //               backgroundColor: Colors.white,
-      //               fontColor: Colors.black,
-      //               onPress:
-      //                   () => context.push(AppRoutes.editQuote, extra: task),
-      //             )
-      //             : null,
-      //   );
-
       case StatusType.measurementDone:
         return ReviewWidgetTile(
-          title: "Quotation Sent",
+          title:
+              isAgency
+                  ? "Measurements & Services Sent"
+                  : "Quotation Approval Required",
           subtitle:
-              isSalesperson
-                  ? "Quotation sent to ${task.client.name}"
-                  : "Task ${task.dealNo} requires quotation approval",
-          btnText: "Edit Quotation",
-          onTap: () => context.push(AppRoutes.editQuote, extra: task),
+              isAgency
+                  ? "Measurements & Services have been sent to Task ${task.dealNo}"
+                  : "Task ${task.dealNo} from ${task.createdBy.name} requires quotation approval",
+          btnText: "Review Quotation",
+          onTap: () => context.push(AppRoutes.quoteDetails, extra: task),
+          child: ActionButton(
+            label: "Edit Quotation",
+            backgroundColor: Colors.white,
+            fontColor: Colors.black,
+            onPress: () => context.push(AppRoutes.editQuote, extra: task),
+          ),
         );
 
       case StatusType.quotationApproved:
-        return ReviewWidgetTile(
-          title: "Order Materials",
-          subtitle: "Task ${task.dealNo} approved by ${task.client.name}",
-          btnText: "Set as Ordered",
-          onTap:
-              () => context.updateTaskStatus(
-                context: context,
-                task: task,
-                status: StatusType.ordered.status.name,
-              ),
-        );
+        return isAgency
+            ? SizedBox.shrink()
+            : ReviewWidgetTile(
+              title: "Order Materials",
+              subtitle: "Task ${task.dealNo} approved by ${task.client.name}",
+              btnText: "Set as Ordered",
+              onTap:
+                  () => context.updateTaskStatus(
+                    context: context,
+                    task: task,
+                    status: StatusType.ordered.status.name,
+                  ),
+            );
 
       case StatusType.ordered:
         return ReviewWidgetTile(
@@ -169,7 +179,8 @@ class ReviewWidget extends StatelessWidget {
         return isSalesperson || isAdmin
             ? ReviewWidgetTile(
               title: "Invoice has been rejected",
-              subtitle: "Invoice was rejected by client ${task.client.name}. You can always revert this action",
+              subtitle:
+                  "Invoice was rejected by client ${task.client.name}. You can always revert this action",
               btnText: "Go Back to Ordered status",
               onTap:
                   () => context.updateTaskStatus(
