@@ -92,7 +92,7 @@ class ReviewWidget extends StatelessWidget {
           subtitle:
               "Bill #BILL-123456 from ${task.agency?.name ?? ""} requires your approval",
           btnText: "Review Bill",
-          onTap: () => context.push(AppRoutes.reviewBill),
+          onTap: () => context.push(AppRoutes.reviewBill, extra: task),
         );
 
       case StatusType.measurementDone:
@@ -163,16 +163,12 @@ class ReviewWidget extends StatelessWidget {
                 task: task,
                 status: StatusType.billCreated.status.name,
               ),
-          child:
-              !isAgency
-                  ? ActionButton(
-                    label: "View Bill",
-                    backgroundColor: Colors.white,
-                    fontColor: Colors.black,
-                    onPress:
-                        () => context.push(AppRoutes.reviewBill, extra: task),
-                  )
-                  : null,
+          child: ActionButton(
+            label: "View Bill",
+            backgroundColor: Colors.white,
+            fontColor: Colors.black,
+            onPress: () => context.push(AppRoutes.reviewBill, extra: task),
+          ),
         );
 
       case StatusType.invoiceRejected:

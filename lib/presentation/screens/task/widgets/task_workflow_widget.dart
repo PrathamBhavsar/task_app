@@ -82,6 +82,15 @@ class TaskWorkflowWidget extends StatelessWidget {
                   : "Review or Update the Measurements & Services sent by ${isAgency ? "you" : agencyName}!",
         );
 
+      case StatusType.billCreated:
+        return _infoContainer(
+          color: AppColors.blueBg,
+          text:
+              isAgency
+                  ? "Bill has been sent. Awaiting approval"
+                  : "Approve or Reject Bill sent by $agencyName!",
+        );
+
       case StatusType.quotationApproved:
         return _infoContainer(
           color: AppColors.blueBg,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/di/di.dart';
+import '../../../core/helpers/cache_helper.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
@@ -33,19 +35,21 @@ class TaskPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('My Tasks', style: AppTexts.titleTextStyle),
-                IntrinsicWidth(
-                  child: ActionButton(
-                    label: 'New Task',
-                    onPress:
-                        () => context.push(
-                          AppRoutes.editTask,
-                          extra: {'isNew': true},
-                        ),
-                    prefixIcon: CustomIcon.badgePlus,
-                    fontColor: Colors.white,
-                    backgroundColor: Colors.black,
-                  ),
-                ),
+                getIt<CacheHelper>().isAgency
+                    ? SizedBox.shrink()
+                    : IntrinsicWidth(
+                      child: ActionButton(
+                        label: 'New Task',
+                        onPress:
+                            () => context.push(
+                              AppRoutes.editTask,
+                              extra: {'isNew': true},
+                            ),
+                        prefixIcon: CustomIcon.badgePlus,
+                        fontColor: Colors.white,
+                        backgroundColor: Colors.black,
+                      ),
+                    ),
               ],
             ),
             20.hGap,
