@@ -8,7 +8,6 @@ import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../../utils/extensions/quote_measurement_converter.dart';
-import '../../../utils/extensions/update_task_status.dart';
 import '../../blocs/measurement/api/measurement_api_bloc.dart';
 import '../../blocs/measurement/api/measurement_api_event.dart';
 import '../../blocs/measurement/api/measurement_api_state.dart';
@@ -25,7 +24,6 @@ import '../../blocs/quote_measurements/quote_measurement_event.dart';
 import '../../blocs/quote_measurements/quote_measurement_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_state.dart';
-import '../../providers/measurement_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
@@ -35,10 +33,7 @@ import 'widgets/quote_measurement_tile.dart';
 import 'widgets/static_service_tile.dart';
 
 class EditQuoteScreen extends StatefulWidget {
-  const EditQuoteScreen({
-    required this.task,
-    super.key,
-  });
+  const EditQuoteScreen({required this.task, super.key});
 
   final Task task;
 
@@ -493,7 +488,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
     );
   }
 
-  Padding buildServiceTile(int index, MeasurementProvider provider) {
+  Padding buildServiceTile(int index) {
     return Padding(
       padding: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 10.h),
       child: BorderedContainer(
@@ -505,7 +500,8 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
               children: [
                 Text('#${index + 1}', style: AppTexts.titleTextStyle),
                 IconButton(
-                  onPressed: () => provider.removeServiceAt(index),
+                  // onPressed: () => provider.removeServiceAt(index),
+                  onPressed: () {},
                   icon: Icon(
                     Icons.delete_outline_rounded,
                     color: AppColors.errorRed,

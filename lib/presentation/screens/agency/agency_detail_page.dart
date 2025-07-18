@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../../../domain/entities/task.dart';
 import '../../../domain/entities/user.dart';
@@ -9,7 +8,6 @@ import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/custom_icons.dart';
 import '../../../utils/constants/dummy_data.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/tab_header.dart';
@@ -34,131 +32,128 @@ class AgencyDetailPage extends StatelessWidget {
       ),
     ),
     body: SafeArea(
-      child: Consumer<TaskProvider>(
-        builder:
-            (context, provider, child) => SingleChildScrollView(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            BorderedContainer(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BorderedContainer(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Agency Overview',
-                              style: AppTexts.titleTextStyle.copyWith(
-                                fontVariations: [FontVariation.weight(500)],
-                              ),
-                            ),
-                            IconButton(
-                              onPressed:
-                                  () => context.replace(
-                                    AppRoutes.editAgency,
-                                    extra: agency,
-                                  ),
-                              icon: Icon(
-                                CustomIcon.squarePen,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Agency Overview',
+                        style: AppTexts.titleTextStyle.copyWith(
+                          fontVariations: [FontVariation.weight(500)],
                         ),
-                        Text(
-                          'Performance metrics and details',
-                          style: AppTexts.inputHintTextStyle,
+                      ),
+                      IconButton(
+                        onPressed:
+                            () => context.replace(
+                          AppRoutes.editAgency,
+                          extra: agency,
                         ),
-                        20.hGap,
-                        DashboardContainers(
-                          list: DummyData.agencyDetailDashboard,
+                        icon: Icon(
+                          CustomIcon.squarePen,
+                          color: Colors.black,
                         ),
-                        10.hGap,
-                        _buildInfoColumn(
-                          'Contact Information',
-                          agency.contactNo,
-                        ),
-                        _buildInfoColumn('Address', agency.address),
-                        // Text(
-                        //   'Service Areas',
-                        //   style: AppTexts.inputHintTextStyle.copyWith(
-                        //     fontVariations: [FontVariation.weight(600)],
-                        //   ),
-                        // ),
-                        // 5.hGap,
-                        // Wrap(
-                        //   runSpacing: 10.h,
-                        //   spacing: 5.w,
-                        //   runAlignment: WrapAlignment.start,
-                        //   alignment: WrapAlignment.start,
-                        //   crossAxisAlignment: WrapCrossAlignment.start,
-                        //   direction: Axis.horizontal,
-                        //   children: [
-                        //     ...List.generate(
-                        //       agency.serviceAreas.length,
-                        //       (index) => CustomTag(
-                        //         text: agency.serviceAreas[index],
-                        //         color: Colors.black,
-                        //         textColor: Colors.white,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        // 5.hGap,
-                        // Text(
-                        //   'Specialities',
-                        //   style: AppTexts.inputHintTextStyle.copyWith(
-                        //     fontVariations: [FontVariation.weight(600)],
-                        //   ),
-                        // ),
-                        // 5.hGap,
-                        // Wrap(
-                        //   runSpacing: 10.h,
-                        //   spacing: 5.w,
-                        //   runAlignment: WrapAlignment.start,
-                        //   alignment: WrapAlignment.start,
-                        //   crossAxisAlignment: WrapCrossAlignment.start,
-                        //   direction: Axis.horizontal,
-                        //   children: [
-                        //     ...List.generate(
-                        //       agency.specialities.length,
-                        //       (index) => CustomTag(
-                        //         text: agency.specialities[index],
-                        //         color: Colors.black,
-                        //         textColor: Colors.white,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                      ],
-                    ),
-                  ),
-                  TabHeader(
-                    tabs: [
-                      Tab(text: 'Pending'),
-                      Tab(text: 'Completed'),
-                      Tab(text: 'All'),
+                      ),
                     ],
                   ),
-                  // Builder(
-                  //   builder: (context) {
-                  //     switch (provider.tabIndex) {
-                  //       case 0:
-                  //         return _buildList(context, Task.pendingTasks);
-                  //       case 1:
-                  //         return _buildList(context, Task.completedTasks);
-                  //       default:
-                  //         return _buildList(context, Task.sampleTasks);
-                  //     }
-                  //   },
+                  Text(
+                    'Performance metrics and details',
+                    style: AppTexts.inputHintTextStyle,
+                  ),
+                  20.hGap,
+                  DashboardContainers(
+                    list: DummyData.agencyDetailDashboard,
+                  ),
+                  10.hGap,
+                  _buildInfoColumn(
+                    'Contact Information',
+                    agency.contactNo,
+                  ),
+                  _buildInfoColumn('Address', agency.address),
+                  // Text(
+                  //   'Service Areas',
+                  //   style: AppTexts.inputHintTextStyle.copyWith(
+                  //     fontVariations: [FontVariation.weight(600)],
+                  //   ),
                   // ),
-                  10.hGap,
-                  _buildQuickActions(context),
-                  10.hGap,
-                  _buildPerformanceMetrics(),
+                  // 5.hGap,
+                  // Wrap(
+                  //   runSpacing: 10.h,
+                  //   spacing: 5.w,
+                  //   runAlignment: WrapAlignment.start,
+                  //   alignment: WrapAlignment.start,
+                  //   crossAxisAlignment: WrapCrossAlignment.start,
+                  //   direction: Axis.horizontal,
+                  //   children: [
+                  //     ...List.generate(
+                  //       agency.serviceAreas.length,
+                  //       (index) => CustomTag(
+                  //         text: agency.serviceAreas[index],
+                  //         color: Colors.black,
+                  //         textColor: Colors.white,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // 5.hGap,
+                  // Text(
+                  //   'Specialities',
+                  //   style: AppTexts.inputHintTextStyle.copyWith(
+                  //     fontVariations: [FontVariation.weight(600)],
+                  //   ),
+                  // ),
+                  // 5.hGap,
+                  // Wrap(
+                  //   runSpacing: 10.h,
+                  //   spacing: 5.w,
+                  //   runAlignment: WrapAlignment.start,
+                  //   alignment: WrapAlignment.start,
+                  //   crossAxisAlignment: WrapCrossAlignment.start,
+                  //   direction: Axis.horizontal,
+                  //   children: [
+                  //     ...List.generate(
+                  //       agency.specialities.length,
+                  //       (index) => CustomTag(
+                  //         text: agency.specialities[index],
+                  //         color: Colors.black,
+                  //         textColor: Colors.white,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
-              ).padAll(AppPaddings.appPaddingInt),
+              ),
             ),
+            TabHeader(
+              tabs: [
+                Tab(text: 'Pending'),
+                Tab(text: 'Completed'),
+                Tab(text: 'All'),
+              ],
+            ),
+            // Builder(
+            //   builder: (context) {
+            //     switch (provider.tabIndex) {
+            //       case 0:
+            //         return _buildList(context, Task.pendingTasks);
+            //       case 1:
+            //         return _buildList(context, Task.completedTasks);
+            //       default:
+            //         return _buildList(context, Task.sampleTasks);
+            //     }
+            //   },
+            // ),
+            10.hGap,
+            _buildQuickActions(context),
+            10.hGap,
+            _buildPerformanceMetrics(),
+          ],
+        ).padAll(AppPaddings.appPaddingInt),
       ),
     ),
   );

@@ -2,8 +2,9 @@ import 'package:either_dart/either.dart';
 
 import '../../core/error/failure.dart';
 import '../../data/models/payloads/auth_payload.dart';
+import '../../data/responses/auth/login_response.dart';
 import '../entities/user.dart';
 
 abstract class AuthRepository {
-  Future<Either<Failure, User>> login(AuthPayload data);
+  Future<Either<Failure, LoginResponse>> login(AuthPayload data);
 }

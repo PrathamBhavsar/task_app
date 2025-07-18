@@ -64,14 +64,14 @@ class _AuthScreenState extends State<AuthScreen> {
                             ),
                             softWrap: true,
                           ),
-                          40.hGap,
+                          30.hGap,
                           Text(
                             'Sign in to your account to continue',
                             style: AppTexts.inputHintTextStyle.copyWith(
                               fontSize: 16.sp,
                             ),
                           ),
-                          10.hGap,
+                          30.hGap,
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
@@ -100,14 +100,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             keyboardType: TextInputType.visiblePassword,
                             isPassword: true,
                             isEnabled: state.status != AuthStatus.loading,
-                          ),
-                          10.hGap,
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Select your role',
-                              style: AppTexts.labelTextStyle,
-                            ),
                           ),
                           10.hGap,
                           ActionButton(

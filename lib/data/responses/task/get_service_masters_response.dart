@@ -6,7 +6,7 @@ part 'get_service_masters_response.g.dart';
 
 @JsonSerializable()
 class GetServiceMastersResponse {
-  @JsonKey(name: 'service masters')
+  @JsonKey(name: 'service_masters')
   final List<ServiceMaster> serviceMasters;
 
   GetServiceMastersResponse({required this.serviceMasters});

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/constants/dummy_data.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../providers/task_provider.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/chart_widget.dart';
 import '../../widgets/pie_chart.dart';

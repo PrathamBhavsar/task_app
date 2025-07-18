@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+
 
 import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/auth/auth_bloc.dart';
-import '../../providers/task_provider.dart';
+
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/labeled_text_field.dart';
@@ -69,69 +69,66 @@ class _NewAgencyScreenState extends State<NewAgencyScreen> {
     body: GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       behavior: HitTestBehavior.opaque,
-      child: Consumer<TaskProvider>(
-        builder:
-            (context, provider, child) => SingleChildScrollView(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Agency Details',
+                  style: AppTexts.titleTextStyle.copyWith(
+                    fontVariations: [FontVariation.weight(600)],
+                  ),
+                ),
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    return GestureDetector(
+                      onTap:
+                          () =>
+                      context.read<AuthBloc>()
+                        ..add(ToggleVisibilityEvent()),
+                      child: CustomTag(
+                        text: state.isVisible ? 'Active' : 'Inactive',
+                        color: Colors.black,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            20.hGap,
+            BorderedContainer(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Agency Details',
-                        style: AppTexts.titleTextStyle.copyWith(
-                          fontVariations: [FontVariation.weight(600)],
-                        ),
-                      ),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          return GestureDetector(
-                            onTap:
-                                () =>
-                                    context.read<AuthBloc>()
-                                      ..add(ToggleVisibilityEvent()),
-                            child: CustomTag(
-                              text: state.isVisible ? 'Active' : 'Inactive',
-                              color: Colors.black,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                  LabeledTextInput(
+                    title: 'Name',
+                    hint: 'Enter agent name',
+                    controller: _nameController,
                   ),
-                  20.hGap,
-                  BorderedContainer(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        LabeledTextInput(
-                          title: 'Name',
-                          hint: 'Enter agent name',
-                          controller: _nameController,
-                        ),
-                        LabeledTextInput(
-                          title: 'Phone',
-                          hint: 'Enter agent phone',
-                          controller: _phoneController,
-                        ),
-                        LabeledTextInput(
-                          title: 'Email',
-                          hint: 'Enter agent email',
-                          controller: _emailController,
-                        ),
-                        LabeledTextInput(
-                          title: 'Address',
-                          hint: 'Enter agent address',
-                          controller: _addressController,
-                          isMultiline: true,
-                        ),
-                      ],
-                    ),
+                  LabeledTextInput(
+                    title: 'Phone',
+                    hint: 'Enter agent phone',
+                    controller: _phoneController,
+                  ),
+                  LabeledTextInput(
+                    title: 'Email',
+                    hint: 'Enter agent email',
+                    controller: _emailController,
+                  ),
+                  LabeledTextInput(
+                    title: 'Address',
+                    hint: 'Enter agent address',
+                    controller: _addressController,
+                    isMultiline: true,
                   ),
                 ],
-              ).padAll(AppPaddings.appPaddingInt),
+              ),
             ),
+          ],
+        ).padAll(AppPaddings.appPaddingInt),
       ),
     ),
   );

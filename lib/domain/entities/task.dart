@@ -40,7 +40,7 @@ class Task {
   final Designer designer;
 
   @JsonKey(name: 'assigned_users')
-  final List<User> assignedUsers;
+  final List<User>? assignedUsers;
 
   final String? remarks;
 

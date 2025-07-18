@@ -7,6 +7,7 @@ import '../../data/api/api_constants.dart';
 import '../../data/api/api_handler.dart';
 import '../../data/api/api_helper.dart';
 import '../../data/api/api_service.dart';
+import '../../data/api/interceptors.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/repositories/bill_repository_impl.dart';
 import '../../data/repositories/client_repository_impl.dart';
@@ -72,6 +73,7 @@ import '../../presentation/blocs/task_form/task_form_bloc.dart';
 import '../../presentation/blocs/timeline/timeline_bloc.dart';
 import '../../presentation/blocs/user/user_bloc.dart';
 import '../helpers/cache_helper.dart';
+import '../helpers/secure_prefs_helper.dart';
 import '../helpers/shared_prefs_helper.dart';
 import '../helpers/snack_bar_helper.dart';
 import '../helpers/log_helper.dart';
@@ -80,8 +82,8 @@ final getIt = GetIt.instance;
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void setupLocator() {
-  setupApiModule();
   setupHelpers();
+  setupApiModule();
 
   setupHome();
   setupTaskForm();
@@ -102,36 +104,9 @@ void setupLocator() {
   getIt.registerFactory(TabBloc.new);
 }
 
-void setupApiModule() {
-  getIt.registerLazySingleton<Dio>(
-    () => Dio(
-      BaseOptions(
-        contentType: Headers.jsonContentType,
-        responseType: ResponseType.json,
-        baseUrl: ApiConstants.currentBaseUrl,
-      ),
-    )..interceptors.add(getIt<AwesomeDioInterceptor>()),
-  );
-
-  getIt.registerLazySingleton<ApiService>(() => ApiService(getIt<Dio>()));
-
-  getIt.registerLazySingleton<ApiHandler>(
-    () => ApiHandler(
-      getIt<LogHelper>(),
-      onError: (error) => getIt<SnackBarHelper>().showError(error.message),
-    ),
-  );
-
-  getIt.registerLazySingleton<ApiHelper>(
-    () => ApiHelper(
-      service: getIt<ApiService>(),
-      handler: getIt<ApiHandler>(),
-      logger: getIt<LogHelper>(),
-    ),
-  );
-}
-
 void setupHelpers() {
+  getIt.registerLazySingleton<CacheInterceptor>(CacheInterceptor.new);
+
   getIt.registerLazySingleton<LogHelper>(LogHelper.new);
 
   getIt.registerLazySingleton<AwesomeDioInterceptor>(
@@ -149,8 +124,42 @@ void setupHelpers() {
 
   getIt.registerLazySingleton<SharedPrefHelper>(SharedPrefHelper.new);
 
+  getIt.registerLazySingleton<SecurePrefHelper>(SecurePrefHelper.new);
+
   getIt.registerLazySingleton<CacheHelper>(
-    () => CacheHelper(getIt<SharedPrefHelper>()),
+    () => CacheHelper(getIt<SharedPrefHelper>(), getIt<SecurePrefHelper>()),
+  );
+}
+
+void setupApiModule() {
+  getIt.registerLazySingleton<Dio>(
+    () =>
+        Dio(
+            BaseOptions(
+              contentType: Headers.jsonContentType,
+              responseType: ResponseType.json,
+              baseUrl: ApiConstants.currentBaseUrl,
+            ),
+          )
+          ..interceptors.add(getIt<AwesomeDioInterceptor>())
+          ..interceptors.add(getIt<CacheInterceptor>()),
+  );
+
+  getIt.registerLazySingleton<ApiService>(() => ApiService(getIt<Dio>()));
+
+  getIt.registerLazySingleton<ApiHandler>(
+    () => ApiHandler(
+      getIt<LogHelper>(),
+      onError: (error) => getIt<SnackBarHelper>().showError(error.message),
+    ),
+  );
+
+  getIt.registerLazySingleton<ApiHelper>(
+    () => ApiHelper(
+      service: getIt<ApiService>(),
+      handler: getIt<ApiHandler>(),
+      logger: getIt<LogHelper>(),
+    ),
   );
 }
 
@@ -238,9 +247,7 @@ void setupQuoteMeasurement() {
   );
 
   getIt.registerFactory(
-    () => QuoteMeasurementBloc(
-      getIt<GetAllQuoteMeasurementsUseCase>(),
-    ),
+    () => QuoteMeasurementBloc(getIt<GetAllQuoteMeasurementsUseCase>()),
   );
 }
 

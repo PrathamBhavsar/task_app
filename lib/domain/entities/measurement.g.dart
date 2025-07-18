@@ -19,7 +19,7 @@ Measurement _$MeasurementFromJson(Map<String, dynamic> json) => Measurement(
 
 Map<String, dynamic> _$MeasurementToJson(Measurement instance) =>
     <String, dynamic>{
-      'measurement_id': instance.measurementId,
+      if (instance.measurementId case final value?) 'measurement_id': value,
       'location': instance.location,
       'width': instance.width,
       'height': instance.height,

@@ -12,8 +12,8 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
   client: Client.fromJson(json['client'] as Map<String, dynamic>),
   designer: Designer.fromJson(json['designer'] as Map<String, dynamic>),
   assignedUsers:
-      (json['assigned_users'] as List<dynamic>)
-          .map((e) => User.fromJson(e as Map<String, dynamic>))
+      (json['assigned_users'] as List<dynamic>?)
+          ?.map((e) => User.fromJson(e as Map<String, dynamic>))
           .toList(),
   name: json['name'] as String,
   status: const StatusConverter().fromJson(json['status'] as String),
@@ -40,6 +40,6 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
   'client': instance.client.toJson(),
   'agency': instance.agency?.toJson(),
   'designer': instance.designer.toJson(),
-  'assigned_users': instance.assignedUsers.map((e) => e.toJson()).toList(),
+  'assigned_users': instance.assignedUsers?.map((e) => e.toJson()).toList(),
   'remarks': instance.remarks,
 };

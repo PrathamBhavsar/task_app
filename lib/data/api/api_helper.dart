@@ -24,6 +24,7 @@ import '../models/payloads/service_payload.dart';
 import '../models/payloads/task_payload.dart';
 import '../models/payloads/update_quote_payload.dart';
 import '../models/payloads/update_status_payload.dart';
+import '../responses/auth/login_response.dart';
 import '../responses/client/put_client_response.dart';
 import '../responses/get_bills_response.dart';
 import '../responses/client/get_clients_response.dart';
@@ -378,10 +379,10 @@ class ApiHelper {
     }
   }
 
-  Future<Either<Failure, User>> login(AuthPayload data) async {
-    final ApiResponse<User> result = await handler.execute<User>(
-      () => service.post(ApiConstants.user.login, data: data.toJson()),
-      (json) => User.fromJson(json as Map<String, dynamic>),
+  Future<Either<Failure, LoginResponse>> login(AuthPayload data) async {
+    final ApiResponse<LoginResponse> result = await handler.execute<LoginResponse>(
+      () => service.post(ApiConstants.auth.login, data: data.toJson()),
+      (json) => LoginResponse.fromJson(json as Map<String, dynamic>),
     );
 
     if (result.isSuccess && result.data != null) {

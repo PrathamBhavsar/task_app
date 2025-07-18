@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../../../core/di/di.dart' show getIt;
 import '../../../core/helpers/snack_bar_helper.dart';
@@ -12,13 +11,10 @@ import '../../../utils/extensions/padding.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_event.dart' show FetchUsersRequested;
 import '../../blocs/user/user_state.dart';
-import '../../providers/task_provider.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../widgets/refresh_wrapper.dart' show RefreshableStateWrapper;
 import 'widgets/agency_tile.dart';
-
-// List<Agency> agencies = Agency.sampleAgencies;
 
 class AgencyPage extends StatelessWidget {
   const AgencyPage({super.key});

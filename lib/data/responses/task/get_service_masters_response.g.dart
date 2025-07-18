@@ -10,11 +10,11 @@ GetServiceMastersResponse _$GetServiceMastersResponseFromJson(
   Map<String, dynamic> json,
 ) => GetServiceMastersResponse(
   serviceMasters:
-      (json['service masters'] as List<dynamic>)
+      (json['service_masters'] as List<dynamic>)
           .map((e) => ServiceMaster.fromJson(e as Map<String, dynamic>))
           .toList(),
 );
 
 Map<String, dynamic> _$GetServiceMastersResponseToJson(
   GetServiceMastersResponse instance,
-) => <String, dynamic>{'service masters': instance.serviceMasters};
+) => <String, dynamic>{'service_masters': instance.serviceMasters};
