@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/entities/measurement.dart';
 import '../../../../domain/entities/quote_measurement.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
@@ -16,7 +17,7 @@ class QuoteMeasurementTile extends StatefulWidget {
   });
 
   final int index;
-  final QuoteMeasurement quoteMeasurement;
+  final Measurement quoteMeasurement;
 
   @override
   State<QuoteMeasurementTile> createState() => _QuoteMeasurementTileState();
@@ -76,7 +77,7 @@ class _QuoteMeasurementTileState extends State<QuoteMeasurementTile> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "${widget.quoteMeasurement.measurement.location} (${widget.quoteMeasurement.measurement.height} x ${widget.quoteMeasurement.measurement.width})",
+            "${widget.quoteMeasurement.location} (${widget.quoteMeasurement.height} x ${widget.quoteMeasurement.width})",
             style: AppTexts.labelTextStyle,
           ),
           10.hGap,

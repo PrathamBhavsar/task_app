@@ -31,7 +31,6 @@ import '../responses/client/get_clients_response.dart';
 import '../responses/get_designers_response.dart';
 import '../responses/get_messages_response.dart';
 import '../responses/get_quote_measurements_response.dart';
-import '../responses/get_quote_response.dart';
 import '../responses/task/get_measurement_response.dart';
 import '../responses/task/get_service_masters_response.dart';
 import '../responses/task/get_service_response.dart';
@@ -189,16 +188,16 @@ class ApiHelper {
   }
 
   Future<Either<Failure, Quote>> getAllQuotes(int taskId) async {
-    final ApiResponse<GetQuoteResponse> result = await handler
-        .execute<GetQuoteResponse>(
+    final ApiResponse<Quote> result = await handler
+        .execute<Quote>(
           () => service.get(
             ApiConstants.quote.base,
             queryParameters: {"task_id": taskId},
           ),
-          (json) => GetQuoteResponse.fromJson(json as Map<String, dynamic>),
+          (json) => Quote.fromJson(json as Map<String, dynamic>),
         );
     if (result.isSuccess && result.data != null) {
-      return Right(result.data!.quote);
+      return Right(result.data!);
     } else {
       return Left(Failure(result.error!.message));
     }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/models/payloads/update_quote_payload.dart';
+import '../../../domain/entities/measurement.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
@@ -71,21 +72,22 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
 
     final mState = context.read<MeasurementApiBloc>().state;
     final sState = context.read<ServiceApiBloc>().state;
-    final qmState = context.read<QuoteMeasurementBloc>().state;
+    // final qmState = context.read<QuoteMeasurementBloc>().state;
 
-    if (mState is MeasurementLoadSuccess &&
-        sState is ServiceLoadSuccess &&
-        qmState is QuoteMeasurementLoadSuccess) {
+    if (mState is MeasurementLoadSuccess && sState is ServiceLoadSuccess
+    // &&
+    // qmState is QuoteMeasurementLoadSuccess
+    ) {
       final task = widget.task;
       final measurements = mState.measurements;
       final services = sState.services;
-      final quoteMeasurements = qmState.quoteMeasurements;
+      // final quoteMeasurements = qmState.quoteMeasurements;
 
       context.read<QuoteCubit>().initialize(
         task,
         services,
         measurements,
-        quoteMeasurements,
+        // quoteMeasurements,
       );
 
       _initialized = true;
@@ -129,11 +131,11 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
             }
           },
         ),
-        BlocListener<QuoteMeasurementBloc, QuoteMeasurementState>(
-          listener: (context, state) {
-            _tryInitializeCubit(context);
-          },
-        ),
+        // BlocListener<QuoteMeasurementBloc, QuoteMeasurementState>(
+        //   listener: (context, state) {
+        //     _tryInitializeCubit(context);
+        //   },
+        // ),
       ],
       child: Scaffold(
         appBar: AppBar(
@@ -148,10 +150,10 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
         body: BlocBuilder<QuoteCubit, QuoteCubitState>(
           builder: (context, state) {
             final quote = state.quote;
-            final quoteMeasurementList = state.quoteMeasurements;
+            final quoteMeasurementList = state.measurements;
             final serviceList = state.services;
 
-            if (quote == null || quoteMeasurementList.isEmpty) {
+            if (quote == null) {
               return const Center(child: CircularProgressIndicator());
             }
 
@@ -314,10 +316,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
     );
   }
 
-  void _onSubmit(
-    BuildContext context,
-    List<QuoteMeasurement> quoteMeasurementList,
-  ) {
+  void _onSubmit(BuildContext context, List<Measurement> quoteMeasurementList) {
     final quote = context.read<QuoteCubit>().state.quote!;
     final taskId = context.read<QuoteCubit>().state.task!.taskId!;
 
@@ -333,12 +332,13 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
         ),
       ),
     );
+    //TODO: MAKE AN UPDATE MEASUREMENTS API
 
-    context.read<QuoteApiBloc>().add(
-      UpdateQuoteMeasurementsRequested(
-        quoteMeasurementList.map((e) => e.toUpdatePayload()).toList(),
-      ),
-    );
+    // context.read<QuoteApiBloc>().add(
+    //   UpdateQuoteMeasurementsRequested(
+    //     quoteMeasurementList.map((e) => e.toUpdatePayload()).toList(),
+    //   ),
+    // );
   }
 
   Row _buildTotalRow(

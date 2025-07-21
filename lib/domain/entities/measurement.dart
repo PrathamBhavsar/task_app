@@ -12,10 +12,19 @@ class Measurement {
   final double height;
   final double area;
   final String unit;
-  final String notes;
+  final String? notes;
 
   @JsonKey(name: 'task_id')
   final int taskId;
+
+  @JsonKey(name: 'unit_price')
+  final double rate;
+  final int quantity;
+
+  @JsonKey(name: 'total_price')
+  final double totalPrice;
+
+  final double discount;
 
   Measurement({
     required this.location,
@@ -23,8 +32,12 @@ class Measurement {
     required this.height,
     required this.area,
     required this.unit,
-    required this.notes,
     required this.taskId,
+    required this.rate,
+    required this.quantity,
+    required this.discount,
+    required this.totalPrice,
+    this.notes,
     this.measurementId,
   });
 
@@ -40,6 +53,10 @@ class Measurement {
     double? height,
     double? area,
     double? width,
+    double? rate,
+    int? quantity,
+    double? totalPrice,
+    double? discount,
   }) {
     return Measurement(
       location: location ?? this.location,
@@ -48,6 +65,10 @@ class Measurement {
       area: area ?? this.area,
       unit: unit ?? this.unit,
       notes: notes ?? this.notes,
+      rate: rate ?? this.rate,
+      quantity: quantity ?? this.quantity,
+      discount: discount ?? this.discount,
+      totalPrice: totalPrice ?? this.totalPrice,
       taskId: taskId,
     );
   }
@@ -60,5 +81,9 @@ class Measurement {
     taskId: taskId,
     area: 0.00,
     unit: 'm',
+    rate: 0.00,
+    discount: 0.00,
+    totalPrice: 0.00,
+    quantity: 1,
   );
 }

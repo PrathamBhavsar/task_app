@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../domain/entities/measurement.dart';
 import '../../../../domain/entities/quote_measurement.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
@@ -8,7 +9,7 @@ import '../../../../utils/extensions/padding.dart';
 class ProductTile extends StatelessWidget {
   const ProductTile({required this.qm, required this.textStyle, super.key});
 
-  final QuoteMeasurement qm;
+  final Measurement qm;
   final TextStyle textStyle;
 
   @override
@@ -20,13 +21,13 @@ class ProductTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              qm.measurement.location,
+              qm.location,
               style: AppTexts.inputLabelTextStyle.copyWith(
                 fontVariations: [FontVariation.weight(800)],
               ),
             ),
             Text(
-              "(${qm.measurement.height} x ${qm.measurement.width})",
+              "(${qm.height} x ${qm.width})",
               style: AppTexts.inputLabelTextStyle.copyWith(
                 fontVariations: [FontVariation.weight(800)],
               ),

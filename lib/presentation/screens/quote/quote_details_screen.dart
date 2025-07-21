@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
+import '../../../domain/entities/measurement.dart';
 import '../../../domain/entities/quote_measurement.dart';
 import '../../../domain/entities/service.dart';
 import '../../../domain/entities/task.dart';
@@ -60,9 +61,9 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     );
     context.read<QuoteApiBloc>().add(FetchQuotesRequested(widget.task.taskId!));
 
-    context.read<QuoteMeasurementBloc>().add(
-      FetchQuoteMeasurementsRequested(widget.task.taskId!),
-    );
+    // context.read<QuoteMeasurementBloc>().add(
+    //   FetchQuoteMeasurementsRequested(widget.task.taskId!),
+    // );
     super.initState();
   }
 
@@ -76,18 +77,20 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     final qmState = context.read<QuoteMeasurementBloc>().state;
 
     if (mState is MeasurementLoadSuccess &&
-        sState is ServiceLoadSuccess &&
-        qmState is QuoteMeasurementLoadSuccess) {
+        sState is ServiceLoadSuccess
+    // &&
+    //    qmState is QuoteMeasurementLoadSuccess
+    ) {
       final task = widget.task;
       final measurements = mState.measurements;
       final services = sState.services;
-      final quoteMeasurements = qmState.quoteMeasurements;
+      // final quoteMeasurements = qmState.quoteMeasurements;
 
       context.read<QuoteCubit>().initialize(
         task,
         services,
         measurements,
-        quoteMeasurements,
+        // quoteMeasurements,
       );
 
       _initialized = true;
@@ -118,11 +121,11 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
               _tryInitializeCubit(context);
             },
           ),
-          BlocListener<QuoteMeasurementBloc, QuoteMeasurementState>(
-            listener: (context, state) {
-              _tryInitializeCubit(context);
-            },
-          ),
+          // BlocListener<QuoteMeasurementBloc, QuoteMeasurementState>(
+          //   listener: (context, state) {
+          //     _tryInitializeCubit(context);
+          //   },
+          // ),
           BlocListener<ServiceApiBloc, ServiceApiState>(
             listener: (context, state) {
               _tryInitializeCubit(context);
@@ -139,7 +142,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
         child: BlocBuilder<QuoteCubit, QuoteCubitState>(
           builder: (context, state) {
             final quote = state.quote;
-            final quoteMeasurementList = state.quoteMeasurements;
+            final quoteMeasurementList = state.measurements;
             final serviceList = state.services;
 
             if (quote == null || quoteMeasurementList.isEmpty) {
@@ -331,7 +334,7 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
   }
 
   Column _buildQuote(
-    List<QuoteMeasurement> quoteMeasurements,
+    List<Measurement> quoteMeasurements,
     double? productSubtotal,
   ) {
     return Column(

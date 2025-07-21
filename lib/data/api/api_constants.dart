@@ -1,6 +1,6 @@
 class ApiConstants {
   /// Base URLs
-  static const String _localDomainUrl = "http://192.168.1.7:8000";
+  static const String _localDomainUrl = "http://192.168.1.8:8000";
   static const String _developmentDomainUrl = "";
 
   static String currentDomainBaseUrl = _localDomainUrl;

@@ -34,9 +34,9 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
     Task task,
     List<Service> services,
     List<Measurement> measurements,
-    List<QuoteMeasurement> quoteMeasurements,
+    // List<QuoteMeasurement> quoteMeasurements,
   ) {
-    final double productSubtotal = quoteMeasurements
+    final double productSubtotal = measurements
         .map((q) => q.totalPrice)
         .fold(0.0, (sum, price) => sum + price);
 
@@ -49,7 +49,7 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
         task: task,
         services: services,
         measurements: measurements,
-        quoteMeasurements: quoteMeasurements,
+        // quoteMeasurements: quoteMeasurements,
         productSubtotal: productSubtotal,
         serviceSubtotal: serviceSubtotal,
       ),
