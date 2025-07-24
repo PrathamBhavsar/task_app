@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
 import '../../../domain/entities/measurement.dart';
-import '../../../domain/entities/quote_measurement.dart';
 import '../../../domain/entities/service.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
@@ -25,9 +24,6 @@ import '../../blocs/quote/cubits/quote_cubit_state.dart';
 import '../../blocs/quote/quote_api_bloc.dart';
 import '../../blocs/quote/quote_api_event.dart';
 import '../../blocs/quote/quote_api_state.dart';
-import '../../blocs/quote_measurements/quote_measurement_bloc.dart';
-import '../../blocs/quote_measurements/quote_measurement_event.dart';
-import '../../blocs/quote_measurements/quote_measurement_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_state.dart';
 import '../../widgets/action_button.dart';
@@ -61,9 +57,6 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
     );
     context.read<QuoteApiBloc>().add(FetchQuotesRequested(widget.task.taskId!));
 
-    // context.read<QuoteMeasurementBloc>().add(
-    //   FetchQuoteMeasurementsRequested(widget.task.taskId!),
-    // );
     super.initState();
   }
 
@@ -74,17 +67,11 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
 
     final mState = context.read<MeasurementApiBloc>().state;
     final sState = context.read<ServiceApiBloc>().state;
-    final qmState = context.read<QuoteMeasurementBloc>().state;
 
-    if (mState is MeasurementLoadSuccess &&
-        sState is ServiceLoadSuccess
-    // &&
-    //    qmState is QuoteMeasurementLoadSuccess
-    ) {
+    if (mState is MeasurementLoadSuccess && sState is ServiceLoadSuccess) {
       final task = widget.task;
       final measurements = mState.measurements;
       final services = sState.services;
-      // final quoteMeasurements = qmState.quoteMeasurements;
 
       context.read<QuoteCubit>().initialize(
         task,
@@ -313,7 +300,8 @@ class _QuoteDetailsScreenState extends State<QuoteDetailsScreen> {
                               label: 'Mark as Rejected',
                               onPress: () {
                                 context.updateTaskStatus(
-                                  status: StatusType.quotationRejected.status.name,
+                                  status:
+                                      StatusType.quotationRejected.status.name,
                                   task: widget.task,
                                   context: context,
                                 );

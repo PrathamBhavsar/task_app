@@ -8,7 +8,6 @@ import '../../domain/entities/designer.dart';
 import '../../domain/entities/measurement.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/entities/quote.dart';
-import '../../domain/entities/quote_measurement.dart';
 import '../../domain/entities/service.dart';
 import '../../domain/entities/service_master.dart';
 import '../../domain/entities/task.dart';
@@ -30,7 +29,6 @@ import '../responses/get_bills_response.dart';
 import '../responses/client/get_clients_response.dart';
 import '../responses/get_designers_response.dart';
 import '../responses/get_messages_response.dart';
-import '../responses/get_quote_measurements_response.dart';
 import '../responses/task/get_measurement_response.dart';
 import '../responses/task/get_service_masters_response.dart';
 import '../responses/task/get_service_response.dart';
@@ -203,17 +201,17 @@ class ApiHelper {
     }
   }
 
-  Future<Either<Failure, List<QuoteMeasurement>>> getAllQuoteMeasurementsByTaskId(int taskId) async {
-    final ApiResponse<GetQuoteMeasurementResponse> result = await handler
-        .execute<GetQuoteMeasurementResponse>(
+  Future<Either<Failure, List<Measurement>>> getAllQuoteMeasurementsByTaskId(int taskId) async {
+    final ApiResponse<GetMeasurementResponse> result = await handler
+        .execute<GetMeasurementResponse>(
           () => service.get(
         ApiConstants.measurement.base,
         queryParameters: {"quote_id": taskId},
       ),
-          (json) => GetQuoteMeasurementResponse.fromJson(json as Map<String, dynamic>),
+          (json) => GetMeasurementResponse.fromJson(json as Map<String, dynamic>),
     );
     if (result.isSuccess && result.data != null) {
-      return Right(result.data!.quoteMeasurements);
+      return Right(result.data!.measurements);
     } else {
       return Left(Failure(result.error!.message));
     }

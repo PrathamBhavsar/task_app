@@ -8,7 +8,6 @@ import '../../../domain/entities/measurement.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/extensions/padding.dart';
-import '../../../utils/extensions/quote_measurement_converter.dart';
 import '../../blocs/measurement/api/measurement_api_bloc.dart';
 import '../../blocs/measurement/api/measurement_api_event.dart';
 import '../../blocs/measurement/api/measurement_api_state.dart';
@@ -20,16 +19,12 @@ import '../../blocs/quote/cubits/quote_cubit_state.dart';
 import '../../blocs/quote/quote_api_bloc.dart';
 import '../../blocs/quote/quote_api_event.dart';
 import '../../blocs/quote/quote_api_state.dart';
-import '../../blocs/quote_measurements/quote_measurement_bloc.dart';
-import '../../blocs/quote_measurements/quote_measurement_event.dart';
-import '../../blocs/quote_measurements/quote_measurement_state.dart';
 import '../../blocs/task/task_bloc.dart';
 import '../../blocs/task/task_state.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/labeled_text_field.dart';
-import '../../../domain/entities/quote_measurement.dart';
 import 'widgets/quote_measurement_tile.dart';
 import 'widgets/static_service_tile.dart';
 
@@ -59,9 +54,6 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
     );
     context.read<QuoteApiBloc>().add(FetchQuotesRequested(widget.task.taskId!));
 
-    context.read<QuoteMeasurementBloc>().add(
-      FetchQuoteMeasurementsRequested(widget.task.taskId!),
-    );
     super.initState();
   }
 

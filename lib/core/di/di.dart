@@ -14,7 +14,6 @@ import '../../data/repositories/client_repository_impl.dart';
 import '../../data/repositories/designer_repository_impl.dart';
 import '../../data/repositories/measurement_repository_impl.dart';
 import '../../data/repositories/message_repository_impl.dart';
-import '../../data/repositories/quote_measurement_repository_impl.dart';
 import '../../data/repositories/quote_repository_impl.dart';
 import '../../data/repositories/service_master_repository_impl.dart';
 import '../../data/repositories/service_repository_impl.dart';
@@ -27,7 +26,6 @@ import '../../domain/repositories/client_repository.dart';
 import '../../domain/repositories/designer_repository.dart';
 import '../../domain/repositories/measurement_repository.dart';
 import '../../domain/repositories/message_repository.dart';
-import '../../domain/repositories/quote_measurement_repository.dart';
 import '../../domain/repositories/quote_repository.dart';
 import '../../domain/repositories/service_master_repository.dart';
 import '../../domain/repositories/service_repository.dart';
@@ -38,7 +36,6 @@ import '../../domain/usecases/bill_usecase.dart';
 import '../../domain/usecases/client_usecase.dart';
 import '../../domain/usecases/designer_usecase.dart';
 import '../../domain/usecases/get_measurements_usecase.dart';
-import '../../domain/usecases/get_quote_measurement_usecase.dart';
 import '../../domain/usecases/get_service_masters_usecase.dart';
 import '../../domain/usecases/get_services_usecase.dart';
 import '../../domain/usecases/message_usecase.dart';
@@ -66,7 +63,6 @@ import '../../presentation/blocs/measurement/measurement_cubit.dart';
 import '../../presentation/blocs/message/message_bloc.dart';
 import '../../presentation/blocs/quote/cubits/quote_cubit.dart';
 import '../../presentation/blocs/quote/quote_api_bloc.dart';
-import '../../presentation/blocs/quote_measurements/quote_measurement_bloc.dart';
 import '../../presentation/blocs/tab/tab_bloc.dart';
 import '../../presentation/blocs/task/task_bloc.dart';
 import '../../presentation/blocs/task_form/task_form_bloc.dart';
@@ -92,7 +88,6 @@ void setupLocator() {
   setupServiceMaster();
   setupService();
   setupMeasurement();
-  setupQuoteMeasurement();
   setupClient();
   setupDesigner();
   setupBill();
@@ -234,20 +229,6 @@ void setupMeasurement() {
       getIt<GetAllMeasurementsUseCase>(),
       getIt<PutMeasurementUseCase>(),
     ),
-  );
-}
-
-void setupQuoteMeasurement() {
-  getIt.registerLazySingleton<QuoteMeasurementRepository>(
-    () => QuoteMeasurementRepositoryImpl(getIt<ApiHelper>()),
-  );
-
-  getIt.registerLazySingleton(
-    () => GetAllQuoteMeasurementsUseCase(getIt<QuoteMeasurementRepository>()),
-  );
-
-  getIt.registerFactory(
-    () => QuoteMeasurementBloc(getIt<GetAllQuoteMeasurementsUseCase>()),
   );
 }
 

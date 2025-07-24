@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
 import '../../../domain/entities/bill.dart';
+import '../../../domain/entities/service.dart';
 import '../../../domain/entities/task.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/enums/status_type.dart';
@@ -13,17 +14,16 @@ import '../../../utils/extensions/padding.dart';
 import '../../../utils/extensions/update_task_status.dart';
 import '../../blocs/bill/bill_bloc.dart';
 import '../../blocs/bill/bill_state.dart';
+import '../../blocs/measurement/api/measurement_api_bloc.dart';
+import '../../blocs/measurement/api/measurement_api_event.dart';
 import '../../blocs/measurement/api/service_api_bloc.dart';
 import '../../blocs/measurement/api/service_api_event.dart';
 import '../../blocs/measurement/api/service_api_state.dart';
-import '../../blocs/quote_measurements/quote_measurement_bloc.dart';
-import '../../blocs/quote_measurements/quote_measurement_event.dart';
 import '../../widgets/action_button.dart';
 import '../../widgets/bordered_container.dart';
 import '../../widgets/custom_tag.dart';
 import '../../widgets/tile_row.dart';
 import '../quote/widgets/service_tile.dart';
-import 'package:task_app/domain/entities/service.dart';
 
 TextStyle textStyle = AppTexts.labelTextStyle.copyWith(fontSize: 14.sp);
 
@@ -43,8 +43,8 @@ class _ReviewBillScreenState extends State<ReviewBillScreen> {
       FetchServicesRequested(widget.task.taskId!),
     );
 
-    context.read<QuoteMeasurementBloc>().add(
-      FetchQuoteMeasurementsRequested(widget.task.taskId!),
+    context.read<MeasurementApiBloc>().add(
+      FetchMeasurementsRequested(widget.task.taskId!),
     );
     super.initState();
   }

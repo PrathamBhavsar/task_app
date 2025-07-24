@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/entities/measurement.dart';
-import '../../../../domain/entities/quote_measurement.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
 import '../../../blocs/quote/cubits/quote_cubit.dart';

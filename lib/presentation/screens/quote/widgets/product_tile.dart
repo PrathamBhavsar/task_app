@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../domain/entities/measurement.dart';
-import '../../../../domain/entities/quote_measurement.dart';
 import '../../../../utils/constants/app_constants.dart';
 import '../../../../utils/extensions/padding.dart';
 

@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/entities/measurement.dart';
 import '../../../../domain/entities/quote.dart';
-import '../../../../domain/entities/quote_measurement.dart';
 import '../../../../domain/entities/service.dart';
 import '../../../../domain/entities/task.dart';
 import 'quote_cubit_state.dart';
@@ -15,17 +14,11 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
     List<Service> services,
     List<Measurement> measurements,
   ) {
-    final quoteMeasurements =
-        measurements
-            .map((m) => QuoteMeasurement.empty(task.taskId!, m))
-            .toList();
-
     emit(
       state.copyWith(
         task: task,
         services: services,
         measurements: measurements,
-        quoteMeasurements: quoteMeasurements,
       ),
     );
   }
@@ -62,7 +55,7 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
     double? discount,
     int? quantity,
   }) {
-    final updatedList = List<QuoteMeasurement>.from(state.quoteMeasurements);
+    final updatedList = List<Measurement>.from(state.measurements);
     final old = updatedList[index];
 
     final double newRate =
@@ -99,11 +92,11 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
       createdAt: oldQuote?.createdAt ?? DateTime.now(),
     );
 
-    emit(state.copyWith(quoteMeasurements: updatedList, quote: updatedQuote));
+    emit(state.copyWith(measurements: updatedList, quote: updatedQuote));
   }
 
   void updateOverallDiscount(double? discountPercent) {
-    _recalculateQuote(state.quoteMeasurements, newDiscount: discountPercent);
+    _recalculateQuote(state.measurements, newDiscount: discountPercent);
   }
 
   void setQuote(Quote quote) {
@@ -111,7 +104,7 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
   }
 
   void _recalculateQuote(
-    List<QuoteMeasurement> measurements, {
+    List<Measurement> measurements, {
     double? newDiscount,
   }) {
     final subtotal = measurements.fold(0.0, (sum, qm) => sum + qm.totalPrice);
@@ -130,6 +123,6 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
       createdAt: state.quote?.createdAt ?? DateTime.now(),
     );
 
-    emit(state.copyWith(quoteMeasurements: measurements, quote: newQuote));
+    emit(state.copyWith(measurements: measurements, quote: newQuote));
   }
 }
