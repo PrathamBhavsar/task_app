@@ -42,20 +42,19 @@ class QuoteCubit extends Cubit<QuoteCubitState> {
         task: task,
         services: services,
         measurements: measurements,
-        // quoteMeasurements: quoteMeasurements,
         productSubtotal: productSubtotal,
         serviceSubtotal: serviceSubtotal,
       ),
     );
   }
 
-  void updateQuoteMeasurement(
+  void updateMeasurement(
     int index, {
     double? rate,
     double? discount,
     int? quantity,
   }) {
-    final updatedList = List<Measurement>.from(state.measurements);
+    final updatedList = state.measurements;
     final old = updatedList[index];
 
     final double newRate =

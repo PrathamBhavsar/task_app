@@ -180,6 +180,19 @@ class TaskWorkflowWidget extends StatelessWidget {
             onPress:
                 () => context.updateTaskStatus(task: task, context: context),
           ),
+          10.hGap,
+          ActionButton(
+            label: 'Skip Agency',
+            prefixIcon: CustomIcon.circleCheckBig,
+            backgroundColor: Colors.black,
+            fontColor: Colors.white,
+            onPress:
+                () => context.updateTaskStatus(
+                  task: task,
+                  status: StatusType.measurementDone.status.name,
+                  context: context,
+                ),
+          ),
         ],
       ),
     );

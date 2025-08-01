@@ -90,7 +90,7 @@ class _QuoteMeasurementTileState extends State<QuoteMeasurementTile> {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     final quantity = int.tryParse(value);
-                    context.read<QuoteCubit>().updateQuoteMeasurement(
+                    context.read<QuoteCubit>().updateMeasurement(
                       widget.index,
                       quantity: quantity,
                     );
@@ -106,7 +106,7 @@ class _QuoteMeasurementTileState extends State<QuoteMeasurementTile> {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     final rate = double.tryParse(value);
-                    context.read<QuoteCubit>().updateQuoteMeasurement(
+                    context.read<QuoteCubit>().updateMeasurement(
                       widget.index,
                       rate: rate,
                     );
@@ -122,7 +122,7 @@ class _QuoteMeasurementTileState extends State<QuoteMeasurementTile> {
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     final discount = double.tryParse(value);
-                    context.read<QuoteCubit>().updateQuoteMeasurement(
+                    context.read<QuoteCubit>().updateMeasurement(
                       widget.index,
                       discount: discount,
                     );

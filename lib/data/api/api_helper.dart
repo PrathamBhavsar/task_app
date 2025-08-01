@@ -82,13 +82,13 @@ class ApiHelper {
   }
 
   Future<Either<Failure, Task>> putTask(TaskPayload data) async {
-    final ApiResponse result = await handler.execute<PutTaskResponse>(
+    final ApiResponse result = await handler.execute<Task>(
       () => service.post(ApiConstants.task.base, data: data.toJson()),
-      (json) => PutTaskResponse.fromJson(json as Map<String, dynamic>),
+      (json) => Task.fromJson(json as Map<String, dynamic>),
     );
 
     if (result.isSuccess && result.data != null) {
-      return Right(result.data!.task);
+      return Right(result.data!);
     } else {
       return Left(Failure(result.error!.message));
     }

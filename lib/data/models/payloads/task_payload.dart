@@ -6,15 +6,13 @@ part 'task_payload.g.dart';
 class TaskPayload {
   @JsonKey(name: "task_id", includeIfNull: false)
   final int? taskId;
-  @JsonKey(name: "deal_no")
-  final String dealNo;
   final String name;
 
   @JsonKey(name: "start_date")
-  final String startDate;
+  final DateTime startDate;
 
   @JsonKey(name: "due_date")
-  final String dueDate;
+  final DateTime dueDate;
 
   final String priority;
 
@@ -39,7 +37,7 @@ class TaskPayload {
 
   const TaskPayload({
     required this.assignedUsers,
-    required this.dealNo,
+
     required this.name,
     required this.startDate,
     required this.dueDate,

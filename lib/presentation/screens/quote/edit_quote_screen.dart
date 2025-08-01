@@ -142,7 +142,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
         body: BlocBuilder<QuoteCubit, QuoteCubitState>(
           builder: (context, state) {
             final quote = state.quote;
-            final quoteMeasurementList = state.measurements;
+            final measurementList = state.measurements;
             final serviceList = state.services;
 
             if (quote == null) {
@@ -156,18 +156,18 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                   children: [
                     _buildExpansionTile(
                       title: 'Product Quotes',
-                      length: quoteMeasurementList.length,
+                      length: measurementList.length,
                       widget: ListView.separated(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return QuoteMeasurementTile(
                             index: index,
-                            quoteMeasurement: quoteMeasurementList[index],
+                            quoteMeasurement: measurementList[index],
                           );
                         },
                         separatorBuilder: (context, index) => 10.hGap,
-                        itemCount: quoteMeasurementList.length,
+                        itemCount: measurementList.length,
                       ),
                       addLabel: 'Add Custom Product',
                       onAdd: () {},
@@ -292,7 +292,7 @@ class _EditQuoteScreenState extends State<EditQuoteScreen> {
                     ),
                     ActionButton(
                       label: 'Save Quote',
-                      onPress: () => _onSubmit(context, quoteMeasurementList),
+                      onPress: () => _onSubmit(context, measurementList),
                       backgroundColor: Colors.black,
                       fontColor: Colors.white,
                     ),

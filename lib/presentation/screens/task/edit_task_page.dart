@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/di/di.dart';
 import '../../../core/helpers/cache_helper.dart';
+import '../../../core/helpers/validator.dart';
 import '../../../data/models/payloads/task_payload.dart';
 import '../../../domain/entities/client.dart';
 import '../../../domain/entities/designer.dart';
@@ -13,6 +14,7 @@ import '../../../domain/entities/task.dart';
 import '../../../domain/entities/user.dart';
 import '../../../utils/constants/app_constants.dart';
 import '../../../utils/enums/user_role.dart';
+import '../../../utils/extensions/date_formatter.dart';
 import '../../../utils/extensions/padding.dart';
 import '../../blocs/client/client_bloc.dart';
 import '../../blocs/client/client_state.dart';
@@ -27,6 +29,7 @@ import '../../blocs/task_form/task_form_state.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../blocs/user/user_state.dart';
 import '../../widgets/bordered_container.dart';
+import '../../widgets/custom_text_field.dart';
 import '../../widgets/drop_down_menu.dart';
 import '../../widgets/labeled_text_field.dart';
 
@@ -41,10 +44,12 @@ class EditTaskPage extends StatefulWidget {
 }
 
 class _EditTaskPageState extends State<EditTaskPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late final _taskNameController = TextEditingController();
   late final _noteController = TextEditingController();
   late final _phoneController = TextEditingController();
   late final _dueDateController = TextEditingController();
+  late DateTime _selectedDueDate;
 
   @override
   void initState() {
@@ -61,6 +66,36 @@ class _EditTaskPageState extends State<EditTaskPage> {
     super.dispose();
   }
 
+  void _handleSubmit() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final int? currentUserId = getIt<CacheHelper>().getUserId();
+    final TaskFormState taskFormState = context.read<TaskFormBloc>().state;
+
+    final TaskPayload payload = TaskPayload(
+      taskId: widget.task?.taskId,
+      assignedUsers: [],
+      name: _taskNameController.text,
+      startDate: DateTime.now(),
+      dueDate: _selectedDueDate,
+      priority: taskFormState.selectedPriority?.name ?? '',
+      status: taskFormState.selectedStatus?.name ?? '',
+      remarks: _noteController.text,
+      agencyId: taskFormState.selectedAgency?.userId,
+      createdById: currentUserId ?? 0,
+      clientId: taskFormState.selectedClient?.clientId ?? 0,
+      designerId: taskFormState.selectedDesigner?.designerId ?? 0,
+    );
+
+    if (widget.isNew) {
+      context.read<TaskBloc>().add(PutTaskRequested(payload));
+    } else {
+      context.read<TaskBloc>().add(UpdateTaskRequested(payload));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,33 +104,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
         title: Text('Edit Task', style: AppTexts.titleTextStyle),
         actions: [
           TextButton(
-            onPressed: () {
-              final int? currentUserId = getIt<CacheHelper>().getUserId();
-              final TaskFormState taskFormState =
-                  context.read<TaskFormBloc>().state;
-
-              final TaskPayload payload = TaskPayload(
-                taskId: widget.task?.taskId,
-                assignedUsers: [],
-                dealNo: "dealNo",
-                name: _taskNameController.text,
-                startDate: DateTime.now().toString(),
-                dueDate: _dueDateController.text,
-                priority: taskFormState.selectedPriority?.name ?? '',
-                status: taskFormState.selectedStatus?.name ?? '',
-                remarks: _noteController.text,
-                agencyId: taskFormState.selectedAgency?.userId,
-                createdById: currentUserId ?? 0,
-                clientId: taskFormState.selectedClient?.clientId ?? 0,
-                designerId: taskFormState.selectedDesigner?.designerId ?? 0,
-              );
-
-              if (widget.isNew) {
-                context.read<TaskBloc>().add(PutTaskRequested(payload));
-              } else {
-                context.read<TaskBloc>().add(UpdateTaskRequested(payload));
-              }
-            },
+            onPressed: _handleSubmit,
             child: Text(
               'Done',
               style: AppTexts.labelTextStyle.copyWith(color: Colors.black),
@@ -145,79 +154,97 @@ class _EditTaskPageState extends State<EditTaskPage> {
     BuildContext context,
   ) {
     return BorderedContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          LabeledTextInput(
-            title: 'Task Title',
-            hint: 'Enter task title',
-            controller: _taskNameController,
-          ),
-          if (!widget.isNew)
-            _buildDropdown<Status>(
-              title: 'Status',
-              list: state.statuses,
-              initialValue: state.selectedStatus,
-              onChanged: (selected) {
-                context.read<TaskFormBloc>().add(StatusChanged(selected));
-              },
-              labelBuilder: (s) => s.name,
-              idBuilder: (s) => s.statusId?.toString() ?? '',
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            LabeledTextInput(
+              title: 'Task Title',
+              hint: 'Enter task title',
+              controller: _taskNameController,
+              validator: Validator.validateName,
             ),
-          _buildDropdown<Priority>(
-            title: 'Priority',
-            list: state.priorities,
-            initialValue: state.selectedPriority,
-            onChanged: (selected) {
-              context.read<TaskFormBloc>().add(PriorityChanged(selected));
-            },
-            labelBuilder: (p) => p.name,
-            idBuilder: (p) => p.priorityId?.toString() ?? '',
-          ),
-          LabeledTextInput(
-            title: 'Due Date',
-            hint: 'Enter due date',
-            controller: _dueDateController,
-          ),
-          LabeledTextInput(
-            title: 'Notes',
-            hint: 'Add note',
-            controller: _noteController,
-            isMultiline: true,
-          ),
-          _buildDropdown<Client>(
-            title: 'Client',
-            list: state.clients,
-            initialValue: state.selectedClient,
-            onChanged: (selected) {
-              context.read<TaskFormBloc>().add(ClientChanged(selected));
-            },
-            labelBuilder: (c) => c.name,
-            idBuilder: (c) => c.clientId?.toString() ?? '',
-          ),
-          _buildDropdown<Designer>(
-            title: 'Designer',
-            list: state.designers,
-            initialValue: state.selectedDesigner,
-            onChanged: (selected) {
-              context.read<TaskFormBloc>().add(DesignerChanged(selected));
-            },
-            labelBuilder: (d) => d.name,
-            idBuilder: (d) => d.designerId?.toString() ?? '',
-          ),
-          if (widget.task?.agency != null || !widget.isNew) ...[
-            _buildDropdown<User>(
-              title: 'Agency',
-              list: state.agencies,
-              initialValue: state.selectedAgency,
+            if (!widget.isNew)
+              _buildDropdown<Status>(
+                title: 'Status',
+                list: state.statuses,
+                initialValue: state.selectedStatus,
+                onChanged: (selected) {
+                  context.read<TaskFormBloc>().add(StatusChanged(selected));
+                },
+                labelBuilder: (s) => s.name,
+                idBuilder: (s) => s.statusId?.toString() ?? '',
+              ),
+            _buildDropdown<Priority>(
+              title: 'Priority',
+              list: state.priorities,
+              initialValue: state.selectedPriority,
               onChanged: (selected) {
-                context.read<TaskFormBloc>().add(AgencyChanged(selected));
+                context.read<TaskFormBloc>().add(PriorityChanged(selected));
               },
-              labelBuilder: (a) => a.name,
-              idBuilder: (a) => a.userId?.toString() ?? '',
+              labelBuilder: (p) => p.name,
+              idBuilder: (p) => p.priorityId?.toString() ?? '',
             ),
+            GestureDetector(
+              onTap: () async {
+                DateTime picked =
+                    await showDatePicker(
+                      context: context,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime.now().add(Duration(days: 365)),
+                    ) ??
+                    DateTime.now().add(const Duration(days: 2));
+                _selectedDueDate = picked;
+                _dueDateController.text = picked.toPrettyDate();
+              },
+              child: LabeledTextInput(
+                title: 'Due Date',
+                hint: 'Enter due date',
+                controller: _dueDateController,
+                isEnabled: false,
+              ),
+            ),
+            LabeledTextInput(
+              title: 'Notes',
+              hint: 'Add note',
+              controller: _noteController,
+              isMultiline: true,
+            ),
+            _buildDropdown<Client>(
+              title: 'Client',
+              list: state.clients,
+              initialValue: state.selectedClient,
+              onChanged: (selected) {
+                context.read<TaskFormBloc>().add(ClientChanged(selected));
+              },
+              labelBuilder: (c) => c.name,
+              idBuilder: (c) => c.clientId?.toString() ?? '',
+            ),
+            _buildDropdown<Designer>(
+              title: 'Designer',
+              list: state.designers,
+              initialValue: state.selectedDesigner,
+              onChanged: (selected) {
+                context.read<TaskFormBloc>().add(DesignerChanged(selected));
+              },
+              labelBuilder: (d) => d.name,
+              idBuilder: (d) => d.designerId?.toString() ?? '',
+            ),
+            if (widget.task?.agency != null || !widget.isNew) ...[
+              _buildDropdown<User>(
+                title: 'Agency',
+                list: state.agencies,
+                initialValue: state.selectedAgency,
+                onChanged: (selected) {
+                  context.read<TaskFormBloc>().add(AgencyChanged(selected));
+                },
+                labelBuilder: (a) => a.name,
+                idBuilder: (a) => a.userId?.toString() ?? '',
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -246,10 +273,11 @@ class _EditTaskPageState extends State<EditTaskPage> {
       _noteController.text = widget.task?.remarks ?? '';
       _phoneController.text = widget.task?.client.contactNo ?? '';
       _dueDateController.text = widget.task?.dueDate.toString() ?? '';
+      _selectedDueDate = widget.task!.dueDate;
     } else {
       _dueDateController.text =
-          DateTime.now().add(const Duration(days: 2)).toString();
-
+          DateTime.now().add(const Duration(days: 2)).toPrettyDate();
+      _selectedDueDate = DateTime.now().add(const Duration(days: 2));
       bloc.add(
         ResetTaskForm(
           clients: customerList,
@@ -258,6 +286,39 @@ class _EditTaskPageState extends State<EditTaskPage> {
         ),
       );
     }
+  }
+
+  Widget labeledTextInput({
+    required String title,
+    required String hint,
+    bool isMultiline = false,
+    bool isEnabled = true,
+    FormFieldValidator<String>? validator,
+    TextEditingController? controller,
+    TextInputType? keyboardType,
+    Function(String)? onChanged,
+    void Function()? onEditingComplete,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppTexts.labelTextStyle),
+          10.hGap,
+          CustomTextField(
+            hintTxt: hint,
+            isMultiline: isMultiline,
+            validator: validator,
+            controller: controller,
+            keyboardType: keyboardType,
+            isEnabled: isEnabled,
+            onChangedFunc: onChanged,
+            onEditingCompleteFunc: onEditingComplete,
+          ),
+        ],
+      ),
+    );
   }
 
   Column _buildDropdown<T>({

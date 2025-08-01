@@ -12,6 +12,7 @@ class CacheInterceptor extends InterceptorsWrapper {
 
     if (token != null && token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
+      print(token);
     }
     return super.onRequest(options, handler);
   }

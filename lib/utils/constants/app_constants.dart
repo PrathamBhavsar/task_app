@@ -86,6 +86,13 @@ abstract class AppThemes {
     appBarTheme: AppBarTheme(backgroundColor: Colors.white),
     scaffoldBackgroundColor: Colors.white,
     dividerTheme: DividerThemeData(color: Colors.transparent),
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: Colors.white,
+      dayOverlayColor: WidgetStatePropertyAll<Color>(Colors.black),
+      todayBackgroundColor: WidgetStatePropertyAll<Color>(Colors.grey.shade200),
+      yearBackgroundColor: WidgetStatePropertyAll<Color>(Colors.transparent),
+      headerForegroundColor: Colors.black,
+    ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       color: Colors.black,
       refreshBackgroundColor: Colors.white,

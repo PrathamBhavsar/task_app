@@ -57,7 +57,7 @@ class _NewClientScreenState extends State<NewClientScreen> {
         title: Text('Add Customer', style: AppTexts.titleTextStyle),
         actions: [
           TextButton(
-            onPressed: () => _handleSubmit,
+            onPressed: _handleSubmit,
             child: Text(
               'Done',
               style: AppTexts.labelTextStyle.copyWith(color: Colors.black),

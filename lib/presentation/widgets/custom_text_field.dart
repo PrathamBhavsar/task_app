@@ -110,16 +110,17 @@ class CustomTextField extends StatelessWidget {
         labelText: labelTxt,
         labelStyle: AppTexts.inputLabelTextStyle,
         hintText: hintTxt,
+        errorMaxLines: 2,
         hintStyle: AppTexts.inputHintTextStyle,
-        enabledBorder: AppBorders.outlineTFBorder(
-          const BorderSide(width: 1, color: AppColors.accent),
-        ),
-        disabledBorder: AppBorders.outlineTFBorder(
+
+        border: AppBorders.outlineTFBorder(
           const BorderSide(width: 1, color: AppColors.accent),
         ),
         focusedErrorBorder: AppBorders.outlineTFBorder(
           const BorderSide(width: 2, color: Colors.red),
         ),
-        focusedBorder: AppBorders.outlineTFBorder(const BorderSide(width: 2)),
+        focusedBorder: AppBorders.outlineTFBorder(
+          const BorderSide(width: 2, color: Colors.black),
+        ),
       );
 }

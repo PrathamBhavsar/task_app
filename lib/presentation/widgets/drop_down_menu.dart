@@ -55,13 +55,10 @@ class _ModelDropdownMenuState<T> extends State<ModelDropdownMenu<T>> {
           data: Theme.of(context).copyWith(
             dropdownMenuTheme: DropdownMenuThemeData(
               inputDecorationTheme: InputDecorationTheme(
-                contentPadding:
-                    kIsWeb
-                        ? EdgeInsets.symmetric(horizontal: 5.w, vertical: 5.w)
-                        : EdgeInsets.symmetric(
-                          vertical: 10.h,
-                          horizontal: 10.w,
-                        ),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 10.h,
+                  horizontal: 10.w,
+                ),
                 labelStyle: AppTexts.inputTextStyle,
               ),
               textStyle: AppTexts.inputTextStyle,
@@ -76,12 +73,7 @@ class _ModelDropdownMenuState<T> extends State<ModelDropdownMenu<T>> {
               enabled: widget.isEnabled,
               width: double.infinity,
               initialSelection: selectedValue,
-              textStyle:
-                  kIsWeb
-                      ? constraints.maxWidth < 600
-                          ? AppTexts.inputTextStyle.copyWith(fontSize: 15.sp)
-                          : AppTexts.inputTextStyle.copyWith(fontSize: 4.sp)
-                      : AppTexts.inputTextStyle,
+              textStyle: AppTexts.inputTextStyle,
               menuStyle: MenuStyle(
                 backgroundColor: WidgetStateProperty.all(Colors.white),
                 elevation: WidgetStateProperty.all(5),
@@ -92,13 +84,10 @@ class _ModelDropdownMenuState<T> extends State<ModelDropdownMenu<T>> {
               menuHeight: 400.h,
               inputDecorationTheme: InputDecorationTheme(
                 isCollapsed: true,
-                contentPadding:
-                    kIsWeb
-                        ? EdgeInsets.symmetric(vertical: 9.h, horizontal: 8.w)
-                        : EdgeInsets.symmetric(
-                          vertical: 10.h,
-                          horizontal: 10.w,
-                        ),
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 10.h,
+                  horizontal: 10.w,
+                ),
                 hintStyle: AppTexts.inputHintTextStyle,
                 disabledBorder: OutlineInputBorder(
                   borderSide: const BorderSide(
@@ -125,20 +114,9 @@ class _ModelDropdownMenuState<T> extends State<ModelDropdownMenu<T>> {
                         message: label,
                         child: Text(
                           label,
-                          style:
-                              kIsWeb
-                                  ? constraints.maxWidth < 600
-                                      ? AppTexts.inputTextStyle.copyWith(
-                                        fontSize: 15.sp,
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                      : AppTexts.inputTextStyle.copyWith(
-                                        fontSize: 5.sp,
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                  : AppTexts.inputTextStyle.copyWith(
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                          style: AppTexts.inputTextStyle.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     );

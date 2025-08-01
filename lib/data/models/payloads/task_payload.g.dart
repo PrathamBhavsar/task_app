@@ -11,10 +11,9 @@ TaskPayload _$TaskPayloadFromJson(Map<String, dynamic> json) => TaskPayload(
       (json['assigned_users'] as List<dynamic>)
           .map((e) => (e as num).toInt())
           .toList(),
-  dealNo: json['deal_no'] as String,
   name: json['name'] as String,
-  startDate: json['start_date'] as String,
-  dueDate: json['due_date'] as String,
+  startDate: DateTime.parse(json['start_date'] as String),
+  dueDate: DateTime.parse(json['due_date'] as String),
   priority: json['priority'] as String,
   status: json['status'] as String,
   createdById: (json['created_by'] as num).toInt(),
@@ -28,10 +27,9 @@ TaskPayload _$TaskPayloadFromJson(Map<String, dynamic> json) => TaskPayload(
 Map<String, dynamic> _$TaskPayloadToJson(TaskPayload instance) =>
     <String, dynamic>{
       if (instance.taskId case final value?) 'task_id': value,
-      'deal_no': instance.dealNo,
       'name': instance.name,
-      'start_date': instance.startDate,
-      'due_date': instance.dueDate,
+      'start_date': instance.startDate.toIso8601String(),
+      'due_date': instance.dueDate.toIso8601String(),
       'priority': instance.priority,
       'remarks': instance.remarks,
       'status': instance.status,
