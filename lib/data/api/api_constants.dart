@@ -39,6 +39,8 @@ class _GenericRoutes {
 
   String get login => ApiConstants._build("$path/login");
 
+  String get refresh => ApiConstants._build("$path/refresh");
+
   String get register => ApiConstants._build("$path register");
 
   /// Custom endpoint

@@ -19,11 +19,13 @@ import '../models/payloads/auth_payload.dart';
 import '../models/payloads/client_payload.dart';
 import '../models/payloads/measurement_payload.dart';
 import '../models/payloads/message_payload.dart';
+import '../models/payloads/refresh_payload.dart';
 import '../models/payloads/service_payload.dart';
 import '../models/payloads/task_payload.dart';
 import '../models/payloads/update_quote_payload.dart';
 import '../models/payloads/update_status_payload.dart';
 import '../responses/auth/login_response.dart';
+import '../responses/auth/refresh_response.dart';
 import '../responses/client/put_client_response.dart';
 import '../responses/get_bills_response.dart';
 import '../responses/client/get_clients_response.dart';
@@ -186,14 +188,13 @@ class ApiHelper {
   }
 
   Future<Either<Failure, Quote>> getAllQuotes(int taskId) async {
-    final ApiResponse<Quote> result = await handler
-        .execute<Quote>(
-          () => service.get(
-            ApiConstants.quote.base,
-            queryParameters: {"task_id": taskId},
-          ),
-          (json) => Quote.fromJson(json as Map<String, dynamic>),
-        );
+    final ApiResponse<Quote> result = await handler.execute<Quote>(
+      () => service.get(
+        ApiConstants.quote.base,
+        queryParameters: {"task_id": taskId},
+      ),
+      (json) => Quote.fromJson(json as Map<String, dynamic>),
+    );
     if (result.isSuccess && result.data != null) {
       return Right(result.data!);
     } else {
@@ -201,22 +202,24 @@ class ApiHelper {
     }
   }
 
-  Future<Either<Failure, List<Measurement>>> getAllQuoteMeasurementsByTaskId(int taskId) async {
+  Future<Either<Failure, List<Measurement>>> getAllQuoteMeasurementsByTaskId(
+    int taskId,
+  ) async {
     final ApiResponse<GetMeasurementResponse> result = await handler
         .execute<GetMeasurementResponse>(
           () => service.get(
-        ApiConstants.measurement.base,
-        queryParameters: {"quote_id": taskId},
-      ),
-          (json) => GetMeasurementResponse.fromJson(json as Map<String, dynamic>),
-    );
+            ApiConstants.measurement.base,
+            queryParameters: {"quote_id": taskId},
+          ),
+          (json) =>
+              GetMeasurementResponse.fromJson(json as Map<String, dynamic>),
+        );
     if (result.isSuccess && result.data != null) {
       return Right(result.data!.measurements);
     } else {
       return Left(Failure(result.error!.message));
     }
   }
-
 
   Future<Either<Failure, Quote>> updateQuote(UpdateQuotePayload data) async {
     final ApiResponse<UpdateQuoteResponse> result = await handler.execute(
@@ -377,10 +380,25 @@ class ApiHelper {
   }
 
   Future<Either<Failure, LoginResponse>> login(AuthPayload data) async {
-    final ApiResponse<LoginResponse> result = await handler.execute<LoginResponse>(
-      () => service.post(ApiConstants.auth.login, data: data.toJson()),
-      (json) => LoginResponse.fromJson(json as Map<String, dynamic>),
-    );
+    final ApiResponse<LoginResponse> result = await handler
+        .execute<LoginResponse>(
+          () => service.post(ApiConstants.auth.login, data: data.toJson()),
+          (json) => LoginResponse.fromJson(json as Map<String, dynamic>),
+        );
+
+    if (result.isSuccess && result.data != null) {
+      return Right(result.data!);
+    } else {
+      return Left(Failure(result.error!.message));
+    }
+  }
+
+  Future<Either<Failure, RefreshResponse>> refresh(RefreshPayload data) async {
+    final ApiResponse<RefreshResponse> result = await handler
+        .execute<RefreshResponse>(
+          () => service.post(ApiConstants.auth.refresh, data: data.toJson()),
+          (json) => RefreshResponse.fromJson(json as Map<String, dynamic>),
+        );
 
     if (result.isSuccess && result.data != null) {
       return Right(result.data!);

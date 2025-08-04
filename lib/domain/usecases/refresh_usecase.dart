@@ -6,8 +6,14 @@ import '../../data/models/payloads/refresh_payload.dart';
 import '../../data/responses/auth/login_response.dart';
 import '../../data/responses/auth/refresh_response.dart';
 import '../entities/user.dart';
+import '../repositories/auth_repository.dart';
 
-abstract class AuthRepository {
-  Future<Either<Failure, LoginResponse>> login(AuthPayload data);
-  Future<Either<Failure, RefreshResponse>> refresh(RefreshPayload data);
+class RefreshUseCase {
+  final AuthRepository repository;
+
+  RefreshUseCase(this.repository);
+
+  Future<Either<Failure, RefreshResponse>> call(RefreshPayload data) {
+    return repository.refresh(data);
+  }
 }

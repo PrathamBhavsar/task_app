@@ -45,6 +45,7 @@ import '../../domain/usecases/put_message_usecase.dart';
 import '../../domain/usecases/put_service_usecase.dart';
 import '../../domain/usecases/put_task_usecase.dart';
 import '../../domain/usecases/quote_usecase.dart';
+import '../../domain/usecases/refresh_usecase.dart';
 import '../../domain/usecases/task_usecase.dart';
 import '../../domain/usecases/timeline_usecase.dart';
 import '../../domain/usecases/update_quote_measurement_usecase.dart';
@@ -79,11 +80,11 @@ final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void setupLocator() {
   setupHelpers();
-  setupApiModule();
 
+  setupApiModule();
+  setupAuth();
   setupHome();
   setupTaskForm();
-  setupAuth();
   setupTask();
   setupServiceMaster();
   setupService();
@@ -100,7 +101,7 @@ void setupLocator() {
 }
 
 void setupHelpers() {
-  getIt.registerLazySingleton<CacheInterceptor>(CacheInterceptor.new);
+
 
   getIt.registerLazySingleton<LogHelper>(LogHelper.new);
 
@@ -124,6 +125,8 @@ void setupHelpers() {
   getIt.registerLazySingleton<CacheHelper>(
     () => CacheHelper(getIt<SharedPrefHelper>(), getIt<SecurePrefHelper>()),
   );
+
+
 }
 
 void setupApiModule() {
@@ -176,6 +179,9 @@ void setupAuth() {
     () => AuthRepositoryImpl(getIt<ApiHelper>()),
   );
 
+  getIt.registerLazySingleton(() => RefreshUseCase(getIt<AuthRepository>()));
+
+  getIt.registerLazySingleton<CacheInterceptor>(() => CacheInterceptor(getIt<CacheHelper>()));
   getIt.registerLazySingleton(() => AuthUseCase(getIt<AuthRepository>()));
 
   getIt.registerFactory(
